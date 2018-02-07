@@ -2,7 +2,7 @@
 
 Copyright © 2017-2018 Kerry Shetline, kerry@shetline.com
 
-###Licensing
+### Licensing
 
 This is open-source software. Portions of this code are covered by the MIT license, the
 rest is covered by the GPL-3.0-or-later license, with a selling exception. Any code herein not specifically labeled should be considered to fall under the MIT license. While you should check each file to see which license category it falls under, the basic division is that the MIT license covers most of the behind-the-scenes utilities and calculations, and the GPL covers most of the user interface and visual appearance of the application.
