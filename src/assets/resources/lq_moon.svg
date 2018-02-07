@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<svg viewBox="0 0 500 500" xmlns="http://www.w3.org/2000/svg">
+  <ellipse style="fill: rgb(51, 102, 153);" cx="250" cy="250" rx="250" ry="250"/>
+  <path d="M 10 250 C 10 117.452 117.452 10 250 10 L 250 490 C 117.452 490 10 382.548 10 250 Z" style="fill: rgb(255, 255, 255);"/>
+</svg>

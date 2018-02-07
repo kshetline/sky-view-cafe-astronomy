@@ -1,0 +1,68 @@
+<p-dialog header="Preferences" modal="modal" [(visible)]="visible" width="590" height="280" (keyup)="onKey($event)">
+  <div class="settings-grid">
+    <div class="settings-row">
+      <div class="settings-label">
+        Default location:
+      </div>
+      <div class="settings-value">
+        <ks-dropdown [options]="locations" [(ngModel)]="defaultLocation" [autoWidth]="false"></ks-dropdown>
+      </div>
+    </div>
+    <div class="settings-row">
+      <div class="settings-label">
+        Default view:
+      </div>
+      <div class="settings-value">
+        <ks-dropdown [options]="tabs" [(ngModel)]="defaultTab" [autoWidth]="false"></ks-dropdown>
+      </div>
+    </div>
+    <div class="settings-row">
+      <div class="settings-label">
+        Azimuth:
+      </div>
+      <div class="settings-value">
+        <ks-dropdown [options]="azimuths" [(ngModel)]="northAzimuth" [autoWidth]="false"></ks-dropdown>
+      </div>
+    </div>
+    <div class="settings-row">
+      <div class="settings-label">
+        <label for="twilightInput">Twilight begin/end events:</label>
+      </div>
+      <div class="settings-value flex-container" fxLayout="row" fxLayoutAlign="space-between center">
+        <ks-dropdown [options]="twilightOptions" [(ngModel)]="twilightByDegrees" [autoWidth]="false" [style]="{width: '27em'}" fxFlex="0 0 auto"></ks-dropdown>
+        <input type="text" [(ngModel)]="twilightValue" pInputText class="twilight-input form-control" fxFlex="0 0 auto"
+               id="twilightInput" required minlength="1" maxlength="3" pattern="\d{1,3}" (input)="onTwilightChange($event.target.value)"/>
+      </div>
+    </div>
+    <div *ngIf="!formValid" class="settings-row">
+      <div class="settings-label"></div>
+      <div class="settings-value error-caption">
+        {{ invalidMessage }}
+      </div>
+    </div>
+    <div class="settings-row">
+      <div class="settings-label">
+        Calendar:
+      </div>
+      <div class="settings-value flex-container" fxLayout="row" fxLayoutAlign="space-between center">
+        <ks-dropdown [options]="calendarOptions" [(ngModel)]="calendarOption" [autoWidth]="false" [style]="{width: '23em'}" fxFlex="0 0 auto"></ks-dropdown>
+        <svc-date-editor [pureGregorian]="true" [minYear]="300" [maxYear]="3900"
+                         fxFlex="0 0 auto" [blank]="!gcdVisible" [disabled]="gcdDisabled" [(ngModel)]="gcdValue"></svc-date-editor>
+      </div>
+    </div>
+    <div class="settings-row">
+      <div class="settings-label">
+        Ink saver:
+      </div>
+      <div class="settings-value">
+        <ks-dropdown [options]="inkSaverOptions" [(ngModel)]="inkSaver" [autoWidth]="false"></ks-dropdown>
+      </div>
+    </div>
+  </div>
+  <p-footer>
+    <div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix">
+      <button type="button" pButton icon="fa-close" (click)="visible=false" label="Cancel"></button>
+      <button type="button" pButton icon="fa-check" (click)="setPreferences()" label="OK" [disabled]="!formValid"></button>
+    </div>
+  </p-footer>
+</p-dialog>

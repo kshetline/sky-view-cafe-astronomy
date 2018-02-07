@@ -1,20 +1,121 @@
-<!--The content below is only a placeholder and can be replaced.-->
-<div style="text-align:center">
-  <h1>
-    Welcome to {{ title }}!
-  </h1>
-  <img width="300" alt="Angular Logo" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNTAgMjUwIj4KICAgIDxwYXRoIGZpbGw9IiNERDAwMzEiIGQ9Ik0xMjUgMzBMMzEuOSA2My4ybDE0LjIgMTIzLjFMMTI1IDIzMGw3OC45LTQzLjcgMTQuMi0xMjMuMXoiIC8+CiAgICA8cGF0aCBmaWxsPSIjQzMwMDJGIiBkPSJNMTI1IDMwdjIyLjItLjFWMjMwbDc4LjktNDMuNyAxNC4yLTEyMy4xTDEyNSAzMHoiIC8+CiAgICA8cGF0aCAgZmlsbD0iI0ZGRkZGRiIgZD0iTTEyNSA1Mi4xTDY2LjggMTgyLjZoMjEuN2wxMS43LTI5LjJoNDkuNGwxMS43IDI5LjJIMTgzTDEyNSA1Mi4xem0xNyA4My4zaC0zNGwxNy00MC45IDE3IDQwLjl6IiAvPgogIDwvc3ZnPg==">
-</div>
-<h2>Here are some links to help you start: </h2>
-<ul>
-  <li>
-    <h2><a target="_blank" rel="noopener" href="https://angular.io/tutorial">Tour of Heroes</a></h2>
-  </li>
-  <li>
-    <h2><a target="_blank" rel="noopener" href="https://github.com/angular/angular-cli/wiki">CLI Documentation</a></h2>
-  </li>
-  <li>
-    <h2><a target="_blank" rel="noopener" href="https://blog.angular.io/">Angular blog</a></h2>
-  </li>
-</ul>
+<p-dialog [(visible)]="displayAbout" class="about-dialog">
+  <div class="about-dialog">
+    <img src="/assets/resources/svc_lunar_eclipse.png" alt="lunar eclipse" width="64" height="64">
+    <h2>Sky View Café NP</h2>
+    Version 1.3.12<br><br>
+    Copyright © 2016-2018 Kerry Shetline.
+  </div>
+</p-dialog>
+<svc-preferences-dialog [(visible)]="displayPreferences"></svc-preferences-dialog>
+<div class="flex-container all-panels" fxLayout="row" fxLayoutAlign="start stretch" fxLayoutGap="4px">
+  <div class="flex-container" fxLayout="column" fxLayoutAlign="start stretch" fxLayoutGap="4px" fxFlex="1 0 auto">
+    <div fxLayout="row" fxLayoutAlign="center stretch" fxFlex="0 0 auto" class="banner-backdrop">
+      <div class="banner" fxFlex="0 0 auto">
+        <div><a href="/assets/help/" target="_blank"><i class="fa fa-question-circle"></i><br>help</a></div>
+        <div><a href="/assets/about.html" target="_blank"><i class="fa fa-info-circle"></i><br>about</a></div>
+        <div><a href="https://www.facebook.com/groups/152276391475378/" target="_blank"><i class="fa fa-facebook-official"></i><br>discuss</a></div>
+        <div><a href="https://github.com/kshetline/sky-view-cafe-astronomy/" target="_blank"><i class="fa fa-code"></i><br>code</a></div>
+        <div><a href="/assets/donate.html" target="_blank"><i class="fa fa-money"></i><br>donate</a></div>
+      </div>
+    </div>
+    <div class="flex-container" fxLayout="row" fxLayoutAlign="space-between stretch" fxFlex="0 0 auto">
+      <div class="time-panel" fxFlex="0 0 auto">
+        <div class="time-panel-row">
+          <div class="time-panel-item">
+            <button pButton type="button" (click)="setToNow()" [disabled]="trackTime" label="Now"></button>
+          </div>
+          <div class="time-panel-item">
+            <svc-time-editor [(ngModel)]="time" [timeZone]="timeZone" [viewOnly]="trackTime" [gregorianChangeDate]="gcDate"></svc-time-editor>
+          </div>
+          <div class="time-panel-item">
+            <p-overlayPanel #calendarPopup class="calendar-popup">
+              <ks-calendar [(ngModel)]="date" [timeZone]="timeZone" [gregorianChangeDate]="gcDate" [showDst]="true" [minYear]="-6000" [maxYear]="9999"
+                           (dayClick)="calendarPopup.hide()"></ks-calendar>
+            </p-overlayPanel>
+            <ks-icon-button [disabled]="trackTime" icon="fa-calendar" (click)="calendarPopup.toggle($event)"></ks-icon-button>&nbsp;
+          </div>
+          <div class="time-panel-item">
+            <p-checkbox [(ngModel)]="trackTime" binary="true" label="Track current time"></p-checkbox>
+          </div>
+          <div class="time-panel-item">&nbsp;&nbsp;&nbsp;&nbsp;</div>
+          <div class="time-panel-item">
+            <svc-event-navigator [disabled]="trackTime"></svc-event-navigator>
+          </div>
+        </div>
+        <div class="time-panel-row">
+          <div class="time-panel-item">&nbsp;</div>
+          <div class="time-panel-caption">±YYYY-MM-DD HH:mm</div>
+          <div class="time-panel-item">&nbsp;</div>
+          <div class="time-panel-item">&nbsp;</div>
+          <div class="time-panel-item">&nbsp;</div>
+          <div class="time-panel-caption">previous/next event</div>
+        </div>
+      </div>
+      <div fxFlex="0 0 auto">
+        <p-menu #moremenu popup="popup" [model]="moreItems"></p-menu>
+        <button type="button" pButton icon="fa fa-list" label="More..." (click)="moremenu.toggle($event)"></button>
+      </div>
+    </div>
+    <div class="lower-panel flex-container" fxFlex="100%" fxLayout="row" fxLayoutAlign="start stretch" fxLayoutWrap="none" fxLayoutGap="4px">
+      <ks-tab-view fxFlex="1 0 auto" (onChange)="tabChanged($event)" [activeTab]="selectedTab">
+        <ks-tab header="Sky">
+          <svc-sky-view></svc-sky-view>
+        </ks-tab>
+        <ks-tab header="Ecliptic">
+          <svc-ecliptic-view></svc-ecliptic-view>
+        </ks-tab>
+        <ks-tab header="Orbits">
+          <svc-orbit-view></svc-orbit-view>
+        </ks-tab>
+        <ks-tab header="Moons/GRS">
+          <svc-moons-view></svc-moons-view>
+        </ks-tab>
+        <ks-tab header="Insolation">
+          <svc-insolation-view></svc-insolation-view>
+        </ks-tab>
+        <ks-tab header="Map">
+          <svc-map-view></svc-map-view>
+        </ks-tab>
+        <ks-tab header="Calendar">
+          <svc-calendar-view></svc-calendar-view>
+        </ks-tab>
+        <ks-tab header="Time">
+          <svc-time-view></svc-time-view>
+        </ks-tab>
+        <ks-tab header="Tables">
+          <svc-table-view></svc-table-view>
+        </ks-tab>
+      </ks-tab-view>
+      <div id="locationAndOptions" fxFlex="0 0 auto" class="flex-container" fxLayoutAlign="start stretch" fxLayout="column" fxLayoutGap="4px">
+        <svc-location-settings fxFlex="0 0 auto"></svc-location-settings>
+        <svc-options-panel fxFlex="100%"></svc-options-panel>
+      </div>
+    </div>
+  </div>
+  <div id="quickTips" class="help-panel" fxFlex="0 0 auto">
+    <h3>Quick Tips</h3>
+    <p>Please read the <a href="/help/" target="_blank">Help</a> page. There's plenty of useful information there, and a
+      lot that <em>Sky View Café</em> can do that you'll discover.</p>
 
+    <h3>Time</h3>
+    <p>Click on the clock in the upper left corner of the app to change the time. You can type in the time, or click on
+       a digit and use the keyboard arrow keys or on-screen arrows to adjust the value.</p>
+    <p>The clock uses 24-hour time. 0 is midnight, 12 is noon, 13 is 1 PM, 23 is 11 PM. The § symbol indicates Daylight
+       Saving Time.</p>
+    <p>Find out more about: <a href="/help/#time" target="_blank">time</a>, <a href="/help/#zone" target="_blank">time
+       zones</a>, and years <a href="/help/#bce" target="_blank">BCE</a>...</p>
+
+    <h3>Location</h3>
+    <p>If <em>Sky View Café</em> does not automatically set your desired location, you can use the <strong>Find...</strong> button to look for cities
+       and towns. You can also click on the latitude and longitude fields to manually set a new observing location. Make sure to also pick the correct
+       matching time zone for your location.<p>
+    <p>Coming back later? Click the <strong>Save...</strong> button to store locations for your next visit. (Cookies must be enabled.)
+
+    <hr>
+
+    <p><a href="/help/#eastleft" target="_blank">Why is East on the left?</a></p>
+
+    <p><a href="http://legacy.skyviewcafe.com/skyview.php" target="_blank">Looking for the original Sky View Café Java applet?</a></p>
+  </div>
+</div>
+<p-growl [value]="messages"></p-growl>

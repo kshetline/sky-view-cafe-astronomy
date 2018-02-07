@@ -1,0 +1,25 @@
+@import "../../../styles";
+
+.zoom-caption {
+  @extend .small-caption;
+  display: table-cell;
+  text-align: center;
+  padding-top: 2px;
+}
+
+p-slider {
+  margin-top: 0.5em;
+}
+
+.marker-legend {
+  background-color: #EEEEEE;
+  padding: 0.5em;
+}
+
+.glasses-3d {
+  vertical-align: middle;
+}
+
+.faded {
+  opacity: 0.33;
+}

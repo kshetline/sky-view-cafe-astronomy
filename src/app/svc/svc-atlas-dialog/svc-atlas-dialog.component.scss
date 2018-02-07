@@ -1,0 +1,53 @@
+@import "../../../styles";
+
+.search-controls {
+  display: table;
+  border-spacing: 0.75em 0;
+  margin-left: -0.75em;
+}
+
+.top-caption-row, .search-row, .bottom-caption-row {
+  display: table-row;
+}
+
+.top-caption-row span, .bottom-caption-row span {
+  @extend .small-caption;
+  display: table-cell;
+}
+
+.bottom-caption-row span {
+  padding-top: 2px;
+  padding-bottom: 6px;
+  vertical-align: top;
+}
+
+.search-row input, .search-row ks-dropdown, .search-row button {
+  display: table-cell;
+  vertical-align: middle;
+}
+
+input.city-field {
+  width: 19em;
+}
+
+p-footer {
+  position: relative;
+  top: 12px;
+}
+
+.map-wrapper {
+  position: absolute;
+  top: 90px;
+  right: 16px;
+  width: 300px;
+  height: 300px;
+}
+
+.atlas-map, .map-mask {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 100%;
+  height: 100%;
+  background-color: #999;
+}

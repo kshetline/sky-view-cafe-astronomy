@@ -1,0 +1,46 @@
+@import "../../../styles";
+
+:host {
+  display: flex;
+  height: 100%;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: stretch;
+}
+
+
+.canvasWrapper {
+  flex-grow: 1;
+  min-width: 250px;
+  min-height: 250px;
+  background-color: black;
+}
+
+.canvasAnchor {
+  position: relative;
+  min-width: 250px;
+  min-height: 250px;
+  background-color: black;
+}
+
+canvas {
+  position: absolute;
+  min-width: 250px;
+  min-height: 250px;
+  top: 0;
+  left: 0;
+  bottom: auto;
+  right: auto;
+  @include selectable(none);
+}
+
+.marquee {
+  flex-grow: 0;
+  color: #00EE00;
+  background: black;
+  padding: 2px;
+  margin-top: 4px;
+  margin-bottom: 2px;
+  overflow: hidden;
+  white-space: nowrap;
+}

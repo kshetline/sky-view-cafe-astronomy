@@ -1,0 +1,11 @@
+<div #canvasWrapper class="canvasWrapper">
+  <div class="canvasAnchor">
+    <canvas #insolationCanvas (window:resize)="onResize()"
+            (mousemove)="onMouseMove($event)"
+            [style.cursor]="cursor"
+    ></canvas>
+  </div>
+</div>
+<div #marquee class="marquee">&nbsp;
+  <span class="marquee-sampler" [ngStyle]="{'background-color': skyColor}">&nbsp;</span><span class="marquee-sampler" [ngStyle]="{'background-color': moonColor}">&nbsp;</span>
+  &nbsp;{{marqueeText}}&nbsp;</div>

@@ -1,0 +1,183 @@
+:host {
+  display: flex;
+  height: 100%;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: stretch;
+}
+
+div.wrapper {
+  flex-grow: 1;
+  background-color: black;
+  color: white;
+}
+
+div.anchor {
+  position: relative;
+  background-color: black;
+}
+
+canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: auto;
+  right: auto;
+  width: 100%;
+}
+
+table {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: auto;
+  right: auto;
+  width: 100%;
+  border-collapse: collapse;
+  border-spacing: 0;
+  background: none;
+}
+
+tr.title, tr.weekdays {
+  height: 2em;
+  font-size: 1.2em
+}
+
+th {
+  border: 1px solid #66CC99;
+  font-variant: small-caps;
+  color: cyan;
+  width: 14.28%;
+}
+
+td {
+  border: 1px solid #66CC99;
+  text-align: left;
+  vertical-align: top;
+}
+
+td.ffox-fix-1 {
+  position: relative;
+}
+
+div.day-wrapper {
+  height: 100%;
+  position: relative;
+  padding: 2px 2px 2px 3px;
+}
+
+div.day-wrapper.ffox-fix-2 {
+  position: absolute;
+  height: auto;
+  top: 0;
+  left: 0;
+  bottom: 2px;
+  right: 2px;
+}
+
+div.day-number {
+  font-size: 1.5em;
+  color: #6666FF;
+  text-shadow: -1px -1px black, -1px 1px black, 1px -1px black, 1px 1px black;
+}
+
+div.day-number.highlight {
+  font-weight: bold;
+  color: white;
+}
+
+div.day-number.other-month {
+  font-size: 1em;
+}
+
+div.rise-set-group {
+  position: absolute;
+  bottom: 2px;
+}
+
+div.edge-ie-fix-1 {
+  padding-bottom: 2px;
+}
+
+span.planet-glyph {
+  vertical-align: middle;
+  font-size: 1.2em;
+  color: #00FF99;
+}
+
+div.rise-set-list {
+  vertical-align: middle;
+  display: inline-block;
+}
+
+div.rise-set {
+  font-size: 0.833em;
+  color: #00FF99;
+  text-shadow: -1px -1px black, -1px 1px black, 1px -1px black, 1px 1px black;
+}
+
+div.phase {
+  font-size: 0.833em;
+  color: #FF66FF;
+  text-shadow: -1px -1px black, -1px 1px black, 1px -1px black, 1px 1px black;
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  text-align: right;
+}
+
+div.daylight {
+  font-size: 0.833em;
+  color: #FFFF99;
+  text-shadow: -1px -1px black, -1px 1px black, 1px -1px black, 1px 1px black;
+  position: absolute;
+  bottom: 0;
+  right: 2px;
+  text-align: right;
+}
+
+div.edge-ie-fix-2 {
+  padding-bottom: 4px;
+}
+
+span.equiSolstice {
+  font-size: 0.833em;
+  color: #FF9966;
+  text-shadow: -1px -1px black, -1px 1px black, 1px -1px black, 1px 1px black;
+}
+
+div.day-number, div.rise-set, span.equiSolstice, img.phase, div.phaseTime {
+  cursor: pointer;
+}
+
+div.day-number:hover, div.rise-set:hover, span.equiSolstice:hover, img.phase:hover, div.phaseTime:hover {
+  color: white;
+  text-decoration: underline;
+}
+
+div.day-number.void-day {
+  color: gray;
+  text-decoration: none;
+  cursor: not-allowed;
+}
+
+.short-day {
+  color: red;
+  font-weight: bold;
+}
+
+.long-day {
+  color: lime;
+  font-weight: bold;
+}
+
+@media print {
+  div.day-number.highlight { // Undo highlighting effect for current day when printing
+    font-weight: normal;
+    color: #6666FF;
+  }
+
+  div.daylight {
+    color: #EEBB00;
+  }
+}

@@ -1,0 +1,115 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta name="description" content="Sky View Cafe is an interactive Java applet for astronomy, with customized local star charts, ecliptic charts, moon phases, rise, set and transit times, lunar and solar eclipses, moons of Jupiter and Saturn, as astronomical event calendar, an ephemeris generator, and more.">
+<meta name="keywords" content="astronomy, java, applet, interactive, stars, chart, star charts, star chart, ephemeris, planetarium, starcharts, starchart, sky charts sky chart, star maps, star map, sky maps, sky map, sky, planets, moon, moon phase, solar eclipse, lunar eclipse, orrery, Galilean moons, moons of Jupiter, moons of Saturn, print, printable, deep sky objects, Messier, NGC, constellations, orbits, ecliptic, insolation, calendar, sun rise, sun set, rise, set, conjunction, opposition, greatest elongation, magnitude, visual magnitude, aphelion, perihelion, illuminated fraction, angular diameter, semidiameter, kerry, shetline, Mercury, Venus, Earth, Mars, Jupiter, Saturn, Uranus, Neptune, Pluto, Io, Europa, Ganymede, Callisto, Mimas, Enceladus, Tethys, Dione, Rhea, Titan, Hyperion, Iapetus, GRS, Great Red Spot">
+<title>Sky View Cafe - Astronomy - Star Charts - Ephemeris - Planetarium</title>
+<link rel="icon" href="img/favicon.ico" type="image/x-icon">
+<style type="text/css">
+
+body {
+  position: absolute;
+  margin: 8px;
+  background-color: #330066;
+  background-image: url('img/twilight_bkg.gif');
+  color: #CCCCCC;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 12px;
+}
+
+a:link    { color: #6699FF }
+a:visited { color: #009999 }
+a:active  { color: #FFFFFF }
+a:hover   { color: #FFFFFF }
+
+.page { position: absolute; left: 0; top: 80px; width: 640px; bottom: 0; }
+
+.title-sans {
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.header-sans {
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.footnote {
+  font-family: Times New Roman, Times, serif;
+  font-size: 10px;
+  color: #9966CC;
+}
+
+</style>
+</head>
+<body>
+<img src="img/svc_banner.jpg" width="640" height="42" alt="SVC Banner">
+<div class="page">
+  <div align=center class="title-sans">Welcome to Sky View Caf&eacute; NP 1.1</div>
+  <p>
+    Sky View Caf&eacute; is an app that lets you see many types of astronomical
+    information in both graphical and numerical form. You can see which stars and planets
+    will be out tonight in the sky above your home town, see how the next solar or lunar
+    eclipse will look from Los Angeles, or find out when the Moon rose over Sydney on your
+    birthday ten years ago. Sky View Caf&eacute; includes star charts, a 3-D orrery,
+    displays of the moons of Jupiter and Saturn, an astronomical event calendar, and many
+    other features.</p>
+
+  <h2 class="header-sans"><a name="history">What's New / Version History</a></h2>
+  <div  style="padding-left: 1em; text-indent: -1em">
+
+  <p><b>1.3.12, 2018-02-06:</b> Mostly internal code changes, with one minor cosmetic update and a new link added
+    to the GitHub code repository.</p>
+
+  <p><b>1.3.11, 2018-02-02:</b> Fix bug where location could be saved with blank name, and the list of saved locations
+   was not updated for deleted items.</p>
+
+  <p><b>1.3.10, 2018-01-30:</b> Fix problems related to days that have two midnights. (This can occur when clocks are
+    turned back to midnight.)</p>
+
+  <p><b>1.3.9, 2018-01-23:</b> Update time zone data to version 2018c, extend to the year 2500, keep Europe/Dublin time
+    zone from 2018b.</p>
+
+  <p><b>1.3.8, 2018-01-21:</b> Update time zone data to version 2018b, extend to 2050, add handing for negative/winter
+    Daylight Saving Time, eliminate "calendar rollbacks" from time zone data. Update delta-T and GRS longitude.</p>
+
+  <p><b>1.3.7, 2018-01-06:</b> Extend time zone data to 2037.</p>
+
+  <p><b>1.3.6, 2018-01-01:</b> Made some adjustments to historical time zone support.</p>
+
+  <p><b>1.3.5, 2017-12-31:</b> Added preliminary version of Table view. Improved time zone support.</p>
+
+  <p><b>1.3.0, 2017-11-28:</b> Added printing support.</p>
+
+  <p><b>1.2.2, 2017-11-11:</b> Updated to use Angular 5.0.</p>
+
+  <p><b>1.2.1, 2017-10-29:</b> Fix Edge/Internet Explorer Calendar layout issues.</p>
+
+  <p><b>1.2.0, 2017-10-29:</b> Add daily moon phase and daily daylight duration to Calendar view.</p>
+
+  <p><b>1.1.2, 2017-10-24:</b> Fix text overflow in atlas dialog and Firefox layout of atlas dialog.</p>
+
+  <p><b>1.1.1, 2017-10-21:</b> Fixed flickering marquee in Firefox (and related performance issue).</p>
+
+  <p><b>1.1.0, 2017-10-16:</b> Added asteroids and comets.</p>
+
+  <p><b>1.0.4, 2017-07-30:</b> Added Milky Way display to Sky view.</p>
+
+  <p><b>1.0.3, 2017-07-29:</b> Added anaglyph 3-D option for Orbits view. Sky view's facing display now matches azimuth
+    style preference setting.</p>
+
+  <p><b>1.0.2, 2017-07-23:</b> Faster client-side event finder. "Growl"-style event messages. Full event functionality
+    for OS time zone.</p>
+
+  <p><b>1.0.1, 2017-07-15:</b> Fixed bug with OS and Local Mean Time time zones.</p>
+
+  <p><b>1.0.0, 2017-07-14:</b> First release.</p>
+  </div>
+  <br>
+  <span class="footnote">
+    Copyright &copy; 2000-2017 Kerry Shetline.</span>
+</div>
+</body>
+</html>

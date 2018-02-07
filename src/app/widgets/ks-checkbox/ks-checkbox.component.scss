@@ -1,0 +1,12 @@
+@import "../../../styles";
+
+span {
+  position: relative;
+  top: 0.1em;
+  cursor: default;
+  @include selectable(none);
+}
+
+.faded {
+  opacity: 0.33;
+}

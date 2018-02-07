@@ -1,0 +1,52 @@
+<fieldset>
+  <legend>Location Settings</legend>
+  <div fxLayout="column" fxLayoutAlign="start center" fxLayoutGap="4px">
+    <div class="latlong">
+      <div class="latlong-values">
+        <svc-angle-editor format="DD_MM_NS" [(ngModel)]="latitude"></svc-angle-editor>
+        <svc-angle-editor format="DDD_MM_EW" [(ngModel)]="longitude"></svc-angle-editor>
+      </div>
+      <div class="latlong-captions">
+        <div class="latlong-caption">latitude</div>
+        <div class="latlong-caption">longitude</div>
+      </div>
+    </div>
+    <svc-zone-selector [(ngModel)]="zone"></svc-zone-selector>
+    <hr>
+    <ks-dropdown [options]="locationNames" [(ngModel)]="locationName"></ks-dropdown>
+    <div fxLayout="row" fxLayoutGap="4px">
+      <button pButton type="button" label="Find" [disabled]="!mapsReady" (click)="openFindDialog()"></button>
+      <button pButton type="button" label="Save" (click)="openSaveDialog()"></button>
+      <button pButton type="button" label="Delete" (click)="openDeleteDialog()"></button>
+    </div>
+  </div>
+  <p-dialog header="Save Location" modal="modal" [(visible)]="showSaveDialog" width="350" height="190">
+    <div style="height: 60px;">
+      Save location as:&nbsp;
+      <ks-dropdown [(ngModel)]="selectedName" [options]="saveDialogNames" [editable]="true" [style]="{width: '200px'}"></ks-dropdown>
+      <br><br><p-checkbox [(ngModel)]="makeDefault" binary="true" label="Make this the default location"></p-checkbox>
+    </div>
+    <p-footer>
+      <div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix">
+        <button type="button" pButton icon="fa-close" (click)="showSaveDialog=false" label="Cancel"></button>
+        <button type="button" pButton icon="fa-check" (click)="doSave()" label="OK" [disabled]="!selectedName.trim()"></button>
+      </div>
+    </p-footer>
+    <p-confirmDialog header="Same location name in use" icon="fa fa-question-circle" width="400" appendTo="body"></p-confirmDialog>
+  </p-dialog>
+  <p-dialog header="Delete Location" modal="modal" [(visible)]="showDeleteDialog" width="350" height="165">
+    <div style="height: 35px;">
+      <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="4px">
+        <span>Location to delete:&nbsp;</span>
+        <ks-dropdown [(ngModel)]="selectedName" [options]="deleteDialogNames" [style]="{width: '200px'}"></ks-dropdown>
+      </div>
+    </div>
+    <p-footer>
+      <div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix">
+        <button type="button" pButton icon="fa-close" (click)="showDeleteDialog=false" label="Cancel"></button>
+        <button type="button" pButton icon="fa-check" (click)="doDelete()" label="OK"></button>
+      </div>
+    </p-footer>
+  </p-dialog>
+  <svc-atlas-dialog [(visible)]="showFindDialog"></svc-atlas-dialog>
+</fieldset>

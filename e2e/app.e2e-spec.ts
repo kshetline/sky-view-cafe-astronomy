@@ -7,8 +7,7 @@ describe('svc-ng App', () => {
     page = new AppPage();
   });
 
-  it('should display welcome message', () => {
+  it('should be able to navigate to the main page', () => {
     page.navigateTo();
-    expect(page.getParagraphText()).toEqual('Welcome to app!');
   });
 });

@@ -1,0 +1,12 @@
+<svc-change-location-dialog [(visible)]="showLocationDialog"
+                            [latitude]="latitude" [longitude]="longitude" [timezone]="timezone"></svc-change-location-dialog>
+<div #canvasWrapper class="canvasWrapper">
+  <div class="canvasAnchor">
+    <canvas #mapCanvas (window:resize)="onResize()"
+            (mousemove)="onMouseMove($event)"
+            (click)="onClick($event)"
+            [style.cursor]="cursor"
+    ></canvas>
+  </div>
+</div>
+<div #marquee class="marquee">&nbsp;{{marqueeText}}&nbsp;</div>

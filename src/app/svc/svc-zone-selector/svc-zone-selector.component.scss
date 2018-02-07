@@ -1,0 +1,29 @@
+@import "../../../styles";
+
+:host /deep/ select {
+  width: 12em;
+}
+
+.caption {
+  @extend .small-caption;
+  display: table-cell;
+  vertical-align: top;
+  text-align: center;
+}
+
+.error {
+  color: red;
+}
+
+.zone-selector {
+  display: table;
+  border-spacing: 0;
+}
+
+.zone-selector-row {
+  display: table-row;
+}
+
+.ks-dropdown {
+  display: table-cell;
+}

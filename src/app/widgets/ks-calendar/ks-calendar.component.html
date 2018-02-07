@@ -1,0 +1,22 @@
+<table>
+  <tr>
+    <th class="arrow" (mousedown)="onMouseDown($event, -1)" (mouseup)="onMouseUp()" (mouseleave)="stopTimer()"
+      (click)="onClick($event, -1)"><i class="fa fa-chevron-left"  aria-hidden="true"></i></th>
+    <th colspan="5">{{title}}</th>
+    <th class="arrow" (mousedown)="onMouseDown($event,  1)" (mouseup)="onMouseUp()" (mouseleave)="stopTimer()"
+      (click)="onClick($event,  1)"><i class="fa fa-chevron-right" aria-hidden="true"></i></th>
+  </tr>
+  <tr>
+    <th *ngFor="let d of daysOfWeek" class="day-header">{{d}}</th>
+  </tr>
+  <tr *ngFor="let week of calendar">
+    <td *ngFor="let day of week" [ngClass]="{
+        'highlight':   day.highlight,
+        'short-day':   day.shortDay,
+        'long-day':    day.longDay,
+        'other-month': day.otherMonth,
+        'void-day':    day.voidDay
+      }"
+      (click)="onDayClick(day)">{{day.text}}</td>
+  </tr>
+</table>

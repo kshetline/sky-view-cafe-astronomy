@@ -1,0 +1,12 @@
+<div #canvasWrapper class="canvasWrapper">
+  <div class="canvasAnchor">
+    <canvas #orbitCanvas (window:resize)="onResize()"
+            (mousedown)="onMouseDown($event)"
+            (mousemove)="onMouseMove($event)"
+            (mouseup)="onMouseUp($event)"
+            (wheel)="onWheel($event)"
+            [style.cursor]="cursor"
+    ></canvas>
+  </div>
+</div>
+<div #marquee class="marquee">&nbsp;{{marqueeText}}&nbsp;</div>

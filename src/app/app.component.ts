@@ -1,10 +1,158 @@
-import { Component } from '@angular/core';
+/*
+  Copyright © 2017 Kerry Shetline, kerry@shetline.com.
+
+  This code is free software: you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+  (at your option) any later version.
+
+  This code is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
+
+  You should have received a copy of the GNU General Public License
+  along with this code.  If not, see <http://www.gnu.org/licenses/>.
+
+  For commercial, proprietary, or other uses not compatible with
+  GPL-3.0-or-later, terms of licensing for this code may be
+  negotiated by contacting the author, Kerry Shetline, otherwise all
+  other uses are restricted.
+*/
+
+import { AfterViewInit, Component, OnDestroy } from '@angular/core';
+import { AppService, currentMinuteMillis, CurrentTab, PROPERTY_GREGORIAN_CHANGE_DATE, UserSetting, VIEW_APP } from './app.service';
+import { Observable, Subscription } from 'rxjs';
+import { MenuItem, Message } from 'primeng/primeng';
+import { KsDateTime } from './util/ks-date-time';
+import { KsTimeZone } from './util/ks-timezone';
+import { YMDDate } from './util/ks-calendar';
 
 @Component({
-  selector: 'app-root',
+  selector: 'svc-app',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss']
+  styleUrls: ['./app.component.scss'],
+  providers: [AppService]
 })
-export class AppComponent {
-  title = 'app';
+export class AppComponent implements AfterViewInit, OnDestroy {
+  private dateTime = new KsDateTime(null, KsTimeZone.OS_ZONE);
+  private _date = <YMDDate> {};
+  private _timeZone: KsTimeZone = KsTimeZone.OS_ZONE;
+  private _time: number = this.dateTime.utcTimeMillis;
+  private _trackTime = false;
+  private timer: Subscription;
+
+  messages: Message[] = [];
+  moreItems: MenuItem[] = [
+      { label: 'Preferences', icon: 'fa-cog', command: () => this.displayPreferences = true },
+      { label: 'Help', icon: 'fa-question-circle', command: () => this.openHelp() },
+      { label: 'About Sky View Café', icon: 'fa-info-circle', command: () => this.displayAbout = true }
+    ];
+
+  displayAbout = false;
+  displayPreferences = false;
+  selectedTab = <number> CurrentTab.SKY;
+  gcDate = '1582-10-15';
+
+  constructor(private app: AppService) {
+    this.time = app.time;
+
+    this.updateTimeZone();
+    this.dateTime.setGregorianChange(app.gregorianChangeDate);
+    this.gcDate = app.gregorianChangeDate;
+
+    app.getTimeUpdates((newTime: number) => {
+      this.time = newTime;
+    });
+
+    app.getLocationUpdates(() => this.updateTimeZone());
+
+    app.getUserSettingUpdates((setting: UserSetting) => {
+      if (setting.view === VIEW_APP && setting.property === PROPERTY_GREGORIAN_CHANGE_DATE) {
+        app.applyCalendarType(this.dateTime);
+        this.gcDate = app.gregorianChangeDate;
+      }
+    });
+  }
+
+  private updateTimeZone(): void {
+    this.messages = [];
+    this._timeZone = KsTimeZone.getTimeZone(this.app.location.zone, this.app.location.longitude);
+    this.dateTime.timeZone = this._timeZone;
+
+    if (this._timeZone.error)
+      this.messages.push({severity: 'error', summary: 'Failed to retrieve time zone', detail: 'Using your OS time zone instead.'});
+  }
+
+  ngAfterViewInit(): void {
+    setTimeout(() => {
+      this.selectedTab = <number> this.app.defaultTab;
+      this.app.currentTab = this.app.defaultTab;
+    });
+  }
+
+  ngOnDestroy(): void {
+    this.stopTimer();
+  }
+
+  stopTimer(): void {
+    if (this.timer) {
+      this.timer.unsubscribe();
+      this.timer = undefined;
+    }
+  }
+
+  get time(): number { return this._time; }
+  set time(newTime: number) {
+    if (this._time !== newTime) {
+      this._time = newTime;
+      this.app.time = this.dateTime.utcTimeMillis = newTime;
+    }
+  }
+  get timeZone(): KsTimeZone { return this._timeZone; }
+
+  get date(): YMDDate {
+    const wt = this.dateTime.wallTime;
+
+    if (wt.y !== this._date.y || wt.m !== this._date.m || wt.d !== this._date.d)
+      this._date = {y: wt.y, m: wt.m, d: wt.d};
+
+    return this._date;
+  }
+  set date(newDate: YMDDate) {
+    const wt = this.dateTime.wallTime;
+
+    if (wt.y !== newDate.y || wt.m !== newDate.m || wt.d !== newDate.d) {
+      this.dateTime.wallTime = {y: newDate.y, m: newDate.m, d: newDate.d, hrs: wt.hrs, min: wt.min, sec: wt.sec};
+      this._time = this.app.time = this.dateTime.utcTimeMillis;
+    }
+  }
+
+  get trackTime(): boolean { return this._trackTime; }
+  set trackTime(state: boolean) {
+    if (this._trackTime !== state) {
+      this._trackTime = state;
+
+      if (state) {
+        this.timer = Observable.timer(250, 250).subscribe(() => {
+          this.time = currentMinuteMillis();
+        });
+      }
+      else
+        this.stopTimer();
+    }
+  }
+
+  setToNow(): void {
+    this.time = currentMinuteMillis();
+  }
+
+  tabChanged(index: number): void {
+    this.app.currentTab = <CurrentTab> index;
+  }
+
+  // noinspection JSMethodCanBeStatic
+  private openHelp(): void {
+    window.open('/assets/help/', '_blank');
+  }
 }

@@ -1,0 +1,25 @@
+<p-dialog header="Change Location" modal="modal" [(visible)]="visible" width="425" height="200"
+          (keyup)="onKey($event)">
+  <div class="zone-choices">
+    Change location to {{formattedLatitude}}, {{formattedLongitude}} and:<br>
+    <br>
+    <div>
+      <p-radioButton name="group1" value="0" label="Keep current time zone ({{currentZone}})" [(ngModel)]="zoneChoice"></p-radioButton>
+    </div>
+    <div [hidden]="!timezone || timezone === currentZone">
+      <p-radioButton name="group1" value="1" label="Switch to {{timezone}}" [(ngModel)]="zoneChoice"></p-radioButton>
+    </div>
+    <div [hidden]="formattedHourOffset === currentZone || formattedHourOffset === 'UT'">
+      <p-radioButton name="group1" value="2" label="Switch to {{formattedHourOffset}}" [(ngModel)]="zoneChoice"></p-radioButton>
+    </div>
+    <div [hidden]="'UT' === currentZone">
+      <p-radioButton name="group1" value="3" label="Switch to UT" [(ngModel)]="zoneChoice"></p-radioButton>
+    </div>
+  </div>
+  <p-footer>
+    <div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix">
+      <button type="button" pButton icon="fa-close" (click)="visible=false" label="Cancel"></button>
+      <button type="button" pButton icon="fa-check" (click)="goToLocation()" label="OK"></button>
+    </div>
+  </p-footer>
+</p-dialog>

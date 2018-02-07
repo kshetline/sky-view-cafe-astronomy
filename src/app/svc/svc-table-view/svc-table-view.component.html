@@ -1,0 +1,8 @@
+<!--suppress XmlUnboundNsPrefix -->
+<div class="table-controls">
+  <p-dropdown #tableTypesDropdown [options]="tableTypes" [(ngModel)]="tableType" [autoWidth]="true"></p-dropdown>
+  <p-dropdown #planetsDropdown [options]="planetChoices" [(ngModel)]="planetChoice" [autoWidth]="true" [disabled]="!planetChoiceEnabled"></p-dropdown>
+</div>
+<div #wrapper class="wrapper" (window:resize)="onResize()">
+  <div #tableContainer class="table-container" [innerHtml]='tableHtml'></div>
+</div>

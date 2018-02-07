@@ -1,0 +1,21 @@
+@import "../../../styles";
+
+.zoom-caption {
+  @extend .small-caption;
+  display: table-cell;
+  text-align: center;
+  padding-top: 2px;
+}
+
+p-slider {
+  margin-top: 0.5em;
+}
+
+.default-zoom {
+  width: 1.75em;
+}
+
+.default-zoom /deep/ span {
+  padding-left: 3px;
+  padding-right: 3px;
+}

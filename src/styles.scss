@@ -1,1 +1,63 @@
-/* You can add global styles to this file, and also import other style files */
+// styles in src/style directory are applied to the whole page
+
+@mixin selectable($state) {
+  -webkit-touch-callout: $state;
+  -webkit-user-select: $state;
+  -khtml-user-select: $state;
+  -moz-user-select: $state;
+  -ms-user-select: $state;
+  user-select: $state;
+}
+
+.small-caption {
+  color: #00C;
+  font-size: 75%;
+  cursor: default;
+  @include selectable(none);
+}
+
+html {
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+}
+
+body {
+  background: white;
+  color: black;
+  font-size: 12px;
+  font-family: Arial, Helvetica, sans-serif;
+  margin: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+.appWrapper {
+  position: absolute;
+  top: 0; left: 0; bottom: 0; right: 0;
+  padding: 4px;
+}
+
+// If a setting of 'nowrap' leaks through, dialog headers (and probably other headers) get screwed up on Firefox.
+.ui-widget-header {
+  white-space: normal;
+}
+
+.ui-tabview .ui-tabview-nav > li.ui-state-default {
+  background-color: #E8E8F0;
+}
+
+.ui-tabview .ui-tabview-nav > li.ui-state-default.ui-tabview-selected {
+  background-color: white;
+}
+
+.ui-dialog-buttonpane {
+  border: none;
+}
+
+.error-caption {
+  color: #C00;
+  font-style: italic;
+  font-size: 11px;
+}

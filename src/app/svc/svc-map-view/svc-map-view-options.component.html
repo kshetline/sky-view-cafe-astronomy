@@ -1,0 +1,16 @@
+<div class="flex-container" fxLayout="column" fxLayoutAlign="start stretch" fxLayoutGap="4px">
+  <div fxFlex="0 0 auto" fxFlexAlign="center">Change location to...</div>
+  <button pButton type="button" label="Subsolar point" (click)="goToSubsolarPoint()"></button>
+  <button pButton type="button" label="Greatest eclipse" (click)="goToEclipseCenter()" [disabled]="!eclipseActive"></button>
+  <hr>
+  <ks-dropdown fxFlex="0 0 auto" [options]="mapTypes" [(ngModel)]="mapType" [autoWidth]="false"></ks-dropdown>
+  <ks-checkbox fxFlex="0 0 auto" [(ngModel)]="showDayNight" binary="true" label="Show day/night"></ks-checkbox>
+  <ks-checkbox fxFlex="0 0 auto" [(ngModel)]="showEclipseShadows" binary="true" label="Show eclipse shadows"></ks-checkbox>
+  <ks-checkbox fxFlex="0 0 auto" [(ngModel)]="showMarkers" binary="true" label="Show location markers"></ks-checkbox>
+  <ks-checkbox fxFlex="0 0 auto" [(ngModel)]="blink" binary="true" label="Blink location markers" [disabled]="!showMarkers"></ks-checkbox>
+  <div fxFlex="0 0 auto" [hidden]="!showMarkers" class="marker-legend">
+    <img src="/assets/resources/marker_location.gif" alt="subsolar point"> Observer location<br>
+    <img src="/assets/resources/marker_subsolar.gif" alt="subsolar point"> Subsolar point<br>
+    <img src="/assets/resources/marker_eclipse.gif" alt="subsolar point"> Eclipse center
+  </div>
+</div>

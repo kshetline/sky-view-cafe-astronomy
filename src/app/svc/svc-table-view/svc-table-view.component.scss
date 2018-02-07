@@ -1,0 +1,44 @@
+:host {
+  display: flex;
+  height: 100%;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: stretch;
+}
+
+div.wrapper {
+  flex-grow: 1;
+}
+
+.table-container {
+  width: auto;
+  overflow: auto;
+}
+
+.table-controls {
+  padding: 4px;
+  border-bottom: lightgray 1px solid;
+}
+
+/deep/ table.table-view {
+  border-collapse: collapse;
+}
+
+/deep/ table.table-view td, /deep/ table.table-view th {
+  padding-right: 2em;
+}
+
+/deep/ table.table-view tr td:last-child, /deep/ table.table-view tr th:last-child {
+  padding-right: 0;
+}
+
+/deep/ table.table-view td {
+  font-family: Courier New, monospace;
+  white-space: pre;
+}
+
+/deep/ table.table-view tr td:first-child {
+  font-family: inherit;
+  font-weight: bold;
+  text-align: right;
+}

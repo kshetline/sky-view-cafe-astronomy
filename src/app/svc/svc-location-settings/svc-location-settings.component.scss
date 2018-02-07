@@ -1,0 +1,44 @@
+@import "../../../styles";
+
+.latlong {
+  display: table;
+  border-spacing: 4px 0;
+}
+
+.latlong-values, .latlong-captions {
+  display: table-row;
+}
+
+svc-angle-editor {
+  display: table-cell;
+}
+
+.latlong-caption {
+  @extend .small-caption;
+  display: table-cell;
+  text-align: center;
+  padding-top: 2px;
+}
+
+hr {
+  width: 12em;
+  border: 1px #D8D8D8 solid;
+  margin-top: 0;
+  margin-bottom: 6px !important;
+}
+
+/deep/ .ui-growl {
+  width: auto;
+}
+
+/deep/ .ui-growl-message {
+  padding-right: 1em;
+}
+
+:host /deep/ select {
+  width: 12em;
+}
+
+:host /deep/ .ui-dialog-content {
+  overflow: hidden;
+}

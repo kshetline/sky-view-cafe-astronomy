@@ -1,0 +1,20 @@
+<div class="flex-container" fxLayout="column" fxLayoutAlign="start stretch" fxLayoutGap="4px">
+  <ks-dropdown fxFlex="0 0 auto" [options]="centerOptions" [(ngModel)]="centerMidnight" [autoWidth]="false"></ks-dropdown>
+  <ks-checkbox fxFlex="0 0 auto" [(ngModel)]="showMoonlight" binary="true" label="Show moonlight"></ks-checkbox>
+  <div fxFlex="0 0 auto" class="twilight-legend">
+    <div style="background-color: black; color: white">Full Night</div>
+    <div style="background-color: #000044; color: white">Astronomical Twilight</div>
+    <div style="background-color: #000066; color: white">Nautical Twilight</div>
+    <div style="background-color: #990066; color: white">Civil Twilight (Sun < -3°)</div>
+    <div style="background-color: #CC6600; color: white">Civil Twilight</div>
+    <div style="background-color: #DDBB33">Early Sunrise / Late Sunset</div>
+    <div style="background-color: #DDDDAA">Late Sunrise / Early Sunset</div>
+    <div style="background-color: #99CCFF">Full Daylight</div>
+  </div>
+  <div fxFlex="0 0 auto" [hidden]="!showMoonlight" class="moonlight-legend">
+    <div style="background-color: black; color: white">Little or No Moonlight</div>
+    <div style="background-color: #333333; color: white">Moon in Sky, 17-50% Full</div>
+    <div style="background-color: #666666; color: white">Moon in Sky, 50-84% Full</div>
+    <div style="background-color: #999999; color: white">Moon in Sky, 84-100% Full</div>
+  </div>
+</div>

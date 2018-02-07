@@ -1,0 +1,333 @@
+/*
+  Copyright © 2017 Kerry Shetline, kerry@shetline.com.
+
+  This code is free software: you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+  (at your option) any later version.
+
+  This code is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
+
+  You should have received a copy of the GNU General Public License
+  along with this code.  If not, see <http://www.gnu.org/licenses/>.
+
+  For commercial, proprietary, or other uses not compatible with
+  GPL-3.0-or-later, terms of licensing for this code may be
+  negotiated by contacting the author, Kerry Shetline, otherwise all
+  other uses are restricted.
+*/
+
+import { SvcGenericOptionsComponent } from '../svc-generic-options.component';
+import { AfterViewInit, Component } from '@angular/core';
+import { MenuItem, SelectItem } from 'primeng/primeng';
+import { AppService, UserSetting } from '../../app.service';
+import {
+  SKY_COLOR, VIEW_SKY, VIEW_TYPE, PROPERTY_SKY_COLOR, PROPERTY_VIEW_TYPE,
+  PROPERTY_REFRACTION, PROPERTY_CELESTIAL_GRID, PROPERTY_ECLIPTIC_GRID,
+  PROPERTY_PATH_OF_SUN, PROPERTY_PATH_OF_MOON, PROPERTY_BRIGHTEN_STARS,
+  PROPERTY_SHOW_CONSTELLATIONS, PROPERTY_ENLARGE_SUN_MOON, PROPERTY_LABEL_PLANETS, PROPERTY_LABEL_BRIGHT_STARS,
+  PROPERTY_LABEL_STARS, PROPERTY_LABEL_CONSTELLATIONS, PROPERTY_LABEL_DSOS, PROPERTY_SHOW_MILKY_WAY,
+} from './svc-sky-view.component';
+import { NO_DEEP_SKY, ALL_DEEP_SKY } from '../generic-sky-view';
+import * as _ from 'lodash';
+import { ADDITIONALS, PROPERTY_ADDITIONALS } from '../generic-view';
+
+const CHECKED = 'fa-check-square-o';
+const UNCHECKED = 'fa-square-o';
+const EM_DASH = '\u2014';
+
+interface MenuItemPlus extends MenuItem {
+  property?: string;
+  value?: any;
+}
+
+interface MenuEvent {
+  originalEvent: MouseEvent;
+  item: MenuItemPlus;
+}
+
+@Component({
+  selector: 'svc-sky-view-options',
+  templateUrl: './svc-sky-view-options.component.html',
+  styleUrls: ['./svc-sky-view-options.component.scss']
+})
+export class SvcSkyViewOptionsComponent extends SvcGenericOptionsComponent implements AfterViewInit {
+  private _viewType = VIEW_TYPE.FULL_SKY_FLAT;
+  private _skyColor = SKY_COLOR.MULTI;
+  private _refraction = true;
+  private _celestial = false;
+  private _ecliptic = false;
+  private _pathOfSun = false;
+  private _pathOfMoon = false;
+  private _brightenStars = false;
+  private _showConstellations = false;
+  private _enlargeSunMoon = false;
+  private _showMilkyWay = false;
+  private deepSkyLabelMagnitude = NO_DEEP_SKY;
+
+  viewTypes: SelectItem[] = [
+    {label: 'Full Sky - Flat',     value: VIEW_TYPE.FULL_SKY_FLAT},
+    {label: 'Full Sky - Dome',     value: VIEW_TYPE.FULL_SKY_DOME},
+    {label: 'Horizon - 45° Span',  value: VIEW_TYPE.HORIZON_45},
+    {label: 'Horizon - 90° Span',  value: VIEW_TYPE.HORIZON_90},
+    {label: 'Horizon - 120° Span', value: VIEW_TYPE.HORIZON_120},
+    {label: 'Horizon to Zenith',   value: VIEW_TYPE.HORIZON_TO_ZENITH},
+    {label: 'Zenith - 100° Span',  value: VIEW_TYPE.ZENITH_100},
+    {label: 'Moon - 1° Span',      value: VIEW_TYPE.MOON_CLOSEUP_1},
+    {label: 'Moon - 4° Span',      value: VIEW_TYPE.MOON_CLOSEUP_4},
+    {label: 'Moon - 8° Span',      value: VIEW_TYPE.MOON_CLOSEUP_8},
+    {label: 'Moon - 16° Span',     value: VIEW_TYPE.MOON_CLOSEUP_16},
+    {label: 'Sun - 1° Span',       value: VIEW_TYPE.SUN_CLOSEUP_1},
+    {label: 'Sun - 4° Span',       value: VIEW_TYPE.SUN_CLOSEUP_4},
+    {label: 'Sun - 8° Span',       value: VIEW_TYPE.SUN_CLOSEUP_8},
+    {label: 'Sun - 16° Span',      value: VIEW_TYPE.SUN_CLOSEUP_16},
+  ];
+
+  skyColors: SelectItem[] = [
+    {label: 'Sky Color: Basic',      value: SKY_COLOR.BASIC},
+    {label: 'Sky Color: Black',      value: SKY_COLOR.BLACK},
+    {label: 'Sky Color: Multicolor', value: SKY_COLOR.MULTI}
+  ];
+
+  namesCategories: MenuItemPlus[] = [
+    {label: 'None',                  icon: UNCHECKED, property: null,
+      command: (event) => { this.toggleLabels(event); }},
+    {label: EM_DASH, icon: 'fa-fw'},
+    {label: 'Planets',               icon: CHECKED,   property: PROPERTY_LABEL_PLANETS,
+      command: (event) => { this.toggleLabels(event); }},
+    {label: 'Bright Stars',          icon: UNCHECKED, property: PROPERTY_LABEL_BRIGHT_STARS,
+      command: (event) => { this.toggleLabels(event); }},
+    {label: 'Stars',                 icon: UNCHECKED, property: PROPERTY_LABEL_STARS,
+      command: (event) => { this.toggleLabels(event); }},
+    {label: 'Constellations',        icon: UNCHECKED, property: PROPERTY_LABEL_CONSTELLATIONS,
+      command: (event) => { this.toggleLabels(event); }, disabled: true},
+    {label: EM_DASH, icon: 'fa-fw'},
+    {label: 'No Deep Sky Objects',   icon: CHECKED,   property: PROPERTY_LABEL_DSOS,
+      command: (event) => { this.toggleLabels(event); }, value: NO_DEEP_SKY},
+    {label: 'DSOs 4.0 and Brighter', icon: UNCHECKED, property: PROPERTY_LABEL_DSOS,
+      command: (event) => { this.toggleLabels(event); }, value: 4},
+    {label: 'DSOs 5.0 and Brighter', icon: UNCHECKED, property: PROPERTY_LABEL_DSOS,
+      command: (event) => { this.toggleLabels(event); }, value: 5},
+    {label: 'DSOs 6.0 and Brighter', icon: UNCHECKED, property: PROPERTY_LABEL_DSOS,
+      command: (event) => { this.toggleLabels(event); }, value: 6},
+    {label: 'All Deep Sky Objects',  icon: UNCHECKED, property: PROPERTY_LABEL_DSOS,
+      command: (event) => { this.toggleLabels(event); }, value: ALL_DEEP_SKY}
+  ];
+
+  constructor(appService: AppService) {
+    super(appService, VIEW_SKY);
+
+    appService.getUserSettingUpdates((setting: UserSetting) => {
+      if (setting.view === VIEW_SKY && setting.source !== this) {
+        if (setting.property === PROPERTY_VIEW_TYPE)
+          this.viewType = <VIEW_TYPE> setting.value;
+        else if (setting.property === PROPERTY_SKY_COLOR)
+          this.skyColor = <SKY_COLOR> setting.value;
+        else if (setting.property === PROPERTY_REFRACTION)
+          this.refraction = <boolean> setting.value;
+        else if (setting.property === PROPERTY_CELESTIAL_GRID)
+          this.celestial = <boolean> setting.value;
+        else if (setting.property === PROPERTY_ECLIPTIC_GRID)
+          this.ecliptic = <boolean> setting.value;
+        else if (setting.property === PROPERTY_PATH_OF_SUN)
+          this.pathOfSun = <boolean> setting.value;
+        else if (setting.property === PROPERTY_PATH_OF_MOON)
+          this.pathOfMoon = <boolean> setting.value;
+        else if (setting.property === PROPERTY_BRIGHTEN_STARS)
+          this.brightenStars = <boolean> setting.value;
+        else if (setting.property === PROPERTY_SHOW_CONSTELLATIONS)
+          this.showConstellations = <boolean> setting.value;
+        else if (setting.property === PROPERTY_ENLARGE_SUN_MOON)
+          this.enlargeSunMoon = <boolean> setting.value;
+        else if (setting.property === PROPERTY_SHOW_MILKY_WAY)
+          this.showMilkyWay = <boolean> setting.value;
+        else if (setting.property === PROPERTY_ADDITIONALS)
+          this.additional = <ADDITIONALS | string> setting.value;
+        else if (setting.property === PROPERTY_LABEL_PLANETS ||
+                 setting.property === PROPERTY_LABEL_BRIGHT_STARS ||
+                 setting.property === PROPERTY_LABEL_STARS ||
+                 setting.property === PROPERTY_LABEL_CONSTELLATIONS)
+          this.updateShowNames(setting.property, <boolean> setting.value);
+        else if (setting.property === PROPERTY_LABEL_DSOS) {
+          this.deepSkyLabelMagnitude = <number> setting.value;
+          this.adjustShowNamesMenu(setting.property);
+        }
+      }
+    });
+  }
+
+  ngAfterViewInit(): void {
+    setTimeout(() => this.appService.requestViewSettings(VIEW_SKY));
+  }
+
+  get viewType(): VIEW_TYPE { return this._viewType; }
+  set viewType(value: VIEW_TYPE) {
+    if (this._viewType !== value) {
+      this._viewType = value;
+      this.appService.updateUserSetting({view: VIEW_SKY, property: PROPERTY_VIEW_TYPE, value: value, source: this});
+    }
+  }
+
+  get skyColor(): SKY_COLOR { return this._skyColor; }
+  set skyColor(value: SKY_COLOR) {
+    if (this._skyColor !== value) {
+      this._skyColor = value;
+      this.appService.updateUserSetting({view: VIEW_SKY, property: PROPERTY_SKY_COLOR, value: value, source: this});
+    }
+  }
+
+  get refraction(): boolean { return this._refraction; }
+  set refraction(value: boolean) {
+    if (this._refraction !== value) {
+      this._refraction = value;
+      this.appService.updateUserSetting({view: VIEW_SKY, property: PROPERTY_REFRACTION, value: value, source: this});
+    }
+  }
+
+  get celestial(): boolean { return this._celestial; }
+  set celestial(value: boolean) {
+    if (this._celestial !== value) {
+      this._celestial = value;
+      this.appService.updateUserSetting({view: VIEW_SKY, property: PROPERTY_CELESTIAL_GRID, value: value, source: this});
+    }
+  }
+
+  get ecliptic(): boolean { return this._ecliptic; }
+  set ecliptic(value: boolean) {
+    if (this._ecliptic !== value) {
+      this._ecliptic = value;
+      this.appService.updateUserSetting({view: VIEW_SKY, property: PROPERTY_ECLIPTIC_GRID, value: value, source: this});
+    }
+  }
+
+  get pathOfSun(): boolean { return this._pathOfSun; }
+  set pathOfSun(value: boolean) {
+    if (this._pathOfSun !== value) {
+      this._pathOfSun = value;
+      this.appService.updateUserSetting({view: VIEW_SKY, property: PROPERTY_PATH_OF_SUN, value: value, source: this});
+    }
+  }
+
+  get pathOfMoon(): boolean { return this._pathOfMoon; }
+  set pathOfMoon(value: boolean) {
+    if (this._pathOfMoon !== value) {
+      this._pathOfMoon = value;
+      this.appService.updateUserSetting({view: VIEW_SKY, property: PROPERTY_PATH_OF_MOON, value: value, source: this});
+    }
+  }
+
+  get brightenStars(): boolean { return this._brightenStars; }
+  set brightenStars(value: boolean) {
+    if (this._brightenStars !== value) {
+      this._brightenStars = value;
+      this.appService.updateUserSetting({view: VIEW_SKY, property: PROPERTY_BRIGHTEN_STARS , value: value, source: this});
+    }
+  }
+
+  get showConstellations(): boolean { return this._showConstellations; }
+  set showConstellations(value: boolean) {
+    if (this._showConstellations !== value) {
+      this._showConstellations = value;
+      _.find(this.namesCategories, {'property': PROPERTY_LABEL_CONSTELLATIONS}).disabled = !value;
+      this.appService.updateUserSetting({view: VIEW_SKY, property: PROPERTY_SHOW_CONSTELLATIONS, value: value, source: this});
+    }
+  }
+
+  get enlargeSunMoon(): boolean { return this._enlargeSunMoon; }
+  set enlargeSunMoon(value: boolean) {
+    if (this._enlargeSunMoon !== value) {
+      this._enlargeSunMoon = value;
+      this.appService.updateUserSetting({view: VIEW_SKY, property: PROPERTY_ENLARGE_SUN_MOON, value: value, source: this});
+    }
+  }
+
+  get showMilkyWay(): boolean { return this._showMilkyWay; }
+  set showMilkyWay(value: boolean) {
+    if (this._showMilkyWay !== value) {
+      this._showMilkyWay = value;
+      this.appService.updateUserSetting({view: VIEW_SKY, property: PROPERTY_SHOW_MILKY_WAY, value: value, source: this});
+    }
+  }
+
+  private updateShowNames(property: string, value: boolean | number): void {
+    for (const item of this.namesCategories) {
+      if (item.property === property)
+        item.icon = (value ? CHECKED : UNCHECKED);
+
+      if (value &&
+          ((item.property === PROPERTY_LABEL_STARS && property === PROPERTY_LABEL_BRIGHT_STARS) ||
+           (item.property === PROPERTY_LABEL_BRIGHT_STARS && property === PROPERTY_LABEL_STARS)))
+        item.icon = UNCHECKED;
+    }
+
+    this.adjustShowNamesMenu(null);
+  }
+
+  toggleLabels(event: MenuEvent): void {
+    const property = event.item.property;
+
+    for (const item of this.namesCategories) {
+      let value: boolean = undefined;
+
+      if (item.label === EM_DASH)
+        continue;
+
+      if (item.property === null && property === null) {
+        item.icon = CHECKED;
+        this.deepSkyLabelMagnitude = NO_DEEP_SKY;
+        continue;
+      }
+      else if (property === null) {
+        value = false;
+        item.icon = UNCHECKED;
+      }
+      else if (item === event.item) {
+        if (item.property === PROPERTY_LABEL_DSOS)
+          value = this.deepSkyLabelMagnitude = item.value;
+        else {
+          value = (item.icon === UNCHECKED);
+          item.icon = (value ? CHECKED : UNCHECKED);
+        }
+      }
+
+      if (value !== undefined) {
+        this.appService.updateUserSetting({view: VIEW_SKY, property: item.property, value: value, source: this});
+
+        if (property === PROPERTY_LABEL_STARS && value)
+          this.appService.updateUserSetting({view: VIEW_SKY, property: PROPERTY_LABEL_BRIGHT_STARS, value: false, source: this});
+
+        if (property === PROPERTY_LABEL_BRIGHT_STARS && value)
+          this.appService.updateUserSetting({view: VIEW_SKY, property: PROPERTY_LABEL_STARS, value: false, source: this});
+      }
+    }
+
+    this.adjustShowNamesMenu(property);
+  }
+
+  private adjustShowNamesMenu(property: string): void {
+    let anyButNoneChecked = false;
+
+    for (const item of this.namesCategories) {
+      if (item.label === EM_DASH)
+        continue;
+
+      if (item.property === PROPERTY_LABEL_BRIGHT_STARS && property === PROPERTY_LABEL_STARS)
+        item.icon = UNCHECKED;
+
+      if (item.property === PROPERTY_LABEL_STARS && property === PROPERTY_LABEL_BRIGHT_STARS)
+        item.icon = UNCHECKED;
+
+      if (item.property === PROPERTY_LABEL_DSOS)
+        item.icon = (item.value === this.deepSkyLabelMagnitude ? CHECKED : UNCHECKED);
+
+      if (item.property !== null &&
+          !(item.property === PROPERTY_LABEL_DSOS && item.value === NO_DEEP_SKY))
+        anyButNoneChecked = anyButNoneChecked || (item.icon === CHECKED);
+    }
+
+    this.namesCategories[0].icon = (anyButNoneChecked ? UNCHECKED : CHECKED);
+  }
+}

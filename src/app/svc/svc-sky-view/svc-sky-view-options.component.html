@@ -1,0 +1,23 @@
+<div class="flex-container" fxLayout="column" fxLayoutAlign="start stretch" fxLayoutGap="4px">
+  <ks-dropdown fxFlex="0 0 auto" [options]="viewTypes" [(ngModel)]="viewType" [autoWidth]="false"></ks-dropdown>
+  <ks-dropdown fxFlex="0 0 auto" [options]="skyColors" [(ngModel)]="skyColor" [autoWidth]="false"></ks-dropdown>
+  <p-dropdown fxFlex="0 0 auto" [options]="additionals" [(ngModel)]="additional" [autoWidth]="false"
+    [disabled]="!asteroidsReady"></p-dropdown>
+  <ks-checkbox fxFlex="0 0 auto" [(ngModel)]="refraction" binary="true" label="Refraction effect"
+    [disabled]="viewType > 6"></ks-checkbox>
+  <ks-checkbox fxFlex="0 0 auto" [(ngModel)]="celestial" binary="true" label="Celestial grid"></ks-checkbox>
+  <ks-checkbox fxFlex="0 0 auto" [(ngModel)]="ecliptic" binary="true" label="Ecliptic grid"></ks-checkbox>
+  <ks-checkbox fxFlex="0 0 auto" [(ngModel)]="pathOfSun" binary="true" label="Path of Sun, ±12h"
+    [disabled]="viewType > 6"></ks-checkbox>
+  <ks-checkbox fxFlex="0 0 auto" [(ngModel)]="pathOfMoon" binary="true" label="Path of Moon, ±12h"
+    [disabled]="viewType > 6"></ks-checkbox>
+  <ks-checkbox fxFlex="0 0 auto" [(ngModel)]="brightenStars" binary="true" label="Brighten stars"></ks-checkbox>
+  <ks-checkbox fxFlex="0 0 auto" [(ngModel)]="showConstellations" binary="true" label="Constellations"></ks-checkbox>
+  <ks-checkbox fxFlex="0 0 auto" [(ngModel)]="enlargeSunMoon" binary="true" label="Enlarge Sun/Moon"
+    [disabled]="viewType > 6"></ks-checkbox>
+  <ks-checkbox fxFlex="0 0 auto" [(ngModel)]="showMilkyWay" binary="true" label="Milky Way"
+    [disabled]="viewType > 6"></ks-checkbox>
+</div>
+<p-menu #menu popup="popup" [model]="namesCategories"></p-menu>
+<br>
+<button type="button" pButton icon="fa fa-list" label="Show Names..." (click)="menu.toggle($event)"></button>

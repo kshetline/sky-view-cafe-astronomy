@@ -1,0 +1,54 @@
+<p-dialog header="Find Latitude, Longitude, and Time Zone" modal="modal" [(visible)]="visible" width="775" height="500"
+          (keyup)="onKey($event)">
+  <p-growl [value]="messages" sticky="true"></p-growl>
+  <div style="position: relative">
+    <div class="search-controls" [ngBusy]="busy">
+      <div class="top-caption-row">
+        <span>City/place name -or- ZIP/postal code</span><span>US state -or- Canadian province -or- country</span>
+        <span></span>
+      </div>
+      <div class="search-row">
+        <input #searchField type="text" pInputText class="city-field" [(ngModel)]="city" [disabled]="searching"
+               (focus)="searchFocus(true)" (blur)="searchFocus(false)"/>
+        <ks-dropdown [(ngModel)]="state" [options]="states" [editable]="true" [style]="{width: '19em'}"></ks-dropdown>
+        <button type="button" pButton icon="fa-search" (click)="search()" label="Search" [disabled]="searching || becomingVisible"
+                (focus)="searchFocus(true)" (blur)="searchFocus(false)"></button>
+      </div>
+      <div class="bottom-caption-row">
+        <span>Required</span><span>(Optional)</span><span></span>
+      </div>
+    </div>
+  </div>
+  <p-checkbox [(ngModel)]="extended" binary="true" label="Extended search (slower, possibly more matches)"></p-checkbox>
+  <p-dataTable [value]="locations" [rows]="tableRows" [paginator]="true" [pageLinks]="3" selectionMode="single"
+               [emptyMessage]="emptyMessage" [(selection)]="selection" (onRowDblclick)="onDoubleClick()"
+               [style]="{width: '426px', height: '306px', 'padding-top': '12px'}">
+    <p-column field="rank" header="&#x2605;" [style]="{width: '36px'}">
+      <ng-template let-loc="rowData" pTemplate="body">
+        {{loc.rank}} <img src="assets/resources/flags/{{loc.flagCode}}.png" width="16" height="11" alt="{{loc.flagCode}}">
+      </ng-template>
+    </p-column>
+    <p-column field="name" header="Name" [style]="{width: '200px', 'text-overflow': 'ellipsis', overflow: 'hidden'}">
+      <ng-template let-loc="rowData" pTemplate="body">
+        <span pTooltip="{{loc.name}}">{{loc.name}}</span>
+      </ng-template>
+    </p-column>
+    <p-column field="lat" header="Lat." [style]="{width: '55px'}"></p-column>
+    <p-column field="lon" header="Long." [style]="{width: '62px'}"></p-column>
+    <p-column field="zoneInfo" header="Time Zone" [style]="{width: '72px'}">
+      <ng-template let-loc="rowData" pTemplate="body">
+        <span pTooltip="{{loc.zone}}">{{loc.zoneInfo}}</span>
+      </ng-template>
+    </p-column>
+  </p-dataTable>
+  <div class="map-wrapper">
+    <div #atlasMap class="atlas-map"></div>
+    <div class="map-mask" [ngStyle]="{visibility: maskDisplay}"></div>
+  </div>
+  <p-footer>
+    <div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix">
+      <button type="button" pButton icon="fa-close" (click)="visible=false" label="Cancel"></button>
+      <button type="button" pButton icon="fa-check" (click)="setLocation()" label="OK" [disabled]="searching || !selection"></button>
+    </div>
+  </p-footer>
+</p-dialog>

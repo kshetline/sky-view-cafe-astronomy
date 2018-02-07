@@ -1,14 +1,62 @@
+<!--
+  Copyright © 2017 Kerry Shetline, kerry@shetline.com
+
+  IMPORTANT NOTE: The license below DOES NOT COVER use of the specific
+  Google API key used in this code. Users must supply their own key.
+
+  This code is free software: you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+  (at your option) any later version.
+
+  This code is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
+
+  You should have received a copy of the GNU General Public License
+  along with this code.  If not, see <http://www.gnu.org/licenses/>.
+
+  For commercial, proprietary, or other uses not compatible with
+  GPL-3.0-or-later, terms of licensing for this code may be
+  negotiated by contacting the author, Kerry Shetline, otherwise all
+  other uses are restricted.
+-->
 <!doctype html>
 <html lang="en">
-<head>
-  <meta charset="utf-8">
-  <title>SvcNg</title>
-  <base href="/">
+  <head>
+    <meta charset="utf-8">
+    <meta name="description" content="Sky View Cafe is an interactive web app for astronomy, with customized local star charts, ecliptic charts, moon phases, rise, set and transit times, lunar and solar eclipses, moons of Jupiter and Saturn, an astronomical event calendar, and more.">
+    <meta name="keywords" content="astronomy, planetarium, interactive, stars, chart, star charts, star chart, starcharts, starchart, sky charts, sky chart, star maps, star map, sky maps, sky map, sky, planets, moon, moon phase, solar eclipse, lunar eclipse, orrery, Galilean moons, moons of Jupiter, moons of Saturn, deep sky objects, Messier, NGC, constellations, orbits, ecliptic, insolation, calendar, sunrise, sunset, rise, set, conjunction, opposition, greatest elongation, magnitude, visual magnitude, aphelion, perihelion, illuminated fraction, angular diameter, semidiameter, kerry, shetline, Mercury, Venus, Earth, Mars, Jupiter, Saturn, Uranus, Neptune, Pluto, Io, Europa, Ganymede, Callisto, Mimas, Enceladus, Tethys, Dione, Rhea, Titan, Hyperion, Iapetus, GRS, Great Red Spot">
+    <title>Sky View Café</title>
+    <base href="/">
 
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="icon" type="image/x-icon" href="favicon.ico">
-</head>
-<body>
-  <app-root></app-root>
-</body>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+    <script>
+      var mapsInitialized = false;
+      var mapsCallback = null;
+
+      function initGoogleMaps(callback) {
+        if (callback)
+          mapsCallback = callback;
+        else {
+          mapsInitialized = true;
+
+          if (mapsCallback)
+            mapsCallback();
+        }
+      }
+    </script>
+    <!-- If you copy the code below you MUST REPLACE the API key with YOUR OWN key. -->
+    <script type="text/javascript" async defer
+        src="http://maps.googleapis.com/maps/api/js?key=AIzaSyCUwvZPoiKPTs-yTaAf3jh2O6ysNTmG-X8&callback=initGoogleMaps"></script>
+  </head>
+  <body>
+    <div class="appWrapper"><svc-app>
+      <div style="font: 14px Arial, Helvetica, sans-serif; text-align: center;
+        position: absolute; top: 0; bottom: 0; left: 0; right: 0; margin: auto; height: 3em;">
+        <i class="fa fa-spinner fa-pulse fa-2x fa-fw"></i> Loading...</div>
+    </svc-app></div>
+  </body>
 </html>

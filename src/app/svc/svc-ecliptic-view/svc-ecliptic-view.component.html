@@ -1,0 +1,11 @@
+<div #canvasWrapper class="canvasWrapper">
+  <div class="canvasAnchor">
+    <canvas #skyCanvas (window:resize)="onResize()"
+            (mousedown)="onMouseDown($event)"
+            (mousemove)="onMouseMove($event)"
+            (mouseup)="onMouseUp($event)"
+            [style.cursor]="cursor"
+    ></canvas>
+  </div>
+</div>
+<div #marquee class="marquee">&nbsp;{{marqueeText}}&nbsp;</div>

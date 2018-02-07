@@ -1,0 +1,6 @@
+<canvas #canvas tabindex="0"
+  (mousedown)="onMouseDown($event)" (mouseup)="onMouseUp() " (click)="onClick($event)"
+  (keydown)="onKeyDown($event)" (keyup)="onKeyUp($event)" (keypress)="onKeyPress($event)"
+  (focus)="onFocus(true)" (blur)="onFocus(false)"
+  [@displayState]="displayState" (@displayState.start)="onAnimate()"
+  (@displayState.done)="onAnimate()"></canvas>

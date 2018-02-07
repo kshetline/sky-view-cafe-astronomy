@@ -1,0 +1,25 @@
+<div class="flex-container" fxLayout="column" fxLayoutAlign="start stretch" fxLayoutGap="4px">
+  <div fxFlex="0 0 auto" fxFlexAlign="center" class="inc-dec-panel">
+    <div class="inc-dec-pair">
+      <button pButton type="button" icon="fa-chevron-left" (click)="changeMonth(-1)"
+        (mousedown)="onMouseDown(-1)" (mouseup)="onMouseUp()" (mouseleave)="stopClickTimer()"></button>
+      <span>Month</span>
+      <button pButton type="button" icon="fa-chevron-right" (click)="changeMonth(1)"
+        (mousedown)="onMouseDown(1)" (mouseup)="onMouseUp()" (mouseleave)="stopClickTimer()"></button>
+    </div>
+    <div class="inc-dec-pair">
+      <button pButton type="button" icon="fa-chevron-left" (click)="changeMonth(-12)"
+        (mousedown)="onMouseDown(-12)" (mouseup)="onMouseUp()" (mouseleave)="stopClickTimer()"></button>
+      <span>Year</span>
+      <button pButton type="button" icon="fa-chevron-right" (click)="changeMonth(12)"
+        (mousedown)="onMouseDown(12)" (mouseup)="onMouseUp()" (mouseleave)="stopClickTimer()"></button>
+    </div>
+  </div>
+  <hr>
+  <ks-checkbox fxFlex="0 0 auto" [(ngModel)]="keyMoonPhases" binary="true" label="Key Moon phases"></ks-checkbox>
+  <ks-checkbox fxFlex="0 0 auto" [(ngModel)]="equisolstice" binary="true" label="Equinox/Solstice"></ks-checkbox>
+  <ks-checkbox fxFlex="0 0 auto" [(ngModel)]="dailyDaylight" binary="true" label="Daily daylight"></ks-checkbox>
+  <ks-checkbox fxFlex="0 0 auto" [(ngModel)]="dailyMoonPhase" binary="true" label="Daily Moon phase"></ks-checkbox>
+  <ks-dropdown fxFlex="0 0 auto" [options]="eventTypes" [(ngModel)]="eventType" [autoWidth]="false" scrollHeight="260px"></ks-dropdown>
+  <ks-checkbox fxFlex="0 0 auto" [(ngModel)]="includeTransits" binary="true" label="Include transit time"></ks-checkbox>
+</div>

@@ -1,0 +1,18 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+}
+
+fieldset {
+  flex-grow: 1;
+}
+
+.no-options {
+  font-style: italic;
+  color: #AAAAAA;
+}
+
+div.filler {
+  height: 0.5em;
+}

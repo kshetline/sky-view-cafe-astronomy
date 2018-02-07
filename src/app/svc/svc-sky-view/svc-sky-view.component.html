@@ -1,0 +1,27 @@
+<div *ngIf="trackingPlanet < 0" class="skyControls" fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="8px">
+  <span>Facing: {{formattedFacing}}&deg; {{facingOrigin}}</span>
+  <span>&bull;</span>
+  <button pButton type="button" label="S" [disabled]="trackSun || facing === 0" (click)="changeFacing(0)"></button>
+  <button pButton type="button" label="W" [disabled]="trackSun || facing === 90" (click)="changeFacing(90)"></button>
+  <button pButton type="button" label="N" [disabled]="trackSun || facing === 180" (click)="changeFacing(180)"></button>
+  <button pButton type="button" label="E" [disabled]="trackSun || facing === 270" (click)="changeFacing(270)"></button>
+  <span>&bull;</span>
+  <p-checkbox [(ngModel)]="trackSun" binary="true" label="Track Sun"></p-checkbox>
+</div>
+<div *ngIf="trackingPlanet >= 0" class="skyControls">
+  <p-radioButton name="horizonOrEcliptic" [value]="false" [(ngModel)]="parallelToEcliptic" label="Parallel to horizon"></p-radioButton>
+  &nbsp;&nbsp;&nbsp;
+  <p-radioButton name="horizonOrEcliptic" [value]="true"  [(ngModel)]="parallelToEcliptic" label="Parallel to ecliptic"></p-radioButton>
+</div>
+<div #canvasWrapper class="canvasWrapper">
+  <div class="canvasAnchor">
+    <canvas #skyCanvas (window:resize)="onResize()"
+            (mousedown)="onMouseDown($event)"
+            (mousemove)="onMouseMove($event)"
+            (mouseup)="onMouseUp($event)"
+            (dblclick)="onDoubleClick($event)"
+            [style.cursor]="cursor"
+    ></canvas>
+  </div>
+</div>
+<div #marquee class="marquee">&nbsp;{{marqueeText}}&nbsp;</div>

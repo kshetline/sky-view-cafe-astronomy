@@ -1,0 +1,25 @@
+hr {
+  width: 12em;
+  border: 1px #D8D8D8 solid;
+  margin-top: 2px !important;
+  margin-bottom: 6px !important;
+}
+
+.inc-dec-panel {
+  display: table;
+}
+
+.inc-dec-pair {
+  display: table-row;
+}
+
+.inc-dec-pair button {
+  display: table-cell;
+  margin: 0.333em;
+}
+
+.inc-dec-pair span {
+  display: table-cell;
+  text-align: center;
+  padding: 0.333em;
+}

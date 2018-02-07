@@ -1,0 +1,11 @@
+<div class="flex-container" fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="4px">
+  <button pButton type="button" icon="fa-chevron-left" [disabled]="disabled || !eventFinderReady"
+          (mousedown)="onMouseDown(true)" (mouseup)="onMouseUp()" (mouseleave)="stopClickTimer()"></button>
+  <ks-dropdown scrollHeight="400px"
+               [options]="events" [(ngModel)]="selectedEvent" [disabled]="disabled || !eventFinderReady"></ks-dropdown>
+  <ks-dropdown scrollHeight="250px"
+               [options]="planets" [(ngModel)]="selectedPlanet" [disabled]="disabled || noPlanets || !eventFinderReady"></ks-dropdown>
+  <button pButton type="button" icon="fa-chevron-right" [disabled]="disabled || !eventFinderReady"
+          (mousedown)="onMouseDown(false)" (mouseup)="onMouseUp()" (mouseleave)="stopClickTimer()"></button>
+</div>
+<p-growl [value]="messages" [life]="6000"></p-growl>

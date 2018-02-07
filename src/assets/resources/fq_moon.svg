@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<svg viewBox="0 0 500 500" xmlns="http://www.w3.org/2000/svg">
+  <g transform="matrix(0, 1, -1, 0, 500.000031, 0)">
+    <ellipse style="fill: rgb(51, 102, 153);" cx="250" cy="250" rx="250" ry="250" transform="matrix(0, 1, -1, 0, 500, 0)"/>
+    <path d="M 130 130 C 130 -2.548 237.452 -110 370 -110 L 370 370 C 237.452 370 130 262.548 130 130 Z" style="fill: rgb(255, 255, 255);" transform="matrix(0, 1, -1, 0, 380.000004, -120.000013)"/>
+  </g>
+</svg>

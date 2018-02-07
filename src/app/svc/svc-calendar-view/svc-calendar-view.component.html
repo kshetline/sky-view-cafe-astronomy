@@ -1,0 +1,45 @@
+<!--suppress XmlUnboundNsPrefix -->
+<div #wrapper class="wrapper" (window:resize)="onResize()">
+  <div class="anchor">
+    <canvas #canvas></canvas>
+    <table #calendarTable>
+      <tr class="title" #titleRow>
+        <th colspan="7">{{title}}</th>
+      </tr>
+      <tr class="weekdays" #weekdaysRow>
+        <th *ngFor="let d of daysOfWeek" class="day-header">{{d}}</th>
+      </tr>
+      <tr *ngFor="let week of calendar">
+        <td *ngFor="let day of week" [ngClass]="{'ffox-fix-1': isFirefox}">
+          <div class="day-wrapper" [ngClass]="{'ffox-fix-2': isFirefox}">
+            <div [ngClass]="{
+                'day-number':  true,
+                'highlight':   day.highlight,
+                'other-month': day.otherMonth,
+                'void-day':    day.voidDay
+              }" (click)="!day.voidDay && onClick(day.y, day.m, day.d)">{{day.text}}
+              <span class="long-day" [hidden]="day.voidDay || day.otherMonth || !day.longDay">&#x21BA;</span>
+              <span class="short-day" [hidden]="day.voidDay || day.otherMonth || !day.shortDay">&#x21BB;</span>
+            </div>
+            <div><span class="equiSolstice" (click)="day.equiSolstice && onClick(day.equiSolstice.time)"
+            >{{day.equiSolstice && day.equiSolstice.text}}</span>&nbsp;</div>
+            <div class="rise-set-group" [ngClass]="{'edge-ie-fix-1': isEdgeOrIE}">
+              <span class="planet-glyph">{{day.planet}}</span>
+              <div class="rise-set-list">
+                <div *ngFor="let event of day.riseSetTimes" class="rise-set"
+                  (click)="onClick(event.time)">{{event.text}}</div>
+              </div>
+            </div>
+            <div class="phase">
+              <img [src]="day.phaseImage || '/assets/resources/blank.svg'" width="18" height="18" [hidden]="!day.phaseImage" class="phase"
+                (click)="day.phaseTime && onClick(day.phaseTime.time)"><br>
+              <div (click)="day.phaseTime && onClick(day.phaseTime.time)"
+                class="phaseTime">{{day.phaseTime && day.phaseTime.text}}</div>
+            </div>
+            <div class="daylight" [ngClass]="{'edge-ie-fix-2': isEdgeOrIE}">{{day.daylight}}</div>
+          </div>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>

@@ -1,0 +1,58 @@
+table {
+  border: 1px solid #D8D8D8;
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
+td, th {
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 12px;
+  font-weight: normal;
+  color: black;
+  background: white;
+  padding: 1px 3px;
+  cursor: default;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+td {
+  cursor: pointer;
+}
+
+.arrow {
+  background: white;
+  cursor: pointer;
+}
+
+.day-header {
+  font-size: 9px;
+  background: #EEE;
+}
+
+.highlight {
+  background: #CFF;
+}
+
+.short-day {
+  color: #C00;
+}
+
+.long-day {
+  color: #0A0;
+}
+
+.other-month {
+  font-size: 9px;
+  color: #999;
+}
+
+.void-day {
+  font-size: 9px;
+  color: #999;
+  cursor: not-allowed;
+}

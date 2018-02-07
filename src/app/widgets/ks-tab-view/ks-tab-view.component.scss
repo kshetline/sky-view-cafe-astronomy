@@ -1,0 +1,32 @@
+ul.ks-tabs {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+}
+
+ul.ks-tabs > li {
+  display: inline-block;
+  margin: 0 0.1em;
+  padding: 0.5em 1em;
+  background-color: #EEEEF4;
+  color: #555555;
+  border: 1px solid #CCCCD6;
+  border-top-left-radius: 4px;
+  border-top-right-radius: 4px;
+  border-bottom: none;
+  cursor: pointer;
+}
+
+ul.ks-tabs > li:hover {
+  background-color: #F7F7FA;
+}
+
+ul.ks-tabs > li.ks-active {
+  background-color: white;
+  cursor: default;
+}
+
+:host div {
+  height: calc(100% - 2.6em);
+}
