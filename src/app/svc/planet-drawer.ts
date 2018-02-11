@@ -20,8 +20,8 @@
   other uses are restricted.
 */
 
-import { asin, floor, limitNeg1to1, max, min, mod, PI, round, sqrt, tan_deg } from '../util/ks-math';
-import { fillEllipse, getPixel, setPixel } from '../util/ks-util';
+import { asin, floor, limitNeg1to1, max, min, mod, PI, round, sqrt, tan_deg } from 'ks-math';
+import { fillEllipse, getPixel, setPixel } from 'ks-util';
 
 export abstract class PlanetDrawer {
   protected scaledCylinderCanvas: HTMLCanvasElement;

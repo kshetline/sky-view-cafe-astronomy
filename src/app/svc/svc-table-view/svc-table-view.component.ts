@@ -25,7 +25,7 @@ import { AppService, CurrentTab, Location, UserSetting } from '../../app.service
 import { AstroDataService } from '../../astronomy/astro-data.service';
 import { KsDateTime } from '../../util/ks-date-time';
 import { KsTimeZone } from '../../util/ks-timezone';
-import { abs, ceil, max } from '../../util/ks-math';
+import { abs, ceil, max } from 'ks-math';
 import * as _ from 'lodash';
 import { EventFinder } from '../../astronomy/event-finder';
 import { ISkyObserver } from '../../astronomy/i-sky-observer';

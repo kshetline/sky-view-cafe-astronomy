@@ -20,17 +20,16 @@
   other uses are restricted.
 */
 
-import { GenericView, DrawingContext } from '../generic-view';
+import { DrawingContext, GenericView } from '../generic-view';
 import { AfterViewInit, Component, ElementRef, ViewChild } from '@angular/core';
-import { CurrentTab, AppService, UserSetting, Location } from '../../app.service';
+import { AppService, CurrentTab, Location, UserSetting } from '../../app.service';
 import { getInsolationColor } from '../../astronomy/astronomy-util';
 import { KsTimeZone } from '../../util/ks-timezone';
 import { KsDateTime } from '../../util/ks-date-time';
-import { floor, min, round } from '../../util/ks-math';
-import { strokeLine } from '../../util/ks-util';
+import { floor, FMT_DD, FMT_MINS, min, round } from 'ks-math';
+import { strokeLine } from 'ks-util';
 import { SafeStyle } from '@angular/platform-browser';
 import { MOON, SUN } from '../../astronomy/astro-constants';
-import { FMT_DD, FMT_MINS } from '../../math/angle';
 import { UT_to_TDB } from '../../astronomy/ut-converter';
 
 export const  VIEW_INSOLATION = 'insolation';

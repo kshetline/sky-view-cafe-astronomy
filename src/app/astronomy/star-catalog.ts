@@ -19,11 +19,9 @@
 
 import { AstroDataService } from './astro-data.service';
 import { KsArrayBufferReader } from '../util/ks-array-buffer-reader';
-import { abs, cos, mod, sin_deg, PI, sign, sin, tan, to_radian } from '../util/ks-math';
+import { abs, cos, mod, PI, sign, sin, sin_deg, SphericalPosition, tan, to_radian, Unit } from 'ks-math';
 import { ABERRATION, JD_J2000, NO_PRECESSION, NUTATION, OBLIQUITY_J2000, UNKNOWN_MAGNITUDE } from './astro-constants';
 import { Ecliptic, NMode } from './ecliptic';
-import { SphericalPosition } from '../math/spherical-position';
-import { Unit } from '../math/angle';
 import { ISkyObserver } from './i-sky-observer';
 import { UT_to_TDB } from './ut-converter';
 

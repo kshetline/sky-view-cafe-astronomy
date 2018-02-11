@@ -20,7 +20,7 @@
 import { AfterViewInit, Component, ElementRef, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { Observable, Subscription } from 'rxjs';
-import { FontMetrics, getCssValue, getFont, getFontMetrics, getTextWidth, isWindows } from '../../util/ks-util';
+import { FontMetrics, getCssValue, getFont, getFontMetrics, getTextWidth, isWindows } from 'ks-util';
 import * as _ from 'lodash';
 
 export interface SequenceItemInfo {

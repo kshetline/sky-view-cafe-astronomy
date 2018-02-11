@@ -22,8 +22,7 @@
 
 import { MoonInfo, PlanetaryMoons } from './planetary-moons';
 import { DELAYED_TIME, FIRST_SATURN_MOON, JD_B1950, LAST_SATURN_MOON, SATURN, SATURN_FLATTENING } from './astro-constants';
-import { SphericalPosition3D } from '../math/spherical-position-3d';
-import { abs, asin_deg, atan2, atan2_deg, cos, cos_deg, sin, sin_deg, sqrt, squared, to_degree } from '../util/ks-math';
+import { abs, asin_deg, atan2, atan2_deg, cos, cos_deg, sin, sin_deg, SphericalPosition3D, sqrt, squared, to_degree } from 'ks-math';
 import { Ecliptic } from './ecliptic';
 
 const s1 = sin_deg(28.0817);

@@ -18,10 +18,10 @@
 */
 
 import * as _ from 'lodash';
-import * as M_ from './ks-math';
-import { padLeft } from './ks-util';
+import { padLeft } from 'ks-util';
 import { getDateOfNthWeekdayOfMonth_SGC, getDayOnOrAfter_SGC, LAST } from './ks-calendar';
 import { dateAndTimeFromMillis_SGC, DAY_MSEC, millisFromDateTime_SGC, MINUTE_MSEC } from './ks-date-time-zone-common';
+import { div_tt0, mod2 } from 'ks-math';
 
 export interface RegionAndSubzones {
   region: string;
@@ -299,7 +299,7 @@ export class KsTimeZone {
     else  if (matches[0] === 'LMT') {
       longitude = (!longitude ? 0 : longitude);
 
-      zone = new KsTimeZone({zoneName: 'LMT', currentUtcOffset: Math.round(M_.mod2(longitude, 360) * 4),
+      zone = new KsTimeZone({zoneName: 'LMT', currentUtcOffset: Math.round(mod2(longitude, 360) * 4),
                              usesDst: false, dstOffset: 0, transitions: null});
     }
     else if (matches[0] === 'OS') {
@@ -485,7 +485,7 @@ export class KsTimeZone {
     let result = offsetMinutes < 0 ? '-' : '+';
 
     offsetMinutes = Math.abs(offsetMinutes);
-    result += padLeft(M_.div_tt0(offsetMinutes, 60), 2, '0') + ':' + padLeft(offsetMinutes % 60, 2, '0');
+    result += padLeft(div_tt0(offsetMinutes, 60), 2, '0') + ':' + padLeft(offsetMinutes % 60, 2, '0');
 
     return result;
   }

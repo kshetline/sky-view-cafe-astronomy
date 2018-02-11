@@ -33,8 +33,8 @@ import {
 } from '../../astronomy/astro-constants';
 import { YMDDate } from '../../util/ks-calendar';
 import { DatePipe } from '@angular/common';
-import { abs, ceil, floor, max, min, round } from '../../util/ks-math';
-import { isEdge, isFirefox, isIE } from '../../util/ks-util';
+import { abs, ceil, floor, max, min, round } from 'ks-math';
+import { isEdge, isFirefox, isIE } from 'ks-util';
 import * as _ from 'lodash';
 import { AstroEvent, EventFinder } from '../../astronomy/event-finder';
 import { ISkyObserver } from '../../astronomy/i-sky-observer';

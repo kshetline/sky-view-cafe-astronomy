@@ -21,16 +21,14 @@
 */
 
 import {
-  GenericPlanetaryView, DrawingContextPlanetary, highlightedStarColor, LABEL_TYPE, NONPLANET, SELECTION_TYPE, SortablePlanet,
-  SUBJECT, FAR_AWAY
+  DrawingContextPlanetary, FAR_AWAY, GenericPlanetaryView, highlightedStarColor, LABEL_TYPE, NONPLANET, SELECTION_TYPE,
+  SortablePlanet, SUBJECT
 } from './generic-planetary-view';
 import { AfterViewInit } from '@angular/core';
 import { AppService, CurrentTab } from '../app.service';
-import { strokeEllipse } from '../util/ks-util';
-import { SphericalPosition3D } from '../math/spherical-position-3d';
-import { LINE_BREAK, LABEL_ANCHOR } from '../astronomy/star-catalog';
-import { max, min, Point, pow, round } from '../util/ks-math';
-import { SphericalPosition } from '../math/spherical-position';
+import { strokeEllipse } from 'ks-util';
+import { max, min, Point, pow, round, SphericalPosition, SphericalPosition3D } from 'ks-math';
+import { LABEL_ANCHOR, LINE_BREAK } from '../astronomy/star-catalog';
 import * as _ from 'lodash';
 import { NO_MATCH, REFRACTION } from '../astronomy/astro-constants';
 

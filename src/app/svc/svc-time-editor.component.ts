@@ -21,10 +21,9 @@ import { Component, forwardRef, Input } from '@angular/core';
 import { NG_VALUE_ACCESSOR, ControlValueAccessor } from '@angular/forms';
 import { KsSequenceEditorComponent, BACKGROUND_ANIMATIONS, SequenceItemInfo } from '../widgets/ks-sequence-editor/ks-sequence-editor.component';
 import { KsDateTime, DateTimeField } from '../util/ks-date-time';
-import { abs, max, min } from '../util/ks-math';
+import { abs, div_tt0, max, min } from 'ks-math';
 import { KsTimeZone } from '../util/ks-timezone';
 import { Observable } from 'rxjs';
-import * as M_ from '../util/ks-math';
 import { SVC_MAX_YEAR, SVC_MIN_YEAR } from '../app.service';
 import { DateAndTime } from '../util/ks-date-time-zone-common';
 
@@ -184,29 +183,29 @@ export class SvcTimeEditorComponent extends KsSequenceEditorComponent implements
     else
       i[0].value = NO_BREAK_SPACE;
 
-    const y4 = M_.div_tt0(y, 1000);
-    const y3 = M_.div_tt0(y - y4 * 1000, 100);
-    const y2 = M_.div_tt0(y - y4 * 1000 - y3 * 100, 10);
+    const y4 = div_tt0(y, 1000);
+    const y3 = div_tt0(y - y4 * 1000, 100);
+    const y2 = div_tt0(y - y4 * 1000 - y3 * 100, 10);
     const y1 = y % 10;
 
     [i[1].value, i[2].value, i[3].value, i[4].value] = [y4, y3, y2, y1];
 
-    const M2 = M_.div_tt0(wallTime.m, 10);
+    const M2 = div_tt0(wallTime.m, 10);
     const M1 = wallTime.m % 10;
 
     [i[6].value, i[7].value] = [M2, M1];
 
-    const d2 = M_.div_tt0(wallTime.d, 10);
+    const d2 = div_tt0(wallTime.d, 10);
     const d1 = wallTime.d % 10;
 
     [i[9].value, i[10].value] = [d2, d1];
 
-    const h2 = M_.div_tt0(wallTime.hrs, 10);
+    const h2 = div_tt0(wallTime.hrs, 10);
     const h1 = wallTime.hrs % 10;
 
     [i[12].value, i[13].value] = [h2, h1];
 
-    const m2 = M_.div_tt0(wallTime.min, 10);
+    const m2 = div_tt0(wallTime.min, 10);
     const m1 = wallTime.min % 10;
 
     [i[15].value, i[16].value] = [m2, m1];

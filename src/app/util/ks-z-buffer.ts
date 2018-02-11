@@ -18,7 +18,7 @@
 */
 
 import * as _ from 'lodash';
-import { strokeCircle, strokeLine } from './ks-util';
+import { strokeCircle, strokeLine } from 'ks-util';
 
 enum DrawAction {FILLED_RECT, LINE, CIRCLE, RECT}
 

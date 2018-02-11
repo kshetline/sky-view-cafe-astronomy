@@ -20,9 +20,8 @@
   other uses are restricted.
 */
 
-import { SphericalPosition } from '../math/spherical-position';
 import * as _ from 'lodash';
-import { floor, mod } from '../util/ks-math';
+import { floor, mod, SphericalPosition } from 'ks-math';
 
 export class MilkyWay {
   private static milkyWayPixels: ImageData;

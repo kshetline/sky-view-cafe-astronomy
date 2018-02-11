@@ -17,8 +17,8 @@
   OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-import { abs, div_rd, round, sign } from '../util/ks-math';
-import { padLeft } from '../util/ks-util';
+import { abs, div_rd, round, sign } from 'ks-math';
+import { padLeft } from 'ks-util';
 
 export function formatLatitude(lat: number): string {
   const theSign = sign(lat);

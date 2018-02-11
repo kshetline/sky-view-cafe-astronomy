@@ -20,9 +20,7 @@
   presented by Jean Meeus.
 */
 
-import { Unit } from '../math/angle';
-import { cos, sin, to_radian } from '../util/ks-math';
-import { SphericalPosition3D } from '../math/spherical-position-3d';
+import { cos, sin, SphericalPosition3D, to_radian, Unit } from 'ks-math';
 import { JD_J2000 } from './astro-constants';
 import { Ecliptic } from './ecliptic';
 

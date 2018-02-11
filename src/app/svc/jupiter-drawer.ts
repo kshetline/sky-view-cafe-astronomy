@@ -26,7 +26,7 @@ import { AstroDataService } from '../astronomy/astro-data.service';
 import { JpegCommentReader } from '../util/ks-read-jpeg-comment';
 import { HttpClient } from '@angular/common/http';
 import { JupiterInfo } from '../astronomy/jupiter-info';
-import { mod } from '../util/ks-math';
+import { mod } from 'ks-math';
 
 export class JupiterDrawer extends PlanetDrawer {
   private static jupiterImage: HTMLImageElement;

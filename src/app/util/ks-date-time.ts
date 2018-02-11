@@ -21,8 +21,8 @@ import {
   getDayNumber_SGC, getISOFormatDate, GregorianChange, handleVariableDateArgs, KsCalendar, YearOrDate, YMDDate
 } from './ks-calendar';
 import * as _ from 'lodash';
-import { div_rd, mod, round } from './ks-math';
-import { padLeft } from './ks-util';
+import { div_rd, mod, round } from 'ks-math';
+import { padLeft } from 'ks-util';
 import { KsTimeZone } from './ks-timezone';
 import { DateAndTime, DAY_MSEC, MINUTE_MSEC } from './ks-date-time-zone-common';
 

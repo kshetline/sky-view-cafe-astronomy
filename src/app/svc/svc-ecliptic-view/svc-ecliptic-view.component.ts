@@ -21,24 +21,22 @@
 */
 
 import {
-  GenericSkyView, eclipticColor, eclipticGridColor, equatorColor, horizonColor, horizonPrintColor, equatorPrintColor, eclipticPrintColor, eclipticGridPrintColor
+  eclipticColor, eclipticGridColor, eclipticGridPrintColor, eclipticPrintColor, equatorColor, equatorPrintColor, GenericSkyView,
+  horizonColor, horizonPrintColor
 } from '../generic-sky-view';
 import {
-  DrawingContextPlanetary, MARQUEE_ECLIPTIC, MARQUEE_EQUATORIAL, MARQUEE_MAGNITUDE, MARQUEE_ILLUMINATION, MARQUEE_SIZE,
-  NONPLANET, OUTER_LABEL_GAP, SUBJECT
+  DrawingContextPlanetary, MARQUEE_ECLIPTIC, MARQUEE_EQUATORIAL, MARQUEE_ILLUMINATION, MARQUEE_MAGNITUDE, MARQUEE_SIZE, NONPLANET,
+  OUTER_LABEL_GAP, SUBJECT
 } from '../generic-planetary-view';
 import { AfterViewInit, Component, ElementRef, ViewChild } from '@angular/core';
 import { AppService, CurrentTab, UserSetting } from '../../app.service';
 import * as C_ from '../../astronomy/astro-constants';
-import {
-  abs, ceil, cos, cos_deg, floor, limitNeg1to1, max, min, Point,
-  round, sin, sin_deg, tan_deg, TWO_PI, squared
-} from '../../util/ks-math';
-import { strokeCircle, strokeLine } from '../../util/ks-util';
 import { MOON } from '../../astronomy/astro-constants';
-import { Angle } from '../../math/angle';
-import { SphericalPosition } from '../../math/spherical-position';
-import { Unit } from '../../math/angle';
+import {
+  abs, Angle, ceil, cos, cos_deg, floor, limitNeg1to1, max, min, Point, round, sin, sin_deg, SphericalPosition, squared, tan_deg,
+  TWO_PI, Unit
+} from 'ks-math';
+import { strokeCircle, strokeLine } from 'ks-util';
 import { ADDITIONALS, PROPERTY_ADDITIONALS } from '../generic-view';
 
 

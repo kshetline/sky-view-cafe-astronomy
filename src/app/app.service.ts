@@ -29,7 +29,7 @@ import { HttpClient } from '@angular/common/http';
 import * as _ from 'lodash';
 import { DomSanitizer } from '@angular/platform-browser';
 import { KsCalendar } from './util/ks-calendar';
-import { ceil } from './util/ks-math';
+import { ceil } from 'ks-math';
 
 export const SVC_MIN_YEAR = -6000;
 export const SVC_MAX_YEAR = 9999;

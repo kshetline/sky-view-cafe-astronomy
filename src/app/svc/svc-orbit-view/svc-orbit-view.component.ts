@@ -25,12 +25,11 @@ import {
   planetColors, SELECTION_TYPE, SUBJECT, LABEL_TYPE, LabelInfo, ASTEROID_COLOR_INDEX, COMET_COLOR_INDEX, planetPrintColors
 } from '../generic-planetary-view';
 import { AfterViewInit, Component, ElementRef, ViewChild } from '@angular/core';
-import { abs, cos_deg, floor, log10, max, min, mod, mod2, Point, Point3D, pow, round, sin_deg,
-} from '../../util/ks-math';
-import { SphericalPosition3D } from '../../math/spherical-position-3d';
+import { abs, cos_deg, floor, log10, max, min, mod, mod2, Point, Point3D, pow, round, SphericalPosition3D, sin_deg,
+} from 'ks-math';
 import { CurrentTab, AppService, UserSetting } from '../../app.service';
 import { EARTH, MARS, MOON, NEPTUNE, PLUTO, REFRACTION, SATURN, SUN } from '../../astronomy/astro-constants';
-import { colorFromRGB, parseColor, replaceAlpha, RGBA } from '../../util/ks-util';
+import { colorFromRGB, parseColor, replaceAlpha, RGBA } from 'ks-util';
 import { ZBuffer } from '../../util/ks-z-buffer';
 import { SolarSystem } from '../../astronomy/solar-system';
 import { NMode } from '../../astronomy/ecliptic';

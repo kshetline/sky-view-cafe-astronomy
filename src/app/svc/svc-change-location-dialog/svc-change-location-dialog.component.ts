@@ -23,7 +23,7 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { AppService, Location } from '../../app.service';
 import { formatLatitude, formatLongitude } from '../svc-util';
-import { mod, floor } from '../../util/ks-math';
+import { mod, floor } from 'ks-math';
 
 @Component({
   selector: 'svc-change-location-dialog',

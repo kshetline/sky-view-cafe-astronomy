@@ -17,11 +17,10 @@
   OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-import { abs, acos, acos_deg, asin_deg, atan_deg, atan2_deg, cos, cos_deg, exp, limitNeg1to1, log, log10, max, min, mod, mod2,
-         pow, sin, sin_deg, sqrt, tan, tan_deg, to_radian, TWO_PI } from '../util/ks-math';
-import { Angle, Unit } from '../math/angle';
-import { SphericalPosition } from '../math/spherical-position';
-import { SphericalPosition3D } from '../math/spherical-position-3d';
+import {
+  abs, acos, acos_deg, Angle, asin_deg, atan2_deg, atan_deg, cos, cos_deg, exp, limitNeg1to1, log, log10, max, min, mod, mod2, pow,
+  sin, sin_deg, SphericalPosition, SphericalPosition3D, sqrt, tan, tan_deg, to_radian, TWO_PI, Unit
+} from 'ks-math';
 import { ISkyObserver } from './i-sky-observer';
 import { Ecliptic, NMode } from './ecliptic';
 import { MeeusMoon } from './meeus-moon';
@@ -29,11 +28,10 @@ import { Vsop87Planets } from './vsop87-planets';
 import { Pluto } from './pluto';
 import { TDB_to_UT, UT_to_TDB } from './ut-converter';
 import {
-  HIGH_PRECISION, JD_J2000, LOW_PRECISION, FIRST_PLANET, SUN, MERCURY, VENUS, EARTH, MOON, MARS, JUPITER, SATURN,
-  URANUS,
-  NEPTUNE, PLUTO, LAST_PLANET, NO_MATCH, QUICK_PLANET, DEFAULT_FLAGS, TOPOCENTRIC, NUTATION, QUICK_SUN, ASTEROID_BASE,
-  ASTEROID_MAX, COMET_BASE, COMET_MAX, ABERRATION, ASTROMETRIC, DELAYED_TIME, LIGHT_DAYS_PER_AU, SIGNED_HOUR_ANGLE,
-  TRUE_DISTANCE, UNKNOWN_MAGNITUDE, KM_PER_AU, EARTH_RADIUS_KM, SUN_RADIUS_KM, MOON_RADIUS_KM, EARTH_RADIUS_POLAR_KM
+  ABERRATION, ASTEROID_BASE, ASTEROID_MAX, ASTROMETRIC, COMET_BASE, COMET_MAX, DEFAULT_FLAGS, DELAYED_TIME, EARTH, EARTH_RADIUS_KM,
+  EARTH_RADIUS_POLAR_KM, FIRST_PLANET, HIGH_PRECISION, JD_J2000, JUPITER, KM_PER_AU, LAST_PLANET, LIGHT_DAYS_PER_AU, LOW_PRECISION,
+  MARS, MERCURY, MOON, MOON_RADIUS_KM, NEPTUNE, NO_MATCH, NUTATION, PLUTO, QUICK_PLANET, QUICK_SUN, SATURN, SIGNED_HOUR_ANGLE, SUN,
+  SUN_RADIUS_KM, TOPOCENTRIC, TRUE_DISTANCE, UNKNOWN_MAGNITUDE, URANUS, VENUS
 } from './astro-constants';
 import * as _ from 'lodash';
 import { AdditionalOrbitingObjects } from './additional-orbiting-objects';

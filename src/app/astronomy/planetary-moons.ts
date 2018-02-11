@@ -20,9 +20,9 @@
 import { SolarSystem } from './solar-system';
 import * as _ from 'lodash';
 import { UT_to_TDB } from './ut-converter';
-import { floor, max, min, sqrt } from '../util/ks-math';
+import { floor, max, min, sqrt } from 'ks-math';
 import { FIRST_JUPITER_MOON, NO_MATCH } from './astro-constants';
-import { extendDelimited } from '../util/ks-util';
+import { extendDelimited } from 'ks-util';
 
 export const AS_SEEN_FROM_EARTH = false;
 export const AS_SEEN_FROM_SUN   = true;

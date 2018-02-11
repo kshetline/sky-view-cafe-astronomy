@@ -26,7 +26,7 @@
 
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { urlEncodeParams } from '../util/ks-util';
+import { urlEncodeParams } from 'ks-util';
 
 export interface AtlasResults {
   originalSearch: string;

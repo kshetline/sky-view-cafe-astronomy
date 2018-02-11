@@ -21,10 +21,10 @@
 */
 
 import { JD_J2000, OBLIQUITY_J2000 } from './astro-constants';
-import { Angle, Unit } from '../math/angle';
-import { SphericalPosition } from '../math/spherical-position';
-import { SphericalPosition3D } from '../math/spherical-position-3d';
-import { abs, asin, atan2, cos, cos_deg, HALF_PI, limitNeg1to1, PI, sin, sin_deg, sqrt } from '../util/ks-math';
+import {
+  abs, Angle, asin, atan2, cos, cos_deg, HALF_PI, limitNeg1to1, PI, sin, sin_deg, SphericalPosition, SphericalPosition3D,
+  sqrt, Unit
+} from 'ks-math';
 import * as _ from 'lodash';
 
 export interface Nutation {

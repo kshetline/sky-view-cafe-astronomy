@@ -18,7 +18,7 @@
 */
 
 import { getDateFromDayNumber_SGC, getDayNumber_SGC, YMDDate } from './ks-calendar';
-import { div_rd, mod } from './ks-math';
+import { div_rd, mod } from 'ks-math';
 
 export interface DateAndTime extends YMDDate {
   hrs: number;

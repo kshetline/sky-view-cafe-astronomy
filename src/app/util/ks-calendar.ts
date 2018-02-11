@@ -18,8 +18,8 @@
 */
 
 import * as _ from 'lodash';
-import * as M_ from './ks-math';
-import * as S_ from './ks-util';
+import { div_rd, div_tt0, mod } from 'ks-math';
+import { padLeft } from 'ks-util';
 
 export enum CalendarType {PURE_GREGORIAN, PURE_JULIAN}
 export const GREGORIAN_CHANGE_MIN_YEAR = 300;
@@ -96,8 +96,8 @@ export function getDayNumberGregorian(yearOrDate: YearOrDate, month?: number, da
   while (month <  1) { month += 12; --year; }
   while (month > 12) { month -= 12; ++year; }
 
-  return 367 * year - M_.div_rd(7 * (year + M_.div_tt0(month + 9, 12)), 4) - M_.div_tt0(3 * (M_.div_tt0(year + M_.div_tt0(month - 9, 7), 100) + 1), 4) +
-    M_.div_tt0(275 * month, 9) + day - 719559;
+  return 367 * year - div_rd(7 * (year + div_tt0(month + 9, 12)), 4) - div_tt0(3 * (div_tt0(year + div_tt0(month - 9, 7), 100) + 1), 4) +
+    div_tt0(275 * month, 9) + day - 719559;
 }
 
 export function getDayNumberJulian(yearOrDate: YearOrDate, month?: number, day?: number): number {
@@ -106,7 +106,7 @@ export function getDayNumberJulian(yearOrDate: YearOrDate, month?: number, day?:
   while (month <  1) { month += 12; --year; }
   while (month > 12) { month -= 12; ++year; }
 
-  return 367 * year - M_.div_rd(7 * (year + M_.div_tt0(month + 9, 12)), 4) + M_.div_tt0(275 * month, 9) + day - 719561;
+  return 367 * year - div_rd(7 * (year + div_tt0(month + 9, 12)), 4) + div_tt0(275 * month, 9) + day - 719561;
 }
 
 // Always returns 1. This function exists only to parallel getFirstDateInMonth, which can be a different
@@ -172,7 +172,7 @@ export function getDaysInYear_SGC(year: number): number {
  * @return {number} Day of week as 0-6: 0 for Sunday, 1 for Monday... 6 for Saturday.
  */
 export function getDayOfWeek(dayNum: number): number {
-  return M_.mod(dayNum + 4, 7);
+  return mod(dayNum + 4, 7);
 }
 
 /**
@@ -188,7 +188,7 @@ export function getDayOfWeek(dayNum: number): number {
  */
 export function getDayOfWeek_SGC(yearOrDateOrDayNum: YearOrDate, month?: number, day?: number): number {
   if (_.isNumber(yearOrDateOrDayNum) && _.isUndefined(month))
-    return M_.mod(<number> yearOrDateOrDayNum + 4, 7);
+    return mod(<number> yearOrDateOrDayNum + 4, 7);
   else
     return getDayOfWeek(getDayNumber_SGC(yearOrDateOrDayNum, month, day));
 }
@@ -217,7 +217,7 @@ export function getDateOfNthWeekdayOfMonth_SGC(year: number, month: number, dayO
   if (dayOfWeek === dayOfTheWeek && index === 1)
     return day;
 
-  dayNum += M_.mod(dayOfTheWeek - dayOfWeek, 7);
+  dayNum += mod(dayOfTheWeek - dayOfWeek, 7);
   ymd = getDateFromDayNumber_SGC(dayNum);
 
   while (ymd.m === month) {
@@ -246,7 +246,7 @@ export function getDayOfWeekInMonthCount_SGC(year: number, month: number, dayOfT
 export function getDayOnOrAfter_SGC(year: number, month: number, dayOfTheWeek: number, minDate: number): number {
   const dayNum = getDayNumber_SGC(year, month, minDate);
   const dayOfWeek = getDayOfWeek(dayNum);
-  const delta = M_.mod(dayOfTheWeek - dayOfWeek, 7);
+  const delta = mod(dayOfTheWeek - dayOfWeek, 7);
 
   if (year === 1582 && month === 10) {
     const ymd = getDateFromDayNumber_SGC(dayNum + delta);
@@ -269,7 +269,7 @@ export function getDayOnOrAfter_SGC(year: number, month: number, dayOfTheWeek: n
 export function getDayOnOrBefore_SGC(year: number, month: number, dayOfTheWeek: number, maxDate: number): number {
   const dayNum = getDayNumber_SGC(year, month, maxDate);
   const dayOfWeek = getDayOfWeek(dayNum);
-  const delta = M_.mod(dayOfWeek - dayOfTheWeek, 7);
+  const delta = mod(dayOfWeek - dayOfTheWeek, 7);
 
   if (year === 1582 && month === 10) {
     const ymd = getDateFromDayNumber_SGC(dayNum - delta);
@@ -368,9 +368,9 @@ export function isValidDateJulian(yearOrDate: YearOrDate, month?: number, day?: 
 export function getISOFormatDate(yearOrDate: YearOrDate, month?: number, day?: number): string {
   let year: number; [year, month, day] = handleVariableDateArgs(yearOrDate, month, day);
 
-  const yyyy = (year < 0 ? '-' : '') + S_.padLeft(Math.abs(year), 4, '0');
-  const mm   = S_.padLeft(month, 2, '0');
-  const dd   = S_.padLeft(day, 2, '0');
+  const yyyy = (year < 0 ? '-' : '') + padLeft(Math.abs(year), 4, '0');
+  const mm   = padLeft(month, 2, '0');
+  const dd   = padLeft(day, 2, '0');
 
   return yyyy + '-' + mm + '-' + dd;
 }
@@ -616,7 +616,7 @@ export class KsCalendar {
     if (dayOfWeek === dayOfTheWeek && index === 1)
       return day;
 
-    dayNum += M_.mod(dayOfTheWeek - dayOfWeek, 7);
+    dayNum += mod(dayOfTheWeek - dayOfWeek, 7);
     ymd = this.getDateFromDayNumber(dayNum);
 
     while (ymd.m === month) {
@@ -639,13 +639,13 @@ export class KsCalendar {
     const firstDay = this.getDayNumber(year, month, this.getDateOfNthWeekdayOfMonth(year, month, dayOfTheWeek, 1));
     const nextMonth = this.getDayNumber(year, month + 1, 1);
 
-    return M_.div_tt0(nextMonth - firstDay - 1, 7) + 1;
+    return div_tt0(nextMonth - firstDay - 1, 7) + 1;
   }
 
   public getDayOnOrAfter(year: number, month: number, dayOfTheWeek: number, minDate: number): number {
     const dayNum = this.getDayNumber(year, month, minDate);
     const dayOfWeek = getDayOfWeek(dayNum);
-    const delta = M_.mod(dayOfTheWeek - dayOfWeek, 7);
+    const delta = mod(dayOfTheWeek - dayOfWeek, 7);
 
     if (year === this.gcYear && month === this.gcDate) {
       const ymd = this.getDateFromDayNumber(dayNum + delta);
@@ -668,7 +668,7 @@ export class KsCalendar {
   public getDayOnOrBefore(year: number, month: number, dayOfTheWeek: number, maxDate: number): number {
     const dayNum = this.getDayNumber(year, month, maxDate);
     const dayOfWeek = getDayOfWeek(dayNum);
-    const delta = M_.mod(dayOfWeek - dayOfTheWeek, 7);
+    const delta = mod(dayOfWeek - dayOfTheWeek, 7);
 
     if (year === this.gcYear && month === this.gcDate) {
       const ymd = this.getDateFromDayNumber(dayNum - delta);
@@ -700,7 +700,7 @@ export class KsCalendar {
     let currMonth;
 
     // Step back (if necessary) to the nearest prior day matching the requested starting day of the week.
-    dateOffset = M_.mod(startingDayOfWeek - getDayOfWeek(dayNum), -7); // First time I recall ever wanting to use a negative modulus.
+    dateOffset = mod(startingDayOfWeek - getDayOfWeek(dayNum), -7); // First time I recall ever wanting to use a negative modulus.
     dayNum += dateOffset; // dateOffset will be 0 or negative
 
     ymd = this.getDateFromDayNumber(dayNum);

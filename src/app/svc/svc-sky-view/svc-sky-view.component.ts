@@ -21,26 +21,26 @@
 */
 
 import {
-  GenericSkyView, eclipticColor, eclipticGridColor, equatorColor, equatorialGridColor,
-  moonPathColor, sunPathColor, eclipticGridPrintColor, eclipticPrintColor, equatorialGridPrintColor, equatorPrintColor
+  eclipticColor, eclipticGridColor, eclipticGridPrintColor, eclipticPrintColor, equatorColor, equatorialGridColor,
+  equatorialGridPrintColor, equatorPrintColor, GenericSkyView, moonPathColor, sunPathColor
 } from '../generic-sky-view';
 import {
-  DrawingContextPlanetary, FAR_AWAY, LabelInfo, NONPLANET, OUTER_LABEL_GAP, planetColors, SUBJECT,
-  MARQUEE_EQUATORIAL, MARQUEE_HORIZONTAL, MARQUEE_MAGNITUDE, MARQUEE_ILLUMINATION, MARQUEE_SIZE, cometColor, asteroidColor, planetPrintColors
+  asteroidColor, cometColor, DrawingContextPlanetary, FAR_AWAY, LabelInfo, MARQUEE_EQUATORIAL, MARQUEE_HORIZONTAL, MARQUEE_ILLUMINATION,
+  MARQUEE_MAGNITUDE, MARQUEE_SIZE, NONPLANET, OUTER_LABEL_GAP, planetColors, planetPrintColors,
+  SUBJECT
 } from '../generic-planetary-view';
 import { AfterViewInit, Component, ElementRef, ViewChild } from '@angular/core';
 import { AppService, CurrentTab, PROPERTY_NORTH_AZIMUTH, UserSetting, VIEW_APP } from '../../app.service';
 import * as C_ from '../../astronomy/astro-constants';
-import { abs, asin_deg, atan2_deg, ceil, cos, cos_deg, floor, interpolate, limitNeg1to1, max, min, mod, mod2, PI, Point,
-         round, sin, sin_deg, sqrt, tan, tan_deg, TWO_PI } from '../../util/ks-math';
-import { colorFromRGB, drawOutlinedText, padLeft, parseColor, replaceAlpha, strokeLine } from '../../util/ks-util';
-import { AVG_SUN_MOON_RADIUS, LOW_PRECISION, MOON, NO_SELECTION, QUICK_SUN, REFRACTION, REFRACTION_AT_HORIZON, SUN,
-         TOPOCENTRIC } from '../../astronomy/astro-constants';
+import {
+  AVG_SUN_MOON_RADIUS, LOW_PRECISION, MOON, NO_SELECTION, QUICK_SUN, REFRACTION, REFRACTION_AT_HORIZON, SUN, TOPOCENTRIC
+} from '../../astronomy/astro-constants';
+import {
+  abs, Angle, asin_deg, atan2_deg, ceil, cos, cos_deg, floor, interpolate, limitNeg1to1, max, min, mod, mod2, PI, Point, round, sin,
+  sin_deg, SphericalPosition, SphericalPosition3D, sqrt, tan, tan_deg, TWO_PI, Unit
+} from 'ks-math';
+import { colorFromRGB, drawOutlinedText, padLeft, parseColor, replaceAlpha, strokeLine } from 'ks-util';
 import { equatorialToGalactic, getSkyColor, refractedAltitude } from '../../astronomy/astronomy-util';
-import { Angle } from '../../math/angle';
-import { SphericalPosition } from '../../math/spherical-position';
-import { SphericalPosition3D } from '../../math/spherical-position-3d';
-import { Unit } from '../../math/angle';
 import { DAY_MINUTES } from '../../util/ks-date-time-zone-common';
 import { MoonDrawer } from '../moon-drawer';
 import { SolarSystem } from '../../astronomy/solar-system';

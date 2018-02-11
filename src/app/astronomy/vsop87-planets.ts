@@ -25,9 +25,7 @@
 */
 
 import { JD_J2000, MERCURY, NEPTUNE, SUN } from './astro-constants';
-import { Angle, Unit } from '../math/angle';
-import { abs, cos, PI } from '../util/ks-math';
-import { SphericalPosition3D } from '../math/spherical-position-3d';
+import { abs, Angle, cos, PI, SphericalPosition3D, Unit } from 'ks-math';
 
 interface VsopTerm {
   A: number;

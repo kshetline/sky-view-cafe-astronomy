@@ -23,7 +23,7 @@
 import { GenericPlanetaryView, DrawingContextPlanetary, SUBJECT, SELECTION_TYPE, LABEL_TYPE } from '../generic-planetary-view';
 import { AfterViewInit, Component, ElementRef, ViewChild } from '@angular/core';
 import { floor, log10, max, min, PI, Point, pow, round, sin_deg, sqrt
-} from '../../util/ks-math';
+} from 'ks-math';
 import { CurrentTab, AppService, UserSetting } from '../../app.service';
 import { AVG_SUN_MOON_RADIUS, JUPITER, JUPITER_FLATTENING, NAUTICAL_TWILIGHT, REFRACTION_AT_HORIZON, SATURN, SATURN_FLATTENING, SUN } from '../../astronomy/astro-constants';
 import * as _ from 'lodash';
@@ -32,7 +32,7 @@ import { SaturnDrawer } from '../saturn-drawer';
 import { AstroDataService } from '../../astronomy/astro-data.service';
 import { HttpClient } from '@angular/common/http';
 import { PlanetDrawer } from '../planet-drawer';
-import { extendDelimited, fillEllipse, getFontMetrics, padLeft, strokeEllipse } from '../../util/ks-util';
+import { extendDelimited, fillEllipse, getFontMetrics, padLeft, strokeEllipse } from 'ks-util';
 import { AS_SEEN_FROM_SUN, MOON_SHADOW, MoonInfo, PlanetaryMoons } from '../../astronomy/planetary-moons';
 import { JupitersMoons } from '../../astronomy/jupiter-moons';
 import { SaturnMoons } from '../../astronomy/saturn-moons';

@@ -20,20 +20,20 @@
   other uses are restricted.
 */
 
-import { GenericView, DrawingContext } from './generic-view';
+import { DrawingContext, GenericView } from './generic-view';
 import { AfterViewInit } from '@angular/core';
 import { AppService, CurrentTab, PROPERTY_NORTH_AZIMUTH, UserSetting, VIEW_APP } from '../app.service';
 import { SolarSystem } from '../astronomy/solar-system';
-import { abs, cos_deg, floor, intersects, max, min, mod2, Point, Rectangle,
-         round, sin_deg, sqrt, TWO_PI, union } from '../util/ks-math';
-import { getTextWidth, toDefaultLocaleFixed } from '../util/ks-util';
+import {
+  abs, Angle, cos_deg, floor, FMT_MINS, FMT_SECS, intersects, max, min, mod2, Point, Rectangle, round, sin_deg, SphericalPosition,
+  SphericalPosition3D, sqrt, TWO_PI, union
+} from 'ks-math';
+import { getTextWidth, toDefaultLocaleFixed } from 'ks-util';
 import { Ecliptic } from '../astronomy/ecliptic';
-import { SphericalPosition } from '../math/spherical-position';
-import { SphericalPosition3D } from '../math/spherical-position-3d';
 import * as C_ from '../astronomy/astro-constants';
-import { ABERRATION, EARTH, KM_PER_AU, MOON, NEPTUNE, NO_MATCH, NO_SELECTION, NUTATION, PLUTO, SUN,
-         TOPOCENTRIC, UNKNOWN_MAGNITUDE, URANUS } from '../astronomy/astro-constants';
-import { Angle, FMT_MINS, FMT_SECS } from '../math/angle';
+import {
+  ABERRATION, EARTH, KM_PER_AU, MOON, NEPTUNE, NO_MATCH, NO_SELECTION, NUTATION, PLUTO, SUN, TOPOCENTRIC, UNKNOWN_MAGNITUDE, URANUS
+} from '../astronomy/astro-constants';
 import { MOON_SHADOW, PlanetaryMoons } from '../astronomy/planetary-moons';
 
 

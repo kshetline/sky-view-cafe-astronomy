@@ -22,7 +22,7 @@
 
 import { PlanetDrawer } from './planet-drawer';
 import { SATURN_FLATTENING } from '../astronomy/astro-constants';
-import { mod } from '../util/ks-math';
+import { mod } from 'ks-math';
 
 export class SaturnDrawer extends PlanetDrawer {
   private static saturnImage: HTMLImageElement;

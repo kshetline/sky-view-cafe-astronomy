@@ -22,11 +22,10 @@
 
 import { MoonEvents, MoonInfo, PlanetaryMoons } from './planetary-moons';
 import { DELAYED_TIME, FIRST_JUPITER_MOON, JUPITER, JUPITER_FLATTENING, LAST_JUPITER_MOON, MEAN_JUPITER_SYS_II } from './astro-constants';
-import { SphericalPosition3D } from '../math/spherical-position-3d';
-import { abs, atan2, atan_deg, cos, cos_deg, floor, max, min, sin, sin_deg, sqrt, squared } from '../util/ks-math';
+import { abs, atan2, atan_deg, cos, cos_deg, floor, max, min, sin, sin_deg, SphericalPosition3D, sqrt, squared } from 'ks-math';
 import { SolarSystem } from './solar-system';
 import { JupiterInfo } from './jupiter-info';
-import { extendDelimited } from '../util/ks-util';
+import { extendDelimited } from 'ks-util';
 
 export class JupitersMoons extends PlanetaryMoons {
   private static initialized = false;

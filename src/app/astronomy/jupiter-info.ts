@@ -18,12 +18,11 @@
 */
 
 import { AstroDataService } from './astro-data.service';
-import { Angle, Unit } from '../math/angle';
+import { Angle, asin_deg, cos_deg, interpolateTabular, limitNeg1to1, sign, sin_deg, sqrt, squared, Unit } from 'ks-math';
 import { KsArrayBufferReader } from '../util/ks-array-buffer-reader';
 import { KsDateTime } from '../util/ks-date-time';
 import { isNumber, isUndefined } from 'util';
 import { JD_J2000 } from './astro-constants';
-import { asin_deg, cos_deg, interpolateTabular, limitNeg1to1, sign, sin_deg, sqrt, squared } from '../util/ks-math';
 import { TDB_to_UT } from './ut-converter';
 
 export enum DataQuality { GOOD = 1, FAIR, POOR }

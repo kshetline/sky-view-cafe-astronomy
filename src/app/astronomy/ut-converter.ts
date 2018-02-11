@@ -18,7 +18,7 @@
 */
 
 import { JD_J2000 } from './astro-constants';
-import { floor, squared } from '../util/ks-math';
+import { floor, squared } from 'ks-math';
 
 const historicDeltaT = [
 // Values to smooth transition from polynomial used for earlier years.

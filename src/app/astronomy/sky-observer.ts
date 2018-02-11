@@ -18,16 +18,14 @@
 */
 
 import { ISkyObserver } from './i-sky-observer';
-import { abs, asin, atan, atan2, cos, HALF_PI, interpolate, limitNeg1to1, mod, PI, sign, sin, sqrt, tan,
-         to_degree, to_radian, TWO_PI } from '../util/ks-math';
-import { Angle, Unit } from '../math/angle';
-import { SphericalPosition } from '../math/spherical-position';
-import { SphericalPosition3D } from '../math/spherical-position-3d';
+import {
+  abs, Angle, asin, atan, atan2, cos, HALF_PI, interpolate, limitNeg1to1, mod, PI, sign, sin, SphericalPosition, SphericalPosition3D,
+  sqrt, tan, to_degree, to_radian, TWO_PI, Unit
+} from 'ks-math';
 import { refractedAltitude, unrefractedAltitude } from './astronomy-util';
 import { SolarSystem } from './solar-system';
-import { UT_to_TDB, TDB_to_UT } from './ut-converter';
-import { ABERRATION, NUTATION, REFRACTION, TOPOCENTRIC, SUN, KM_PER_AU, EARTH_RADIUS_POLAR_KM,
-         EARTH_RADIUS_KM } from './astro-constants';
+import { TDB_to_UT, UT_to_TDB } from './ut-converter';
+import { ABERRATION, EARTH_RADIUS_KM, EARTH_RADIUS_POLAR_KM, KM_PER_AU, NUTATION, REFRACTION, SUN, TOPOCENTRIC } from './astro-constants';
 import * as _ from 'lodash';
 
 const A90_1SEC = 1.5707915;

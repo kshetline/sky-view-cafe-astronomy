@@ -25,13 +25,11 @@
 // Degrees in, degrees out.
 //
 
-import { floor, interpolate, limitNeg1to1, max, min, pow, round, sqrt, tan_deg } from '../util/ks-math';
-import { SphericalPosition } from '../math/spherical-position';
+import { Angle, floor, interpolate, limitNeg1to1, max, min, pow, round, SphericalPosition, sqrt, tan_deg, Unit } from 'ks-math';
 import { ISkyObserver } from './i-sky-observer';
 import { GALACTIC_ASCENDING_NODE_B1950, GALACTIC_NORTH_B1950, JD_B1950, JD_J2000, LOW_PRECISION, MOON, QUICK_SUN, SUN } from './astro-constants';
 import { SolarSystem } from './solar-system';
-import { blendColors } from '../util/ks-util';
-import { Angle, Unit } from '../math/angle';
+import { blendColors } from 'ks-util';
 import { Ecliptic } from './ecliptic';
 
 export const COLOR_NIGHT                 = 'black';

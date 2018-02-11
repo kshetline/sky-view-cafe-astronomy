@@ -26,17 +26,16 @@ import {
   TWILIGHT_ENDS, UNSEEN_ALL_DAY, URANUS, VENUS, VISIBLE_ALL_DAY, WINTER_SOLSTICE
 } from './astro-constants';
 import { UT_to_TDB } from './ut-converter';
-import { ZeroFinder } from '../math/zero-finder';
-import { div_rd, floor, mod, mod2, max, min, abs, sin_deg, round, sign } from '../util/ks-math';
+import {
+  abs, Angle, div_rd, floor, FMT_DD, FMT_MINS, max, min, MinMaxFinder, mod, mod2, round, sign, sin_deg, Unit, ZeroFinder
+} from 'ks-math';
 import { DateTimeField, KsDateTime } from '../util/ks-date-time';
 import { KsTimeZone } from '../util/ks-timezone';
 import { getISOFormatDate, GregorianChange, KsCalendar, YMDDate } from '../util/ks-calendar';
 import { ISkyObserver } from './i-sky-observer';
 import * as _ from 'lodash';
 import { JupiterInfo } from './jupiter-info';
-import { MinMaxFinder } from '../math/min-max-finder';
 import { JupitersMoons } from './jupiter-moons';
-import { Angle, FMT_DD, FMT_MINS, Unit } from '../math/angle';
 
 export class AstroEvent {
   private _eventType: number;

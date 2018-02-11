@@ -20,7 +20,7 @@
 import { Component, forwardRef, Input } from '@angular/core';
 import { NG_VALUE_ACCESSOR, ControlValueAccessor } from '@angular/forms';
 import { KsSequenceEditorComponent, BACKGROUND_ANIMATIONS } from '../widgets/ks-sequence-editor/ks-sequence-editor.component';
-import { abs, div_rd, min, mod, mod2, round } from '../util/ks-math';
+import { abs, div_rd, min, mod, mod2, round } from 'ks-math';
 import * as _ from 'lodash';
 
 export const SVC_ANGLE_EDITOR_VALUE_ACCESSOR: any = {

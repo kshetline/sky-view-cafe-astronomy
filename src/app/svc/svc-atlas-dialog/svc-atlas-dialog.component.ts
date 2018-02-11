@@ -26,7 +26,7 @@ import { SvcAtlasService, AtlasLocation, AtlasResults } from '../svc-atlas.servi
 import { formatLatitude, formatLongitude } from '../svc-util';
 import { KsTimeZone } from '../../util/ks-timezone';
 import { Message } from 'primeng/primeng';
-import { isFirefox } from '../../util/ks-util';
+import { isFirefox } from 'ks-util';
 import {  } from '@types/googlemaps';
 
 interface LocationInfo {
