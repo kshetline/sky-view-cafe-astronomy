@@ -22,6 +22,7 @@
     "@angular/platform-browser": "^5.2.3",
     "@angular/platform-browser-dynamic": "^5.2.3",
     "@angular/router": "^5.2.3",
+    "array-buffer-reader": "^1.0.0",
     "core-js": "^2.4.1",
     "font-awesome": "^4.7.0",
     "ks-math": "^1.1.0",

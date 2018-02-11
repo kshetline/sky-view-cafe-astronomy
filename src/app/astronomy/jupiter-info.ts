@@ -19,7 +19,7 @@
 
 import { AstroDataService } from './astro-data.service';
 import { Angle, asin_deg, cos_deg, interpolateTabular, limitNeg1to1, sign, sin_deg, sqrt, squared, Unit } from 'ks-math';
-import { KsArrayBufferReader } from '../util/ks-array-buffer-reader';
+import { ArrayBufferReader } from 'array-buffer-reader';
 import { KsDateTime } from '../util/ks-date-time';
 import { isNumber, isUndefined } from 'util';
 import { JD_J2000 } from './astro-constants';
@@ -55,7 +55,7 @@ export class JupiterInfo {
 
   private static readGrsInfo(grsData: ArrayBuffer): void {
     try {
-      const reader = new KsArrayBufferReader(grsData);
+      const reader = new ArrayBufferReader(grsData);
 
       this.preTableGRSDrift = Number(reader.readAnsiLine(true)) / 365.2425; // Convert degrees/year -> degrees/day
       this.postTableGRSDrift = Number(reader.readAnsiLine(true)) / 365.2425;

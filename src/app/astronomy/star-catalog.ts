@@ -18,7 +18,7 @@
 */
 
 import { AstroDataService } from './astro-data.service';
-import { KsArrayBufferReader } from '../util/ks-array-buffer-reader';
+import { ArrayBufferReader } from 'array-buffer-reader';
 import { abs, cos, mod, PI, sign, sin, sin_deg, SphericalPosition, tan, to_radian, Unit } from 'ks-math';
 import { ABERRATION, JD_J2000, NO_PRECESSION, NUTATION, OBLIQUITY_J2000, UNKNOWN_MAGNITUDE } from './astro-constants';
 import { Ecliptic, NMode } from './ecliptic';
@@ -232,7 +232,7 @@ export class StarCatalog {
   }
 
   private readStarData(data: ArrayBuffer): void {
-    const reader = new KsArrayBufferReader(data);
+    const reader = new ArrayBufferReader(data);
     let state = READING.FK5;
     let doDouble = false;
     let fk5Num = 0;
