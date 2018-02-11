@@ -23,15 +23,13 @@
 import { AfterViewInit, Component, ElementRef, ViewChild } from '@angular/core';
 import { AppService, CurrentTab, Location, PROPERTY_GREGORIAN_CHANGE_DATE, SVC_MAX_YEAR, SVC_MIN_YEAR, UserSetting,
          VIEW_APP } from '../../app.service';
-import { KsDateTime } from '../../util/ks-date-time';
-import { KsTimeZone } from '../../util/ks-timezone';
+import { DateAndTime, KsDateTime, KsTimeZone, YMDDate } from 'ks-date-time-zone';
 import {
   EQ_SOLSTICE_EVENT_BASE, FALL_EQUINOX, FIRST_QUARTER, FULL_MOON, JUPITER, LAST_QUARTER, MARS, MERCURY, MOON, NEPTUNE,
   NEW_MOON, PHASE_EVENT_BASE, PLUTO, RISE_EVENT, RISE_SET_EVENT_BASE, SATURN, SET_EVENT, SPRING_EQUINOX,
   SUMMER_SOLSTICE, SUN, TRANSIT_EVENT, TWILIGHT_BEGINS, TWILIGHT_ENDS, UNSEEN_ALL_DAY, URANUS, VENUS, VISIBLE_ALL_DAY,
   WINTER_SOLSTICE
 } from '../../astronomy/astro-constants';
-import { YMDDate } from '../../util/ks-calendar';
 import { DatePipe } from '@angular/common';
 import { abs, ceil, floor, max, min, round } from 'ks-math';
 import { isEdge, isFirefox, isIE } from 'ks-util';
@@ -41,7 +39,6 @@ import { ISkyObserver } from '../../astronomy/i-sky-observer';
 import { MoonDrawer } from '../moon-drawer';
 import { UT_to_TDB } from '../../astronomy/ut-converter';
 import { GenericView } from '../generic-view';
-import { DateAndTime } from '../../util/ks-date-time-zone-common';
 import { SkyObserver } from '../../astronomy/sky-observer';
 
 export const  VIEW_CALENDAR = 'calendar';

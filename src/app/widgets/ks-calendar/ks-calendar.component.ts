@@ -22,10 +22,7 @@ import { DatePipe } from '@angular/common';
 import { NG_VALUE_ACCESSOR, ControlValueAccessor } from '@angular/forms';
 import { Observable, Subscription } from 'rxjs';
 import * as _ from 'lodash';
-
-import { KsDateTime } from '../../util/ks-date-time';
-import { KsTimeZone } from '../../util/ks-timezone';
-import { CalendarType, GregorianChange, YMDDate } from '../../util/ks-calendar';
+import { CalendarType, GregorianChange, KsDateTime, KsTimeZone, YMDDate } from 'ks-date-time-zone';
 
 const CLICK_REPEAT_DELAY = 500;
 const CLICK_REPEAT_RATE  = 100;

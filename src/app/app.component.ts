@@ -24,9 +24,7 @@ import { AfterViewInit, Component, OnDestroy } from '@angular/core';
 import { AppService, currentMinuteMillis, CurrentTab, PROPERTY_GREGORIAN_CHANGE_DATE, UserSetting, VIEW_APP } from './app.service';
 import { Observable, Subscription } from 'rxjs';
 import { MenuItem, Message } from 'primeng/primeng';
-import { KsDateTime } from './util/ks-date-time';
-import { KsTimeZone } from './util/ks-timezone';
-import { YMDDate } from './util/ks-calendar';
+import { KsDateTime, KsTimeZone, YMDDate } from 'ks-date-time-zone';
 
 @Component({
   selector: 'svc-app',

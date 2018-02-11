@@ -29,9 +29,7 @@ import { UT_to_TDB } from './ut-converter';
 import {
   abs, Angle, div_rd, floor, FMT_DD, FMT_MINS, max, min, MinMaxFinder, mod, mod2, round, sign, sin_deg, Unit, ZeroFinder
 } from 'ks-math';
-import { DateTimeField, KsDateTime } from '../util/ks-date-time';
-import { KsTimeZone } from '../util/ks-timezone';
-import { getISOFormatDate, GregorianChange, KsCalendar, YMDDate } from '../util/ks-calendar';
+import { DateTimeField, getISOFormatDate, GregorianChange, KsCalendar, KsDateTime, KsTimeZone, YMDDate } from 'ks-date-time-zone';
 import { ISkyObserver } from './i-sky-observer';
 import * as _ from 'lodash';
 import { JupiterInfo } from './jupiter-info';

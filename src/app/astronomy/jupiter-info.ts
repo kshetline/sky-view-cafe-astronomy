@@ -20,7 +20,7 @@
 import { AstroDataService } from './astro-data.service';
 import { Angle, asin_deg, cos_deg, interpolateTabular, limitNeg1to1, sign, sin_deg, sqrt, squared, Unit } from 'ks-math';
 import { ArrayBufferReader } from 'array-buffer-reader';
-import { KsDateTime } from '../util/ks-date-time';
+import { KsDateTime } from 'ks-date-time-zone';
 import { isNumber, isUndefined } from 'util';
 import { JD_J2000 } from './astro-constants';
 import { TDB_to_UT } from './ut-converter';

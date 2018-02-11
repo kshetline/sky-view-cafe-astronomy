@@ -20,12 +20,10 @@
 import { Component, forwardRef, Input } from '@angular/core';
 import { NG_VALUE_ACCESSOR, ControlValueAccessor } from '@angular/forms';
 import { KsSequenceEditorComponent, BACKGROUND_ANIMATIONS, SequenceItemInfo } from '../widgets/ks-sequence-editor/ks-sequence-editor.component';
-import { KsDateTime, DateTimeField } from '../util/ks-date-time';
+import { DateAndTime, KsDateTime, KsTimeZone, DateTimeField } from 'ks-date-time-zone';
 import { abs, div_tt0, max, min } from 'ks-math';
-import { KsTimeZone } from '../util/ks-timezone';
 import { Observable } from 'rxjs';
 import { SVC_MAX_YEAR, SVC_MIN_YEAR } from '../app.service';
-import { DateAndTime } from '../util/ks-date-time-zone-common';
 
 export const SVC_TIME_EDITOR_VALUE_ACCESSOR: any = {
   provide: NG_VALUE_ACCESSOR,

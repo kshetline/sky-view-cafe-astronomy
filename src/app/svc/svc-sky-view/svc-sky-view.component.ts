@@ -41,7 +41,7 @@ import {
 } from 'ks-math';
 import { colorFromRGB, drawOutlinedText, padLeft, parseColor, replaceAlpha, strokeLine } from 'ks-util';
 import { equatorialToGalactic, getSkyColor, refractedAltitude } from '../../astronomy/astronomy-util';
-import { DAY_MINUTES } from '../../util/ks-date-time-zone-common';
+import { DAY_MINUTES } from 'ks-date-time-zone';
 import { MoonDrawer } from '../moon-drawer';
 import { SolarSystem } from '../../astronomy/solar-system';
 import { MilkyWay } from '../milky-way';

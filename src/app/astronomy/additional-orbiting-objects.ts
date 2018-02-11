@@ -17,16 +17,14 @@
   OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-import { KsDateTime } from '../util/ks-date-time';
+import { KsDateTime, KsTimeZone, parseISODate } from 'ks-date-time-zone';
 import { AstroDataService } from './astro-data.service';
 import { AsteroidCometElements, AsteroidCometInfo, OrbitalElements } from './solar-system';
 import { ASTEROID_BASE, COMET_BASE, K_DEG, K_RAD, NO_MATCH } from './astro-constants';
-import { parseISODate } from '../util/ks-calendar';
 import {
   abs, Angle, atan, cos, cos_deg, cosh, HALF_PI, interpolate, interpolateModular, log, max, min, mod, PI, pow, sign, signZP,
   sin, sin_deg, sinh, SphericalPosition, SphericalPosition3D, sqrt, tan, to_radian, TWO_PI
 } from 'ks-math';
-import { KsTimeZone } from '../util/ks-timezone';
 import * as _ from 'lodash';
 import { Ecliptic } from './ecliptic';
 import { compareCaseSecondary, compareStrings, padLeft, replace } from 'ks-util';

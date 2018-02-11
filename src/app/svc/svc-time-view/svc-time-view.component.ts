@@ -22,12 +22,10 @@
 
 import { Component } from '@angular/core';
 import { AppService, CurrentTab, Location } from '../../app.service';
-import { KsTimeZone } from '../../util/ks-timezone';
-import { KsDateTime } from '../../util/ks-date-time';
+import { DAY_MSEC, KsDateTime, KsTimeZone } from 'ks-date-time-zone';
 import { padLeft, toDefaultLocaleFixed } from 'ks-util';
 import { Angle, FMT_MINS, mod2, Mode, round, Unit } from 'ks-math';
 import { UT_to_TDB } from '../../astronomy/ut-converter';
-import { DAY_MSEC } from '../../util/ks-date-time-zone-common';
 import { SkyObserver } from '../../astronomy/sky-observer';
 
 const nbsp = '\u00A0';

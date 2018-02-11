@@ -28,7 +28,7 @@ import { SolarSystem } from '../astronomy/solar-system';
 import { abs, ceil, max } from 'ks-math';
 import { FontMetrics, isSafari, getFontMetrics } from 'ks-util';
 import * as _ from 'lodash';
-import { KsDateTime } from '../util/ks-date-time';
+import { KsDateTime } from 'ks-date-time-zone';
 import { ASTEROID_BASE, COMET_BASE, EARTH, FIRST_PLANET, HALF_MINUTE, LAST_PLANET, NO_MATCH } from '../astronomy/astro-constants';
 import { UT_to_TDB } from '../astronomy/ut-converter';
 import { SafeStyle } from '@angular/platform-browser';

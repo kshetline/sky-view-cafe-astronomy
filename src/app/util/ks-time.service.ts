@@ -23,7 +23,7 @@
 
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { ZoneInfo } from './ks-timezone';
+import { ZoneInfo } from 'ks-date-time-zone';
 
 export interface RegionAndSubzones {
   region: string;

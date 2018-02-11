@@ -24,7 +24,7 @@ import { Component, ElementRef, EventEmitter, Input, Output, ViewChild } from '@
 import { AppService, Location } from '../../app.service';
 import { SvcAtlasService, AtlasLocation, AtlasResults } from '../svc-atlas.service';
 import { formatLatitude, formatLongitude } from '../svc-util';
-import { KsTimeZone } from '../../util/ks-timezone';
+import { KsTimeZone } from 'ks-date-time-zone';
 import { Message } from 'primeng/primeng';
 import { isFirefox } from 'ks-util';
 import {  } from '@types/googlemaps';

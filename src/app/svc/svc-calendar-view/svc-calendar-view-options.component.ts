@@ -26,8 +26,7 @@ import { AppService, SVC_MAX_YEAR, SVC_MIN_YEAR, UserSetting } from '../../app.s
 import { VIEW_CALENDAR, PROPERTY_KEY_MOON_PHASES, PROPERTY_EQUISOLSTICE, PROPERTY_DAILY_DAYLIGHT, PROPERTY_DAILY_MOON_PHASE,
          PROPERTY_EVENT_TYPE, PROPERTY_INCLUDE_TRANSITS
 } from './svc-calendar-view.component';
-import { DateTimeField, KsDateTime } from '../../util/ks-date-time';
-import { KsTimeZone } from '../../util/ks-timezone';
+import { DateTimeField, KsDateTime, KsTimeZone } from 'ks-date-time-zone';
 import { Observable, Subscription } from 'rxjs';
 
 const CLICK_REPEAT_DELAY = 500;

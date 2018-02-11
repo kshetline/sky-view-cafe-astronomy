@@ -26,7 +26,7 @@ import {
   PROPERTY_TWILIGHT_DEGREES, PROPERTY_TWILIGHT_MINUTES, VIEW_APP
 } from '../../app.service';
 import { MenuItem } from 'primeng/primeng';
-import { getISOFormatDate, parseISODate, YMDDate } from '../../util/ks-calendar';
+import { getISOFormatDate, parseISODate, YMDDate } from 'ks-date-time-zone';
 
 interface MenuItemPlus extends MenuItem {
   value?: any;

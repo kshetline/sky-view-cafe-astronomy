@@ -22,7 +22,7 @@ import { Component, EventEmitter, forwardRef, OnInit, Output } from '@angular/co
 import { NG_VALUE_ACCESSOR, ControlValueAccessor } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { AppService } from '../../app.service';
-import { KsTimeZone, RegionAndSubzones } from '../../util/ks-timezone';
+import { KsTimeZone, RegionAndSubzones } from 'ks-date-time-zone';
 
 export const SVC_ZONE_SELECTOR_VALUE_ACCESSOR: any = {
   provide: NG_VALUE_ACCESSOR,
