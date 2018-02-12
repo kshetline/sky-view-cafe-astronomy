@@ -19,10 +19,10 @@
 
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { AsteroidCometInfo } from './solar-system';
+import { AsteroidCometInfo, IAstroDataService } from 'ks-astronomy';
 
 @Injectable()
-export class AstroDataService {
+export class AstroDataService implements IAstroDataService {
   private static starData: ArrayBuffer;
   private static grsData: ArrayBuffer;
   private static asteroidData: AsteroidCometInfo[];

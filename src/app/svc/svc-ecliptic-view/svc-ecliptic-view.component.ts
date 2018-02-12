@@ -30,8 +30,7 @@ import {
 } from '../generic-planetary-view';
 import { AfterViewInit, Component, ElementRef, ViewChild } from '@angular/core';
 import { AppService, CurrentTab, UserSetting } from '../../app.service';
-import * as C_ from '../../astronomy/astro-constants';
-import { MOON } from '../../astronomy/astro-constants';
+import { MOON, TOPOCENTRIC } from 'ks-astronomy';
 import {
   abs, Angle, ceil, cos, cos_deg, floor, limitNeg1to1, max, min, Point, round, sin, sin_deg, SphericalPosition, squared, tan_deg,
   TWO_PI, Unit
@@ -278,7 +277,7 @@ export class SvcEclipticViewComponent extends GenericSkyView implements AfterVie
       let flags = dc.planetFlags;
 
       if (this.topocentricMoon && bodyIndex === MOON)
-        flags |= C_.TOPOCENTRIC;
+        flags |= TOPOCENTRIC;
 
       return dc.ss.getEclipticPosition(bodyIndex, dc.jde, dc.skyObserver, flags);
     }

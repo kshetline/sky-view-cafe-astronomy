@@ -20,11 +20,10 @@
   other uses are restricted.
 */
 
-import { SolarSystem } from '../astronomy/solar-system';
+import { ISkyObserver, MOON, SolarSystem } from 'ks-astronomy';
 import { abs, Angle, ceil, floor, interpolate, max, round, sqrt, TWO_PI, Unit } from 'ks-math';
 import { getPixel, setPixel } from 'ks-util';
-import { MOON } from '../astronomy/astro-constants';
-import { ISkyObserver } from '../astronomy/i-sky-observer';
+
 
 export class MoonDrawer {
   private moonPixels: ImageData;

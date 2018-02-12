@@ -1,6 +1,6 @@
 {
   "name": "svc-ng",
-  "version": "1.3.12",
+  "version": "1.3.13",
   "license": "MIT AND GPL-3.0-or-later",
   "scripts": {
     "ng": "ng",
@@ -25,6 +25,7 @@
     "array-buffer-reader": "^1.0.0",
     "core-js": "^2.4.1",
     "font-awesome": "^4.7.0",
+    "ks-astronomy": "^1.0.0",
     "ks-date-time-zone": "^1.0.1",
     "ks-math": "^1.1.0",
     "ks-util": "^1.0.5",

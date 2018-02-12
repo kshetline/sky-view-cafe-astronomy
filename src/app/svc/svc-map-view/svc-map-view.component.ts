@@ -20,17 +20,15 @@
   other uses are restricted.
 */
 
-import { GenericView, DrawingContext } from '../generic-view';
+import { DrawingContext, GenericView } from '../generic-view';
 import { AfterViewInit, Component, ElementRef, ViewChild } from '@angular/core';
+import { abs, ceil, cos_deg, floor, max, min, mod, mod2, Point, round, sin_deg, SphericalPosition3D } from 'ks-math';
+import { AppEvent, AppService, CurrentTab, UserSetting } from '../../app.service';
 import {
-  abs, ceil, cos_deg, floor, max, min, mod, mod2, Point, round, SphericalPosition3D, sin_deg
-} from 'ks-math';
-import { CurrentTab, AppService, UserSetting, AppEvent } from '../../app.service';
-import { ABERRATION, AVG_SUN_MOON_RADIUS, MOON, QUICK_SUN, REFRACTION_AT_HORIZON, SUN, TOPOCENTRIC } from '../../astronomy/astro-constants';
-import { SolarSystem } from '../../astronomy/solar-system';
+  ABERRATION, AVG_SUN_MOON_RADIUS, MOON, QUICK_SUN, REFRACTION_AT_HORIZON, SkyObserver, SolarSystem, SUN, TOPOCENTRIC
+} from 'ks-astronomy';
 import { KsTimeService, ZoneForLocation } from '../../util/ks-time.service';
 import { formatLatitude, formatLongitude } from '../svc-util';
-import { SkyObserver } from '../../astronomy/sky-observer';
 
 export const  VIEW_MAP = 'map';
 export const    PROPERTY_MAP_TYPE = 'map_type';

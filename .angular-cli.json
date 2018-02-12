@@ -9,7 +9,12 @@
       "outDir": "dist",
       "assets": [
         "assets",
-        "favicon.ico"
+        "favicon.ico",
+        {
+          "glob": "**/*",
+          "input": "../node_modules/ks-astronomy/dist/resources",
+          "output": "./assets/resources/"
+        }
       ],
       "index": "index.html",
       "main": "main.ts",

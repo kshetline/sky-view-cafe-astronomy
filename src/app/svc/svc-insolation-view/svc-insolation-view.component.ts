@@ -23,13 +23,11 @@
 import { DrawingContext, GenericView } from '../generic-view';
 import { AfterViewInit, Component, ElementRef, ViewChild } from '@angular/core';
 import { AppService, CurrentTab, Location, UserSetting } from '../../app.service';
-import { getInsolationColor } from '../../astronomy/astronomy-util';
+import { getInsolationColor, MOON, SUN, UT_to_TDB } from 'ks-astronomy';
 import { KsDateTime, KsTimeZone } from 'ks-date-time-zone';
 import { floor, FMT_DD, FMT_MINS, min, round } from 'ks-math';
 import { strokeLine } from 'ks-util';
 import { SafeStyle } from '@angular/platform-browser';
-import { MOON, SUN } from '../../astronomy/astro-constants';
-import { UT_to_TDB } from '../../astronomy/ut-converter';
 
 export const  VIEW_INSOLATION = 'insolation';
 export const    PROPERTY_CENTER_MIDNIGHT = 'center_midnight';

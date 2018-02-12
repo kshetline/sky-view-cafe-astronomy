@@ -24,20 +24,17 @@ import { AfterViewInit, Component, Input, OnDestroy } from '@angular/core';
 import { AppService, UserSetting } from '../../app.service';
 import { Message, SelectItem } from 'primeng/primeng';
 import { Observable, Subscription } from 'rxjs';
-import { EventFinder } from '../../astronomy/event-finder';
+import {
+  APHELION, EARTH, EclipseInfo, EventFinder, FALL_EQUINOX, FIRST_QUARTER, FULL_MOON, GALILEAN_MOON_EVENT, GREATEST_ELONGATION,
+  GRS_TRANSIT_EVENT, INFERIOR_CONJUNCTION, JUPITER, JupiterInfo, LAST_QUARTER, LUNAR_ECLIPSE, MARS, MERCURY, MOON, NEPTUNE, NEW_MOON,
+  OPPOSITION, PERIHELION, PLUTO, QUADRATURE, RISE_EVENT, RISE_SET_EVENT_BASE, SATURN, SET_EVENT, SET_EVENT_MINUS_1_MIN, SkyObserver,
+  SOLAR_ECLIPSE, SPRING_EQUINOX, SUMMER_SOLSTICE, SUN, SUPERIOR_CONJUNCTION, TRANSIT_EVENT, TWILIGHT_BEGINS, TWILIGHT_ENDS, URANUS,
+  VENUS, WINTER_SOLSTICE
+} from 'ks-astronomy';
 import { KsDateTime, KsTimeZone } from 'ks-date-time-zone';
 import { AstroDataService } from '../../astronomy/astro-data.service';
-import { JupiterInfo } from '../../astronomy/jupiter-info';
 import { PROPERTY_FIXED_GRS, PROPERTY_GRS_OVERRIDE, VIEW_MOONS } from '../svc-moons-view/svc-moons-view.component';
 import * as _ from 'lodash';
-import { EclipseInfo } from '../../astronomy/solar-system';
-import {
-  APHELION, EARTH, FALL_EQUINOX, FIRST_QUARTER, FULL_MOON, GALILEAN_MOON_EVENT, GREATEST_ELONGATION, GRS_TRANSIT_EVENT,
-  INFERIOR_CONJUNCTION, JUPITER, LAST_QUARTER, LUNAR_ECLIPSE, MARS, MERCURY, MOON, NEPTUNE, NEW_MOON, OPPOSITION, PERIHELION,
-  PLUTO, QUADRATURE, RISE_EVENT, RISE_SET_EVENT_BASE, SATURN, SET_EVENT, SET_EVENT_MINUS_1_MIN, SOLAR_ECLIPSE, SPRING_EQUINOX,
-  SUMMER_SOLSTICE, SUN, SUPERIOR_CONJUNCTION, TRANSIT_EVENT, TWILIGHT_BEGINS, TWILIGHT_ENDS, URANUS, VENUS, WINTER_SOLSTICE
-} from '../../astronomy/astro-constants';
-import { SkyObserver } from '../../astronomy/sky-observer';
 
 const CLICK_REPEAT_DELAY = 500;
 const CLICK_REPEAT_RATE  = 100;

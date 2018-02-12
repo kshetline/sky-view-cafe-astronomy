@@ -28,9 +28,9 @@ import { AfterViewInit } from '@angular/core';
 import { AppService, CurrentTab } from '../app.service';
 import { strokeEllipse } from 'ks-util';
 import { max, min, Point, pow, round, SphericalPosition, SphericalPosition3D } from 'ks-math';
-import { LABEL_ANCHOR, LINE_BREAK } from '../astronomy/star-catalog';
+import { LABEL_ANCHOR, LINE_BREAK, NO_MATCH, REFRACTION } from 'ks-astronomy';
 import * as _ from 'lodash';
-import { NO_MATCH, REFRACTION } from '../astronomy/astro-constants';
+
 
 export const eclipticColor               = '#666699';
 export const eclipticGridColor           = 'rgba(102,102,153,0.4)';

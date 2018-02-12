@@ -26,7 +26,7 @@ import {
   VIEW_TABLES, PROPERTY_TABLE_TYPE, PROPERTY_TWILIGHT, TableType, PROPERTY_PLANET_CHOICE
 } from './svc-table-view.component';
 import { SelectItem } from 'primeng/primeng';
-import { SUN } from '../../astronomy/astro-constants';
+import { SUN } from 'ks-astronomy';
 
 @Component({
   selector: 'svc-table-view-options',

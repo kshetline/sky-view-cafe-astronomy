@@ -23,7 +23,7 @@
 import { SelectItem } from 'primeng/primeng';
 import { AppService } from '../app.service';
 import { ADDITIONALS, PROPERTY_ADDITIONALS } from './generic-view';
-import { SolarSystem } from '../astronomy/solar-system';
+import { SolarSystem } from 'ks-astronomy';
 import * as _ from 'lodash';
 
 export class SvcGenericOptionsComponent {

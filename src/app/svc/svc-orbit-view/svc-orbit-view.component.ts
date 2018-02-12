@@ -21,18 +21,15 @@
 */
 
 import {
-  GenericPlanetaryView, DrawingContextPlanetary, MARQUEE_AU, MARQUEE_ECLIPTIC, MARQUEE_HELIOCENTRIC, MARQUEE_DISTANCE,
-  planetColors, SELECTION_TYPE, SUBJECT, LABEL_TYPE, LabelInfo, ASTEROID_COLOR_INDEX, COMET_COLOR_INDEX, planetPrintColors
+  ASTEROID_COLOR_INDEX, COMET_COLOR_INDEX, DrawingContextPlanetary, GenericPlanetaryView, LABEL_TYPE, LabelInfo, MARQUEE_AU,
+  MARQUEE_DISTANCE, MARQUEE_ECLIPTIC, MARQUEE_HELIOCENTRIC, planetColors, planetPrintColors, SELECTION_TYPE, SUBJECT
 } from '../generic-planetary-view';
 import { AfterViewInit, Component, ElementRef, ViewChild } from '@angular/core';
-import { abs, cos_deg, floor, log10, max, min, mod, mod2, Point, Point3D, pow, round, SphericalPosition3D, sin_deg,
-} from 'ks-math';
-import { CurrentTab, AppService, UserSetting } from '../../app.service';
-import { EARTH, MARS, MOON, NEPTUNE, PLUTO, REFRACTION, SATURN, SUN } from '../../astronomy/astro-constants';
+import { abs, cos_deg, floor, log10, max, min, mod, mod2, Point, Point3D, pow, round, sin_deg, SphericalPosition3D, } from 'ks-math';
+import { AppService, CurrentTab, UserSetting } from '../../app.service';
+import { EARTH, MARS, MOON, NEPTUNE, NMode, PLUTO, REFRACTION, SATURN, SolarSystem, SUN } from 'ks-astronomy';
 import { colorFromRGB, parseColor, replaceAlpha, RGBA } from 'ks-util';
 import { ZBuffer } from '../../util/ks-z-buffer';
-import { SolarSystem } from '../../astronomy/solar-system';
-import { NMode } from '../../astronomy/ecliptic';
 import { ADDITIONALS, GenericView, PROPERTY_ADDITIONALS } from '../generic-view';
 import * as _ from 'lodash';
 

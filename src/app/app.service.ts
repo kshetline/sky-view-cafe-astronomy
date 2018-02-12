@@ -21,14 +21,13 @@
 */
 
 import { Injectable } from '@angular/core';
-import { SolarSystem } from './astronomy/solar-system';
-import { StarCatalog } from './astronomy/star-catalog';
+import { SolarSystem, StarCatalog } from 'ks-astronomy';
 import { BehaviorSubject, Observable, Subject, Subscription } from 'rxjs';
 import { AstroDataService } from './astronomy/astro-data.service';
 import { HttpClient } from '@angular/common/http';
 import * as _ from 'lodash';
 import { DomSanitizer } from '@angular/platform-browser';
-import { KsCalendar } from './util/ks-calendar';
+import { KsCalendar } from 'ks-date-time-zone';
 import { ceil } from 'ks-math';
 
 export const SVC_MIN_YEAR = -6000;

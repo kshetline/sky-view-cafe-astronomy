@@ -21,7 +21,7 @@
 */
 
 import { PlanetDrawer } from './planet-drawer';
-import { SATURN_FLATTENING } from '../astronomy/astro-constants';
+import { SATURN_FLATTENING } from 'ks-astronomy';
 import { mod } from 'ks-math';
 
 export class SaturnDrawer extends PlanetDrawer {

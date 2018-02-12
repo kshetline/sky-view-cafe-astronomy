@@ -31,19 +31,17 @@ import {
 } from '../generic-planetary-view';
 import { AfterViewInit, Component, ElementRef, ViewChild } from '@angular/core';
 import { AppService, CurrentTab, PROPERTY_NORTH_AZIMUTH, UserSetting, VIEW_APP } from '../../app.service';
-import * as C_ from '../../astronomy/astro-constants';
 import {
-  AVG_SUN_MOON_RADIUS, LOW_PRECISION, MOON, NO_SELECTION, QUICK_SUN, REFRACTION, REFRACTION_AT_HORIZON, SUN, TOPOCENTRIC
-} from '../../astronomy/astro-constants';
+  AVG_SUN_MOON_RADIUS, equatorialToGalactic, getSkyColor, LOW_PRECISION, MOON, NO_SELECTION, QUICK_SUN, refractedAltitude,
+  REFRACTION, REFRACTION_AT_HORIZON, SolarSystem, SUN, TOPOCENTRIC
+} from 'ks-astronomy';
 import {
   abs, Angle, asin_deg, atan2_deg, ceil, cos, cos_deg, floor, interpolate, limitNeg1to1, max, min, mod, mod2, PI, Point, round, sin,
   sin_deg, SphericalPosition, SphericalPosition3D, sqrt, tan, tan_deg, TWO_PI, Unit
 } from 'ks-math';
 import { colorFromRGB, drawOutlinedText, padLeft, parseColor, replaceAlpha, strokeLine } from 'ks-util';
-import { equatorialToGalactic, getSkyColor, refractedAltitude } from '../../astronomy/astronomy-util';
 import { DAY_MINUTES } from 'ks-date-time-zone';
 import { MoonDrawer } from '../moon-drawer';
-import { SolarSystem } from '../../astronomy/solar-system';
 import { MilkyWay } from '../milky-way';
 import { ADDITIONALS, PROPERTY_ADDITIONALS } from '../generic-view';
 
@@ -903,7 +901,7 @@ export class SvcSkyViewComponent extends GenericSkyView implements AfterViewInit
       let flags = dc.planetFlags;
 
       if (bodyIndex === MOON)
-        flags |= C_.TOPOCENTRIC;
+        flags |= TOPOCENTRIC;
 
       return dc.ss.getHorizontalPosition(bodyIndex, dc.jdu, dc.skyObserver, flags);
     }

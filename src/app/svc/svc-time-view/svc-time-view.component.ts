@@ -25,8 +25,7 @@ import { AppService, CurrentTab, Location } from '../../app.service';
 import { DAY_MSEC, KsDateTime, KsTimeZone } from 'ks-date-time-zone';
 import { padLeft, toDefaultLocaleFixed } from 'ks-util';
 import { Angle, FMT_MINS, mod2, Mode, round, Unit } from 'ks-math';
-import { UT_to_TDB } from '../../astronomy/ut-converter';
-import { SkyObserver } from '../../astronomy/sky-observer';
+import { SkyObserver, UT_to_TDB } from 'ks-astronomy';
 
 const nbsp = '\u00A0';
 

@@ -22,20 +22,18 @@
 
 import { AfterViewInit } from '@angular/core';
 import { AppService, CurrentTab } from '../app.service';
-import { ISkyObserver } from '../astronomy/i-sky-observer';
-import { StarCatalog } from '../astronomy/star-catalog';
-import { SolarSystem } from '../astronomy/solar-system';
+import {
+  ASTEROID_BASE, COMET_BASE, EARTH, FIRST_PLANET, HALF_MINUTE, ISkyObserver, LAST_PLANET, NO_MATCH, SkyObserver, SolarSystem,
+  StarCatalog, UT_to_TDB
+} from 'ks-astronomy';
 import { abs, ceil, max } from 'ks-math';
-import { FontMetrics, isSafari, getFontMetrics } from 'ks-util';
+import { FontMetrics, getFontMetrics, isSafari } from 'ks-util';
 import * as _ from 'lodash';
 import { KsDateTime } from 'ks-date-time-zone';
-import { ASTEROID_BASE, COMET_BASE, EARTH, FIRST_PLANET, HALF_MINUTE, LAST_PLANET, NO_MATCH } from '../astronomy/astro-constants';
-import { UT_to_TDB } from '../astronomy/ut-converter';
 import { SafeStyle } from '@angular/platform-browser';
 import { Subscription } from 'rxjs/Subscription';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
-import { SkyObserver } from '../astronomy/sky-observer';
 
 export const PROPERTY_ADDITIONALS = 'additionals';
 export enum    ADDITIONALS {NONE, ALL_ASTEROIDS, ALL_COMETS, ALL}

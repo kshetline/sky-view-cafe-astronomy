@@ -26,12 +26,10 @@ import { AstroDataService } from '../../astronomy/astro-data.service';
 import { DateAndTime, GregorianChange, KsDateTime, KsTimeZone } from 'ks-date-time-zone';
 import { abs, ceil, max } from 'ks-math';
 import * as _ from 'lodash';
-import { EventFinder } from '../../astronomy/event-finder';
-import { ISkyObserver } from '../../astronomy/i-sky-observer';
-import { JupiterInfo } from '../../astronomy/jupiter-info';
+import {
+  EARTH, EventFinder, ISkyObserver, JUPITER, JupiterInfo, MARS, MERCURY, MOON, NEPTUNE, PLUTO, SATURN, SkyObserver, SUN, URANUS, VENUS
+} from 'ks-astronomy';
 import { SelectItem } from 'primeng/primeng';
-import { SUN, MOON, MERCURY, VENUS, EARTH, MARS, JUPITER, SATURN, URANUS, NEPTUNE, PLUTO } from '../../astronomy/astro-constants';
-import { SkyObserver } from '../../astronomy/sky-observer';
 
 export enum TableType {NONE, EPHEMERIS, EPHEMERIS_TBD, RISE_SET_TIMES, LUNAR_PHASES, EQUINOX_SOLSTICE, GALILEAN_MOONS}
 
