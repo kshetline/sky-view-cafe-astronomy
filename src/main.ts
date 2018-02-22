@@ -3,6 +3,9 @@ import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
 
 import { AppModule } from './app/app.module';
 import { environment } from './environments/environment';
+import { initTimeZoneLargeAlt } from 'ks-date-time-zone/dist/ks-timezone-large-alt';
+
+initTimeZoneLargeAlt();
 
 if (environment.production) {
   enableProdMode();

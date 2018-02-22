@@ -209,7 +209,7 @@ export class SvcAtlasDialogComponent {
         this.locations = results.matches.map((location: AtlasLocation): LocationInfo => {
           return {
             rank: location.rank,
-            flagCode: location.flagCode,
+            flagCode: location.flagCode || 'blank',
             name: location.displayName,
             lat: formatLatitude(location.latitude),
             lon: formatLongitude(location.longitude),

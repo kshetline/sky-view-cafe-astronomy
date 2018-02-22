@@ -104,7 +104,12 @@ export class SvcZoneSelectorComponent implements ControlValueAccessor, OnInit {
 
     if (groups) {
       let g1 = groups[1];
-      const g2 = groups[2];
+      let g2 = groups[2];
+
+      if (!this.knownIanaZones.has(newZone) && g1 !== LMT && g1 !== OS && !g1.startsWith(UT)) {
+        g1 = OS;
+        g2 = undefined;
+      }
 
       if (g1.endsWith('/')) {
         g1 = groups[1].slice(0, -1);
