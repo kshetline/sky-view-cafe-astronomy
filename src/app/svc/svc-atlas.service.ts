@@ -53,8 +53,8 @@ export interface AtlasLocation {
   longitude: number;
   elevation: number;
   zone: string;
-  zoneOffset: number;
-  zoneDst: number;
+  zoneOffset: number; // in minutes
+  zoneDst: number; // in minutes
   zip: string;
   rank: number;
   placeType: string;

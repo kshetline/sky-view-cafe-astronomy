@@ -214,8 +214,8 @@ export class SvcAtlasDialogComponent {
             lat: formatLatitude(location.latitude),
             lon: formatLongitude(location.longitude),
             zone: location.zone,
-            zoneInfo: 'UT' + KsTimeZone.formatUtcOffset(location.zoneOffset) +
-                      KsTimeZone.getDstSymbol(location.zoneDst),
+            zoneInfo: 'UT' + KsTimeZone.formatUtcOffset(location.zoneOffset * 60) +
+                      KsTimeZone.getDstSymbol(location.zoneDst * 60),
             atlasLocation: location
           };
         });
