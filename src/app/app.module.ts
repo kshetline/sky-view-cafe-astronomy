@@ -169,16 +169,16 @@ export class AppModule {}
 // Patches for PrimeNG focus bugs.
 import { Dropdown, RadioButton } from 'primeng/primeng';
 
-const origDropdownInputFocus = Dropdown.prototype.onInputFocus;
+const originalDropdownOnInputFocus = Dropdown.prototype.onInputFocus;
 Dropdown.prototype.onInputFocus = function(event: any): void {
   setTimeout(() => {
-    origDropdownInputFocus.call(this, event);
+    originalDropdownOnInputFocus.call(this, event);
   });
 };
 
-const origRadioButtonOnFocus = RadioButton.prototype.onFocus;
+const originalRadioButtonOnFocus = RadioButton.prototype.onFocus;
 RadioButton.prototype.onFocus = function(event: any): void {
   setTimeout(() => {
-    origRadioButtonOnFocus.call(this, event);
+    originalRadioButtonOnFocus.call(this, event);
   });
 };
