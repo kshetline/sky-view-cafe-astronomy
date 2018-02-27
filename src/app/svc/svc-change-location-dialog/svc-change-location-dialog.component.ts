@@ -49,14 +49,6 @@ export class SvcChangeLocationDialogComponent {
     if (this._visible !== isVisible) {
       this._visible = isVisible;
       this.visibleChange.emit(isVisible);
-
-      if (isVisible) {
-        // Put focus on...
-//        setTimeout(() => {
-//          (<HTMLInputElement> this.searchField.nativeElement).focus();
-//          this.becomingVisible = false;
-//        }, 250);
-      }
     }
   }
 

@@ -25,6 +25,7 @@ import { AppService, currentMinuteMillis, CurrentTab, PROPERTY_GREGORIAN_CHANGE_
 import { Observable, Subscription } from 'rxjs';
 import { MenuItem, Message } from 'primeng/primeng';
 import { KsDateTime, KsTimeZone, YMDDate } from 'ks-date-time-zone';
+import { toggleFullScreen } from 'ks-util';
 
 @Component({
   selector: 'svc-app',
@@ -44,6 +45,7 @@ export class AppComponent implements AfterViewInit, OnDestroy {
   moreItems: MenuItem[] = [
       { label: 'Preferences', icon: 'fa-cog', command: () => this.displayPreferences = true },
       { label: 'Help', icon: 'fa-question-circle', command: () => this.openHelp() },
+      { label: 'Toggle full screen', icon: 'fa-arrows-alt', command: () => this.toggleFullScreen() },
       { label: 'About Sky View Café', icon: 'fa-info-circle', command: () => this.displayAbout = true }
     ];
 
@@ -152,5 +154,10 @@ export class AppComponent implements AfterViewInit, OnDestroy {
   // noinspection JSMethodCanBeStatic
   private openHelp(): void {
     window.open('/assets/help/', '_blank');
+  }
+
+  // noinspection JSMethodCanBeStatic
+  private toggleFullScreen(): void {
+    toggleFullScreen();
   }
 }

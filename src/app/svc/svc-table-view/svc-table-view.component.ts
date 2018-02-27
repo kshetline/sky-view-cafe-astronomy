@@ -224,7 +224,7 @@ export class SvcTableViewComponent implements AfterViewInit {
     const top = ceil(this.wrapper.getBoundingClientRect().top);
     const right = this.appService.getRightEdgeOfViewArea();
 
-    this.width = max(right - 16, 625);
+    this.width = max(right - 20, 625);
     // Using the document's clientHeight instead of the window's innerHeight accounts for possible scroll bar.
     this.height = max(window.document.documentElement.clientHeight - top - 8, 250);
 
