@@ -20,6 +20,21 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
+// To work around IE's lack of support for slice on Uint8ClampedArray. The standard polyfills apparently don't fix this.
+function altSlice(array: Uint8ClampedArray, start: number, end: number): ArrayLike<number> {
+  try {
+    return array.slice(start, end);
+  }
+  catch (e) {}
+
+  const result = [];
+
+  for (let i = start; i < end; ++i)
+    result.push(array[i]);
+
+  return result;
+}
+
 @Injectable()
 export class JpegCommentReader {
   constructor(private httpClient: HttpClient) {
@@ -66,7 +81,7 @@ export class JpegCommentReader {
         if (offset + itemLength >= len)
           return null;
         else if (itemType === 0xFE && itemLength > 2) {
-          const commentBytes = imageBytes.slice(offset + 3, offset + itemLength + 1);
+          const commentBytes = altSlice(imageBytes, offset + 3, offset + itemLength + 1);
           const commentChars: string[] = [];
 
           // I'd use commentBytes.map(...) here, but a Uint8ClampedArray refuses to map to a string array.
