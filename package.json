@@ -1,6 +1,6 @@
 {
   "name": "svc-ng",
-  "version": "1.4.0",
+  "version": "1.4.1",
   "license": "MIT AND GPL-3.0-or-later",
   "scripts": {
     "ng": "ng",
