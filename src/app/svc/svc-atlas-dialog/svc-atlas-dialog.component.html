@@ -20,7 +20,7 @@
     </div>
   </div>
   <p-checkbox [(ngModel)]="extended" binary="true" label="Extended search (slower, possibly more matches)"></p-checkbox>
-  <p-dataTable [value]="locations" [rows]="tableRows" [paginator]="true" [pageLinks]="3" selectionMode="single"
+  <p-dataTable #locationTable [value]="locations" [rows]="tableRows" [paginator]="true" [pageLinks]="3" selectionMode="single"
                [emptyMessage]="emptyMessage" [(selection)]="selection" (onRowDblclick)="onDoubleClick()"
                [style]="{width: '426px', height: '306px', 'padding-top': '12px'}">
     <p-column field="rank" header="&#x2605;" [style]="{width: '36px'}">

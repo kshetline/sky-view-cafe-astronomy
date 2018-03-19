@@ -79,6 +79,8 @@ import { SvcTimeEditorComponent } from './svc/svc-time-editor.component';
 import { SvcTimeViewComponent } from './svc/svc-time-view/svc-time-view.component';
 import { SvcZoneSelectorComponent } from './svc/svc-zone-selector/svc-zone-selector.component';
 
+import { AppRoutingModule } from './app-routing.module';
+
 export function busyConfigFactory(): BusyConfig {
   return new BusyConfig({
      delay: 500,
@@ -88,6 +90,7 @@ export function busyConfigFactory(): BusyConfig {
 
 @NgModule({
   imports: [
+    AppRoutingModule,
     BlockUIModule,
     BrowserAnimationsModule,
     BrowserModule,

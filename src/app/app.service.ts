@@ -21,6 +21,7 @@
 */
 
 import { Injectable } from '@angular/core';
+import { NavigationEnd, Router } from '@angular/router';
 import { SolarSystem, StarCatalog } from 'ks-astronomy';
 import { BehaviorSubject, Observable, Subject, Subscription } from 'rxjs';
 import { AstroDataService } from './astronomy/astro-data.service';
@@ -49,6 +50,7 @@ export function currentMinuteMillis(): number {
 }
 
 export enum CurrentTab {SKY, ECLIPTIC, ORBITS, MOONS_GRS, INSOLATION, MAP, CALENDAR, TIME, TABLES}
+const tabNames = ['sky', 'ecliptic', 'orbits', 'moons', 'insolation', 'map', 'calendar', 'time', 'tables'];
 export enum CalendarSetting {STANDARD, PURE_GREGORIAN, PURE_JULIAN, CUSTOM_GCD}
 
 export interface AppEvent {
@@ -138,7 +140,8 @@ export class AppService {
   private _gcDate = '1582-10-15';
   private _inkSaver = true;
 
-  constructor(astroDataService: AstroDataService, private httpClient: HttpClient, private _sanitizer: DomSanitizer) {
+  constructor(astroDataService: AstroDataService, private httpClient: HttpClient, private _sanitizer: DomSanitizer,
+              private router: Router) {
     const savedLocationsString = localStorage.getItem('locations');
 
     if (savedLocationsString)
@@ -178,6 +181,18 @@ export class AppService {
     this.debouncedSaveSettings = _.debounce(() => {
       localStorage.setItem('allSettings', JSON.stringify(this.allSettings));
     }, 1000);
+
+    router.events.subscribe(event => {
+      if (event instanceof NavigationEnd) {
+        const url = event.url;
+        const newTab = tabNames.map(name => '/' + name).indexOf(url);
+
+        if (newTab >= 0)
+          this.currentTab = newTab;
+        else
+          this.currentTab = CurrentTab.SKY;
+      }
+    });
   }
 
   public static get title(): string { return 'Sky View Café'; }
@@ -294,8 +309,10 @@ export class AppService {
 
   public get currentTab(): CurrentTab { return this._currentTab.getValue(); }
   public set currentTab(newTab: CurrentTab) {
-    if (this._currentTab.getValue() !== newTab)
+    if (this._currentTab.getValue() !== newTab) {
       this._currentTab.next(newTab);
+      this.router.navigate(['/' + tabNames[this._currentTab.getValue()]]);
+    }
   }
   public getCurrentTabUpdates(callback: (tabIndex: CurrentTab) => void): Subscription {
     return this.currentTabObserver.subscribe(callback);
