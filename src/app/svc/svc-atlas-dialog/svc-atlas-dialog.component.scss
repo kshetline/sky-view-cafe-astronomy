@@ -51,3 +51,13 @@ p-footer {
   height: 100%;
   background-color: #999;
 }
+
+.flag-image {
+  width: 16px;
+  height: 11px;
+  position: relative;
+  top: 3px;
+  padding: 1px;
+  border: lightgray 1px solid;
+  box-sizing: content-box;
+}

@@ -1,5 +1,5 @@
 /*
-  Copyright © 2017 Kerry Shetline, kerry@shetline.com.
+  Copyright © 2017-2018 Kerry Shetline, kerry@shetline.com.
 
   This code is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -33,10 +33,10 @@ import 'rxjs/add/operator/timeout';
 import { NgBusyModule, BusyConfig } from 'ng-busy';
 
 import { BlockUIModule, ButtonModule, ConfirmationService, ConfirmDialogModule, CheckboxModule,
-         DataTableModule, DialogModule, DropdownModule, GrowlModule, InputTextModule, MenuModule,
-         OverlayPanelModule, PanelModule, RadioButtonModule, SharedModule, SliderModule, TabViewModule,
-         TooltipModule
+         DialogModule, DropdownModule, GrowlModule, InputTextModule, MenuModule, OverlayPanelModule,
+         PanelModule, RadioButtonModule, SharedModule, SliderModule, TabViewModule, TooltipModule
 } from 'primeng/primeng';
+import { TableModule } from 'primeng/table';
 
 import { AppComponent } from './app.component';
 import { AppService } from './app.service';
@@ -97,7 +97,6 @@ export function busyConfigFactory(): BusyConfig {
     ButtonModule,
     CheckboxModule,
     ConfirmDialogModule,
-    DataTableModule,
     DialogModule,
     DropdownModule,
     FlexLayoutModule,
@@ -113,6 +112,7 @@ export function busyConfigFactory(): BusyConfig {
     RadioButtonModule,
     SharedModule,
     SliderModule,
+    TableModule,
     TabViewModule,
     TooltipModule
   ],

@@ -1,4 +1,4 @@
-<p-dialog header="Find Latitude, Longitude, and Time Zone" modal="modal" [(visible)]="visible" width="775" height="500"
+<p-dialog header="Find Latitude, Longitude, and Time Zone" modal="modal" [(visible)]="visible" width="795" height="500"
           (keyup)="onKey($event)">
   <p-growl [value]="messages" sticky="true"></p-growl>
   <div style="position: relative">
@@ -20,27 +20,40 @@
     </div>
   </div>
   <p-checkbox [(ngModel)]="extended" binary="true" label="Extended search (slower, possibly more matches)"></p-checkbox>
-  <p-dataTable #locationTable [value]="locations" [rows]="tableRows" [paginator]="true" [pageLinks]="3" selectionMode="single"
-               [emptyMessage]="emptyMessage" [(selection)]="selection" (onRowDblclick)="onDoubleClick()"
-               [style]="{width: '426px', height: '306px', 'padding-top': '12px'}">
-    <p-column field="rank" header="&#x2605;" [style]="{width: '36px'}">
-      <ng-template let-loc="rowData" pTemplate="body">
-        {{loc.rank}} <img src="assets/resources/flags/{{loc.flagCode}}.png" width="16" height="11" alt="{{loc.flagCode}}">
-      </ng-template>
-    </p-column>
-    <p-column field="name" header="Name" [style]="{width: '200px', 'text-overflow': 'ellipsis', overflow: 'hidden'}">
-      <ng-template let-loc="rowData" pTemplate="body">
-        <span pTooltip="{{loc.name}}">{{loc.name}}</span>
-      </ng-template>
-    </p-column>
-    <p-column field="lat" header="Lat." [style]="{width: '55px'}"></p-column>
-    <p-column field="lon" header="Long." [style]="{width: '62px'}"></p-column>
-    <p-column field="zoneInfo" header="Time Zone" [style]="{width: '72px'}">
-      <ng-template let-loc="rowData" pTemplate="body">
-        <span pTooltip="{{loc.zone}}">{{loc.zoneInfo}}</span>
-      </ng-template>
-    </p-column>
-  </p-dataTable>
+  <p-table #locationTable [value]="locations" selectionMode="single" [scrollable]="true" scrollHeight="273px"
+           sortMode="none" [style]="{width: '446px', height: '306px', 'padding-top': '12px'}"
+           [(selection)]="selection" metaKeySelection="true">
+    <ng-template pTemplate="colgroup">
+      <colgroup>
+        <col style="width: 40px">
+        <col style="width: 200px">
+        <col style="width: 55px">
+        <col style="width: 62px">
+        <col style="width: 72px">
+      </colgroup>
+    </ng-template>
+    <ng-template pTemplate="header">
+      <tr>
+        <th>&#x2605;</th>
+        <th>Name</th>
+        <th>Lat.</th>
+        <th>Long.</th>
+        <th>Time Zone</th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-loc>
+      <tr [pSelectableRow]="loc" (dblclick)="onDoubleClick()">
+        <td>{{loc.rank}} <img src="assets/resources/flags/{{loc.flagCode}}.png" class="flag-image" width="16" height="11" alt="{{loc.flagCode}}"></td>
+        <td style="text-overflow: ellipsis; overflow: hidden"><span pTooltip="{{loc.name}}">{{loc.name}}</span></td>
+        <td>{{loc.lat}}</td>
+        <td>{{loc.lon}}</td>
+        <td><span pTooltip="{{loc.zone}}">{{loc.zoneInfo}}</span></td>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="emptymessage">
+      <tr><td colspan="5">{{emptyMessage}}</td></tr>
+    </ng-template>
+  </p-table>
   <div class="map-wrapper">
     <div #atlasMap class="atlas-map"></div>
     <div class="map-mask" [ngStyle]="{visibility: maskDisplay}"></div>

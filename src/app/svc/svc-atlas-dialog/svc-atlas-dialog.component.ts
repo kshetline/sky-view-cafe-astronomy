@@ -1,5 +1,5 @@
 /*
-  Copyright © 2017 Kerry Shetline, kerry@shetline.com.
+  Copyright © 2017-2018 Kerry Shetline, kerry@shetline.com.
 
   This code is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -25,8 +25,8 @@ import { AppService, Location } from '../../app.service';
 import { SvcAtlasService, AtlasLocation, AtlasResults } from '../svc-atlas.service';
 import { formatLatitude, formatLongitude } from '../svc-util';
 import { KsTimeZone } from 'ks-date-time-zone';
-import { DataTable, Message } from 'primeng/primeng';
-import { isFirefox } from 'ks-util';
+import { Message } from 'primeng/primeng';
+import { Table } from 'primeng/table';
 import {  } from '@types/googlemaps';
 
 interface LocationInfo {
@@ -57,7 +57,7 @@ export class SvcAtlasDialogComponent {
 
   @ViewChild('searchField') private searchField: ElementRef;
   @ViewChild('atlasMap') private atlasMap: ElementRef;
-  @ViewChild('locationTable') private locationTable: DataTable;
+  @ViewChild('locationTable') private locationTable: Table;
 
   locations: LocationInfo[] = [];
   city = '';
@@ -67,7 +67,6 @@ export class SvcAtlasDialogComponent {
   states = [''];
   maskDisplay = 'visible';
   messages: Message[] = [];
-  tableRows = (isFirefox() ? 11 : 12);
   busy: Promise<any> = null;
 
   @Input() get extended(): boolean { return this._extended; }
