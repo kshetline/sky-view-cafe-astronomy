@@ -25,7 +25,7 @@ import { AppService, Location } from '../../app.service';
 import { SvcAtlasService, AtlasLocation, AtlasResults } from '../svc-atlas.service';
 import { formatLatitude, formatLongitude } from '../svc-util';
 import { KsTimeZone } from 'ks-date-time-zone';
-import { Message } from 'primeng/primeng';
+import { Message } from 'primeng/components/common/api';
 import { Table } from 'primeng/table';
 import {  } from '@types/googlemaps';
 

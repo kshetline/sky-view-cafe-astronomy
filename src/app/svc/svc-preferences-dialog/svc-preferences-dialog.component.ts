@@ -1,5 +1,5 @@
 /*
-  Copyright © 2017 Kerry Shetline, kerry@shetline.com.
+  Copyright © 2017-2018 Kerry Shetline, kerry@shetline.com.
 
   This code is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -20,13 +20,14 @@
   other uses are restricted.
 */
 
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output, ViewChild } from '@angular/core';
 import {
   AppService, CalendarSetting, CurrentTab, PROPERTY_DEFAULT_TAB, PROPERTY_GREGORIAN_CHANGE_DATE, PROPERTY_INK_SAVER, PROPERTY_NORTH_AZIMUTH, PROPERTY_TWILIGHT_BY_DEGREES,
   PROPERTY_TWILIGHT_DEGREES, PROPERTY_TWILIGHT_MINUTES, VIEW_APP
 } from '../../app.service';
-import { MenuItem } from 'primeng/primeng';
+import { MenuItem } from 'primeng/components/common/api';
 import { getISOFormatDate, parseISODate, YMDDate } from 'ks-date-time-zone';
+import { KsDropdownComponent } from '../../widgets/ks-dropdown/ks-dropdown.component';
 
 interface MenuItemPlus extends MenuItem {
   value?: any;
@@ -43,6 +44,8 @@ export class SvcPreferencesDialogComponent {
   private _twilightByDegrees = true;
   private twilightDegrees = 12;
   private twilightMinutes = 80;
+
+  @ViewChild('defaultLocationDropdown') private defaultLocationDropdown: KsDropdownComponent;
 
 // SKY, ECLIPTIC, ORBITS, MOONS_GRS, INSOLATION, MAP, CALENDAR, TIME, TABLES
   tabs: MenuItemPlus[] = [
@@ -136,6 +139,8 @@ export class SvcPreferencesDialogComponent {
 
         if (this.locations.length === 0)
           this.locations.push('');
+
+        setTimeout(() => this.defaultLocationDropdown.applyFocus());
       }
     }
   }

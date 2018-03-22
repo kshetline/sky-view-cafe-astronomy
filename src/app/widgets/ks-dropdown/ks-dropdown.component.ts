@@ -1,5 +1,5 @@
 /*
-  Copyright © 2017 Kerry Shetline, kerry@shetline.com
+  Copyright © 2017-2018 Kerry Shetline, kerry@shetline.com
 
   MIT license: https://opensource.org/licenses/MIT
 
@@ -17,10 +17,11 @@
   OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-import { Component, EventEmitter, forwardRef, Input, Output } from '@angular/core';
+import { Component, EventEmitter, forwardRef, Input, Output, ViewChild } from '@angular/core';
 import { NG_VALUE_ACCESSOR, ControlValueAccessor } from '@angular/forms';
 import { SelectItem } from 'primeng/components/common/api';
 import * as _ from 'lodash';
+import { Dropdown } from 'primeng/dropdown';
 
 const DROPDOWN_VALUE_ACCESSOR: any = {
   provide: NG_VALUE_ACCESSOR,
@@ -33,7 +34,7 @@ const noop = () => {};
 @Component({
   selector: 'ks-dropdown',
   template: `
-    <p-dropdown [options]="primeOptions" [(ngModel)]="primeValue" appendTo="body"
+    <p-dropdown #pDropdown [options]="primeOptions" [(ngModel)]="primeValue" appendTo="body"
       [disabled]="(options.length === 0 && !editable) || disabled"
       (onFocus)="onDropdownFocus($event)" (onBlur)="onDropdownBlur($event)" [scrollHeight]="scrollHeight"
       [editable]="editable" [autoWidth]="autoWidth" [style]="style"></p-dropdown>`,
@@ -47,12 +48,14 @@ export class KsDropdownComponent implements ControlValueAccessor {
   private onTouchedCallback: () => void = noop;
   private onChangeCallback: (_: any) => void = noop;
 
+  @ViewChild('pDropdown') private pDropdown: Dropdown;
+
   public primeOptions: SelectItem[] = [];
   public disabled = false;
 
   @Output() onFocus: EventEmitter<any> = new EventEmitter();
   @Output() onBlur: EventEmitter<any> = new EventEmitter();
-  @Input() autoWidth = 'true';
+  @Input() autoWidth = true;
   @Input() editable = false;
   @Input() scrollHeight = '200px';
   @Input() style = '';
@@ -128,6 +131,10 @@ export class KsDropdownComponent implements ControlValueAccessor {
 
       this._primeValue = this.findMatchingPrimeOption(this._value);
     }
+  }
+
+  public applyFocus(): void {
+    this.pDropdown.applyFocus();
   }
 
   private findMatchingOption(testValue: any): any {

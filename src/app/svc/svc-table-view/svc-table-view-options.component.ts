@@ -1,5 +1,5 @@
 /*
-  Copyright © 2017 Kerry Shetline, kerry@shetline.com.
+  Copyright © 2017-2018 Kerry Shetline, kerry@shetline.com.
 
   This code is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -25,7 +25,7 @@ import { AppService, UserSetting } from '../../app.service';
 import {
   VIEW_TABLES, PROPERTY_TABLE_TYPE, PROPERTY_TWILIGHT, TableType, PROPERTY_PLANET_CHOICE
 } from './svc-table-view.component';
-import { SelectItem } from 'primeng/primeng';
+import { SelectItem } from 'primeng/components/common/api';
 import { SUN } from 'ks-astronomy';
 
 @Component({

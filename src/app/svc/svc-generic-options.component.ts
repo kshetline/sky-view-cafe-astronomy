@@ -1,5 +1,5 @@
 /*
-  Copyright © 2017 Kerry Shetline, kerry@shetline.com.
+  Copyright © 2017-2018 Kerry Shetline, kerry@shetline.com.
 
   This code is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
   other uses are restricted.
 */
 
-import { SelectItem } from 'primeng/primeng';
+import { SelectItem } from 'primeng/components/common/api';
 import { AppService } from '../app.service';
 import { ADDITIONALS, PROPERTY_ADDITIONALS } from './generic-view';
 import { SolarSystem } from 'ks-astronomy';

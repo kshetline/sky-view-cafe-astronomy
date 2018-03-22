@@ -23,7 +23,7 @@
   <p-dialog header="Save Location" modal="modal" [(visible)]="showSaveDialog" width="350" height="190">
     <div style="height: 60px;">
       Save location as:&nbsp;
-      <ks-dropdown [(ngModel)]="selectedName" [options]="saveDialogNames" [editable]="true" [style]="{width: '200px'}"></ks-dropdown>
+      <ks-dropdown #saveNameDropdown [(ngModel)]="selectedName" [options]="saveDialogNames" [editable]="true" [style]="{width: '200px'}"></ks-dropdown>
       <br><br><p-checkbox [(ngModel)]="makeDefault" binary="true" label="Make this the default location"></p-checkbox>
     </div>
     <p-footer>
@@ -38,7 +38,7 @@
     <div style="height: 35px;">
       <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="4px">
         <span>Location to delete:&nbsp;</span>
-        <ks-dropdown [(ngModel)]="selectedName" [options]="deleteDialogNames" [style]="{width: '200px'}"></ks-dropdown>
+        <ks-dropdown #deleteNameDropdown [(ngModel)]="selectedName" [options]="deleteDialogNames" [style]="{width: '200px'}"></ks-dropdown>
       </div>
     </div>
     <p-footer>

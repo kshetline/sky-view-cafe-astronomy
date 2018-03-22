@@ -32,11 +32,24 @@ import 'rxjs/add/operator/timeout';
 
 import { NgBusyModule, BusyConfig } from 'ng-busy';
 
-import { BlockUIModule, ButtonModule, ConfirmationService, ConfirmDialogModule, CheckboxModule,
-         DialogModule, DropdownModule, GrowlModule, InputTextModule, MenuModule, OverlayPanelModule,
-         PanelModule, RadioButtonModule, SharedModule, SliderModule, TabViewModule, TooltipModule
-} from 'primeng/primeng';
+import { BlockUIModule } from 'primeng/blockui';
+import { ButtonModule } from 'primeng/button';
+import { ConfirmationService } from 'primeng/components/common/api';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { CheckboxModule } from 'primeng/checkbox';
+import { DialogModule } from 'primeng/dialog';
+import { DropdownModule } from 'primeng/dropdown';
+import { GrowlModule } from 'primeng/growl';
+import { InputTextModule } from 'primeng/inputtext';
+import { MenuModule } from 'primeng/menu';
+import { OverlayPanelModule } from 'primeng/overlaypanel';
+import { PanelModule } from 'primeng/panel';
+import { RadioButtonModule } from 'primeng/radiobutton';
+import { SharedModule } from 'primeng/shared';
+import { SliderModule } from 'primeng/slider';
 import { TableModule } from 'primeng/table';
+import { TabViewModule } from 'primeng/tabview';
+import { TooltipModule } from 'primeng/tooltip';
 
 import { AppComponent } from './app.component';
 import { AppService } from './app.service';
@@ -168,20 +181,3 @@ export function busyConfigFactory(): BusyConfig {
 })
 
 export class AppModule {}
-
-// Patches for PrimeNG focus bugs.
-import { Dropdown, RadioButton } from 'primeng/primeng';
-
-const originalDropdownOnInputFocus = Dropdown.prototype.onInputFocus;
-Dropdown.prototype.onInputFocus = function(event: any): void {
-  setTimeout(() => {
-    originalDropdownOnInputFocus.call(this, event);
-  });
-};
-
-const originalRadioButtonOnFocus = RadioButton.prototype.onFocus;
-RadioButton.prototype.onFocus = function(event: any): void {
-  setTimeout(() => {
-    originalRadioButtonOnFocus.call(this, event);
-  });
-};

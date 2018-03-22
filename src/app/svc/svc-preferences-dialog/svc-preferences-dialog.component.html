@@ -1,11 +1,11 @@
-<p-dialog header="Preferences" modal="modal" [(visible)]="visible" width="590" height="280" (keyup)="onKey($event)">
+<p-dialog header="Preferences" [(visible)]="visible" width="590" height="280" (keyup)="onKey($event)">
   <div class="settings-grid">
     <div class="settings-row">
       <div class="settings-label">
         Default location:
       </div>
       <div class="settings-value">
-        <ks-dropdown [options]="locations" [(ngModel)]="defaultLocation" [autoWidth]="false"></ks-dropdown>
+        <ks-dropdown #defaultLocationDropdown [options]="locations" [(ngModel)]="defaultLocation" [autoWidth]="false"></ks-dropdown>
       </div>
     </div>
     <div class="settings-row">

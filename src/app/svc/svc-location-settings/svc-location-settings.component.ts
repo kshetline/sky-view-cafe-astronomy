@@ -1,5 +1,5 @@
 /*
-  Copyright © 2017 Kerry Shetline, kerry@shetline.com.
+  Copyright © 2017-2018 Kerry Shetline, kerry@shetline.com.
 
   This code is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -20,10 +20,11 @@
   other uses are restricted.
 */
 
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { AppService, Location, NEW_LOCATION } from '../../app.service';
 import * as _ from 'lodash';
 import { ConfirmationService } from 'primeng/components/common/api';
+import { KsDropdownComponent } from '../../widgets/ks-dropdown/ks-dropdown.component';
 
 const SELECT_A_LOCATION = 'Select a location';
 
@@ -44,6 +45,9 @@ export class SvcLocationSettingsComponent {
   deleteDialogNames: string[] = [];
   makeDefault = false;
   mapsReady = false;
+
+  @ViewChild('saveNameDropdown') private saveNameDropdown: KsDropdownComponent;
+  @ViewChild('deleteNameDropdown') private deleteNameDropdown: KsDropdownComponent;
 
   constructor(private app: AppService, private confirmationService: ConfirmationService) {
     app.getLocationUpdates(() => this.buildLocationMenu());
@@ -96,6 +100,8 @@ export class SvcLocationSettingsComponent {
         this.saveDialogNames.splice(0, 0, this.selectedName);
       }
     }
+
+    setTimeout(() => this.saveNameDropdown.applyFocus());
   }
 
   openDeleteDialog(): void {
@@ -103,6 +109,8 @@ export class SvcLocationSettingsComponent {
     this.deleteDialogNames = _.clone(this.savedLocationNames);
     this.deleteDialogNames.splice(0, 0, SELECT_A_LOCATION);
     this.selectedName = SELECT_A_LOCATION;
+
+    setTimeout(() => this.deleteNameDropdown.applyFocus());
   }
 
   openFindDialog(): void {

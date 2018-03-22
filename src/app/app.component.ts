@@ -1,5 +1,5 @@
 /*
-  Copyright © 2017 Kerry Shetline, kerry@shetline.com.
+  Copyright © 2017-2018 Kerry Shetline, kerry@shetline.com.
 
   This code is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -24,7 +24,7 @@ import { AfterViewInit, Component, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { AppService, currentMinuteMillis, CurrentTab, PROPERTY_GREGORIAN_CHANGE_DATE, UserSetting, VIEW_APP } from './app.service';
 import { Observable, Subscription } from 'rxjs';
-import { MenuItem, Message } from 'primeng/primeng';
+import { MenuItem, Message } from 'primeng/components/common/api';
 import { KsDateTime, KsTimeZone, YMDDate } from 'ks-date-time-zone';
 import { toggleFullScreen } from 'ks-util';
 

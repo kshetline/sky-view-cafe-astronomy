@@ -1,5 +1,5 @@
 /*
-  Copyright © 2017 Kerry Shetline, kerry@shetline.com.
+  Copyright © 2017-2018 Kerry Shetline, kerry@shetline.com.
 
   This code is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -22,7 +22,7 @@
 
 import { SvcGenericOptionsComponent } from '../svc-generic-options.component';
 import { AfterViewInit, Component } from '@angular/core';
-import { MenuItem, SelectItem } from 'primeng/primeng';
+import { MenuItem, SelectItem } from 'primeng/components/common/api';
 import { AppService, UserSetting } from '../../app.service';
 import {
   SKY_COLOR, VIEW_SKY, VIEW_TYPE, PROPERTY_SKY_COLOR, PROPERTY_VIEW_TYPE,

@@ -1,5 +1,5 @@
 /*
-  Copyright © 2017 Kerry Shetline, kerry@shetline.com.
+  Copyright © 2017-2018 Kerry Shetline, kerry@shetline.com.
 
   This code is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -21,7 +21,7 @@
 */
 
 import { AfterViewInit, Component } from '@angular/core';
-import { MenuItem, SelectItem } from 'primeng/primeng';
+import { MenuItem, SelectItem } from 'primeng/components/common/api';
 import { AppService, UserSetting } from '../../app.service';
 import { VIEW_ECLIPTIC, PROPERTY_SPAN_25, PROPERTY_ORIENTATION, PROPERTY_ECLIPTIC_GRID, PROPERTY_CELESTIAL_EQUATOR,
          PROPERTY_SHOW_CONSTELLATIONS, PROPERTY_LOCAL_HORIZON, PROPERTY_SHOW_STARS, PROPERTY_BRIGHTEN_STARS,

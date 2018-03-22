@@ -21,7 +21,7 @@
 */
 
 import { AfterViewInit, Component, OnDestroy } from '@angular/core';
-import { SelectItem } from 'primeng/primeng';
+import { SelectItem } from 'primeng/components/common/api';
 import { AppService, SVC_MAX_YEAR, SVC_MIN_YEAR, UserSetting } from '../../app.service';
 import { VIEW_CALENDAR, PROPERTY_KEY_MOON_PHASES, PROPERTY_EQUISOLSTICE, PROPERTY_DAILY_DAYLIGHT, PROPERTY_DAILY_MOON_PHASE,
          PROPERTY_EVENT_TYPE, PROPERTY_INCLUDE_TRANSITS

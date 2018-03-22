@@ -1,5 +1,5 @@
 /*
-  Copyright © 2017 Kerry Shetline, kerry@shetline.com.
+  Copyright © 2017-2018 Kerry Shetline, kerry@shetline.com.
 
   This code is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -22,7 +22,7 @@
 
 import { SvcGenericOptionsComponent } from '../svc-generic-options.component';
 import { AfterViewInit, Component } from '@angular/core';
-import { SelectItem } from 'primeng/primeng';
+import { SelectItem } from 'primeng/components/common/api';
 import { AppService, UserSetting } from '../../app.service';
 import {
   VIEW_ORBITS, PROPERTY_EXTENT, PROPERTY_CENTER_EARTH, PROPERTY_MARQUEE_UNITS, PROPERTY_SHOW_PATHS, PROPERTY_SHOW_MARKERS,

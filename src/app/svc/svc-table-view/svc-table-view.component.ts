@@ -1,5 +1,5 @@
 /*
-  Copyright © 2017 Kerry Shetline, kerry@shetline.com.
+  Copyright © 2017-2018 Kerry Shetline, kerry@shetline.com.
 
   This code is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -29,7 +29,7 @@ import * as _ from 'lodash';
 import {
   EARTH, EventFinder, ISkyObserver, JUPITER, JupiterInfo, MARS, MERCURY, MOON, NEPTUNE, PLUTO, SATURN, SkyObserver, SUN, URANUS, VENUS
 } from 'ks-astronomy';
-import { SelectItem } from 'primeng/primeng';
+import { SelectItem } from 'primeng/components/common/api';
 
 export enum TableType {NONE, EPHEMERIS, EPHEMERIS_TBD, RISE_SET_TIMES, LUNAR_PHASES, EQUINOX_SOLSTICE, GALILEAN_MOONS}
 
