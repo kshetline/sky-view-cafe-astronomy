@@ -1,6 +1,6 @@
 @import "../../../styles";
 
-:host /deep/ select {
+:host ::ng-deep select {
   width: 12em;
 }
 

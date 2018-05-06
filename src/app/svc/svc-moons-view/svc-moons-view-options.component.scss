@@ -15,7 +15,7 @@ p-slider {
   width: 1.75em;
 }
 
-.default-zoom /deep/ span {
+.default-zoom ::ng-deep span {
   padding-left: 3px;
   padding-right: 3px;
 }

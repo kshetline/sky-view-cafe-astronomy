@@ -20,24 +20,24 @@ div.wrapper {
   border-bottom: lightgray 1px solid;
 }
 
-/deep/ table.table-view {
+::ng-deep table.table-view {
   border-collapse: collapse;
 }
 
-/deep/ table.table-view td, /deep/ table.table-view th {
+::ng-deep table.table-view td, ::ng-deep table.table-view th {
   padding-right: 2em;
 }
 
-/deep/ table.table-view tr td:last-child, /deep/ table.table-view tr th:last-child {
+::ng-deep table.table-view tr td:last-child, ::ng-deep table.table-view tr th:last-child {
   padding-right: 0;
 }
 
-/deep/ table.table-view td {
+::ng-deep table.table-view td {
   font-family: Courier New, monospace;
   white-space: pre;
 }
 
-/deep/ table.table-view tr td:first-child {
+::ng-deep table.table-view tr td:first-child {
   font-family: inherit;
   font-weight: bold;
   text-align: right;

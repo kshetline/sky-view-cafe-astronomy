@@ -14,7 +14,7 @@
   height: 100%;
 }
 
-/deep/ fieldset {
+::ng-deep fieldset {
   border: 1px #D8D8D8 solid;
 }
 
@@ -48,11 +48,11 @@ svc-location-settings {
   white-space: nowrap;
 }
 
-/deep/ .ui-tabview .ui-tabview-panel {
+::ng-deep .ui-tabview .ui-tabview-panel {
   padding: 0;
 }
 
-/deep/ .calendar-popup .ui-overlaypanel-content {
+::ng-deep .calendar-popup .ui-overlaypanel-content {
   padding: 2px;
 }
 
@@ -60,7 +60,7 @@ div.about-dialog {
   text-align: center;
 }
 
-p-dialog.about-dialog /deep/ .ui-dialog.ui-widget .ui-dialog-titlebar {
+p-dialog.about-dialog ::ng-deep .ui-dialog.ui-widget .ui-dialog-titlebar {
   padding: 2px;
 }
 

@@ -27,18 +27,18 @@ hr {
   margin-bottom: 6px !important;
 }
 
-/deep/ .ui-growl {
+::ng-deep .ui-growl {
   width: auto;
 }
 
-/deep/ .ui-growl-message {
+::ng-deep .ui-growl-message {
   padding-right: 1em;
 }
 
-:host /deep/ select {
+:host ::ng-deep select {
   width: 12em;
 }
 
-:host /deep/ .ui-dialog-content {
+:host ::ng-deep .ui-dialog-content {
   overflow: hidden;
 }
