@@ -20,13 +20,17 @@
   other uses are restricted.
 */
 
-import { AfterViewInit, Component, OnDestroy } from '@angular/core';
+import { AfterViewInit, Component, HostListener, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { AppService, currentMinuteMillis, CurrentTab, PROPERTY_GREGORIAN_CHANGE_DATE, UserSetting, VIEW_APP } from './app.service';
 import { Observable, Subscription } from 'rxjs';
 import { MenuItem, Message } from 'primeng/components/common/api';
 import { KsDateTime, KsTimeZone, YMDDate } from 'ks-date-time-zone';
 import { toggleFullScreen } from 'ks-util';
+import * as _ from 'lodash';
+
+const MIN_APP_WIDTH = 1040;
+const MIN_APP_HEIGHT = 640;
 
 @Component({
   selector: 'svc-app',
@@ -37,6 +41,7 @@ import { toggleFullScreen } from 'ks-util';
 export class AppComponent implements AfterViewInit, OnDestroy {
   private dateTime = new KsDateTime(null, KsTimeZone.OS_ZONE);
   private _date = <YMDDate> {};
+  private debouncedResize: () => void;
   private _timeZone: KsTimeZone = KsTimeZone.OS_ZONE;
   private _time: number = this.dateTime.utcTimeMillis;
   private _trackTime = false;
@@ -91,6 +96,8 @@ export class AppComponent implements AfterViewInit, OnDestroy {
 
   ngAfterViewInit(): void {
     setTimeout(() => {
+      this.doResize();
+
       if (this.router.url === '/') {
         this.selectedTab = <number> this.app.defaultTab;
         this.app.currentTab = this.app.defaultTab;
@@ -166,5 +173,31 @@ export class AppComponent implements AfterViewInit, OnDestroy {
   // noinspection JSMethodCanBeStatic
   private toggleFullScreen(): void {
     toggleFullScreen();
+  }
+
+  @HostListener('window:resize') private onResize(): void {
+    if (!this.debouncedResize)
+      this.debouncedResize = _.debounce(() => this.doResize(), 1000);
+
+    this.debouncedResize();
+  }
+
+  // noinspection JSMethodCanBeStatic
+  private doResize(): void {
+    let outermost = document.querySelector('html') as HTMLElement;
+
+    if (!outermost)
+      outermost = document.querySelector('body');
+
+    const origOverflow = outermost.style.overflow;
+
+    if (outermost.clientWidth < outermost.scrollWidth || outermost.clientWidth < MIN_APP_WIDTH ||
+        outermost.clientHeight < outermost.scrollHeight || outermost.clientHeight < MIN_APP_HEIGHT)
+      outermost.style.overflow = 'auto';
+    else
+      outermost.style.overflow = 'hidden';
+
+    if (outermost.style.overflow !== origOverflow)
+      document.dispatchEvent(new Event('scroll-changed'));
   }
 }

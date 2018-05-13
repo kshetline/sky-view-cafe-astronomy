@@ -143,6 +143,10 @@ export abstract class GenericView implements AfterViewInit {
     this.locationSubscription = appService.getLocationUpdates(() => {
       this.draw();
     });
+
+    document.addEventListener('scroll-changed', () => {
+      this.onResize();
+    });
   }
 
   ngAfterViewInit(): void {

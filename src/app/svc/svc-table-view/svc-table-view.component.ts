@@ -142,6 +142,10 @@ export class SvcTableViewComponent implements AfterViewInit {
         this.updateView(forced);
       }
     });
+
+    document.addEventListener('scroll-changed', () => {
+      this.onResize();
+    });
   }
 
   ngAfterViewInit(): void {

@@ -206,6 +206,10 @@ export class SvcCalendarViewComponent implements AfterViewInit {
       this.moonDrawer = moonDrawer;
       this.onResize();
     });
+
+    document.addEventListener('scroll-changed', () => {
+      this.onResize();
+    });
   }
 
   ngAfterViewInit(): void {
