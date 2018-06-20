@@ -23,7 +23,7 @@
 import { AfterViewInit, Component, Input, OnDestroy } from '@angular/core';
 import { AppService, UserSetting } from '../../app.service';
 import { Message, SelectItem } from 'primeng/components/common/api';
-import { Observable, Subscription } from 'rxjs';
+import { Subscription, timer } from 'rxjs';
 import {
   APHELION, EARTH, EclipseInfo, EventFinder, FALL_EQUINOX, FIRST_QUARTER, FULL_MOON, GALILEAN_MOON_EVENT, GREATEST_ELONGATION,
   GRS_TRANSIT_EVENT, INFERIOR_CONJUNCTION, JUPITER, JupiterInfo, LAST_QUARTER, LUNAR_ECLIPSE, MARS, MERCURY, MOON, NEPTUNE, NEW_MOON,
@@ -164,7 +164,7 @@ export class SvcEventNavigatorComponent implements AfterViewInit, OnDestroy {
       this._selectedEvent = newEvent;
 
       if (newEvent < 0) {
-        Observable.timer(0).subscribe(() => {
+        timer(0).subscribe(() => {
           this.selectedEvent = lastEvent;
         });
       }
@@ -180,7 +180,7 @@ export class SvcEventNavigatorComponent implements AfterViewInit, OnDestroy {
       this._selectedPlanet = newPlanet;
 
       if (newPlanet < 0) {
-        Observable.timer(0).subscribe(() => {
+        timer(0).subscribe(() => {
           this.selectedPlanet = lastPlanet;
         });
       }
@@ -191,7 +191,7 @@ export class SvcEventNavigatorComponent implements AfterViewInit, OnDestroy {
     if (!this.clickTimer) {
       this.lastGoBack = goBack;
 
-      this.clickTimer = Observable.timer(CLICK_REPEAT_DELAY, CLICK_REPEAT_RATE).subscribe(() => {
+      this.clickTimer = timer(CLICK_REPEAT_DELAY, CLICK_REPEAT_RATE).subscribe(() => {
         this.getEvent(this.lastGoBack);
       });
     }

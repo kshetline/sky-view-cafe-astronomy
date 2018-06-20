@@ -20,7 +20,7 @@
 import * as _ from 'lodash';
 import { Component, EventEmitter, forwardRef, OnInit, Output } from '@angular/core';
 import { NG_VALUE_ACCESSOR, ControlValueAccessor } from '@angular/forms';
-import { Observable } from 'rxjs';
+import { timer } from 'rxjs';
 import { AppService } from '../../app.service';
 import { KsTimeZone, RegionAndSubzones } from 'ks-date-time-zone';
 
@@ -156,7 +156,7 @@ export class SvcZoneSelectorComponent implements ControlValueAccessor, OnInit {
     this.hasFocus = false;
     // If focus is lost and hasn't come back to a different selection on the next event cycle, assume
     // the selector as a whole has lost focus.
-    Observable.timer().subscribe(() => {
+    timer().subscribe(() => {
         --this.focusCount;
 
       if (!this.hasFocus) {

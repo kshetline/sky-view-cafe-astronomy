@@ -28,8 +28,6 @@ import { HttpClientModule, HttpClientJsonpModule } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { FlexLayoutModule } from '@angular/flex-layout';
 
-import 'rxjs/add/operator/timeout';
-
 import { NgBusyModule, BusyConfig } from 'ng-busy';
 
 import { BlockUIModule } from 'primeng/blockui';

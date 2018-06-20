@@ -23,7 +23,7 @@ import { BACKGROUND_ANIMATIONS, KsSequenceEditorComponent } from '../widgets/ks-
 import { DateTimeField, KsCalendar, KsDateTime, KsTimeZone, YMDDate } from 'ks-date-time-zone';
 import * as M_ from 'ks-math';
 import { abs, max, min } from 'ks-math';
-import { Observable } from 'rxjs';
+import { timer } from 'rxjs';
 import * as _ from 'lodash';
 import { SVC_MAX_YEAR, SVC_MIN_YEAR } from '../app.service';
 
@@ -169,7 +169,7 @@ export class SvcDateEditorComponent extends KsSequenceEditorComponent implements
     }
 
     if (reUpdate) {
-      Observable.timer().subscribe(() => {
+      timer().subscribe(() => {
         this.errorFlash();
         this.onChangeCallback(this.ymd);
         this.updateDigits();

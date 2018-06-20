@@ -31,8 +31,8 @@ import { NO_DEEP_SKY, ALL_DEEP_SKY } from '../generic-sky-view';
 import * as _ from 'lodash';
 import { SvcGenericOptionsComponent } from '../svc-generic-options.component';
 
-const CHECKED = 'fa-check-square-o';
-const UNCHECKED = 'fa-square-o';
+const CHECKED = 'fa fa-check-square-o';
+const UNCHECKED = 'fa fa-square-o';
 const EM_DASH = '\u2014';
 
 interface MenuItemPlus extends MenuItem {
@@ -76,7 +76,7 @@ export class SvcEclipticViewOptionsComponent extends SvcGenericOptionsComponent 
   namesCategories: MenuItemPlus[] = [
     {label: 'None',                  icon: UNCHECKED, property: null,
       command: (event) => { this.toggleLabels(event); }},
-    {label: EM_DASH, icon: 'fa-fw'},
+    {label: EM_DASH, icon: 'fa fa-fw'},
     {label: 'Planets',               icon: CHECKED,   property: PROPERTY_LABEL_PLANETS,
       command: (event) => { this.toggleLabels(event); }},
     {label: 'Bright Stars',          icon: UNCHECKED, property: PROPERTY_LABEL_BRIGHT_STARS,
@@ -85,7 +85,7 @@ export class SvcEclipticViewOptionsComponent extends SvcGenericOptionsComponent 
       command: (event) => { this.toggleLabels(event); }},
     {label: 'Constellations',        icon: UNCHECKED, property: PROPERTY_LABEL_CONSTELLATIONS,
       command: (event) => { this.toggleLabels(event); }, disabled: true},
-    {label: EM_DASH, icon: 'fa-fw'},
+    {label: EM_DASH, icon: 'fa fa-fw'},
     {label: 'No Deep Sky Objects',   icon: CHECKED,   property: PROPERTY_LABEL_DSOS,
       command: (event) => { this.toggleLabels(event); }, value: NO_DEEP_SKY},
     {label: 'DSOs 4.0 and Brighter', icon: UNCHECKED, property: PROPERTY_LABEL_DSOS,

@@ -27,7 +27,7 @@ import { VIEW_CALENDAR, PROPERTY_KEY_MOON_PHASES, PROPERTY_EQUISOLSTICE, PROPERT
          PROPERTY_EVENT_TYPE, PROPERTY_INCLUDE_TRANSITS
 } from './svc-calendar-view.component';
 import { DateTimeField, KsDateTime, KsTimeZone } from 'ks-date-time-zone';
-import { Observable, Subscription } from 'rxjs';
+import { Subscription, timer } from 'rxjs';
 
 const CLICK_REPEAT_DELAY = 500;
 const CLICK_REPEAT_RATE  = 250;
@@ -138,7 +138,7 @@ export class SvcCalendarViewOptionsComponent implements AfterViewInit, OnDestroy
 
   onMouseDown(delta: number): void {
     if (!this.clickTimer) {
-      this.clickTimer = Observable.timer(CLICK_REPEAT_DELAY, CLICK_REPEAT_RATE).subscribe(() => {
+      this.clickTimer = timer(CLICK_REPEAT_DELAY, CLICK_REPEAT_RATE).subscribe(() => {
         this.changeMonth(delta);
       });
     }

@@ -19,7 +19,7 @@
 
 import { AfterViewInit, Component, ElementRef, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { animate, state, style, transition, trigger } from '@angular/animations';
-import { Observable, Subscription } from 'rxjs';
+import { Subscription, timer } from 'rxjs';
 import { FontMetrics, getCssValue, getFont, getFontMetrics, getTextWidth, isWindows } from 'ks-util';
 import * as _ from 'lodash';
 
@@ -141,7 +141,7 @@ export class KsSequenceEditorComponent implements AfterViewInit, OnInit, OnDestr
       this.warningTimer.unsubscribe();
 
     this.displayState = 'warning';
-    this.warningTimer = Observable.timer(WARNING_DURATION).subscribe(() => {
+    this.warningTimer = timer(WARNING_DURATION).subscribe(() => {
       this.endWarning();
     });
   }
@@ -346,7 +346,7 @@ export class KsSequenceEditorComponent implements AfterViewInit, OnInit, OnDestr
 
   protected errorFlash(): void {
     this.displayState = 'error';
-    Observable.timer(FLASH_DURATION).subscribe(() => { this.displayState = (this.warningTimer ? 'warning' : 'normal'); });
+    timer(FLASH_DURATION).subscribe(() => { this.displayState = (this.warningTimer ? 'warning' : 'normal'); });
   }
 
   protected stopKeyTimer(): void {
@@ -404,7 +404,7 @@ export class KsSequenceEditorComponent implements AfterViewInit, OnInit, OnDestr
     if ((newSelection === SPIN_UP || newSelection === SPIN_DOWN) && !this.clickTimer) {
       this.lastDelta = newSelection === SPIN_UP ? 1 : -1;
 
-      this.clickTimer = Observable.timer(KEY_REPEAT_DELAY, KEY_REPEAT_RATE).subscribe(() => {
+      this.clickTimer = timer(KEY_REPEAT_DELAY, KEY_REPEAT_RATE).subscribe(() => {
         this.onSpin(this.lastDelta);
       });
     }
@@ -448,7 +448,7 @@ export class KsSequenceEditorComponent implements AfterViewInit, OnInit, OnDestr
 
   onKeyDown(event: KeyboardEvent): void {
     if (NAVIGATION_KEYS.includes(event.keyCode) && !this.keyTimer) {
-      this.keyTimer = Observable.timer(KEY_REPEAT_DELAY, KEY_REPEAT_RATE).subscribe(() => {
+      this.keyTimer = timer(KEY_REPEAT_DELAY, KEY_REPEAT_RATE).subscribe(() => {
         this.onKey(event);
       });
     }

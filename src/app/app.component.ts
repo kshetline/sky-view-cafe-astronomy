@@ -23,7 +23,7 @@
 import { AfterViewInit, Component, HostListener, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { AppService, currentMinuteMillis, CurrentTab, PROPERTY_GREGORIAN_CHANGE_DATE, UserSetting, VIEW_APP } from './app.service';
-import { Observable, Subscription } from 'rxjs';
+import { Subscription, timer } from 'rxjs';
 import { MenuItem, Message } from 'primeng/components/common/api';
 import { KsDateTime, KsTimeZone, YMDDate } from 'ks-date-time-zone';
 import { toggleFullScreen } from 'ks-util';
@@ -49,10 +49,10 @@ export class AppComponent implements AfterViewInit, OnDestroy {
 
   messages: Message[] = [];
   moreItems: MenuItem[] = [
-      { label: 'Preferences', icon: 'fa-cog', command: () => this.displayPreferences = true },
-      { label: 'Help', icon: 'fa-question-circle', command: () => this.openHelp() },
-      { label: 'Toggle full screen', icon: 'fa-arrows-alt', command: () => this.toggleFullScreen() },
-      { label: 'About Sky View Café', icon: 'fa-info-circle', command: () => this.displayAbout = true }
+      { label: 'Preferences', icon: 'fa fa-cog', command: () => this.displayPreferences = true },
+      { label: 'Help', icon: 'fa fa-question-circle', command: () => this.openHelp() },
+      { label: 'Toggle full screen', icon: 'fa fa-arrows-alt', command: () => this.toggleFullScreen() },
+      { label: 'About Sky View Café', icon: 'fa fa-info-circle', command: () => this.displayAbout = true }
     ];
 
   displayAbout = false;
@@ -148,7 +148,7 @@ export class AppComponent implements AfterViewInit, OnDestroy {
       this._trackTime = state;
 
       if (state) {
-        this.timer = Observable.timer(250, 250).subscribe(() => {
+        this.timer = timer(250, 250).subscribe(() => {
           this.time = currentMinuteMillis();
         });
       }

@@ -22,7 +22,7 @@ import { NG_VALUE_ACCESSOR, ControlValueAccessor } from '@angular/forms';
 import { KsSequenceEditorComponent, BACKGROUND_ANIMATIONS, SequenceItemInfo } from '../widgets/ks-sequence-editor/ks-sequence-editor.component';
 import { DateAndTime, KsDateTime, KsTimeZone, DateTimeField } from 'ks-date-time-zone';
 import { abs, div_tt0, max, min } from 'ks-math';
-import { Observable } from 'rxjs';
+import { timer } from 'rxjs';
 import { SVC_MAX_YEAR, SVC_MIN_YEAR } from '../app.service';
 
 export const SVC_TIME_EDITOR_VALUE_ACCESSOR: any = {
@@ -165,7 +165,7 @@ export class SvcTimeEditorComponent extends KsSequenceEditorComponent implements
     }
 
     if (reUpdate) {
-      Observable.timer().subscribe(() => {
+      timer().subscribe(() => {
         this.errorFlash();
         this.dateTime.wallTime = wallTime;
         this.onChangeCallback(this.dateTime.utcTimeMillis);

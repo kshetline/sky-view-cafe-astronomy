@@ -20,7 +20,7 @@
 import { Component, EventEmitter, forwardRef, Input, OnDestroy, Output } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { NG_VALUE_ACCESSOR, ControlValueAccessor } from '@angular/forms';
-import { Observable, Subscription } from 'rxjs';
+import { Subscription, timer } from 'rxjs';
 import * as _ from 'lodash';
 import { CalendarType, GregorianChange, KsDateTime, KsTimeZone, YMDDate } from 'ks-date-time-zone';
 
@@ -218,7 +218,7 @@ export class KsCalendarComponent implements ControlValueAccessor, OnDestroy {
 
   onMouseDown(event: MouseEvent, delta: number): void {
     if (!this.timerSubscription) {
-      this.timerSubscription = Observable.timer(CLICK_REPEAT_DELAY, CLICK_REPEAT_RATE).subscribe(() => {
+      this.timerSubscription = timer(CLICK_REPEAT_DELAY, CLICK_REPEAT_RATE).subscribe(() => {
         this.onClick(event, delta);
       });
     }

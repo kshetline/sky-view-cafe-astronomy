@@ -24,6 +24,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { ZoneInfo } from 'ks-date-time-zone';
+import { timeout } from 'rxjs/operators';
 
 export interface RegionAndSubzones {
   region: string;
@@ -75,25 +76,25 @@ export class KsTimeService {
     }
   }
 
-  public getZoneForLocation(longitude: number, latitude: number, timestamp?: number | null, timeout?: number): Promise<ZoneForLocation> {
+  public getZoneForLocation(longitude: number, latitude: number, timestamp?: number | null, timeoutValue?: number): Promise<ZoneForLocation> {
     if (timestamp === null || timestamp === undefined)
       timestamp = Math.floor(Date.now() / 1000);
 
     const params = 'lon=' + longitude + '&lat=' + latitude + '&timestamp=' + timestamp;
 
-    if (!timeout)
-      timeout = 60000;
+    if (!timeoutValue)
+      timeoutValue = 60000;
 
     if (this.hostname === 'localhost') {
       return this.httpClient.jsonp<ZoneForLocation>
-        ('http://test.skyviewcafe.com/timeservices/zoneloc?' + params, 'callback').timeout(timeout).toPromise();
+        ('http://test.skyviewcafe.com/timeservices/zoneloc?' + params, 'callback').pipe(timeout(timeoutValue)).toPromise();
     }
     else if (this.hostname === '127.0.0.1') {
       return this.httpClient.jsonp<ZoneForLocation>
-        ('http://localhost:8088/time/zoneloc?' + params, 'callback').timeout(timeout).toPromise();
+        ('http://localhost:8088/time/zoneloc?' + params, 'callback').pipe(timeout(timeoutValue)).toPromise();
     }
     else {
-      return this.httpClient.get<ZoneForLocation>('/timeservices/zoneloc?' + params).timeout(timeout).toPromise();
+      return this.httpClient.get<ZoneForLocation>('/timeservices/zoneloc?' + params).pipe(timeout(timeoutValue)).toPromise();
     }
   }
 }

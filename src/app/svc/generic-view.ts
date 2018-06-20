@@ -31,9 +31,7 @@ import { FontMetrics, getFontMetrics, isSafari } from 'ks-util';
 import * as _ from 'lodash';
 import { KsDateTime } from 'ks-date-time-zone';
 import { SafeStyle } from '@angular/platform-browser';
-import { Subscription } from 'rxjs/Subscription';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { Observable } from 'rxjs/Observable';
+import { Subscription, BehaviorSubject, Observable } from 'rxjs';
 
 export const PROPERTY_ADDITIONALS = 'additionals';
 export enum    ADDITIONALS {NONE, ALL_ASTEROIDS, ALL_COMETS, ALL}

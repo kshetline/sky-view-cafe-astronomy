@@ -28,8 +28,8 @@
     </div>
     <p-footer>
       <div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix">
-        <button type="button" pButton icon="fa-close" (click)="showSaveDialog=false" label="Cancel"></button>
-        <button type="button" pButton icon="fa-check" (click)="doSave()" label="OK" [disabled]="!selectedName.trim()"></button>
+        <button type="button" pButton icon="fa fa-close" (click)="showSaveDialog=false" label="Cancel"></button>
+        <button type="button" pButton icon="fa fa-check" (click)="doSave()" label="OK" [disabled]="!selectedName.trim()"></button>
       </div>
     </p-footer>
     <p-confirmDialog header="Same location name in use" icon="fa fa-question-circle" width="400" appendTo="body"></p-confirmDialog>
@@ -43,8 +43,8 @@
     </div>
     <p-footer>
       <div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix">
-        <button type="button" pButton icon="fa-close" (click)="showDeleteDialog=false" label="Cancel"></button>
-        <button type="button" pButton icon="fa-check" (click)="doDelete()" label="OK"></button>
+        <button type="button" pButton icon="fa fa-close" (click)="showDeleteDialog=false" label="Cancel"></button>
+        <button type="button" pButton icon="fa fa-check" (click)="doDelete()" label="OK"></button>
       </div>
     </p-footer>
   </p-dialog>
