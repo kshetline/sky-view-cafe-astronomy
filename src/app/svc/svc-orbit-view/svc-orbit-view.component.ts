@@ -1,5 +1,5 @@
 /*
-  Copyright © 2017 Kerry Shetline, kerry@shetline.com.
+  Copyright © 2017-2018 Kerry Shetline, kerry@shetline.com.
 
   This code is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -168,7 +168,7 @@ export class SvcOrbitViewComponent extends GenericPlanetaryView implements After
           // This should happen at a close time interval. Since a user wouldn't change both settings
           // one after the other very quickly, assume a short time interval means that old settings
           // are being loaded and that the change in extent shouldn't reset the zoom setting.
-          if (Date.now() > this.zoomLastSet + ZOOM_RESET_TOLERANCE) {
+          if (performance.now() > this.zoomLastSet + ZOOM_RESET_TOLERANCE) {
             this.zoom = SvcOrbitViewComponent.zoomToZoomSteps(scales[this.extent]);
 
             if (this.zoom !== oldZoom)
@@ -189,7 +189,7 @@ export class SvcOrbitViewComponent extends GenericPlanetaryView implements After
           this.showNames = <boolean> setting.value;
         else if (setting.property === PROPERTY_ZOOM) {
           this.zoom = <number> setting.value;
-          this.zoomLastSet = Date.now();
+          this.zoomLastSet = performance.now();
         }
         else if (setting.property === PROPERTY_ANAGLYPH_3D)
           this.anaglyph3d = <boolean> setting.value;

@@ -310,7 +310,6 @@ export class SvcTableViewComponent implements AfterViewInit {
       const setTableContents = (html: string) => {
         this.tableHtml = html;
         this.onResize();
-//        console.log('**** new table **** ' + Date.now());
       };
 
       if (_.isString(newTable))

@@ -1,8 +1,8 @@
 <div class="orbitControls">Select an orientation...
-  <button pButton type="button" icon="fa fa-chevron-left" (click)="changeOrientation(1, 0)"></button>
+  <button pButton type="button" icon="fa fa-chevron-left" (click)="changeOrientation(1, 0)"></button>&nbsp;
   <span [hidden]="rotation_xz < 0">&#x2008;</span>{{rotation_xz | number: '3.1-1'}}&deg;
-  <button pButton type="button" icon="fa fa-chevron-right" (click)="changeOrientation(-1, 0)"></button>&nbsp;
-  <button pButton type="button" icon="fa fa-chevron-down" (click)="changeOrientation(0, -1)"></button>
+  <button pButton type="button" icon="fa fa-chevron-right" (click)="changeOrientation(-1, 0)"></button>&nbsp;&nbsp;
+  <button pButton type="button" icon="fa fa-chevron-down" (click)="changeOrientation(0, -1)"></button>&nbsp;
   <span [hidden]="rotation_yz < 0">&#x2008;</span>{{rotation_yz | number: '3.1-1'}}&deg;
   <button pButton type="button" icon="fa fa-chevron-up" (click)="changeOrientation(0, 1)"></button>
   ...or drag view below.&nbsp;

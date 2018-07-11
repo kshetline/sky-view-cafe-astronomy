@@ -1,5 +1,5 @@
 /*
-  Copyright © 2017 Kerry Shetline, kerry@shetline.com.
+  Copyright © 2017-2018 Kerry Shetline, kerry@shetline.com.
 
   This code is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -180,7 +180,7 @@ export class SvcInsolationViewComponent extends GenericView implements AfterView
     }
 
     if (!this.drawingComplete) {
-      const startTime = Date.now();
+      const startTime = performance.now();
       const context = this.insolationCanvas.getContext('2d');
       let y0 = this.lastPlotY;
       let timedOut = false;
@@ -200,7 +200,7 @@ export class SvcInsolationViewComponent extends GenericView implements AfterView
             context.fillRect(x, y, plotSize, plotSize);
           }
 
-          const currTime = Date.now();
+          const currTime = performance.now();
 
           if (currTime > startTime + 250) {
             timedOut = true;

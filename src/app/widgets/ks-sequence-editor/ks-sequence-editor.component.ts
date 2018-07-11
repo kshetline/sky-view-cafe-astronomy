@@ -1,5 +1,5 @@
 /*
-  Copyright © 2017 Kerry Shetline, kerry@shetline.com
+  Copyright © 2017-2018 Kerry Shetline, kerry@shetline.com
 
   MIT license: https://opensource.org/licenses/MIT
 
@@ -21,6 +21,7 @@ import { AfterViewInit, Component, ElementRef, Input, OnDestroy, OnInit, ViewChi
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { Subscription, timer } from 'rxjs';
 import { FontMetrics, getCssValue, getFont, getFontMetrics, getTextWidth, isWindows } from 'ks-util';
+import { abs, Point } from 'ks-math';
 import * as _ from 'lodash';
 
 export interface SequenceItemInfo {
@@ -43,6 +44,8 @@ const NAVIGATION_KEYS = [BACKSPACE, KEY_LEFT, KEY_UP, KEY_RIGHT, KEY_DOWN];
 const KEY_REPEAT_DELAY = 500;
 const KEY_REPEAT_RATE  = 100;
 const WARNING_DURATION = 5000;
+
+const DIGIT_SWIPE_THRESHOLD = 10;
 
 const NO_SELECTION = -1;
 const SPIN_UP      = -2;
@@ -89,6 +92,7 @@ export class KsSequenceEditorComponent implements AfterViewInit, OnInit, OnDestr
   private _blank = false;
   private scaled = false;
   private lastDelta = 1;
+  private firstTouch: Point;
   @ViewChild('canvas') private canvasRef: ElementRef;
 
   protected canvas: HTMLCanvasElement;
@@ -96,6 +100,7 @@ export class KsSequenceEditorComponent implements AfterViewInit, OnInit, OnDestr
   protected disabled = false;
   protected width = 180;
   protected height = 17;
+  protected metrics: FontMetrics;
   protected font: string;
   protected smallFont: string;
   protected fixedFont: string;
@@ -170,15 +175,6 @@ export class KsSequenceEditorComponent implements AfterViewInit, OnInit, OnDestr
     this.canvas = this.canvasRef.nativeElement;
     this.font = getFont(this.canvas);
 
-    if (!this.font) {
-      const fontStyle = getCssValue(this.canvas, 'font-style');
-      const fontVariant = getCssValue(this.canvas, 'font-variant');
-      const fontWeight = getCssValue(this.canvas, 'font-weight');
-      const fontSize = parseFloat(getCssValue(this.canvas, 'font-size').replace('px', ''));
-      const fontFamily = getCssValue(this.canvas, 'font-family');
-      this.font = fontStyle + ' ' + fontVariant + ' ' + fontWeight + ' ' + fontSize + 'px ' + fontFamily;
-    }
-
     this.smallFont = this.fixedFont = this.smallFixedFont = this.font;
     const fontParts = /(.*?\b)((?:\d|\.)+)(px\b)(\s*\/\s*\w+\s+)?(.*)/.exec(this.font);
 
@@ -236,8 +232,9 @@ export class KsSequenceEditorComponent implements AfterViewInit, OnInit, OnDestr
   }
 
   protected computeSize(): void {
-    const metrics: FontMetrics = getFontMetrics(this.canvas);
-    const padding = KsSequenceEditorComponent.getPadding(metrics);
+    this.metrics = getFontMetrics(this.canvas);
+
+    const padding = KsSequenceEditorComponent.getPadding(this.metrics);
     let hOffset = padding;
 
     this.hOffsets = [];
@@ -249,8 +246,8 @@ export class KsSequenceEditorComponent implements AfterViewInit, OnInit, OnDestr
 
     this.hOffsets.push(hOffset);
 
-    const w = hOffset + Math.ceil(metrics.ascent * 1.5) + padding;
-    const h = metrics.ascent + padding * 2;
+    const w = hOffset + Math.ceil(this.metrics.ascent * 1.5) + padding;
+    const h = this.metrics.ascent + padding * 2;
     const scaling = window.devicePixelRatio || 1;
 
     this.hOffsets.push(w);
@@ -273,8 +270,7 @@ export class KsSequenceEditorComponent implements AfterViewInit, OnInit, OnDestr
     if (!this.canvas)
       return;
 
-    const metrics: FontMetrics = getFontMetrics(this.canvas);
-    const padding = KsSequenceEditorComponent.getPadding(metrics);
+    const padding = KsSequenceEditorComponent.getPadding(this.metrics);
     const h = this.height;
     const rightEdge = this.hOffsets[this.hOffsets.length - 2];
     const context = this.canvas.getContext('2d');
@@ -306,7 +302,7 @@ export class KsSequenceEditorComponent implements AfterViewInit, OnInit, OnDestr
         }
 
         context.font = this.getFontForItem(item);
-        context.fillText(String(item.value), this.hOffsets[index], padding + metrics.ascent);
+        context.fillText(String(item.value), this.hOffsets[index], padding + this.metrics.ascent);
       }
     });
 
@@ -314,13 +310,12 @@ export class KsSequenceEditorComponent implements AfterViewInit, OnInit, OnDestr
   }
 
   protected drawSpinner(context: CanvasRenderingContext2D): void {
-    const metrics: FontMetrics = getFontMetrics(this.canvas);
     const h = this.height;
     const leftEdge = this.hOffsets[this.hOffsets.length - 2];
     const spinnerCenter = Math.ceil((leftEdge + this.width) / 2) + 0.5;
     const spinnerInset = h / 8;
-    const arrowH = metrics.ascent / 2.5;
-    const arrowV = metrics.ascent / 2;
+    const arrowH = this.metrics.ascent / 2.5;
+    const arrowV = this.metrics.ascent / 2;
 
     context.fillStyle = this.getStaticBackgroundColor();
     context.fillRect(leftEdge, 0, this.width - leftEdge, h);
@@ -364,12 +359,32 @@ export class KsSequenceEditorComponent implements AfterViewInit, OnInit, OnDestr
   }
 
   protected getSelectionForEvent(event: MouseEvent): number {
+    return this.getSelectionForXY(event.offsetX, event.offsetY);
+  }
+
+  protected getSelectionForTouchEvent(event: TouchEvent): number {
+    const pt = this.getXYForTouchEvent(event);
+    return this.getSelectionForXY(pt.x, pt.y);
+  }
+
+  protected getXYForTouchEvent(event: TouchEvent, asChange = false): Point {
+    const touches = (asChange ? event.changedTouches : event.targetTouches);
+
+    if (touches.length < 1)
+      return {x: -1, y: -1};
+
+    const rect = (touches.item(0).target as HTMLElement).getBoundingClientRect();
+
+    return {x: touches.item(0).clientX - rect.left, y: touches.item(0).clientY - rect.top};
+  }
+
+  protected getSelectionForXY(x: number, y: number): number {
     const newSelection = _.findIndex(this.hOffsets, (offset: number, index: number) => {
-      return offset <= event.offsetX && event.offsetX < this.hOffsets[Math.min(index + 1, this.hOffsets.length - 1)];
+      return offset <= x && x < this.hOffsets[Math.min(index + 1, this.hOffsets.length - 1)];
     });
 
     if (newSelection >= this.items.length)
-      return (event.offsetY < this.height / 2 ? SPIN_UP : SPIN_DOWN);
+      return (y < this.height / 2 ? SPIN_UP : SPIN_DOWN);
 
     // If this item isn't selectable, move left until a selectable item is found.
     // If going left doesn't work, try looking to the right.
@@ -399,8 +414,29 @@ export class KsSequenceEditorComponent implements AfterViewInit, OnInit, OnDestr
   }
 
   onMouseDown(event: MouseEvent): void {
-    const newSelection = this.getSelectionForEvent(event);
+    if (this.disabled || this.viewOnly)
+      return;
 
+    this.startSelectionAction(this.getSelectionForEvent(event));
+  }
+
+  onTouchStart(event: TouchEvent): void {
+    if (this.disabled || this.viewOnly)
+      return;
+
+    event.preventDefault();
+    this.firstTouch = this.getXYForTouchEvent(event);
+
+    const newSelection = this.getSelectionForTouchEvent(event);
+
+    if (!this.hasFocus)
+      this.canvas.focus();
+
+    this.updateSelection(newSelection);
+    this.startSelectionAction(newSelection);
+  }
+
+  protected startSelectionAction(newSelection: number): void {
     if ((newSelection === SPIN_UP || newSelection === SPIN_DOWN) && !this.clickTimer) {
       this.lastDelta = newSelection === SPIN_UP ? 1 : -1;
 
@@ -411,9 +447,34 @@ export class KsSequenceEditorComponent implements AfterViewInit, OnInit, OnDestr
   }
 
   onMouseUp(): void {
+    if (this.disabled || this.viewOnly)
+      return;
+
     if (this.clickTimer) {
       this.stopClickTimer();
       this.onSpin(this.lastDelta);
+    }
+  }
+
+  onTouchEnd(event: TouchEvent): void {
+    if (this.disabled || this.viewOnly)
+      return;
+
+    event.preventDefault();
+
+    this.onMouseUp();
+
+    if (this.selection >= 0 && this.firstTouch) {
+      const pt = this.getXYForTouchEvent(event, true);
+      const dx = pt.x - this.firstTouch.x;
+      const dy = pt.y - this.firstTouch.y;
+
+      if (abs(dy) > DIGIT_SWIPE_THRESHOLD) {
+        if (dy < 0)
+          this.increment();
+        else
+          this.decrement();
+      }
     }
   }
 
@@ -421,12 +482,19 @@ export class KsSequenceEditorComponent implements AfterViewInit, OnInit, OnDestr
     if (this.disabled || this.viewOnly)
       return;
 
-    const newSelection = this.getSelectionForEvent(event);
+    this.updateSelection(this.getSelectionForEvent(event));
+  }
 
+  protected updateSelection(newSelection: number): void {
     if (this.selection !== newSelection && newSelection !== SPIN_UP && newSelection !== SPIN_DOWN) {
-      this.items[this.selection].selected = false;
+      if (this.selection > 0)
+        this.items[this.selection].selected = false;
+
       this.selection = newSelection;
-      this.items[this.selection].selected = true;
+
+      if (this.selection > 0)
+        this.items[this.selection].selected = true;
+
       this.draw();
     }
   }
