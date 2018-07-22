@@ -295,6 +295,13 @@ export class SvcTimeEditorComponent extends KsSequenceEditorComponent implements
     }
   }
 
+  protected onKey(key: string): void {
+    if (!this.disabled && !this.viewOnly && this.selection === 0 && key === ' ')
+      this.digitTyped(32, ' ');
+    else
+      super.onKey(key);
+  }
+
   protected digitTyped(charCode: number, key: string): void {
     const i = this.items;
     const origDate = <number> i[9].value * 10 + <number> i[10].value;

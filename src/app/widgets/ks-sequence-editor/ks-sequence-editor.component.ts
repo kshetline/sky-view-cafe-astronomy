@@ -21,7 +21,7 @@ import { AfterViewInit, Component, ElementRef, Input, OnDestroy, OnInit, ViewChi
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { Subscription, timer } from 'rxjs';
 import { FontMetrics, getCssValue, getFont, getFontMetrics, getTextWidth, isWindows } from 'ks-util';
-import { abs, Point } from 'ks-math';
+import { abs, max, Point } from 'ks-math';
 import * as _ from 'lodash';
 
 export interface SequenceItemInfo {
@@ -34,12 +34,69 @@ export interface SequenceItemInfo {
   sizing?: string | string[];
 }
 
-const BACKSPACE =  8;
-const KEY_LEFT  = 37;
-const KEY_UP    = 38;
-const KEY_RIGHT = 39;
-const KEY_DOWN  = 40;
-const NAVIGATION_KEYS = [BACKSPACE, KEY_LEFT, KEY_UP, KEY_RIGHT, KEY_DOWN];
+const NAVIGATION_KEYS = ['Backspace', 'Enter', ' ', 'ArrowLeft', 'ArrowUp', 'ArrowRight', 'ArrowDown'];
+
+function eventToKey(event: KeyboardEvent): string {
+  let key = event.key;
+
+  if (key === undefined) {
+    const charCode = event.charCode;
+
+    if (charCode !== 0) {
+      key = String.fromCodePoint(charCode);
+    }
+    else {
+      const keyCode = event.keyCode || event.which;
+
+      switch (keyCode) {
+        case   8: key = 'Backspace'; break;
+        case   9: key = 'Tab'; break;
+        case  12: key = 'Clear'; break;
+        case  13: key = 'Enter'; break;
+        case  16: key = 'Shift'; break;
+        case  17: key = 'Control'; break;
+        case  18: key = 'Alt'; break;
+        case  19: key = 'Pause'; break;
+        case  20: key = 'CapsLock'; break;
+        case  27: key = 'Escape'; break;
+        case  33: key = 'PageUp'; break;
+        case  34: key = 'PageDown'; break;
+        case  35: key = 'End'; break;
+        case  36: key = 'Home'; break;
+        case  37: key = 'ArrowLeft'; break;
+        case  38: key = 'ArrowUp'; break;
+        case  39: key = 'ArrowRight'; break;
+        case  40: key = 'ArrowDown'; break;
+        case  44: key = 'PrintScreen'; break;
+        case  45: key = 'Insert'; break;
+        case  46: key = 'Delete'; break;
+        case  91: key = 'OS'; break;
+        case  93: key = 'ContextMenu'; break;
+        case 144: key = 'NumLock'; break;
+        case 145: key = 'ScrollLock'; break;
+        case 224: key = 'Meta'; break;
+
+        default:
+          if (112 <= keyCode && keyCode <= 135)
+            key = 'F' + (keyCode - 111);
+      }
+    }
+  }
+  else {
+    switch (key) {
+      case 'UIKeyInputLeftArrow':  key = 'ArrowLeft'; break;
+      case 'UIKeyInputUpArrow':    key = 'ArrowUp'; break;
+      case 'UIKeyInputRightArrow': key = 'ArrowRight'; break;
+      case 'UIKeyInputDownArrow':  key = 'ArrowDown'; break;
+    }
+  }
+
+  return key;
+}
+
+function isIOS(): boolean {
+  return !!navigator.platform.match(/i(Pad|Pod|Phone)/i);
+}
 
 const KEY_REPEAT_DELAY = 500;
 const KEY_REPEAT_RATE  = 100;
@@ -93,6 +150,11 @@ export class KsSequenceEditorComponent implements AfterViewInit, OnInit, OnDestr
   private scaled = false;
   private lastDelta = 1;
   private firstTouch: Point;
+  private touchDeltaY = 0;
+  private contentMadeEditable = false;
+  private keyUpReceived = true;
+  private pendingKey: string = null;
+
   @ViewChild('canvas') private canvasRef: ElementRef;
 
   protected canvas: HTMLCanvasElement;
@@ -109,6 +171,7 @@ export class KsSequenceEditorComponent implements AfterViewInit, OnInit, OnDestr
   protected items: SequenceItemInfo[] = [];
   protected hasFocus = false;
   protected selection = 0;
+  protected ios = isIOS();
 
   public displayState = 'normal';
 
@@ -248,7 +311,7 @@ export class KsSequenceEditorComponent implements AfterViewInit, OnInit, OnDestr
 
     const w = hOffset + Math.ceil(this.metrics.ascent * 1.5) + padding;
     const h = this.metrics.ascent + padding * 2;
-    const scaling = window.devicePixelRatio || 1;
+    const scaling = max(window.devicePixelRatio || 1, 2);
 
     this.hOffsets.push(w);
     this.width = w;
@@ -302,7 +365,8 @@ export class KsSequenceEditorComponent implements AfterViewInit, OnInit, OnDestr
         }
 
         context.font = this.getFontForItem(item);
-        context.fillText(String(item.value), this.hOffsets[index], padding + this.metrics.ascent);
+        context.fillText(String(item.value), this.hOffsets[index], padding + this.metrics.ascent +
+          (index === this.selection && !this.clickTimer ? this.touchDeltaY : 0));
       }
     });
 
@@ -367,6 +431,7 @@ export class KsSequenceEditorComponent implements AfterViewInit, OnInit, OnDestr
     return this.getSelectionForXY(pt.x, pt.y);
   }
 
+  // noinspection JSMethodCanBeStatic
   protected getXYForTouchEvent(event: TouchEvent, asChange = false): Point {
     const touches = (asChange ? event.changedTouches : event.targetTouches);
 
@@ -425,7 +490,14 @@ export class KsSequenceEditorComponent implements AfterViewInit, OnInit, OnDestr
       return;
 
     event.preventDefault();
+
+    if (!this.contentMadeEditable) {
+      this.canvas.setAttribute('contenteditable', 'true');
+      this.contentMadeEditable = true;
+    }
+
     this.firstTouch = this.getXYForTouchEvent(event);
+    this.touchDeltaY = 0;
 
     const newSelection = this.getSelectionForTouchEvent(event);
 
@@ -446,6 +518,20 @@ export class KsSequenceEditorComponent implements AfterViewInit, OnInit, OnDestr
     }
   }
 
+  onTouchMove(event: TouchEvent): void {
+    if (this.disabled || this.viewOnly)
+      return;
+
+    event.preventDefault();
+
+    if (this.selection >= 0 && this.firstTouch) {
+      const pt = this.getXYForTouchEvent(event, true);
+
+      this.touchDeltaY = pt.y - this.firstTouch.y;
+      this.draw();
+    }
+  }
+
   onMouseUp(): void {
     if (this.disabled || this.viewOnly)
       return;
@@ -457,6 +543,11 @@ export class KsSequenceEditorComponent implements AfterViewInit, OnInit, OnDestr
   }
 
   onTouchEnd(event: TouchEvent): void {
+    if (this.touchDeltaY !== 0) {
+      this.touchDeltaY = 0;
+      this.draw();
+    }
+
     if (this.disabled || this.viewOnly)
       return;
 
@@ -466,7 +557,6 @@ export class KsSequenceEditorComponent implements AfterViewInit, OnInit, OnDestr
 
     if (this.selection >= 0 && this.firstTouch) {
       const pt = this.getXYForTouchEvent(event, true);
-      const dx = pt.x - this.firstTouch.x;
       const dy = pt.y - this.firstTouch.y;
 
       if (abs(dy) > DIGIT_SWIPE_THRESHOLD) {
@@ -515,67 +605,82 @@ export class KsSequenceEditorComponent implements AfterViewInit, OnInit, OnDestr
   protected lostFocus(): void {}
 
   onKeyDown(event: KeyboardEvent): void {
-    if (NAVIGATION_KEYS.includes(event.keyCode) && !this.keyTimer) {
+    const key = eventToKey(event);
+
+    if (NAVIGATION_KEYS.includes(key) && !this.keyTimer) {
+      this.pendingKey = key;
       this.keyTimer = timer(KEY_REPEAT_DELAY, KEY_REPEAT_RATE).subscribe(() => {
-        this.onKey(event);
+        this.pendingKey = null;
+        this.onKey(key);
       });
+
+      event.preventDefault();
     }
+    else
+      this.pendingKey = null;
   }
 
   onKeyUp(event: KeyboardEvent): void {
-    if (NAVIGATION_KEYS.includes(event.keyCode)) {
-      this.stopKeyTimer();
-      this.onKey(event);
+    this.stopKeyTimer();
+
+    if (this.pendingKey) {
+      this.onKey(this.pendingKey);
+      this.pendingKey = null;
     }
+
+    this.keyUpReceived = true;
   }
 
   onKeyPress(event: KeyboardEvent): void {
+    const key = eventToKey(event);
+    const now = performance.now();
+
     // Firefox, unlike Chrome, creates keypress events for arrow keys, which will lead to doubled
     // effect if we don't filter out these extra events.
-    if (NAVIGATION_KEYS.includes(event.keyCode))
+    if (NAVIGATION_KEYS.includes(key))
       return;
 
-    this.onKey(event);
+    if (!this.ios || (!event.repeat && this.keyUpReceived))
+      this.onKey(key);
+
+    event.preventDefault();
+    this.keyUpReceived = false;
   }
 
-  protected onKey(event: KeyboardEvent): void {
-    if (this.disabled || this.viewOnly)
-      return;
-
-    let keyCode = event.keyCode;
-    const key = event.key;
-
-    if (!this.hasFocus || !this.items[this.selection].editable) {
+  protected onKey(key: string): void {
+    if (this.disabled || this.viewOnly || !this.hasFocus || !this.items[this.selection].editable) {
       return;
     }
 
     if (this.selection !== this.signDigit) {
       if (key === '-')
-        keyCode = KEY_DOWN;
+        key = 'ArrowDown';
       else if (key === '+' || key === '=')
-        keyCode = KEY_UP;
+        key = 'ArrowUp';
     }
 
-    switch (keyCode) {
-      case KEY_UP:
+    switch (key) {
+      case 'ArrowUp':
         this.increment();
       break;
 
-      case KEY_DOWN:
+      case 'ArrowDown':
         this.decrement();
       break;
 
-      case BACKSPACE:
-      case KEY_LEFT:
+      case 'Backspace':
+      case 'ArrowLeft':
         this.cursorLeft();
       break;
 
-      case KEY_RIGHT:
+      case ' ':
+      case 'ArrowRight':
+      case 'Enter':
         this.cursorRight();
       break;
 
       default:
-        this.digitTyped(event.charCode, key);
+        this.digitTyped(key && key.length === 1 ? key.charCodeAt(0) : 0, key);
     }
   }
 
