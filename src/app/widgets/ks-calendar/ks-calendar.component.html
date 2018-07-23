@@ -1,9 +1,11 @@
 <table>
   <tr>
-    <th class="arrow" (mousedown)="onMouseDown($event, -1)" (mouseup)="onMouseUp()" (mouseleave)="stopTimer()"
+    <th class="arrow" (touchstart)="onTouchStart($event, -1)" (touchend)="stopTimer()"
+      (mousedown)="onMouseDown($event, -1)" (mouseup)="stopTimer()" (mouseleave)="stopTimer()"
       (click)="onClick($event, -1)"><i class="fa fa-chevron-left"  aria-hidden="true"></i></th>
     <th colspan="5">{{title}}</th>
-    <th class="arrow" (mousedown)="onMouseDown($event,  1)" (mouseup)="onMouseUp()" (mouseleave)="stopTimer()"
+    <th class="arrow" (touchstart)="onTouchStart($event, 1)" (touchend)="stopTimer()"
+      (mousedown)="onMouseDown($event,  1)" (mouseup)="stopTimer()" (mouseleave)="stopTimer()"
       (click)="onClick($event,  1)"><i class="fa fa-chevron-right" aria-hidden="true"></i></th>
   </tr>
   <tr>

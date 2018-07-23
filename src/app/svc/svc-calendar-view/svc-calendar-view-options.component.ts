@@ -45,6 +45,7 @@ export class SvcCalendarViewOptionsComponent implements AfterViewInit, OnDestroy
   private _dailyMoonPhase = true;
   private _includeTransits = false;
   private clickTimer: Subscription;
+  private pendingDelta = 0;
 
   eventTypes: SelectItem[] = [
     {label: 'Rise/Set Sun',     value: 0},
@@ -133,7 +134,18 @@ export class SvcCalendarViewOptionsComponent implements AfterViewInit, OnDestroy
     if (this.clickTimer) {
       this.clickTimer.unsubscribe();
       this.clickTimer = undefined;
+
+      if (this.pendingDelta) {
+        this.changeMonth(this.pendingDelta);
+        this.pendingDelta = 0;
+      }
     }
+  }
+
+  onTouchStart(event: TouchEvent, delta: number): void {
+    event.preventDefault();
+    this.pendingDelta = delta;
+    this.onMouseDown(delta);
   }
 
   onMouseDown(delta: number): void {
@@ -141,12 +153,6 @@ export class SvcCalendarViewOptionsComponent implements AfterViewInit, OnDestroy
       this.clickTimer = timer(CLICK_REPEAT_DELAY, CLICK_REPEAT_RATE).subscribe(() => {
         this.changeMonth(delta);
       });
-    }
-  }
-
-  onMouseUp(): void {
-    if (this.clickTimer) {
-      this.stopClickTimer();
     }
   }
 

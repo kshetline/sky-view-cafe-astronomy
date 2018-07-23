@@ -28,6 +28,7 @@ import { KsTimeZone } from 'ks-date-time-zone';
 import { Message } from 'primeng/components/common/api';
 import { Table } from 'primeng/table';
 import {  } from '@types/googlemaps';
+import { eventToKey, isIOS } from 'ks-util';
 
 interface LocationInfo {
   rank: number;
@@ -155,7 +156,7 @@ export class SvcAtlasDialogComponent {
   }
 
   onKey(event: KeyboardEvent): void {
-    if (event.keyCode === 13 && !this.searching) {
+    if (eventToKey(event) === 'Enter' && !this.searching) {
       if ((this.searchInFocus || document.activeElement.tagName === 'INPUT') && this.city)
         this.search();
       else if (this.selection)
@@ -240,6 +241,14 @@ export class SvcAtlasDialogComponent {
     this.visible = false;
     this.appService.location = new Location('(' + SvcAtlasDialogComponent.stripNameQualifiers(loc.name) + ')',
       loc.atlasLocation.latitude, loc.atlasLocation.longitude, loc.zone);
+  }
+
+  // noinspection JSMethodCanBeStatic
+  public showTooltip(tooltip: string): string {
+    if (!isIOS())
+      return tooltip;
+    else
+      return null;
   }
 
   private showMap(): void {

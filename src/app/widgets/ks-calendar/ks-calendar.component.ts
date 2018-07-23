@@ -62,6 +62,8 @@ export class KsCalendarComponent implements ControlValueAccessor, OnDestroy {
   private onTouchedCallback: () => void = noop;
   private onChangeCallback: (_: any) => void = noop;
   private timerSubscription: Subscription;
+  private pendingDelta = 0;
+  private pendingEvent: MouseEvent = null;
 
   title: string;
   daysOfWeek: string[] = [];
@@ -213,27 +215,39 @@ export class KsCalendarComponent implements ControlValueAccessor, OnDestroy {
     if (this.timerSubscription) {
       this.timerSubscription.unsubscribe();
       this.timerSubscription = undefined;
+
+      if (this.pendingDelta) {
+        this.onClick(this.pendingEvent, this.pendingDelta);
+        this.pendingEvent = null;
+        this.pendingDelta = 0;
+      }
     }
+  }
+
+  onTouchStart(event: TouchEvent, delta: number): void {
+    event.preventDefault();
+    this.onMouseDown(null, delta);
   }
 
   onMouseDown(event: MouseEvent, delta: number): void {
     if (!this.timerSubscription) {
+      this.pendingEvent = event;
+      this.pendingDelta = delta;
+
       this.timerSubscription = timer(CLICK_REPEAT_DELAY, CLICK_REPEAT_RATE).subscribe(() => {
+        this.pendingEvent = null;
+        this.pendingDelta = 0;
         this.onClick(event, delta);
       });
     }
   }
 
-  onMouseUp(): void {
-    this.stopTimer();
-  }
-
   onClick(event: MouseEvent, delta: number): void {
     const date: YMDDate = _.clone(this.ymd);
 
-    if (event.altKey)
+    if (event && event.altKey)
       date.y += delta * 10;
-    else if (event.shiftKey)
+    else if (event && event.shiftKey)
       date.y += delta;
     else
       date.m += delta;

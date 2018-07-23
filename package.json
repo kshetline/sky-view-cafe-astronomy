@@ -14,7 +14,7 @@
   "private": true,
   "dependencies": {
     "@angular/animations": "6.0.5",
-    "@angular/cdk": "^6.3.2",
+    "@angular/cdk": "^6.4.0",
     "@angular/common": "6.0.5",
     "@angular/compiler": "6.0.5",
     "@angular/core": "6.0.5",
@@ -30,12 +30,12 @@
     "ks-astronomy": "^1.0.1",
     "ks-date-time-zone": "^1.4.0",
     "ks-math": "^1.1.1",
-    "ks-util": "^1.2.0",
+    "ks-util": "^1.3.0",
     "lodash": "^4.17.10",
     "ng-busy": "^6.0.0-rc4",
-    "primeicons": "^1.0.0-beta.9",
-    "primeng": "^6.0.0",
-    "rxjs": "^6.2.1",
+    "primeicons": "^1.0.0-beta.10",
+    "primeng": "^6.0.1",
+    "rxjs": "^6.2.2",
     "zone.js": "^0.8.26"
   },
   "devDependencies": {
@@ -46,7 +46,7 @@
     "@types/googlemaps": "^3.30.11",
     "@types/jasmine": "^2.8.8",
     "@types/jasminewd2": "~2.0.2",
-    "@types/lodash": "^4.14.110",
+    "@types/lodash": "^4.14.112",
     "@types/node": "^6.0.114",
     "codelyzer": "^4.4.2",
     "jasmine-core": "~2.8.0",
@@ -58,7 +58,7 @@
     "karma-jasmine-html-reporter": "^0.2.2",
     "protractor": "~5.1.2",
     "ts-node": "~4.1.0",
-    "tslint": "^5.10.0",
+    "tslint": "^5.11.0",
     "typescript": "2.7.2"
   }
 }

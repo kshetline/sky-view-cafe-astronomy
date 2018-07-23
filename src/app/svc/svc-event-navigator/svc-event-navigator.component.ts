@@ -187,6 +187,11 @@ export class SvcEventNavigatorComponent implements AfterViewInit, OnDestroy {
     }
   }
 
+  onTouchStart(event: TouchEvent, goBack: boolean): void {
+    event.preventDefault();
+    this.onMouseDown(goBack);
+  }
+
   onMouseDown(goBack: boolean): void {
     if (!this.clickTimer) {
       this.lastGoBack = goBack;
@@ -195,6 +200,11 @@ export class SvcEventNavigatorComponent implements AfterViewInit, OnDestroy {
         this.getEvent(this.lastGoBack);
       });
     }
+  }
+
+  onTouchEnd(event: TouchEvent): void {
+    event.preventDefault();
+    this.onMouseUp();
   }
 
   onMouseUp(): void {

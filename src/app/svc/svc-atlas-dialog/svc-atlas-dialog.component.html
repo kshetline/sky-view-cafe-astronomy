@@ -44,10 +44,10 @@
     <ng-template pTemplate="body" let-loc>
       <tr [pSelectableRow]="loc" (dblclick)="onDoubleClick()">
         <td>{{loc.rank}} <img src="assets/resources/flags/{{loc.flagCode}}.png" class="flag-image" width="16" height="11" alt="{{loc.flagCode}}"></td>
-        <td style="text-overflow: ellipsis; overflow: hidden"><span pTooltip="{{loc.name}}">{{loc.name}}</span></td>
+        <td style="text-overflow: ellipsis; overflow: hidden"><span [pTooltip]="showTooltip(loc.name)">{{loc.name}}</span></td>
         <td>{{loc.lat}}</td>
         <td>{{loc.lon}}</td>
-        <td><span pTooltip="{{loc.zone}}">{{loc.zoneInfo}}</span></td>
+        <td><span [pTooltip]="showTooltip(loc.zone)">{{loc.zoneInfo}}</span></td>
       </tr>
     </ng-template>
     <ng-template pTemplate="emptymessage">

@@ -630,6 +630,11 @@ export class SvcOrbitViewComponent extends GenericPlanetaryView implements After
     this.draw();
   }
 
+  public tapChangeOrientation(event: TouchEvent, deltaX: number, deltaY: number): void {
+    event.preventDefault();
+    this.changeOrientation(deltaX, deltaY);
+  }
+
   public changeOrientation(deltaX: number, deltaY: number): void {
     this.rotation_xz = mod2(floor(this.rotation_xz / 15 + deltaX) * 15, 360);
 

@@ -20,7 +20,7 @@
 import { AfterViewInit, Component, ElementRef, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { Subscription, timer } from 'rxjs';
-import { FontMetrics, getCssValue, getFont, getFontMetrics, getTextWidth, isWindows } from 'ks-util';
+import { eventToKey, FontMetrics, getCssValue, getFont, getFontMetrics, getTextWidth, isWindows } from 'ks-util';
 import { abs, max, Point } from 'ks-math';
 import * as _ from 'lodash';
 
@@ -35,68 +35,6 @@ export interface SequenceItemInfo {
 }
 
 const NAVIGATION_KEYS = ['Backspace', 'Enter', ' ', 'ArrowLeft', 'ArrowUp', 'ArrowRight', 'ArrowDown'];
-
-function eventToKey(event: KeyboardEvent): string {
-  let key = event.key;
-
-  if (key === undefined) {
-    const charCode = event.charCode;
-
-    if (charCode !== 0) {
-      key = String.fromCodePoint(charCode);
-    }
-    else {
-      const keyCode = event.keyCode || event.which;
-
-      switch (keyCode) {
-        case   8: key = 'Backspace'; break;
-        case   9: key = 'Tab'; break;
-        case  12: key = 'Clear'; break;
-        case  13: key = 'Enter'; break;
-        case  16: key = 'Shift'; break;
-        case  17: key = 'Control'; break;
-        case  18: key = 'Alt'; break;
-        case  19: key = 'Pause'; break;
-        case  20: key = 'CapsLock'; break;
-        case  27: key = 'Escape'; break;
-        case  33: key = 'PageUp'; break;
-        case  34: key = 'PageDown'; break;
-        case  35: key = 'End'; break;
-        case  36: key = 'Home'; break;
-        case  37: key = 'ArrowLeft'; break;
-        case  38: key = 'ArrowUp'; break;
-        case  39: key = 'ArrowRight'; break;
-        case  40: key = 'ArrowDown'; break;
-        case  44: key = 'PrintScreen'; break;
-        case  45: key = 'Insert'; break;
-        case  46: key = 'Delete'; break;
-        case  91: key = 'OS'; break;
-        case  93: key = 'ContextMenu'; break;
-        case 144: key = 'NumLock'; break;
-        case 145: key = 'ScrollLock'; break;
-        case 224: key = 'Meta'; break;
-
-        default:
-          if (112 <= keyCode && keyCode <= 135)
-            key = 'F' + (keyCode - 111);
-      }
-    }
-  }
-  else {
-    switch (key) {
-      case 'UIKeyInputLeftArrow':  key = 'ArrowLeft'; break;
-      case 'UIKeyInputUpArrow':    key = 'ArrowUp'; break;
-      case 'UIKeyInputRightArrow': key = 'ArrowRight'; break;
-      case 'UIKeyInputDownArrow':  key = 'ArrowDown'; break;
-    }
-  }
-
-  return key;
-}
-
-function isIOS(): boolean {
-  return !!navigator.platform.match(/i(Pad|Pod|Phone)/i);
-}
 
 const KEY_REPEAT_DELAY = 500;
 const KEY_REPEAT_RATE  = 100;
@@ -152,8 +90,8 @@ export class KsSequenceEditorComponent implements AfterViewInit, OnInit, OnDestr
   private firstTouch: Point;
   private touchDeltaY = 0;
   private contentMadeEditable = false;
-  private keyUpReceived = true;
   private pendingKey: string = null;
+  private lastKeyPress = 0;
 
   @ViewChild('canvas') private canvasRef: ElementRef;
 
@@ -171,7 +109,6 @@ export class KsSequenceEditorComponent implements AfterViewInit, OnInit, OnDestr
   protected items: SequenceItemInfo[] = [];
   protected hasFocus = false;
   protected selection = 0;
-  protected ios = isIOS();
 
   public displayState = 'normal';
 
@@ -627,24 +564,25 @@ export class KsSequenceEditorComponent implements AfterViewInit, OnInit, OnDestr
       this.onKey(this.pendingKey);
       this.pendingKey = null;
     }
-
-    this.keyUpReceived = true;
   }
 
   onKeyPress(event: KeyboardEvent): void {
     const key = eventToKey(event);
-    const now = performance.now();
 
     // Firefox, unlike Chrome, creates keypress events for arrow keys, which will lead to doubled
     // effect if we don't filter out these extra events.
     if (NAVIGATION_KEYS.includes(key))
       return;
 
-    if (!this.ios || (!event.repeat && this.keyUpReceived))
+    // For some strange reason, iOS external mobile keyboards (at least one Logitech model, and on Apple model)
+    // are sometimes generating two keypress events for one single keypress, both events with the same timestamp,
+    // and without event.repeat set to true for the second event. We need to reject the repeated event.
+    if (event.timeStamp > this.lastKeyPress) {
       this.onKey(key);
+      this.lastKeyPress = event.timeStamp;
+    }
 
     event.preventDefault();
-    this.keyUpReceived = false;
   }
 
   protected onKey(key: string): void {
