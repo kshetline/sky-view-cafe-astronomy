@@ -441,10 +441,10 @@ export class SvcSkyViewComponent extends GenericSkyView implements AfterViewInit
     }
   }
 
-  onMouseMove(event: MouseEvent): void {
+  handleDrag(x: number, y: number, button1Down: boolean): void {
     const wasDragging = this.dragging;
 
-    super.onMouseMove(event);
+    super.handleDrag(x, y, button1Down);
 
     if (this.dragging && this.lastDrawingContext) {
       if (!wasDragging && !this.trackSun)

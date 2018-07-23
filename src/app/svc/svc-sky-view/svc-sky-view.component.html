@@ -16,9 +16,9 @@
 <div #canvasWrapper class="canvasWrapper">
   <div class="canvasAnchor">
     <canvas #skyCanvas (window:resize)="onResize()"
-            (mousedown)="onMouseDown($event)"
-            (mousemove)="onMouseMove($event)"
-            (mouseup)="onMouseUp($event)"
+            (touchstart)="onTouchStart($event)" (mousedown)="onMouseDown($event)"
+            (touchmove)="onTouchMove($event)" (mousemove)="onMouseMove($event)"
+            (touchend)="onTouchEnd($event)" (mouseup)="onMouseUp($event)"
             (dblclick)="onDoubleClick($event)"
             [style.cursor]="cursor"
     ></canvas>

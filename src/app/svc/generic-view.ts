@@ -26,7 +26,7 @@ import {
   ASTEROID_BASE, COMET_BASE, EARTH, FIRST_PLANET, HALF_MINUTE, ISkyObserver, LAST_PLANET, NO_MATCH, SkyObserver, SolarSystem,
   StarCatalog, UT_to_TDB
 } from 'ks-astronomy';
-import { abs, ceil, max } from 'ks-math';
+import { abs, ceil, max, Point } from 'ks-math';
 import { FontMetrics, getFontMetrics, isSafari } from 'ks-util';
 import * as _ from 'lodash';
 import { KsDateTime } from 'ks-date-time-zone';
@@ -75,6 +75,7 @@ export abstract class GenericView implements AfterViewInit {
   protected clickX = -1;
   protected clickY = -1;
   protected canDrag = true;
+  protected goodDragStart = false;
   protected debouncedDraw: () => void;
   protected debouncedMouseMove: () => void;
   protected debouncedResize: () => void;
@@ -218,15 +219,58 @@ export abstract class GenericView implements AfterViewInit {
     this.draw();
   }
 
-  // noinspection JSUnusedGlobalSymbols
+  // TODO: Turn into utility function
+  // noinspection JSMethodCanBeStatic
+  protected getXYForTouchEvent(event: TouchEvent, asChange = false): Point {
+    const touches = (asChange ? event.changedTouches : event.targetTouches);
+
+    if (touches.length < 1)
+      return {x: -1, y: -1};
+
+    const rect = (touches.item(0).target as HTMLElement).getBoundingClientRect();
+
+    return {x: touches.item(0).clientX - rect.left, y: touches.item(0).clientY - rect.top};
+  }
+
+  onTouchStart(event: TouchEvent): void {
+    const pt = this.getXYForTouchEvent(event);
+
+    this.clickX = this.lastMoveX = pt.x;
+    this.clickY = this.lastMoveY = pt.y;
+
+    if (this.isInsideView()) {
+      this.goodDragStart = true;
+      this.draw();
+      event.preventDefault();
+    }
+    else
+      this.goodDragStart = false;
+  }
+
   onMouseDown(event: MouseEvent): void {
     this.clickX = this.lastMoveX = event.offsetX;
     this.clickY = this.lastMoveY = event.offsetY;
+    this.goodDragStart = this.isInsideView();
+  }
+
+  onTouchMove(event: TouchEvent): void {
+    const pt = this.getXYForTouchEvent(event, true);
+
+    if (this.goodDragStart)
+      this.handleDrag(pt.x, pt.y, true);
+
+    if (this.isInsideView())
+      event.preventDefault();
   }
 
   onMouseMove(event: MouseEvent): void {
-    this.lastMoveX = event.offsetX;
-    this.lastMoveY = event.offsetY;
+    if (this.goodDragStart)
+      this.handleDrag(event.offsetX, event.offsetY, !!((event.buttons & 0x01) || (this.isSafari && (event.which & 0x01))));
+  }
+
+  protected handleDrag(x: number, y: number, button1Down: boolean): void {
+    this.lastMoveX = x;
+    this.lastMoveY = y;
 
     let  justCleared = false;
 
@@ -234,9 +278,9 @@ export abstract class GenericView implements AfterViewInit {
       this.clearMouseHighlighting();
       justCleared = true;
       this.resetCursor();
+      this.goodDragStart = false;
     }
-    // noinspection JSBitwiseOperatorUsage
-    else if (this.canDrag && ((event.buttons & 0x01) || (this.isSafari && (event.which & 0x01)))) {
+    else if (this.canDrag && button1Down) {
       this.dragging = true;
       this.cursor = this.sanitizedHandCursor;
     }
@@ -260,7 +304,18 @@ export abstract class GenericView implements AfterViewInit {
     this.lastMoveX = this.lastMoveY = -1;
   }
 
-  // noinspection JSUnusedGlobalSymbols
+  onTouchEnd(event: TouchEvent): void {
+    const pt = this.getXYForTouchEvent(event, true);
+
+    this.lastMoveX = pt.x;
+    this.lastMoveY = pt.y;
+    this.resetCursor();
+    this.draw();
+
+    if (this.isInsideView())
+      event.preventDefault();
+  }
+
   onMouseUp(event: MouseEvent): void {
     this.lastMoveX = event.offsetX;
     this.lastMoveY = event.offsetY;

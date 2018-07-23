@@ -368,6 +368,7 @@ export class KsSequenceEditorComponent implements AfterViewInit, OnInit, OnDestr
     return this.getSelectionForXY(pt.x, pt.y);
   }
 
+  // TODO: Turn into utility function
   // noinspection JSMethodCanBeStatic
   protected getXYForTouchEvent(event: TouchEvent, asChange = false): Point {
     const touches = (asChange ? event.changedTouches : event.targetTouches);
