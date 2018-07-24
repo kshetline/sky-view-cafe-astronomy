@@ -443,6 +443,8 @@ export class SvcSkyViewComponent extends GenericSkyView implements AfterViewInit
 
   handleDrag(x: number, y: number, button1Down: boolean): void {
     const wasDragging = this.dragging;
+    const lastX = this.lastMoveX;
+    const lastY = this.lastMoveY;
 
     super.handleDrag(x, y, button1Down);
 
@@ -458,8 +460,8 @@ export class SvcSkyViewComponent extends GenericSkyView implements AfterViewInit
         const lastDc = <DrawingContextPlanetary> this.lastDrawingContext;
         const dx1 = this.clickX - lastDc.xctr;
         const dy1 = this.clickY - lastDc.yctr;
-        const dx2 = this.lastMoveX - lastDc.xctr;
-        const dy2 = this.lastMoveY - lastDc.yctr;
+        const dx2 = lastX - lastDc.xctr;
+        const dy2 = lastY - lastDc.yctr;
 
         this.facing = round(mod(this.dragStartFacing + atan2_deg(dy2, dx2) -
                                 atan2_deg(dy1, dx1), 360.0) * 10.0) / 10.0;

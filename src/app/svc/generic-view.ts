@@ -221,15 +221,15 @@ export abstract class GenericView implements AfterViewInit {
 
   // TODO: Turn into utility function
   // noinspection JSMethodCanBeStatic
-  protected getXYForTouchEvent(event: TouchEvent, asChange = false): Point {
-    const touches = (asChange ? event.changedTouches : event.targetTouches);
+  protected getXYForTouchEvent(event: TouchEvent): Point {
+    const touches = event.touches;
 
     if (touches.length < 1)
       return {x: -1, y: -1};
 
-    const rect = (touches.item(0).target as HTMLElement).getBoundingClientRect();
+    const rect = (touches[0].target as HTMLElement).getBoundingClientRect();
 
-    return {x: touches.item(0).clientX - rect.left, y: touches.item(0).clientY - rect.top};
+    return {x: touches[0].clientX - rect.left, y: touches[0].clientY - rect.top};
   }
 
   onTouchStart(event: TouchEvent): void {
@@ -254,7 +254,7 @@ export abstract class GenericView implements AfterViewInit {
   }
 
   onTouchMove(event: TouchEvent): void {
-    const pt = this.getXYForTouchEvent(event, true);
+    const pt = this.getXYForTouchEvent(event);
 
     if (this.goodDragStart)
       this.handleDrag(pt.x, pt.y, true);
@@ -305,20 +305,20 @@ export abstract class GenericView implements AfterViewInit {
   }
 
   onTouchEnd(event: TouchEvent): void {
-    const pt = this.getXYForTouchEvent(event, true);
+    const pt = this.getXYForTouchEvent(event);
 
     this.lastMoveX = pt.x;
     this.lastMoveY = pt.y;
     this.resetCursor();
     this.draw();
-
-    if (this.isInsideView())
-      event.preventDefault();
+    this.dragging = false;
+    event.preventDefault();
   }
 
   onMouseUp(event: MouseEvent): void {
     this.lastMoveX = event.offsetX;
     this.lastMoveY = event.offsetY;
+    this.dragging = false;
     this.resetCursor();
   }
 

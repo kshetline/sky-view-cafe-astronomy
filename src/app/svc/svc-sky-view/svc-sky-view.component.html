@@ -18,7 +18,7 @@
     <canvas #skyCanvas (window:resize)="onResize()"
             (touchstart)="onTouchStart($event)" (mousedown)="onMouseDown($event)"
             (touchmove)="onTouchMove($event)" (mousemove)="onMouseMove($event)"
-            (touchend)="onTouchEnd($event)" (mouseup)="onMouseUp($event)"
+            (touchend)="onTouchEnd($event)" (touchcancel)="onTouchEnd($event)" (mouseup)="onMouseUp($event)"
             (dblclick)="onDoubleClick($event)"
             [style.cursor]="cursor"
     ></canvas>

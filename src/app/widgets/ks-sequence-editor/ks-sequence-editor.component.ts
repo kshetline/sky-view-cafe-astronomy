@@ -40,7 +40,7 @@ const KEY_REPEAT_DELAY = 500;
 const KEY_REPEAT_RATE  = 100;
 const WARNING_DURATION = 5000;
 
-const DIGIT_SWIPE_THRESHOLD = 10;
+const DIGIT_SWIPE_THRESHOLD = 6;
 
 const NO_SELECTION = -1;
 const SPIN_UP      = -2;
@@ -370,8 +370,8 @@ export class KsSequenceEditorComponent implements AfterViewInit, OnInit, OnDestr
 
   // TODO: Turn into utility function
   // noinspection JSMethodCanBeStatic
-  protected getXYForTouchEvent(event: TouchEvent, asChange = false): Point {
-    const touches = (asChange ? event.changedTouches : event.targetTouches);
+  protected getXYForTouchEvent(event: TouchEvent): Point {
+    const touches = event.touches;
 
     if (touches.length < 1)
       return {x: -1, y: -1};
@@ -463,7 +463,7 @@ export class KsSequenceEditorComponent implements AfterViewInit, OnInit, OnDestr
     event.preventDefault();
 
     if (this.selection >= 0 && this.firstTouch) {
-      const pt = this.getXYForTouchEvent(event, true);
+      const pt = this.getXYForTouchEvent(event);
 
       this.touchDeltaY = pt.y - this.firstTouch.y;
       this.draw();
@@ -481,6 +481,8 @@ export class KsSequenceEditorComponent implements AfterViewInit, OnInit, OnDestr
   }
 
   onTouchEnd(event: TouchEvent): void {
+    const lastDeltaY = this.touchDeltaY;
+
     if (this.touchDeltaY !== 0) {
       this.touchDeltaY = 0;
       this.draw();
@@ -494,11 +496,8 @@ export class KsSequenceEditorComponent implements AfterViewInit, OnInit, OnDestr
     this.onMouseUp();
 
     if (this.selection >= 0 && this.firstTouch) {
-      const pt = this.getXYForTouchEvent(event, true);
-      const dy = pt.y - this.firstTouch.y;
-
-      if (abs(dy) > DIGIT_SWIPE_THRESHOLD) {
-        if (dy < 0)
+      if (abs(lastDeltaY) >= DIGIT_SWIPE_THRESHOLD) {
+        if (lastDeltaY < 0)
           this.increment();
         else
           this.decrement();
