@@ -90,8 +90,7 @@ export class KsSequenceEditorComponent implements AfterViewInit, OnInit, OnDestr
   private firstTouch: Point;
   private touchDeltaY = 0;
   private contentMadeEditable = false;
-  private pendingKey: string = null;
-  private lastKeyPress = 0;
+  private lastKeydown = 0;
 
   @ViewChild('canvas') private canvasRef: ElementRef;
 
@@ -541,48 +540,44 @@ export class KsSequenceEditorComponent implements AfterViewInit, OnInit, OnDestr
   protected gainedFocus(): void {}
   protected lostFocus(): void {}
 
-  onKeyDown(event: KeyboardEvent): void {
-    const key = eventToKey(event);
-
-    if (NAVIGATION_KEYS.includes(key) && !this.keyTimer) {
-      this.pendingKey = key;
-      this.keyTimer = timer(KEY_REPEAT_DELAY, KEY_REPEAT_RATE).subscribe(() => {
-        this.pendingKey = null;
-        this.onKey(key);
-      });
-
+  onKeyDown(event: KeyboardEvent): boolean {
+    // For some strange reason, iOS external mobile keyboards (at least one Logitech model, and one Apple model)
+    // are sometimes generating two keydown events for one single keypress, both events with the same timestamp.
+    // We need to reject the repeated event.
+    if (event.timeStamp <= this.lastKeydown) {
       event.preventDefault();
+      return false;
     }
-    else
-      this.pendingKey = null;
-  }
 
-  onKeyUp(event: KeyboardEvent): void {
-    this.stopKeyTimer();
-
-    if (this.pendingKey) {
-      this.onKey(this.pendingKey);
-      this.pendingKey = null;
-    }
-  }
-
-  onKeyPress(event: KeyboardEvent): void {
+    this.lastKeydown = event.timeStamp;
     const key = eventToKey(event);
 
-    // Firefox, unlike Chrome, creates keypress events for arrow keys, which will lead to doubled
-    // effect if we don't filter out these extra events.
-    if (NAVIGATION_KEYS.includes(key))
-      return;
+    if (key === 'Tab' || event.altKey || event.ctrlKey || event.metaKey)
+      return true;
 
-    // For some strange reason, iOS external mobile keyboards (at least one Logitech model, and on Apple model)
-    // are sometimes generating two keypress events for one single keypress, both events with the same timestamp,
-    // and without event.repeat set to true for the second event. We need to reject the repeated event.
-    if (event.timeStamp > this.lastKeyPress) {
-      this.onKey(key);
-      this.lastKeyPress = event.timeStamp;
-    }
+    this.onKey(key);
+
+    if (NAVIGATION_KEYS.includes(key) && !this.keyTimer)
+      this.keyTimer = timer(KEY_REPEAT_DELAY, KEY_REPEAT_RATE).subscribe(() => this.onKey(key));
 
     event.preventDefault();
+    return false;
+  }
+
+  onKeyUp(event: KeyboardEvent): boolean {
+    this.stopKeyTimer();
+    return true;
+  }
+
+  // noinspection JSMethodCanBeStatic
+  onKeyPress(event: KeyboardEvent): boolean {
+    const key = eventToKey(event);
+
+    if (key === 'Tab' || event.altKey || event.ctrlKey || event.metaKey)
+      return true;
+
+    event.preventDefault();
+    return false;
   }
 
   protected onKey(key: string): void {
