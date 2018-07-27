@@ -1,7 +1,7 @@
-<canvas #canvas tabindex="0" contenteditable="true"
+<div><canvas #canvas tabindex="0" contenteditable="true"
   (mousedown)="onMouseDown($event)" (mouseup)="onMouseUp() " (click)="onClick($event)"
   (keydown)="onKeyDown($event)" (keyup)="onKeyUp($event)" (keypress)="onKeyPress($event)"
   (focus)="onFocus(true)" (blur)="onFocus(false)"
   (touchstart)="onTouchStart($event)" (touchmove)="onTouchMove($event)" (touchend)="onTouchEnd($event)"
   [@displayState]="displayState" (@displayState.start)="onAnimate()"
-  (@displayState.done)="onAnimate()"></canvas>
+  (@displayState.done)="onAnimate()"></canvas></div>

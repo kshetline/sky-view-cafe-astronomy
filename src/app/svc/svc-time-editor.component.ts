@@ -131,7 +131,7 @@ export class SvcTimeEditorComponent extends KsSequenceEditorComponent implements
     this.items.push({value: '-', editable: false, selected: false });
     this.items.push({value: 0,   editable: true,  selected: false }); //  9 - Day tens
     this.items.push({value: 0,   editable: true,  selected: false }); // 10 - Day units
-    this.items.push({value: ' ', editable: false, selected: false });
+    this.items.push({value: ' ', editable: false, selected: false, fixedWidth: true });
     this.items.push({value: 0,   editable: true,  selected: false }); // 12 - Hour tens
     this.items.push({value: 0,   editable: true,  selected: false }); // 13 - Hour units
     this.items.push({value: ':', editable: false, selected: false });

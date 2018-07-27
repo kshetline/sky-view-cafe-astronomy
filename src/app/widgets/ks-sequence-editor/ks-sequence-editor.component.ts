@@ -21,7 +21,7 @@ import { AfterViewInit, Component, ElementRef, Input, OnDestroy, OnInit, ViewChi
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { Subscription, timer } from 'rxjs';
 import {
-  eventToKey, FontMetrics, getCssValue, getFont, getFontMetrics, getTextWidth, isIOS, isWindows
+  eventToKey, FontMetrics, getCssValue, getFont, getFontMetrics, getTextWidth, isAndroid, isEdge, isIE, isIOS, isWindows
 } from 'ks-util';
 import { abs, max, Point } from 'ks-math';
 import * as _ from 'lodash';
@@ -76,10 +76,6 @@ const VIEW_ONLY_TEXT       = '#0F0';
 
 const DEFAULT_BORDER_COLOR = '#D8D8D8';
 
-function isAndroid(): boolean {
-  return navigator.userAgent.includes('Android');
-}
-
 @Component({
   selector: 'ks-sequence-editor',
   animations: [BACKGROUND_ANIMATIONS],
@@ -89,6 +85,8 @@ function isAndroid(): boolean {
 export class KsSequenceEditorComponent implements AfterViewInit, OnInit, OnDestroy {
   private static lastKeydown = 0;
   private static lastKeyKey = '';
+  private static useHiddenInput = isAndroid();
+  private static addFocusOutline = isEdge() || isIE() || isIOS();
 
   private keyTimer: Subscription;
   private clickTimer: Subscription;
@@ -205,12 +203,12 @@ export class KsSequenceEditorComponent implements AfterViewInit, OnInit, OnDestr
       this.smallFixedFont = fontParts[1] + smallerSize + fontParts[3] + fontParts[4] + '"Lucida Console", "Lucida Sans Typewriter", Monaco, monospace';
     }
 
-    if (isAndroid()) {
+    if (KsSequenceEditorComponent.useHiddenInput) {
       this.hiddenInput = document.createElement('input');
       this.hiddenInput.type = 'text';
       this.hiddenInput.style.position = 'absolute';
       this.hiddenInput.style.opacity = '0';
-      this.hiddenInput.style['caret-color'] = 'transparent !important';
+      this.hiddenInput.style['caret-color'] = 'transparent';
       this.hiddenInput.style['pointer-events'] = 'none';
       this.hiddenInput.style.left = '0';
       this.hiddenInput.style.top = '-6px';
@@ -591,7 +589,7 @@ export class KsSequenceEditorComponent implements AfterViewInit, OnInit, OnDestr
 
     if (this.hiddenInput)
       this.canvas.style.outline = getCssValue(this.hiddenInput, 'outline');
-    else if (isIOS())
+    else if (KsSequenceEditorComponent.addFocusOutline)
       this.canvas.style.outline = (newFocus ? 'rgb(59, 153, 252) solid 1px' : 'black none 0px');
   }
 
