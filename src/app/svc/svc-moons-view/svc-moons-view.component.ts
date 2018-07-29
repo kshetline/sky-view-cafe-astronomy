@@ -98,7 +98,7 @@ export class SvcMoonsViewComponent extends GenericPlanetaryView implements After
 
   @ViewChild('canvasWrapper') private wrapperRef: ElementRef;
   @ViewChild('orbitCanvas') private canvasRef: ElementRef;
-  @ViewChild('marquee') private marqueeRef: ElementRef;
+  @ViewChild('marquee', {read: ElementRef}) private marqueeRef: ElementRef;
 
   constructor(appService: AppService, private astroDataService: AstroDataService, private httpClient: HttpClient) {
     super(appService, CurrentTab.MOONS_GRS);

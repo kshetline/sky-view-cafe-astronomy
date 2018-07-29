@@ -1,0 +1,38 @@
+@import "../../../styles";
+
+:host {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: stretch;
+}
+
+.wrapper {
+  display: inline-block;
+  flex: 1 0 auto;
+  position: relative;
+  background: inherit;
+  color: inherit;
+  font: inherit;
+  overflow: hidden;
+}
+
+.spacer {
+  display: inline-block;
+  background: inherit;
+  color: inherit;
+  font: inherit;
+}
+
+.marquee {
+  display: inline-block;
+  position: absolute;
+  top: 0;
+  left: 0;
+  background: inherit;
+  color: inherit;
+  font: inherit;
+  white-space: nowrap;
+  overflow: hidden;
+  @include selectable(none);
+}

@@ -139,7 +139,7 @@ export class SvcSkyViewComponent extends GenericSkyView implements AfterViewInit
 
   @ViewChild('canvasWrapper') private wrapperRef: ElementRef;
   @ViewChild('skyCanvas') private canvasRef: ElementRef;
-  @ViewChild('marquee') private marqueeRef: ElementRef;
+  @ViewChild('marquee', {read: ElementRef}) private marqueeRef: ElementRef;
 
   private readonly gridFont  = 'italic bold 14px Arial, Helvetica, sans-serif';
 

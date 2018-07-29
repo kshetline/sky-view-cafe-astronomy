@@ -58,6 +58,7 @@ import { KsCalendarComponent } from './widgets/ks-calendar/ks-calendar.component
 import { KsCheckboxComponent } from './widgets/ks-checkbox/ks-checkbox.component';
 import { KsDropdownComponent } from './widgets/ks-dropdown/ks-dropdown.component';
 import { KsIconButtonComponent } from './widgets/ks-icon-button/ks-icon-button.component';
+import { KsMarqueeComponent } from './widgets/ks-marquee/ks-marquee.component';
 import { KsSequenceEditorComponent } from './widgets/ks-sequence-editor/ks-sequence-editor.component';
 import { KsTabComponent } from './widgets/ks-tab/ks-tab.component';
 import { KsTabViewComponent } from './widgets/ks-tab-view/ks-tab-view.component';
@@ -133,6 +134,7 @@ export function busyConfigFactory(): BusyConfig {
     KsCheckboxComponent,
     KsDropdownComponent,
     KsIconButtonComponent,
+    KsMarqueeComponent,
     KsSequenceEditorComponent,
     KsTabComponent,
     KsTabViewComponent,

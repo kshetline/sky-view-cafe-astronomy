@@ -83,7 +83,7 @@ export class SvcEclipticViewComponent extends GenericSkyView implements AfterVie
 
   @ViewChild('canvasWrapper') private wrapperRef: ElementRef;
   @ViewChild('skyCanvas') private canvasRef: ElementRef;
-  @ViewChild('marquee') private marqueeRef: ElementRef;
+  @ViewChild('marquee', {read: ElementRef}) private marqueeRef: ElementRef;
 
   constructor(appService: AppService) {
     super(appService, CurrentTab.ECLIPTIC);

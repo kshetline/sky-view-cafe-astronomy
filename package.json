@@ -1,6 +1,6 @@
 {
   "name": "svc-ng",
-  "version": "1.4.5",
+  "version": "1.4.6",
   "license": "MIT AND GPL-3.0-or-later",
   "author": "Kerry Shetline <kerry@shetline.com>",
   "scripts": {
@@ -26,6 +26,7 @@
     "@angular/router": "6.0.5",
     "array-buffer-reader": "^1.0.1",
     "core-js": "^2.5.7",
+    "detect-resize": "^0.1.5",
     "font-awesome": "^4.7.0",
     "ks-astronomy": "^1.0.1",
     "ks-date-time-zone": "^1.4.0",

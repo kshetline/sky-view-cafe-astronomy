@@ -87,6 +87,7 @@ export class KsSequenceEditorComponent implements AfterViewInit, OnInit, OnDestr
   private static lastKeyKey = '';
   private static useHiddenInput = isAndroid();
   private static addFocusOutline = isEdge() || isIE() || isIOS();
+  private static checkForRepeatedKeyTimestamps = isIOS();
 
   private keyTimer: Subscription;
   private clickTimer: Subscription;
@@ -603,7 +604,12 @@ export class KsSequenceEditorComponent implements AfterViewInit, OnInit, OnDestr
     // are sometimes generating two keydown events for one single keypress, both events with the same timestamp,
     // very close timestamps, or even a later-arriving event with an earlier timestamp than the first. We need to
     // reject the repeated event.
-    if ((abs(event.timeStamp - KsSequenceEditorComponent.lastKeydown) <= FALSE_REPEAT_THRESHOLD &&
+    //
+    // On the other hand, one Android external keyboard I've tested with sends the same timestamp multiple times
+    // for legitimately separate keystrokes, so repeated timestamps have to be expected and allowed there.
+    //
+    if (KsSequenceEditorComponent.checkForRepeatedKeyTimestamps &&
+        (abs(event.timeStamp - KsSequenceEditorComponent.lastKeydown) <= FALSE_REPEAT_THRESHOLD &&
          key === KsSequenceEditorComponent.lastKeyKey)) {
       event.preventDefault();
 
