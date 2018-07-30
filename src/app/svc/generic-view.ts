@@ -77,7 +77,7 @@ export abstract class GenericView implements AfterViewInit {
   protected canDrag = true;
   protected goodDragStart = false;
   protected debouncedDraw: () => void;
-  protected debouncedMouseMove: () => void;
+  protected throttledMouseMove: () => void;
   protected debouncedResize: () => void;
   protected dragging = false;
   protected excludedPlanets: number[] = [EARTH];
@@ -257,18 +257,18 @@ export abstract class GenericView implements AfterViewInit {
     const pt = this.getXYForTouchEvent(event);
 
     if (this.goodDragStart)
-      this.handleDrag(pt.x, pt.y, true);
+      this.handleMouseMove(pt.x, pt.y, true);
 
     if (this.isInsideView())
       event.preventDefault();
   }
 
   onMouseMove(event: MouseEvent): void {
-    if (this.goodDragStart)
-      this.handleDrag(event.offsetX, event.offsetY, !!((event.buttons & 0x01) || (this.isSafari && (event.which & 0x01))));
+    if (this.goodDragStart || !this.dragging)
+      this.handleMouseMove(event.offsetX, event.offsetY, !!((event.buttons & 0x01) || (this.isSafari && (event.which & 0x01))));
   }
 
-  protected handleDrag(x: number, y: number, button1Down: boolean): void {
+  protected handleMouseMove(x: number, y: number, button1Down: boolean): void {
     this.lastMoveX = x;
     this.lastMoveY = y;
 
@@ -290,13 +290,13 @@ export abstract class GenericView implements AfterViewInit {
     }
 
     if (!this.dragging || justCleared) {
-      if (!this.debouncedMouseMove) {
-         this.debouncedMouseMove = _.debounce(() => {
+      if (!this.throttledMouseMove) {
+         this.throttledMouseMove = _.throttle(() => {
            this.draw();
          }, 100);
       }
 
-      this.debouncedMouseMove();
+      this.throttledMouseMove();
     }
   }
 

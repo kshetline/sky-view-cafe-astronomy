@@ -56,6 +56,7 @@ export class KsMarqueeComponent implements AfterViewInit, OnDestroy {
     this.marquee = this.marqueeRef.nativeElement;
     this.resizeFunction = () => this.onResize();
     addResizeListener(this.wrapper, this.resizeFunction);
+    this.onResize();
   }
 
   ngOnDestroy(): void {
@@ -70,11 +71,15 @@ export class KsMarqueeComponent implements AfterViewInit, OnDestroy {
     if (this.animationRequestId)
       window.cancelAnimationFrame(this.animationRequestId);
 
+    if (!this.wrapper || !this.marquee)
+      return;
+
     const marqueeWidth = this.wrapper.offsetWidth;
     const textWidth = getTextWidth(this.text, this.marquee);
 
     this.marquee.style.width = marqueeWidth + 'px';
     this.marquee.scrollLeft = 0;
+
     if (textWidth <= marqueeWidth)
       return;
 
