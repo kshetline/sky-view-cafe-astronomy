@@ -1,6 +1,6 @@
 <div><canvas #canvas tabindex="0" contenteditable="true"
   (mousedown)="onMouseDown($event)" (mouseup)="onMouseUp() " (click)="onClick($event)"
-  (keydown)="onKeyDown($event)" (keyup)="onKeyUp($event)" (keypress)="onKeyPress($event)"
+  (keydown)="onKeyDown($event)" (keyup)="onKeyUp()" (keypress)="onKeyPress($event)"
   (focus)="onFocus(true)" (blur)="onFocus(false)"
   (touchstart)="onTouchStart($event)" (touchmove)="onTouchMove($event)" (touchend)="onTouchEnd($event)"
   [@displayState]="displayState" (@displayState.start)="onAnimate()"

@@ -36,8 +36,6 @@ export interface SequenceItemInfo {
   sizing?: string | string[];
 }
 
-const NAVIGATION_KEYS = ['Backspace', 'Enter', ' ', 'ArrowLeft', 'ArrowUp', 'ArrowRight', 'ArrowDown'];
-
 const KEY_REPEAT_DELAY = 500;
 const KEY_REPEAT_RATE  = 100;
 const WARNING_DURATION = 5000;
@@ -83,7 +81,7 @@ const DEFAULT_BORDER_COLOR = '#D8D8D8';
   styleUrls: ['./ks-sequence-editor.component.scss']
 })
 export class KsSequenceEditorComponent implements AfterViewInit, OnInit, OnDestroy {
-  private static lastKeydown = 0;
+  private static lastKeyTimestamp = 0;
   private static lastKeyKey = '';
   private static useHiddenInput = isAndroid();
   private static addFocusOutline = isEdge() || isIE() || isIOS();
@@ -216,7 +214,7 @@ export class KsSequenceEditorComponent implements AfterViewInit, OnInit, OnDestr
 
       this.hiddenInput.addEventListener('keydown', event => this.onKeyDown(event));
       this.hiddenInput.addEventListener('keypress', event => this.onKeyPress(event));
-      this.hiddenInput.addEventListener('keyup', event => this.onKeyUp(event));
+      this.hiddenInput.addEventListener('keyup', () => this.onKeyUp());
       this.hiddenInput.addEventListener('input', () => this.onInput());
       this.hiddenInput.addEventListener('focus', () => this.onHiddenInputFocus(true));
       this.hiddenInput.addEventListener('blur', () => this.onHiddenInputFocus(false));
@@ -609,21 +607,19 @@ export class KsSequenceEditorComponent implements AfterViewInit, OnInit, OnDestr
     // for legitimately separate keystrokes, so repeated timestamps have to be expected and allowed there.
     //
     if (KsSequenceEditorComponent.checkForRepeatedKeyTimestamps &&
-        (abs(event.timeStamp - KsSequenceEditorComponent.lastKeydown) <= FALSE_REPEAT_THRESHOLD &&
+        (abs(event.timeStamp - KsSequenceEditorComponent.lastKeyTimestamp) <= FALSE_REPEAT_THRESHOLD &&
          key === KsSequenceEditorComponent.lastKeyKey)) {
       event.preventDefault();
 
       return false;
     }
 
-    KsSequenceEditorComponent.lastKeydown = event.timeStamp;
-    KsSequenceEditorComponent.lastKeyKey = key;
-
     // In at least one version of Android many key events carry no useful information about the key that was
     // pressed. They instead match the following test and we have to grab a character out of the hidden
     // input field to find out what was actually typed in.
     if (this.hiddenInput && key === 'Unidentified' && event.keyCode === 229) {
       this.getCharFromInputEvent = true;
+      KsSequenceEditorComponent.lastKeyTimestamp = event.timeStamp;
 
       return true;
     }
@@ -631,17 +627,20 @@ export class KsSequenceEditorComponent implements AfterViewInit, OnInit, OnDestr
     if (key === 'Tab' || event.altKey || event.ctrlKey || event.metaKey)
       return true;
 
-    this.onKey(key);
-
-    if (NAVIGATION_KEYS.includes(key) && !this.keyTimer)
+    // If the built-in auto-repeat is in effect, ignore keystrokes that come along until that auto-repeat ends.
+    if (!this.keyTimer) {
+      this.onKey(key);
       this.keyTimer = timer(KEY_REPEAT_DELAY, KEY_REPEAT_RATE).subscribe(() => this.onKey(key));
+    }
 
     event.preventDefault();
+    KsSequenceEditorComponent.lastKeyTimestamp = event.timeStamp;
+    KsSequenceEditorComponent.lastKeyKey = key;
 
     return false;
   }
 
-  onKeyUp(event: KeyboardEvent): boolean {
+  onKeyUp(): boolean {
     this.stopKeyTimer();
 
     return true;
@@ -670,9 +669,8 @@ export class KsSequenceEditorComponent implements AfterViewInit, OnInit, OnDestr
   }
 
   protected onKey(key: string): void {
-    if (this.disabled || this.viewOnly || !this.hasFocus || !this.items[this.selection].editable) {
+    if (this.disabled || this.viewOnly || !this.hasFocus || !this.items[this.selection].editable)
       return;
-    }
 
     if (this.selection !== this.signDigit) {
       if (key === '-')
