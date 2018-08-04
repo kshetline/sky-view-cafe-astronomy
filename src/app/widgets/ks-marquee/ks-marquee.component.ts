@@ -68,8 +68,10 @@ export class KsMarqueeComponent implements AfterViewInit, OnDestroy {
   }
 
   onResize(): void {
-    if (this.animationRequestId)
+    if (this.animationRequestId) {
       window.cancelAnimationFrame(this.animationRequestId);
+      this.animationRequestId = 0;
+    }
 
     if (!this.wrapper || !this.marquee)
       return;
@@ -97,9 +99,9 @@ export class KsMarqueeComponent implements AfterViewInit, OnDestroy {
       this.marquee.scrollLeft = 0;
     }
     else if (now > this.animationStart + HOLD_TIME) {
-      const timeIntoSlide = now - this.animationStart - HOLD_TIME;
+      const timeIntoScroll = now - this.animationStart - HOLD_TIME;
 
-      this.marquee.scrollLeft = min(this.animationWidth, timeIntoSlide / 1000 * MARQUEE_SPEED);
+      this.marquee.scrollLeft = min(this.animationWidth, timeIntoScroll / 1000 * MARQUEE_SPEED);
     }
 
     this.animationRequestId = window.requestAnimationFrame(() => this.animate());

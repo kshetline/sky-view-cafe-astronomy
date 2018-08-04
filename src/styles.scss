@@ -9,6 +9,12 @@
   user-select: $state;
 }
 
+@font-face {
+  font-family: Astronomy;
+  src: url("/assets/resources/Astronomy.ttf");
+  unicode-range: U+263C-2653;
+}
+
 .small-caption {
   color: #00C;
   font-size: 75%;

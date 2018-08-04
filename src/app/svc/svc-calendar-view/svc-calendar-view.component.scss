@@ -101,7 +101,8 @@ div.edge-ie-fix-1 {
 
 span.planet-glyph {
   vertical-align: middle;
-  font-size: 1.2em;
+  font-family: Astronomy, Arial, Helvetica, sans-serif;
+  font-size: 1.5em;
   color: #00FF99;
 }
 
@@ -127,13 +128,18 @@ div.phase {
 }
 
 div.daylight {
+  font-family: Astronomy, Arial, Helvetica, sans-serif;
   font-size: 0.833em;
   color: #FFFF99;
   text-shadow: -1px -1px black, -1px 1px black, 1px -1px black, 1px 1px black;
   position: absolute;
-  bottom: 0;
+  bottom: -1px;
   right: 2px;
   text-align: right;
+
+  &::first-letter {
+    font-size: 1.5em;
+  }
 }
 
 div.edge-ie-fix-2 {

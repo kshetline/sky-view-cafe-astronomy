@@ -1043,9 +1043,9 @@ export class SvcSkyViewComponent extends GenericSkyView implements AfterViewInit
 
     if (dc.minStarBrightness > 0) {
       if (this.skyColor === SKY_COLOR.BASIC)
-        gridColor = replaceAlpha(gridColor, 0.4 + 0.15 * dc.minStarBrightness);
+        gridColor = replaceAlpha(gridColor, 0.4 + 0.0015 * dc.minStarBrightness);
       else
-        gridColor = replaceAlpha(gridColor, 0.4 - 0.15 * dc.minStarBrightness);
+        gridColor = replaceAlpha(gridColor, 0.4 - 0.0015 * dc.minStarBrightness);
     }
 
     // Draw celestial equator and lines of celestial latitude
@@ -1138,9 +1138,9 @@ export class SvcSkyViewComponent extends GenericSkyView implements AfterViewInit
 
     if (dc.minStarBrightness > 0) {
       if (this.skyColor === SKY_COLOR.BASIC)
-        gridColor = replaceAlpha(gridColor, 0.4 + 0.15 * dc.minStarBrightness);
+        gridColor = replaceAlpha(gridColor, 0.4 + 0.0015 * dc.minStarBrightness);
       else
-        gridColor = replaceAlpha(gridColor, 0.4 - 0.15 * dc.minStarBrightness);
+        gridColor = replaceAlpha(gridColor, 0.4 - 0.0015 * dc.minStarBrightness);
     }
 
     // Draw ecliptic and lines of ecliptic latitude

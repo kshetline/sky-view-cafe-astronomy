@@ -389,7 +389,7 @@ export class SvcCalendarViewComponent implements AfterViewInit {
           const mins = daylight % 60;
           const hours = (daylight - mins) / 60;
 
-          date.daylight = '\u2600' + hours + 'h' + (mins < 10 ? '0' : '') + mins + 'm';
+          date.daylight = '\u263C' + hours + 'h' + (mins < 10 ? '0' : '') + mins + 'm';
         }
         else
           date.daylight = '';

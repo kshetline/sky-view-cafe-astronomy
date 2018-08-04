@@ -614,7 +614,7 @@ export class KsSequenceEditorComponent implements AfterViewInit, OnInit, OnDestr
       return false;
     }
 
-    // In at least one version of Android many key events carry no useful information about the key that was
+    // With Android many on-screen keyboard key events carry no useful information about the key that was
     // pressed. They instead match the following test and we have to grab a character out of the hidden
     // input field to find out what was actually typed in.
     if (this.hiddenInput && key === 'Unidentified' && event.keyCode === 229) {
@@ -628,7 +628,7 @@ export class KsSequenceEditorComponent implements AfterViewInit, OnInit, OnDestr
       return true;
 
     // If the built-in auto-repeat is in effect, ignore keystrokes that come along until that auto-repeat ends.
-    if (!this.keyTimer) {
+    if (!this.keyTimer && key !== 'Shift') {
       this.onKey(key);
       this.keyTimer = timer(KEY_REPEAT_DELAY, KEY_REPEAT_RATE).subscribe(() => this.onKey(key));
     }
