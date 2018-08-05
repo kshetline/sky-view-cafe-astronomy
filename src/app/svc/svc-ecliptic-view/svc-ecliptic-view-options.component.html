@@ -8,7 +8,7 @@
   <ks-checkbox fxFlex="0 0 auto" [(ngModel)]="showConstellations" binary="true" label="Constellations"></ks-checkbox>
   <ks-checkbox fxFlex="0 0 auto" [(ngModel)]="localHorizon" binary="true" label="Local horizon"></ks-checkbox>
   <div fxFlex="0 0 auto">
-    <ks-checkbox [(ngModel)]="showStars" binary="true" label="Stars"></ks-checkbox>
+    <ks-checkbox [(ngModel)]="showStars" binary="true" label="Stars"></ks-checkbox>&nbsp;&nbsp;
     <ks-checkbox [(ngModel)]="brightenStars" binary="true" [disabled]="!showStars" label="Brighten stars"></ks-checkbox>
   </div>
   <ks-checkbox fxFlex="0 0 auto" [(ngModel)]="topocentricMoon" binary="true" label="Topocentric Moon"></ks-checkbox>
@@ -16,4 +16,4 @@
 </div>
 <p-menu #menu popup="popup" [model]="namesCategories"></p-menu>
 <br>
-<button type="button" pButton icon="fa fa-list" label="Show Names..." (click)="menu.toggle($event)"></button>
+<button type="button" pButton icon="fas fa-list" label="Show Names..." (click)="menu.toggle($event)"></button>

@@ -1,4 +1,4 @@
-<p-dialog header="Find Latitude, Longitude, and Time Zone" modal="modal" [(visible)]="visible" width="795" height="500"
+<p-dialog header="Find Latitude, Longitude, and Time Zone" [modal]="true" [(visible)]="visible" width="795" height="500"
           (keyup)="onKey($event)">
   <p-growl [value]="messages" sticky="true"></p-growl>
   <div style="position: relative">
@@ -11,7 +11,7 @@
         <input #searchField type="text" pInputText class="city-field" [(ngModel)]="city" [disabled]="searching"
                (focus)="searchFocus(true)" (blur)="searchFocus(false)"/>
         <ks-dropdown [(ngModel)]="state" [options]="states" [editable]="true" [style]="{width: '19em'}"></ks-dropdown>
-        <button type="button" pButton icon="fa fa-search" (click)="search()" label="Search" [disabled]="searching || becomingVisible"
+        <button type="button" pButton icon="fas fa-search" (click)="search()" label="Search" [disabled]="searching || becomingVisible"
                 (focus)="searchFocus(true)" (blur)="searchFocus(false)"></button>
       </div>
       <div class="bottom-caption-row">
@@ -60,8 +60,8 @@
   </div>
   <p-footer>
     <div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix">
-      <button type="button" pButton icon="fa fa-close" (click)="visible=false" label="Cancel"></button>
-      <button type="button" pButton icon="fa fa-check" (click)="setLocation()" label="OK" [disabled]="searching || !selection"></button>
+      <button type="button" pButton icon="far fa-window-close" (click)="visible=false" label="Cancel"></button>
+      <button type="button" pButton icon="fas fa-check" (click)="setLocation()" label="OK" [disabled]="searching || !selection"></button>
     </div>
   </p-footer>
 </p-dialog>

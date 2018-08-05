@@ -1,20 +1,20 @@
 <div class="flex-container" fxLayout="column" fxLayoutAlign="start stretch" fxLayoutGap="4px">
   <div fxFlex="0 0 auto" fxFlexAlign="center" class="inc-dec-panel">
     <div class="inc-dec-pair">
-      <button pButton type="button" icon="fa fa-chevron-left" (click)="changeMonth(-1)"
+      <button pButton type="button" icon="fas fa-chevron-left" (click)="changeMonth(-1)"
         (touchstart)="onTouchStart($event, -1)" (touchend)="stopClickTimer()"
         (mousedown)="onMouseDown(-1)" (mouseup)="stopClickTimer()" (mouseleave)="stopClickTimer()"></button>
       <span>Month</span>
-      <button pButton type="button" icon="fa fa-chevron-right" (click)="changeMonth(1)"
+      <button pButton type="button" icon="fas fa-chevron-right" (click)="changeMonth(1)"
         (touchstart)="onTouchStart($event, 1)" (touchend)="stopClickTimer()"
         (mousedown)="onMouseDown(1)" (mouseup)="stopClickTimer()" (mouseleave)="stopClickTimer()"></button>
     </div>
     <div class="inc-dec-pair">
-      <button pButton type="button" icon="fa fa-chevron-left" (click)="changeMonth(-12)"
+      <button pButton type="button" icon="fas fa-chevron-left" (click)="changeMonth(-12)"
         (touchstart)="onTouchStart($event, -12)" (touchend)="stopClickTimer()"
         (mousedown)="onMouseDown(-12)" (mouseup)="stopClickTimer()" (mouseleave)="stopClickTimer()"></button>
       <span>Year</span>
-      <button pButton type="button" icon="fa fa-chevron-right" (click)="changeMonth(12)"
+      <button pButton type="button" icon="fas fa-chevron-right" (click)="changeMonth(12)"
         (touchstart)="onTouchStart($event, 12)" (touchend)="stopClickTimer()"
         (mousedown)="onMouseDown(12)" (mouseup)="stopClickTimer()" (mouseleave)="stopClickTimer()"></button>
     </div>

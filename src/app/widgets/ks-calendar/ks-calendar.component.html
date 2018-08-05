@@ -2,11 +2,11 @@
   <tr>
     <th class="arrow" (touchstart)="onTouchStart($event, -1)" (touchend)="stopTimer()"
       (mousedown)="onMouseDown($event, -1)" (mouseup)="stopTimer()" (mouseleave)="stopTimer()"
-      (click)="onClick($event, -1)"><i class="fa fa-chevron-left"  aria-hidden="true"></i></th>
+      (click)="onClick($event, -1)"><i class="fas fa-chevron-left"  aria-hidden="true"></i></th>
     <th colspan="5">{{title}}</th>
     <th class="arrow" (touchstart)="onTouchStart($event, 1)" (touchend)="stopTimer()"
       (mousedown)="onMouseDown($event,  1)" (mouseup)="stopTimer()" (mouseleave)="stopTimer()"
-      (click)="onClick($event,  1)"><i class="fa fa-chevron-right" aria-hidden="true"></i></th>
+      (click)="onClick($event,  1)"><i class="fas fa-chevron-right" aria-hidden="true"></i></th>
   </tr>
   <tr>
     <th *ngFor="let d of daysOfWeek" class="day-header">{{d}}</th>

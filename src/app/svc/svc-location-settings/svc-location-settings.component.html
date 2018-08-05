@@ -20,7 +20,7 @@
       <button pButton type="button" label="Delete" (click)="openDeleteDialog()"></button>
     </div>
   </div>
-  <p-dialog header="Save Location" modal="modal" [(visible)]="showSaveDialog" width="350" height="190">
+  <p-dialog header="Save Location" [modal]="true" [(visible)]="showSaveDialog" width="350" height="190">
     <div style="height: 60px;">
       Save location as:&nbsp;
       <ks-dropdown #saveNameDropdown [(ngModel)]="selectedName" [options]="saveDialogNames" [editable]="true" [style]="{width: '200px'}"></ks-dropdown>
@@ -28,13 +28,13 @@
     </div>
     <p-footer>
       <div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix">
-        <button type="button" pButton icon="fa fa-close" (click)="showSaveDialog=false" label="Cancel"></button>
-        <button type="button" pButton icon="fa fa-check" (click)="doSave()" label="OK" [disabled]="!selectedName.trim()"></button>
+        <button type="button" pButton icon="far fa-window-close" (click)="showSaveDialog=false" label="Cancel"></button>
+        <button type="button" pButton icon="fas fa-check" (click)="doSave()" label="OK" [disabled]="!selectedName.trim()"></button>
       </div>
     </p-footer>
-    <p-confirmDialog header="Same location name in use" icon="fa fa-question-circle" width="400" appendTo="body"></p-confirmDialog>
+    <p-confirmDialog key="save-confirm" header="Same location name in use" icon="fas fa-question-circle" width="400"></p-confirmDialog>
   </p-dialog>
-  <p-dialog header="Delete Location" modal="modal" [(visible)]="showDeleteDialog" width="350" height="165">
+  <p-dialog header="Delete Location" [modal]="true" [(visible)]="showDeleteDialog" width="350" height="165">
     <div style="height: 35px;">
       <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="4px">
         <span>Location to delete:&nbsp;</span>
@@ -43,8 +43,8 @@
     </div>
     <p-footer>
       <div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix">
-        <button type="button" pButton icon="fa fa-close" (click)="showDeleteDialog=false" label="Cancel"></button>
-        <button type="button" pButton icon="fa fa-check" (click)="doDelete()" label="OK"></button>
+        <button type="button" pButton icon="far fa-window-close" (click)="showDeleteDialog=false" label="Cancel"></button>
+        <button type="button" pButton icon="fas fa-check" (click)="doDelete()" label="OK"></button>
       </div>
     </p-footer>
   </p-dialog>

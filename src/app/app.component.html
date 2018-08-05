@@ -11,11 +11,11 @@
   <div class="flex-container" fxLayout="column" fxLayoutAlign="start stretch" fxLayoutGap="4px" fxFlex="1 0 auto">
     <div fxLayout="row" fxLayoutAlign="center stretch" fxFlex="0 0 auto" class="banner-backdrop">
       <div class="banner" fxFlex="0 0 auto">
-        <div><a href="/assets/help/" target="_blank"><i class="fa fa-question-circle"></i><br>help</a></div>
-        <div><a href="/assets/about.html" target="_blank"><i class="fa fa-info-circle"></i><br>about</a></div>
-        <div><a href="https://www.facebook.com/groups/152276391475378/" target="_blank"><i class="fa fa-facebook-official"></i><br>discuss</a></div>
-        <div><a href="https://github.com/kshetline/sky-view-cafe-astronomy/" target="_blank"><i class="fa fa-code"></i><br>code</a></div>
-        <div><a href="/assets/donate.html" target="_blank"><i class="fa fa-money"></i><br>donate</a></div>
+        <div><a href="/assets/help/" target="_blank"><i class="fas fa-question-circle"></i><br>help</a></div>
+        <div><a href="/assets/about.html" target="_blank"><i class="fas fa-info-circle"></i><br>about</a></div>
+        <div><a href="https://www.facebook.com/groups/152276391475378/" target="_blank"><i class="fab fa-facebook"></i><br>discuss</a></div>
+        <div><a href="https://github.com/kshetline/sky-view-cafe-astronomy/" target="_blank"><i class="fas fa-code"></i><br>code</a></div>
+        <div><a href="/assets/donate.html" target="_blank"><i class="fas fa-money-check-alt"></i><br>donate</a></div>
       </div>
     </div>
     <div class="flex-container" fxLayout="row" fxLayoutAlign="space-between stretch" fxFlex="0 0 auto">
@@ -32,7 +32,7 @@
               <ks-calendar [(ngModel)]="date" [timeZone]="timeZone" [gregorianChangeDate]="gcDate" [showDst]="true" [minYear]="-6000" [maxYear]="9999"
                            (dayClick)="calendarPopup.hide()"></ks-calendar>
             </p-overlayPanel>
-            <ks-icon-button [disabled]="trackTime" icon="fa fa-calendar" (click)="calendarPopup.toggle($event)"></ks-icon-button>&nbsp;
+            <ks-icon-button [disabled]="trackTime" icon="far fa-calendar-alt" (click)="calendarPopup.toggle($event)"></ks-icon-button>&nbsp;
           </div>
           <div class="time-panel-item">
             <p-checkbox [(ngModel)]="trackTime" binary="true" label="Track current time"></p-checkbox>
@@ -53,7 +53,7 @@
       </div>
       <div fxFlex="0 0 auto">
         <p-menu #moremenu popup="popup" [model]="moreItems"></p-menu>
-        <button type="button" pButton icon="fa fa-list" label="More..." (click)="moremenu.toggle($event)"></button>
+        <button type="button" pButton icon="fas fa-list" label="More..." (click)="moremenu.toggle($event)"></button>
       </div>
     </div>
     <div class="lower-panel flex-container" fxFlex="100%" fxLayout="row" fxLayoutAlign="start stretch" fxLayoutWrap="none" fxLayoutGap="4px">

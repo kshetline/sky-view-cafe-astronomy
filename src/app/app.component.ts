@@ -49,10 +49,10 @@ export class AppComponent implements AfterViewInit, OnDestroy {
 
   messages: Message[] = [];
   moreItems: MenuItem[] = [
-      { label: 'Preferences', icon: 'fa fa-cog', command: () => this.displayPreferences = true },
-      { label: 'Help', icon: 'fa fa-question-circle', command: () => this.openHelp() },
-      { label: 'Toggle full screen', icon: 'fa fa-arrows-alt', command: () => this.toggleFullScreen() },
-      { label: 'About Sky View Café', icon: 'fa fa-info-circle', command: () => this.displayAbout = true }
+      { label: 'Preferences', icon: 'fas fa-cog', command: () => this.displayPreferences = true },
+      { label: 'Help', icon: 'fas fa-question-circle', command: () => this.openHelp() },
+      { label: 'Toggle full screen', icon: 'fas fa-arrows-alt', command: () => this.toggleFullScreen() },
+      { label: 'About Sky View Café', icon: 'fas fa-info-circle', command: () => this.displayAbout = true }
     ];
 
   displayAbout = false;
