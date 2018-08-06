@@ -137,7 +137,7 @@ export class SvcMapViewComponent extends GenericView implements AfterViewInit {
         else if (setting.property === PROPERTY_BLINK_LOCATION_MARKERS)
           this.blink = <boolean> setting.value;
 
-        this.debouncedDraw();
+        this.throttledRedraw();
       }
     });
 
@@ -185,7 +185,7 @@ export class SvcMapViewComponent extends GenericView implements AfterViewInit {
       context.fillStyle = shadowColor;
       context.fillRect(0, 0, this.politicalMap.width, this.politicalMap.height);
 
-      this.debouncedDraw();
+      this.throttledRedraw();
     }).catch((reason: any) => {
       return Promise.reject('Failed to load all images: ' + reason);
     });

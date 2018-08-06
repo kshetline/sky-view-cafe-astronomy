@@ -128,13 +128,13 @@ export class SvcOrbitViewComponent extends GenericPlanetaryView implements After
   private anaglyph3d = false;
   private anaglyphRC = true;
   private centerEarth = false;
-  private debouncedWheelRedraw: () => void;
   private dragStartRotation_xz = 0.0;
   private dragStartRotation_yz = 0.0;
   private dragXOnly = false;
   private dragYOnly = false;
   private extent = 0; // Pluto
   private grayOrbits = false;
+  private initialZoomScale: number;
   private leftEyeLabels: LabelInfo[] = [];
   private showMarkers = false;
   private showNames = true;
@@ -155,6 +155,8 @@ export class SvcOrbitViewComponent extends GenericPlanetaryView implements After
 
     this.marqueeFlags = MARQUEE_ECLIPTIC | MARQUEE_HELIOCENTRIC | MARQUEE_DISTANCE;
     this.marqueeUnits = MARQUEE_AU;
+
+    this.canTouchZoom = true;
 
     appService.getUserSettingUpdates((setting: UserSetting) => {
       if (setting.view === VIEW_ORBITS && setting.source !== this) {
@@ -200,7 +202,7 @@ export class SvcOrbitViewComponent extends GenericPlanetaryView implements After
           this.updatePlanetsToDraw();
         }
 
-        this.debouncedDraw();
+        this.throttledRedraw();
       }
     });
   }
@@ -525,17 +527,34 @@ export class SvcOrbitViewComponent extends GenericPlanetaryView implements After
     return null;
   }
 
+  onTouchStart(event: TouchEvent): void {
+    super.onTouchStart(event);
+    this.beginDrag();
+  }
+
   onMouseDown(event: MouseEvent): void {
     super.onMouseDown(event);
+    this.beginDrag();
+  }
+
+  private beginDrag(): void {
     this.dragStartRotation_xz = this.rotation_xz;
     this.dragStartRotation_yz = this.rotation_yz;
     this.dragXOnly = false;
     this.dragYOnly = false;
   }
 
+  onTouchMove(event: TouchEvent): void {
+    super.onTouchMove(event);
+    this.continueDrag(event.shiftKey);
+  }
+
   onMouseMove(event: MouseEvent): void {
     super.onMouseMove(event);
+    this.continueDrag(event.shiftKey);
+  }
 
+  private continueDrag(holdingShift: boolean): void {
     if (this.dragging) {
       let dx = this.clickX - this.lastMoveX;
       let dy = this.lastMoveY - this.clickY;
@@ -543,7 +562,7 @@ export class SvcOrbitViewComponent extends GenericPlanetaryView implements After
       if (-90.0 <= this.dragStartRotation_yz && this.dragStartRotation_yz < 90.0)
         dx = -dx;
 
-      if (event.shiftKey && !this.dragXOnly && !this.dragYOnly) {
+      if (holdingShift && !this.dragXOnly && !this.dragYOnly) {
         if (abs(dx) > abs(dy)) {
           dy = 0;
 
@@ -580,13 +599,6 @@ export class SvcOrbitViewComponent extends GenericPlanetaryView implements After
 
   onWheel(event: WheelEvent): void {
     const oldZoom = this.zoom;
-
-    if (!this.debouncedWheelRedraw) {
-      this.debouncedWheelRedraw = _.debounce(() => {
-        this.draw();
-      }, 10);
-    }
-
     let zoomDelta = event.wheelDeltaY;
 
     if (zoomDelta === undefined)
@@ -602,11 +614,28 @@ export class SvcOrbitViewComponent extends GenericPlanetaryView implements After
     this.zoom = min(max(this.zoom + round(zoomDelta), 0), ZOOM_STEPS);
 
     if (this.zoom !== oldZoom) {
-      this.debouncedWheelRedraw();
+      this.throttledRedraw();
       this.appService.updateUserSetting({view: VIEW_ORBITS, property: PROPERTY_ZOOM, value: this.zoom, source: this});
     }
 
     event.preventDefault();
+  }
+
+  protected startTouchZoom(): void {
+    this.initialZoomScale = pow(10.0, LOG_MIN_ZOOM + ZOOM_LOG_RANGE * this.zoom / ZOOM_STEPS);
+  }
+
+  protected touchZoom(zoomRatio: number): void {
+    const oldZoom = this.zoom;
+    const scale = this.initialZoomScale / zoomRatio;
+    const newZoom = ZOOM_STEPS * (log10(scale) - LOG_MIN_ZOOM) / ZOOM_LOG_RANGE;
+
+    this.zoom = min(max(newZoom, 0), ZOOM_STEPS);
+
+    if (this.zoom !== oldZoom) {
+      this.throttledRedraw();
+      this.appService.updateUserSetting({view: VIEW_ORBITS, property: PROPERTY_ZOOM, value: this.zoom, source: this});
+    }
   }
 
   protected isInsideView(): boolean {

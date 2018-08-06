@@ -100,7 +100,7 @@ export class SvcInsolationViewComponent extends GenericView implements AfterView
           this.showMoonlight = <boolean> setting.value;
 
         this.refreshImage = true;
-        this.debouncedDraw();
+        this.throttledRedraw();
       }
     });
 
@@ -323,7 +323,7 @@ export class SvcInsolationViewComponent extends GenericView implements AfterView
 
     if (this.wasWithinGraph !== within) {
       this.wasWithinGraph = within;
-      this.debouncedDraw();
+      this.throttledRedraw();
     }
   }
 

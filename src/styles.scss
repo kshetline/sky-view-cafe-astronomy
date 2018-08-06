@@ -45,6 +45,12 @@ body {
   padding: 4px;
 }
 
+.error-caption {
+  color: #C00;
+  font-style: italic;
+  font-size: 11px;
+}
+
 // If a setting of 'nowrap' leaks through, dialog headers (and probably other headers) get screwed up on Firefox.
 .ui-widget-header {
   white-space: normal;
@@ -62,8 +68,6 @@ body {
   border: none;
 }
 
-.error-caption {
-  color: #C00;
-  font-style: italic;
-  font-size: 11px;
+.ui-chkbox, .ui-radiobutton { // Prevent checkbox/radio button layout from changing as buttons are checked/unchecked.
+  min-height: 14px;
 }

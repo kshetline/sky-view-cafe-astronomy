@@ -84,7 +84,6 @@ export class SvcMoonsViewComponent extends GenericPlanetaryView implements After
   private jupiterMoons = new JupitersMoons();
   private saturnDrawer: SaturnDrawer;
   private saturnMoons = new SaturnMoons();
-  private debouncedWheelRedraw: () => void;
 
   private northOnTop = true;
   private eastOnLeft = true;
@@ -95,6 +94,7 @@ export class SvcMoonsViewComponent extends GenericPlanetaryView implements After
   private grsOverride = false;
   private fixedGrs = DEFAULT_FIXED_GRS;
   private zoom = SvcMoonsViewComponent.zoomToZoomSteps(DEFAULT_ZOOM);
+  private initialZoomScale: number;
 
   @ViewChild('canvasWrapper') private wrapperRef: ElementRef;
   @ViewChild('orbitCanvas') private canvasRef: ElementRef;
@@ -102,6 +102,8 @@ export class SvcMoonsViewComponent extends GenericPlanetaryView implements After
 
   constructor(appService: AppService, private astroDataService: AstroDataService, private httpClient: HttpClient) {
     super(appService, CurrentTab.MOONS_GRS);
+
+    this.canTouchZoom = true;
 
     appService.getUserSettingUpdates((setting: UserSetting) => {
       if (setting.view === VIEW_MOONS && setting.source !== this) {
@@ -124,7 +126,7 @@ export class SvcMoonsViewComponent extends GenericPlanetaryView implements After
         else if (setting.property === PROPERTY_ZOOM)
           this.zoom = <number> setting.value;
 
-        this.debouncedDraw();
+        this.throttledRedraw();
       }
     });
   }
@@ -137,12 +139,12 @@ export class SvcMoonsViewComponent extends GenericPlanetaryView implements After
     JupiterDrawer.getJupiterDrawer(this.astroDataService, this.httpClient).then((drawer: JupiterDrawer) => {
       this.jupiterDrawer = drawer;
       this.jupiterInfo = this.jupiterDrawer.getJupiterInfo();
-      this.debouncedDraw();
+      this.throttledRedraw();
     });
 
     SaturnDrawer.getSaturnDrawer().then((drawer: SaturnDrawer) => {
       this.saturnDrawer = drawer;
-      this.debouncedDraw();
+      this.throttledRedraw();
     });
 
     setTimeout(() => this.appService.requestViewSettings(VIEW_MOONS));
@@ -505,13 +507,6 @@ export class SvcMoonsViewComponent extends GenericPlanetaryView implements After
   // noinspection JSUnusedGlobalSymbols
   onWheel(event: WheelEvent): void {
     const oldZoom = this.zoom;
-
-    if (!this.debouncedWheelRedraw) {
-      this.debouncedWheelRedraw = _.debounce(() => {
-        this.draw();
-      }, 10);
-    }
-
     let zoomDelta = event.wheelDeltaY;
 
     if (zoomDelta === undefined)
@@ -527,11 +522,28 @@ export class SvcMoonsViewComponent extends GenericPlanetaryView implements After
     this.zoom = min(max(this.zoom + round(zoomDelta), 0), ZOOM_STEPS);
 
     if (this.zoom !== oldZoom) {
-      this.debouncedWheelRedraw();
+      this.throttledRedraw();
       this.appService.updateUserSetting({view: VIEW_MOONS, property: PROPERTY_ZOOM, value: this.zoom, source: this});
     }
 
     event.preventDefault();
+  }
+
+  protected startTouchZoom(): void {
+    this.initialZoomScale = pow(10.0, LOG_MIN_ZOOM + ZOOM_LOG_RANGE * this.zoom / ZOOM_STEPS);
+  }
+
+  protected touchZoom(zoomRatio: number): void {
+    const oldZoom = this.zoom;
+    const scale = this.initialZoomScale / zoomRatio;
+    const newZoom = ZOOM_STEPS * (log10(scale) - LOG_MIN_ZOOM) / ZOOM_LOG_RANGE;
+
+    this.zoom = min(max(newZoom, 0), ZOOM_STEPS);
+
+    if (this.zoom !== oldZoom) {
+      this.throttledRedraw();
+      this.appService.updateUserSetting({view: VIEW_MOONS, property: PROPERTY_ZOOM, value: this.zoom, source: this});
+    }
   }
 
   protected drawSkyPlotLine(pt1: Point, pt2: Point, dc: DrawingContextPlanetary, subject: SUBJECT): boolean {

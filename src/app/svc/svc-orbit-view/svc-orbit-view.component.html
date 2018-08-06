@@ -16,9 +16,9 @@
 <div #canvasWrapper class="canvasWrapper">
   <div class="canvasAnchor">
     <canvas #orbitCanvas (window:resize)="onResize()"
-            (mousedown)="onMouseDown($event)"
-            (mousemove)="onMouseMove($event)"
-            (mouseup)="onMouseUp($event)"
+            (touchstart)="onTouchStart($event)" (mousedown)="onMouseDown($event)"
+            (touchmove)="onTouchMove($event)" (mousemove)="onMouseMove($event)"
+            (touchend)="onTouchEnd($event)" (touchcancel)="onTouchEnd($event)" (mouseup)="onMouseUp($event)"
             (wheel)="onWheel($event)"
             [style.cursor]="cursor"
     ></canvas>

@@ -270,7 +270,7 @@ export class SvcSkyViewComponent extends GenericSkyView implements AfterViewInit
           this.updatePlanetsToDraw();
         }
 
-        this.debouncedDraw();
+        this.throttledRedraw();
       }
       else if (setting.view === VIEW_APP && setting.property === PROPERTY_NORTH_AZIMUTH)
         this.formatFacing();

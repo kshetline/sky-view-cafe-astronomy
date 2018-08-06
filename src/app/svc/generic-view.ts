@@ -26,7 +26,7 @@ import {
   ASTEROID_BASE, COMET_BASE, EARTH, FIRST_PLANET, HALF_MINUTE, ISkyObserver, LAST_PLANET, NO_MATCH, SkyObserver, SolarSystem,
   StarCatalog, UT_to_TDB
 } from 'ks-astronomy';
-import { abs, ceil, max, Point } from 'ks-math';
+import { abs, ceil, max, Point, sqrt } from 'ks-math';
 import { FontMetrics, getFontMetrics, isSafari } from 'ks-util';
 import * as _ from 'lodash';
 import { KsDateTime } from 'ks-date-time-zone';
@@ -75,9 +75,10 @@ export abstract class GenericView implements AfterViewInit {
   protected clickX = -1;
   protected clickY = -1;
   protected canDrag = true;
+  protected canTouchZoom = false;
+  protected initialZoomSpread = 0; // 0 means not zooming.
   protected goodDragStart = false;
-  protected debouncedDraw: () => void;
-  protected throttledMouseMove: () => void;
+  protected throttledRedraw: () => void;
   protected debouncedResize: () => void;
   protected dragging = false;
   protected excludedPlanets: number[] = [EARTH];
@@ -125,9 +126,9 @@ export abstract class GenericView implements AfterViewInit {
 
     this.updatePlanetsToDraw();
 
-    this.debouncedDraw = _.debounce(() => {
+    this.throttledRedraw = _.throttle(() => {
       this.draw();
-    }, 0);
+    }, 100);
 
     appService.getCurrentTabUpdates((currentTab: CurrentTab) => {
       if (this.tabId === currentTab)
@@ -221,19 +222,27 @@ export abstract class GenericView implements AfterViewInit {
 
   // TODO: Turn into utility function
   // noinspection JSMethodCanBeStatic
-  protected getXYForTouchEvent(event: TouchEvent): Point {
+  protected getXYForTouchEvent(event: TouchEvent, index = 0): Point {
     const touches = event.touches;
 
-    if (touches.length < 1)
+    if (touches.length <= index)
       return {x: -1, y: -1};
 
-    const rect = (touches[0].target as HTMLElement).getBoundingClientRect();
+    const rect = (touches[index].target as HTMLElement).getBoundingClientRect();
 
-    return {x: touches[0].clientX - rect.left, y: touches[0].clientY - rect.top};
+    return {x: touches[index].clientX - rect.left, y: touches[0].clientY - rect.top};
   }
 
   onTouchStart(event: TouchEvent): void {
-    const pt = this.getXYForTouchEvent(event);
+    const pt0 = this.getXYForTouchEvent(event);
+    const pt = _.clone(pt0);
+    let pt1;
+
+    if (event.touches.length > 1) {
+      pt1 = this.getXYForTouchEvent(event, 1);
+      pt.x = (pt0.x + pt1.x) / 2;
+      pt.y = (pt0.y + pt1.y) / 2;
+    }
 
     this.clickX = this.lastMoveX = pt.x;
     this.clickY = this.lastMoveY = pt.y;
@@ -242,9 +251,21 @@ export abstract class GenericView implements AfterViewInit {
       this.goodDragStart = true;
       this.draw();
       event.preventDefault();
+
+      if (this.canTouchZoom && pt1) {
+        const dx = pt1.x - pt0.x;
+        const dy = pt1.y - pt0.y;
+
+        this.initialZoomSpread = max(sqrt(dx * dx + dy * dy), 1);
+        this.startTouchZoom();
+      }
+      else
+        this.initialZoomSpread = 0;
     }
-    else
+    else {
       this.goodDragStart = false;
+      this.initialZoomSpread = 0;
+    }
   }
 
   onMouseDown(event: MouseEvent): void {
@@ -254,13 +275,40 @@ export abstract class GenericView implements AfterViewInit {
   }
 
   onTouchMove(event: TouchEvent): void {
-    const pt = this.getXYForTouchEvent(event);
+    const pt0 = this.getXYForTouchEvent(event);
+    const pt = _.clone(pt0);
+    let pt1;
+
+    if (event.touches.length > 1) {
+      pt1 = this.getXYForTouchEvent(event, 1);
+      pt.x = (pt0.x + pt1.x) / 2;
+      pt.y = (pt0.y + pt1.y) / 2;
+    }
 
     if (this.goodDragStart)
       this.handleMouseMove(pt.x, pt.y, true);
 
+    if (this.initialZoomSpread) {
+      if (pt1) {
+        const dx = pt1.x - pt0.x;
+        const dy = pt1.y - pt0.y;
+        const newSpread = max(sqrt(dx * dx + dy * dy), 1);
+        const zoomRatio = newSpread / this.initialZoomSpread;
+
+        this.touchZoom(zoomRatio);
+      }
+      else
+        this.initialZoomSpread = 0;
+    }
+
     if (this.isInsideView())
       event.preventDefault();
+  }
+
+  protected startTouchZoom(): void {
+  }
+
+  protected touchZoom(zoomRatio: number): void {
   }
 
   onMouseMove(event: MouseEvent): void {
@@ -272,7 +320,7 @@ export abstract class GenericView implements AfterViewInit {
     this.lastMoveX = x;
     this.lastMoveY = y;
 
-    let  justCleared = false;
+    let justCleared = false;
 
     if (!this.isInsideView()) {
       this.clearMouseHighlighting();
@@ -289,15 +337,8 @@ export abstract class GenericView implements AfterViewInit {
       this.resetCursor();
     }
 
-    if (!this.dragging || justCleared) {
-      if (!this.throttledMouseMove) {
-         this.throttledMouseMove = _.throttle(() => {
-           this.draw();
-         }, 100);
-      }
-
-      this.throttledMouseMove();
-    }
+    if (!this.dragging || justCleared)
+      this.throttledRedraw();
   }
 
   protected clearMouseHighlighting(): void {
@@ -305,14 +346,17 @@ export abstract class GenericView implements AfterViewInit {
   }
 
   onTouchEnd(event: TouchEvent): void {
-    const pt = this.getXYForTouchEvent(event);
+    if (event.touches.length < 2)
+      this.initialZoomSpread = 0;
 
-    this.lastMoveX = pt.x;
-    this.lastMoveY = pt.y;
-    this.resetCursor();
-    this.draw();
-    this.dragging = false;
-    event.preventDefault();
+    if (event.touches.length === 1)
+      this.onTouchStart(event);
+    else if (event.touches.length === 0) {
+      this.resetCursor();
+      this.draw();
+      this.dragging = false;
+      event.preventDefault();
+    }
   }
 
   onMouseUp(event: MouseEvent): void {

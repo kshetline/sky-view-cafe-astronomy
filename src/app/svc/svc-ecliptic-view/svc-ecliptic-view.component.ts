@@ -134,7 +134,7 @@ export class SvcEclipticViewComponent extends GenericSkyView implements AfterVie
           this.updatePlanetsToDraw();
         }
 
-        this.debouncedDraw();
+        this.throttledRedraw();
       }
     });
   }

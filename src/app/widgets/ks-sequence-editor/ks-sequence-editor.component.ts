@@ -39,7 +39,7 @@ export interface SequenceItemInfo {
 const KEY_REPEAT_DELAY = 500;
 const KEY_REPEAT_RATE  = 100;
 const WARNING_DURATION = 5000;
-const FALSE_REPEAT_THRESHOLD = 10;
+const FALSE_REPEAT_THRESHOLD = 50;
 
 const DIGIT_SWIPE_THRESHOLD = 6;
 
@@ -205,6 +205,9 @@ export class KsSequenceEditorComponent implements AfterViewInit, OnInit, OnDestr
     if (KsSequenceEditorComponent.useHiddenInput) {
       this.hiddenInput = document.createElement('input');
       this.hiddenInput.type = 'text';
+      this.hiddenInput.autocomplete = 'off';
+      this.hiddenInput.setAttribute('autocapitalize', 'off');
+      this.hiddenInput.setAttribute('autocorrect', 'off');
       this.hiddenInput.style.position = 'absolute';
       this.hiddenInput.style.opacity = '0';
       this.hiddenInput.style['caret-color'] = 'transparent';
