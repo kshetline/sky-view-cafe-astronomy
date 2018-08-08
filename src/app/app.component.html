@@ -2,7 +2,7 @@
   <div class="about-dialog">
     <img src="/assets/resources/svc_lunar_eclipse.png" alt="lunar eclipse" width="64" height="64">
     <h2>Sky View Café NP</h2>
-    Version 1.4.10<br><br>
+    Version 1.4.11<br><br>
     Copyright © 2016-2018 Kerry Shetline.
   </div>
 </p-dialog>
@@ -56,7 +56,7 @@
         <button type="button" pButton icon="fas fa-list" label="More..." (click)="moremenu.toggle($event)"></button>
       </div>
     </div>
-    <div class="lower-panel flex-container" fxFlex="100%" fxLayout="row" fxLayoutAlign="start stretch" fxLayoutWrap="none" fxLayoutGap="4px">
+    <div class="lower-panel flex-container" fxFlex="100%" fxLayout="row" fxLayoutAlign="start stretch" fxLayoutGap="4px">
       <ks-tab-view fxFlex="1 0 auto" (onChange)="tabChanged($event)" [activeTab]="selectedTab">
         <ks-tab header="Sky">
           <svc-sky-view></svc-sky-view>

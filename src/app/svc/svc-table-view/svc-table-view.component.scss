@@ -7,12 +7,16 @@
 }
 
 div.wrapper {
+  position: relative;
   flex-grow: 1;
 }
 
 .table-container {
-  width: auto;
+  position: absolute;
+  left: 0;
+  top: 0;
   overflow: auto;
+  white-space: nowrap;
 }
 
 .table-controls {

@@ -546,7 +546,9 @@ export class SvcOrbitViewComponent extends GenericPlanetaryView implements After
 
   onTouchMove(event: TouchEvent): void {
     super.onTouchMove(event);
-    this.continueDrag(event.shiftKey);
+
+    if (event.defaultPrevented)
+      this.continueDrag(event.shiftKey);
   }
 
   onMouseMove(event: MouseEvent): void {

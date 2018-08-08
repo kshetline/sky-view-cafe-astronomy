@@ -1,5 +1,5 @@
 <!--
-  Copyright © 2017 Kerry Shetline, kerry@shetline.com
+  Copyright © 2017-2018 Kerry Shetline, kerry@shetline.com
 
   IMPORTANT NOTE: The license below DOES NOT COVER use of the specific
   Google API key used in this code. Users must supply their own key.
@@ -30,10 +30,36 @@
     <meta name="keywords" content="astronomy, planetarium, interactive, stars, chart, star charts, star chart, starcharts, starchart, sky charts, sky chart, star maps, star map, sky maps, sky map, sky, planets, moon, moon phase, solar eclipse, lunar eclipse, orrery, Galilean moons, moons of Jupiter, moons of Saturn, deep sky objects, Messier, NGC, constellations, orbits, ecliptic, insolation, calendar, sunrise, sunset, rise, set, conjunction, opposition, greatest elongation, magnitude, visual magnitude, aphelion, perihelion, illuminated fraction, angular diameter, semidiameter, kerry, shetline, Mercury, Venus, Earth, Mars, Jupiter, Saturn, Uranus, Neptune, Pluto, Io, Europa, Ganymede, Callisto, Mimas, Enceladus, Tethys, Dione, Rhea, Titan, Hyperion, Iapetus, GRS, Great Red Spot">
     <title>Sky View Café</title>
     <base href="/">
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
 
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="icon" type="image/x-icon" href="favicon.ico">
     <script>
+      var minWidth = 1024;
+      var minHeight = 640;
+      var width = Math.max(screen.width, screen.height);
+      var origWidth = width;
+      var height = Math.min(screen.height, screen.width);
+
+      if (width < minWidth || height < minHeight) {
+        var metaViewport = document.querySelector('meta[name=viewport]');
+        var ratio = width / height;
+
+        if (height / ratio < minHeight) {
+          width = Math.round(minHeight * ratio);
+          // The extra +2 ensures that a tiny amount of scrolling is possibly, needed in some cases the clear
+          // browser tabs and/or the address bar from a mobile screen.
+          height = minHeight + 2;
+        }
+        else {
+          width = minWidth;
+          height = Math.round(minWidth / ratio) + 2;
+        }
+
+        var scale = origWidth / width;
+
+        metaViewport.setAttribute('content', 'width=' + width + ', height=' + height + ', initial-scale=' + scale);
+      }
+
       var mapsInitialized = false;
       var mapsCallback = null;
 

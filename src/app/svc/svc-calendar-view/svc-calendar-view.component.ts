@@ -32,7 +32,7 @@ import {
   VISIBLE_ALL_DAY, WINTER_SOLSTICE
 } from 'ks-astronomy';
 import { DatePipe } from '@angular/common';
-import { abs, ceil, floor, max, min, round } from 'ks-math';
+import { ceil, floor, max, min, round } from 'ks-math';
 import { isEdge, isFirefox, isIE } from 'ks-util';
 import * as _ from 'lodash';
 import { MoonDrawer } from '../moon-drawer';
@@ -51,9 +51,6 @@ const MOON_IMAGE_PRINT_INSET = 30;
 const MIN_MOON_IMAGE_SIZE = 32;
 
 const DAY_HIGHLIGHT = '#000044';
-
-const MAX_RESIZE_TOLERANCE = 4;
-const MAX_RESIZE_CYCLES = 3;
 
 interface TextAndTime {
   text: string;
@@ -110,13 +107,9 @@ export class SvcCalendarViewComponent implements AfterViewInit {
   private equisolstice = true;
   private dailyMoonPhase = true;
   private dailyDaylight = true;
-  private debouncedResize: () => void;
+  private throttledResize: () => void;
   private eventFinder = new EventFinder();
   private moonDrawer: MoonDrawer;
-  protected waitingForResizeToSettle = false;
-  protected resizeTolerance = 0;
-  protected lastSizeDiff = 0;
-  protected resizeCycles = 0;
 
   private eventTypes: EventType[] = [
     {planet: SUN, altitude: 0},
@@ -152,6 +145,10 @@ export class SvcCalendarViewComponent implements AfterViewInit {
     this.isEdgeOrIE = isEdge() || isIE();
     // TODO: Call method below whenever first day of week changes.
     this.updateDayHeadings();
+
+    this.throttledResize = _.throttle(() => {
+      this.doResize();
+    }, 100);
 
     appService.getCurrentTabUpdates((currentTab: CurrentTab) => {
       if (currentTab === CurrentTab.CALENDAR) {
@@ -226,65 +223,20 @@ export class SvcCalendarViewComponent implements AfterViewInit {
   }
 
   onResize(): void {
-    this.waitingForResizeToSettle = false;
-    this.resizeCycles = 0;
-    this.onResizeAux();
-  }
-
-  protected onResizeAux(): void {
-    if (!this.debouncedResize) {
-      this.debouncedResize = _.debounce(() => {
-        this.doResize();
-
-        setTimeout(() => {
-          // Ideally this.wrapper.clientWidth and this.canvas.clientWidth are equal after resizing,
-          // but in Firefox (and possibly other browsers) they don't match exactly even after an extra
-          // cycle of resizing. Below we try to dynamically figure out how much tolerance in width
-          // difference to allow for.
-          const sizeDiff = abs(this.wrapper.clientWidth - this.canvas.clientWidth);
-          let resizeAgain = true;
-
-          if (sizeDiff > this.resizeTolerance) {
-            if (this.waitingForResizeToSettle && sizeDiff <= MAX_RESIZE_TOLERANCE) {
-              if (sizeDiff === this.lastSizeDiff) {
-                if (++this.resizeCycles === MAX_RESIZE_CYCLES) {
-                  this.resizeTolerance = sizeDiff;
-                  resizeAgain = false;
-                  this.waitingForResizeToSettle = false;
-                }
-              }
-              else
-                this.resizeCycles = 0;
-            }
-
-            this.lastSizeDiff = sizeDiff;
-
-            if (resizeAgain) {
-              this.waitingForResizeToSettle = true;
-              this.onResizeAux();
-            }
-          }
-        }, 50);
-      }, 50);
-    }
-
-    this.debouncedResize();
+    this.throttledResize();
   }
 
   private doResize(): void {
-    const top = ceil(this.wrapper.getBoundingClientRect().top);
-
     this.width = this.wrapper.clientWidth;
-    // Using the document's clientHeight instead of the window's innerHeight accounts for possible scroll bar.
-    this.height = max(window.document.documentElement.clientHeight - top - 5, 250);
+    this.height = this.wrapper.clientHeight;
     this.dayTop = (<HTMLElement> (this.titleRowRef.nativeElement)).clientHeight + (<HTMLElement> (this.weekdaysRowRef.nativeElement)).clientHeight;
 
     this.canvas.width = this.width;
     this.canvas.height = this.height;
-    this.wrapper.style.height = this.height + 'px';
+    this.canvas.style.height = this.height + 'px';
     this.canvas.style.height = this.height + 'px';
     this.calendarTable.style.height = this.height + 'px';
-    this.wrapper.style.height = this.height + 'px';
+    this.calendarTable.style.height = this.height + 'px';
 
     this.draw();
   }

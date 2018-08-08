@@ -30,6 +30,6 @@ ul.ks-tabs > li.ks-active {
   cursor: default;
 }
 
-:host div {
-  height: calc(100% - 2.6em);
+:host>div {
+  height: calc(100% - 31px);
 }

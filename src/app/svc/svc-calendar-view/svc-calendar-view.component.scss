@@ -1,6 +1,6 @@
 :host {
   display: flex;
-  height: 100%;
+  height: calc(100% - 2px);
   flex-direction: column;
   justify-content: space-between;
   align-items: stretch;
