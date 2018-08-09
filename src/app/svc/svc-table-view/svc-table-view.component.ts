@@ -103,6 +103,7 @@ export class SvcTableViewComponent implements AfterViewInit {
     appService.getCurrentTabUpdates((currentTab: CurrentTab) => {
       if (currentTab === CurrentTab.TABLES) {
         setTimeout(() => {
+          this.throttledResize();
           this.updateView();
           (<any> this.tableTypesDropdown).updateDimensions();
           (<any> this.planetsDropdown).updateDimensions();

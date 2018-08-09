@@ -148,7 +148,6 @@ export class SvcOrbitViewComponent extends GenericPlanetaryView implements After
 
   @ViewChild('canvasWrapper') private wrapperRef: ElementRef;
   @ViewChild('orbitCanvas') private canvasRef: ElementRef;
-  @ViewChild('marquee', {read: ElementRef}) private marqueeRef: ElementRef;
 
   constructor(appService: AppService) {
     super(appService, CurrentTab.ORBITS);
@@ -210,7 +209,6 @@ export class SvcOrbitViewComponent extends GenericPlanetaryView implements After
   ngAfterViewInit(): void {
     this.wrapper = this.wrapperRef.nativeElement;
     this.canvas = this.canvasRef.nativeElement;
-    this.marquee = this.marqueeRef.nativeElement;
 
     setTimeout(() => this.appService.requestViewSettings(VIEW_ORBITS));
 

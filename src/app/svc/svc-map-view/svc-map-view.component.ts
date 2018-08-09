@@ -97,7 +97,6 @@ export class SvcMapViewComponent extends GenericView implements AfterViewInit {
 
   @ViewChild('canvasWrapper') private wrapperRef: ElementRef;
   @ViewChild('mapCanvas') private canvasRef: ElementRef;
-  @ViewChild('marquee', {read: ElementRef}) private marqueeRef: ElementRef;
 
   public showLocationDialog = false;
   public latitude: number;
@@ -154,7 +153,6 @@ export class SvcMapViewComponent extends GenericView implements AfterViewInit {
   ngAfterViewInit(): void {
     this.wrapper = this.wrapperRef.nativeElement;
     this.canvas = this.canvasRef.nativeElement;
-    this.marquee = this.marqueeRef.nativeElement;
 
     setTimeout(() => this.appService.requestViewSettings(VIEW_MAP));
 

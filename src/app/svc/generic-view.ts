@@ -63,7 +63,6 @@ export abstract class GenericView implements AfterViewInit {
 
   protected wrapper: HTMLDivElement;
   protected canvas: HTMLCanvasElement;
-  protected marquee: HTMLDivElement;
   protected lastWidth = -1;
   protected lastHeight = -1;
   protected width = -1;

@@ -80,7 +80,6 @@ export class SvcInsolationViewComponent extends GenericView implements AfterView
 
   @ViewChild('canvasWrapper') private wrapperRef: ElementRef;
   @ViewChild('insolationCanvas') private canvasRef: ElementRef;
-  @ViewChild('marquee') private marqueeRef: ElementRef;
 
   skyColor = 'black';
   moonColor = 'black';
@@ -125,7 +124,6 @@ export class SvcInsolationViewComponent extends GenericView implements AfterView
   ngAfterViewInit(): void {
     this.wrapper = this.wrapperRef.nativeElement;
     this.canvas = this.canvasRef.nativeElement;
-    this.marquee = this.marqueeRef.nativeElement;
 
     setTimeout(() => this.appService.requestViewSettings(VIEW_INSOLATION));
 

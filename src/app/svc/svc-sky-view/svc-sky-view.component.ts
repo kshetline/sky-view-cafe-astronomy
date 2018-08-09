@@ -139,7 +139,6 @@ export class SvcSkyViewComponent extends GenericSkyView implements AfterViewInit
 
   @ViewChild('canvasWrapper') private wrapperRef: ElementRef;
   @ViewChild('skyCanvas') private canvasRef: ElementRef;
-  @ViewChild('marquee', {read: ElementRef}) private marqueeRef: ElementRef;
 
   private readonly gridFont  = 'italic bold 14px Arial, Helvetica, sans-serif';
 
@@ -280,7 +279,6 @@ export class SvcSkyViewComponent extends GenericSkyView implements AfterViewInit
   ngAfterViewInit(): void {
     this.wrapper = this.wrapperRef.nativeElement;
     this.canvas = this.canvasRef.nativeElement;
-    this.marquee = this.marqueeRef.nativeElement;
 
     setTimeout(() => this.appService.requestViewSettings(VIEW_SKY));
 
