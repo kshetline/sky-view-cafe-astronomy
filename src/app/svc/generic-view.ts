@@ -40,6 +40,8 @@ export enum    ADDITIONALS {NONE, ALL_ASTEROIDS, ALL_COMETS, ALL}
 const FLICK_REJECTION_THRESHOLD = 250;
 const SLOW_DRAWING_THRESHOLD = 125;
 const MAX_SLOW_FRAMES = 3;
+const SLOW_FRAME_COUNT_RESET_TIME = 3000;
+const FULL_REDRAW_DELAY = 1500;
 
 export interface DrawingContext {
   context: CanvasRenderingContext2D;
@@ -93,6 +95,7 @@ export abstract class GenericView implements AfterViewInit {
   protected lastMoveY = -1;
   protected lastDrawingContext: DrawingContext;
   protected slowFrameCount = 0;
+  protected lastSlowFrameTime = 0;
   protected planetsToDraw: number[] = [];
   protected additional: ADDITIONALS | string = ADDITIONALS.NONE;
 
@@ -135,7 +138,7 @@ export abstract class GenericView implements AfterViewInit {
 
     this.debouncedFullRedraw = _.debounce(() => {
       this.draw(true);
-    }, 1500);
+    }, FULL_REDRAW_DELAY);
 
     this.throttledResize = _.throttle(() => {
       this.doResize();
@@ -375,6 +378,9 @@ export abstract class GenericView implements AfterViewInit {
     if (!this.canvas || dc.w < 0 || dc.h < 0)
       return;
 
+    if (startTime > this.lastSlowFrameTime + SLOW_FRAME_COUNT_RESET_TIME)
+      this.slowFrameCount = 0;
+
     dc.fullDraw = (forceFullDraw || GenericView.printing || this.slowFrameCount < MAX_SLOW_FRAMES);
 
     if (this.lastWidth !== dc.w || this.lastHeight !== dc.h) {
@@ -403,17 +409,23 @@ export abstract class GenericView implements AfterViewInit {
 
     this.lastDrawingContext = dc;
 
+    const now = performance.now();
+
     if (dc.fullDraw) {
-      const fullDrawingTime = performance.now() - startTime;
+      const fullDrawingTime = now - startTime;
 
       if (forceFullDraw)
         this.slowFrameCount = 0;
 
-      if (fullDrawingTime > SLOW_DRAWING_THRESHOLD)
+      if (fullDrawingTime > SLOW_DRAWING_THRESHOLD) {
         ++this.slowFrameCount;
+        this.lastSlowFrameTime = now;
+      }
     }
-    else
+    else {
       this.debouncedFullRedraw();
+      this.lastSlowFrameTime = now;
+    }
   }
 
   protected additionalDrawingSetup(dc: DrawingContext): void {
