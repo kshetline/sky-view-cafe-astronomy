@@ -26,7 +26,7 @@ import {
   ASTEROID_BASE, COMET_BASE, EARTH, FIRST_PLANET, HALF_MINUTE, ISkyObserver, LAST_PLANET, NO_MATCH, SkyObserver, SolarSystem,
   StarCatalog, UT_to_TDB
 } from 'ks-astronomy';
-import { max, Point, sqrt } from 'ks-math';
+import { ceil, max, Point, round, sqrt } from 'ks-math';
 import { FontMetrics, getFontMetrics, isSafari } from 'ks-util';
 import * as _ from 'lodash';
 import { KsDateTime } from 'ks-date-time-zone';
@@ -37,6 +37,8 @@ export const PROPERTY_ADDITIONALS = 'additionals';
 export enum    ADDITIONALS {NONE, ALL_ASTEROIDS, ALL_COMETS, ALL}
 
 const FLICK_REJECTION_THRESHOLD = 250;
+const SLOW_DRAWING_THRESHOLD = 125;
+const MAX_SLOW_FRAMES = 3;
 
 export interface DrawingContext {
   context: CanvasRenderingContext2D;
@@ -51,6 +53,7 @@ export interface DrawingContext {
   jdu: number;
   jde: number;
   inkSaver: boolean;
+  fullDraw: boolean;
 }
 
 export abstract class GenericView implements AfterViewInit {
@@ -63,6 +66,8 @@ export abstract class GenericView implements AfterViewInit {
 
   protected wrapper: HTMLDivElement;
   protected canvas: HTMLCanvasElement;
+  protected canvasScaling = 1;
+  protected touchGuard: HTMLDivElement;
   protected lastWidth = -1;
   protected lastHeight = -1;
   protected width = -1;
@@ -78,6 +83,7 @@ export abstract class GenericView implements AfterViewInit {
   protected goodDragStart = false;
   protected dragStartTime = 0;
   protected throttledRedraw: () => void;
+  protected debouncedFullRedraw: () => void;
   protected throttledResize: () => void;
   protected dragging = false;
   protected excludedPlanets: number[] = [EARTH];
@@ -85,6 +91,7 @@ export abstract class GenericView implements AfterViewInit {
   protected lastMoveX = -1;
   protected lastMoveY = -1;
   protected lastDrawingContext: DrawingContext;
+  protected slowFrameCount = 0;
   protected planetsToDraw: number[] = [];
   protected additional: ADDITIONALS | string = ADDITIONALS.NONE;
 
@@ -125,6 +132,10 @@ export abstract class GenericView implements AfterViewInit {
       this.draw();
     }, 100);
 
+    this.debouncedFullRedraw = _.debounce(() => {
+      this.draw(true);
+    }, 1500);
+
     this.throttledResize = _.throttle(() => {
       this.doResize();
     }, 100);
@@ -149,7 +160,23 @@ export abstract class GenericView implements AfterViewInit {
   }
 
   ngAfterViewInit(): void {
+    this.canvasScaling = window.devicePixelRatio || 1;
+
     this.onResize();
+
+    if ((this.canDrag || this.canTouchZoom) && this.canvas) {
+      this.touchGuard = document.createElement('div');
+
+      const style = this.touchGuard.style;
+
+      style.display = 'none';
+      style.position = 'absolute';
+      style.backgroundColor = 'rgba(128, 128, 128, 0.5)';
+      style.top = style.right = style.bottom = style.left = '0';
+
+      this.canvas.parentElement.appendChild(this.touchGuard);
+      this.touchGuard.addEventListener('touchstart', (event: TouchEvent) => this.onTouchStartForTouchGuard(event));
+    }
 
     GenericView.getPrintingUpdate(printing => {
       this.doResize();
@@ -162,12 +189,20 @@ export abstract class GenericView implements AfterViewInit {
   }
 
   private doResize(): void {
+    if (this.wrapper.clientWidth === 0 || this.wrapper.clientHeight === 0)
+      return;
+
     this.width = this.wrapper.clientWidth;
     this.height = this.wrapper.clientHeight;
-    this.canvas.width = this.width;
-    this.canvas.height = this.height;
+    this.canvas.width = ceil(this.width * this.canvasScaling);
+    this.canvas.height = ceil(this.height * this.canvasScaling);
+    this.canvas.style.width = this.width + 'px';
     this.canvas.style.height = this.height + 'px';
-    this.canvas.style.height = this.height + 'px';
+
+    if (this.touchGuard) {
+      this.touchGuard.style.width = this.width + 'px';
+      this.touchGuard.style.height = this.height + 'px';
+    }
 
     this.draw();
   }
@@ -186,6 +221,17 @@ export abstract class GenericView implements AfterViewInit {
   }
 
   onTouchStart(event: TouchEvent): void {
+    if (this.touchGuard && event.touches.length > 2) {
+      this.touchGuard.style.display = 'block';
+      this.goodDragStart = false;
+      this.initialZoomSpread = 0;
+      this.clearMouseHighlighting();
+      this.resetCursor();
+      event.preventDefault();
+
+      return;
+    }
+
     const pt0 = this.getXYForTouchEvent(event);
     const pt = _.clone(pt0);
     let pt1;
@@ -199,7 +245,7 @@ export abstract class GenericView implements AfterViewInit {
     this.clickX = this.lastMoveX = pt.x;
     this.clickY = this.lastMoveY = pt.y;
 
-    if (this.isInsideView()) {
+    if (this.canDrag && this.isInsideView()) {
       this.goodDragStart = true;
       this.dragStartTime = performance.now();
       this.draw();
@@ -221,10 +267,17 @@ export abstract class GenericView implements AfterViewInit {
     }
   }
 
+  protected onTouchStartForTouchGuard(event: TouchEvent): void {
+    if (event.touches.length > 2) {
+      this.touchGuard.style.display = 'none';
+      event.preventDefault();
+    }
+  }
+
   onMouseDown(event: MouseEvent): void {
     this.clickX = this.lastMoveX = event.offsetX;
     this.clickY = this.lastMoveY = event.offsetY;
-    this.goodDragStart = this.isInsideView();
+    this.goodDragStart = this.canDrag && this.isInsideView();
   }
 
   onTouchMove(event: TouchEvent): void {
@@ -318,10 +371,18 @@ export abstract class GenericView implements AfterViewInit {
     this.resetCursor();
   }
 
-  protected draw(): void {
+  protected scaledRound(x: number): number {
+    return round(x * this.canvasScaling) / this.canvasScaling;
+  }
+
+// tslint:disable-next-line
+lastDrawStart = 0;
+
+  protected draw(forceFullDraw = false): void {
     if (this.tabId !== this.appService.currentTab)
       return;
 
+    const startTime = performance.now();
     const dc = <DrawingContext> {};
 
     dc.w = this.width;
@@ -330,14 +391,17 @@ export abstract class GenericView implements AfterViewInit {
     if (!this.canvas || dc.w < 0 || dc.h < 0)
       return;
 
+    dc.fullDraw = (forceFullDraw || this.slowFrameCount < MAX_SLOW_FRAMES);
+
     if (this.lastWidth !== dc.w || this.lastHeight !== dc.h) {
-      this.canvas.width = dc.w;
-      this.canvas.height = dc.h;
+      this.canvas.width = ceil(dc.w * this.canvasScaling);
+      this.canvas.height = ceil(dc.h * this.canvasScaling);
       this.lastWidth = dc.w;
       this.lastHeight = dc.h;
     }
 
     dc.context = this.canvas.getContext('2d');
+    dc.context.setTransform(this.canvasScaling, 0, 0, this.canvasScaling, 0, 0);
     dc.largeLabelFm = getFontMetrics(this.largeLabelFont);
     dc.mediumLabelFm = getFontMetrics(this.mediumLabelFont);
     dc.smallLabelFm = getFontMetrics(this.smallLabelFont);
@@ -354,6 +418,20 @@ export abstract class GenericView implements AfterViewInit {
     this.additionalDrawingSteps(dc);
 
     this.lastDrawingContext = dc;
+this.marqueeText = (performance.now() - startTime) + ', ' + (startTime - this.lastDrawStart);
+this.lastDrawStart = startTime;
+
+    if (dc.fullDraw) {
+      const fullDrawingTime = performance.now() - startTime;
+
+      if (forceFullDraw)
+        this.slowFrameCount = 0;
+
+      if (fullDrawingTime > SLOW_DRAWING_THRESHOLD)
+        ++this.slowFrameCount;
+    }
+    else
+      this.debouncedFullRedraw();
   }
 
   protected additionalDrawingSetup(dc: DrawingContext): void {

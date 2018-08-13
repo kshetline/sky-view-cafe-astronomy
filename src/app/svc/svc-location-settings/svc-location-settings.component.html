@@ -32,7 +32,7 @@
         <button type="button" pButton icon="fas fa-check" (click)="doSave()" label="OK" [disabled]="!selectedName.trim()"></button>
       </div>
     </p-footer>
-    <p-confirmDialog key="save-confirm" header="Same location name in use" icon="fas fa-question-circle" width="400"></p-confirmDialog>
+    <p-confirmDialog key="save-confirm" header="Same location name in use" icon="fas fa-question-circle" width="400" appendTo="body"></p-confirmDialog>
   </p-dialog>
   <p-dialog header="Delete Location" [modal]="true" [(visible)]="showDeleteDialog" width="350" height="165">
     <div style="height: 35px;">

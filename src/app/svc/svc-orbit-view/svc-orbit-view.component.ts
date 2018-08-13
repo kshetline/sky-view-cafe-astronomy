@@ -321,9 +321,9 @@ export class SvcOrbitViewComponent extends GenericPlanetaryView implements After
           pt1.z = pt0.z;
           SvcOrbitViewComponent.translate(mode, pt1, ctr, viewingDistance, cos_xz, sin_xz, cos_yz, sin_yz);
 
-          // Scale and convert to integer form.
-          const x1 = round(pt1.x * pixelsPerUnit) + dc.xctr;
-          const y1 = dc.yctr - round(pt1.y * pixelsPerUnit);
+          // Scale and transform to screen coordinates.
+          const x1 = pt1.x * pixelsPerUnit + dc.xctr;
+          const y1 = dc.yctr - pt1.y * pixelsPerUnit;
 
           const range = orbitColors[colorIndex].length;
           let shading = round(range / 2 + pt1.z / shadingScale * range / 2.0);
@@ -369,14 +369,14 @@ export class SvcOrbitViewComponent extends GenericPlanetaryView implements After
             if (planet !== EARTH) { // Ascending node
               if (v - orbitStep <= ascNode_p && ascNode_p < v) {
                 const dv = (ascNode_p - v + orbitStep) / orbitStep;
-                const x3 = x2 + round((x1 - x2) * dv);
-                const y3 = y2 + round((y1 - y2) * dv);
+                const x3 = x2 + this.scaledRound((x1 - x2) * dv);
+                const y3 = y2 + this.scaledRound((y1 - y2) * dv);
                 this.zBuffer.addCircle(color, x3, y3, MARKER_SIZE / 2, pt1.z);
               }
               else if (v - orbitStep <= desNode_p && desNode_p < v) { // Descending node
                 const dv = (desNode_p - v + orbitStep) / orbitStep;
-                const x3 = x2 + round((x1 - x2) * dv);
-                const y3 = y2 + round((y1 - y2) * dv);
+                const x3 = x2 + this.scaledRound((x1 - x2) * dv);
+                const y3 = y2 + this.scaledRound((y1 - y2) * dv);
                 this.zBuffer.addRect(color, x3 - MARKER_SIZE / 2, y3 - MARKER_SIZE / 2, MARKER_SIZE - 1, MARKER_SIZE - 1, pt1.z);
               }
             }
@@ -407,9 +407,9 @@ export class SvcOrbitViewComponent extends GenericPlanetaryView implements After
             pt1.z = pt0.z;
             SvcOrbitViewComponent.translate(mode, pt1, ctr, viewingDistance, cos_xz, sin_xz, cos_yz, sin_yz);
 
-            // Scale and convert to integer form.
-            const x1 = round(pt1.x * pixelsPerUnit) + dc.xctr;
-            const y1 = dc.yctr - round(pt1.y * pixelsPerUnit);
+            // Scale and transform to screen coordinates.
+            const x1 = pt1.x * pixelsPerUnit + dc.xctr;
+            const y1 = dc.yctr - pt1.y * pixelsPerUnit;
 
             const range = orbitColors[colorIndex].length;
             let shading = round(range / 2 + pt1.z / shadingScale * range / 2.0);
@@ -452,8 +452,8 @@ export class SvcOrbitViewComponent extends GenericPlanetaryView implements After
       pt0 = dc.ss.getHeliocentricPosition(planet, dc.jde).xyz;
       SvcOrbitViewComponent.translate(mode, pt0, ctr, viewingDistance, cos_xz, sin_xz, cos_yz, sin_yz);
 
-      const pt = {x: round(dc.xctr + pt0.x * pixelsPerUnit),
-                  y: round(dc.yctr - pt0.y * pixelsPerUnit)};
+      const pt = {x: this.scaledRound(dc.xctr + pt0.x * pixelsPerUnit),
+                  y: this.scaledRound(dc.yctr - pt0.y * pixelsPerUnit)};
 
       positions.push({planet: planet, pos: pt0, pt: pt});
     }

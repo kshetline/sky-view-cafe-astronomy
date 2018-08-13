@@ -105,6 +105,8 @@ const MARK_GAP = 3;
 const MARK_LENGTH = 5;
 const MESSAGE_INSET = 3;
 
+const DEFAULT_SKY_RESOLUTION = 5;
+
 @Component({
   selector: 'svc-sky-view',
   templateUrl: './svc-sky-view.component.html',
@@ -582,6 +584,8 @@ export class SvcSkyViewComponent extends GenericSkyView implements AfterViewInit
     }
 
     if ((multiColor && alt >= -18) || showMilkyWay) {
+      const skyResolution = DEFAULT_SKY_RESOLUTION * (dc.fullDraw ? 1 : 2);
+
       dc.heavyLabels = true;
 
       if (this.trackingPlanet !== NO_SELECTION) {
@@ -595,26 +599,26 @@ export class SvcSkyViewComponent extends GenericSkyView implements AfterViewInit
         dc.context.fillRect(dc.x_ul, dc.y_ul, dc.plotWidth, dc.plotHeight);
       }
       else if (this.viewMode === VIEW_MODE.FULL_SKY || this.viewMode === VIEW_MODE.ZENITH) {
-        const minAlt2 = this.minAlt - 5.0 / dc.pixelsPerArcSec / 3600.0;
+        const minAlt2 = this.minAlt - skyResolution / dc.pixelsPerArcSec / 3600.0;
 
-        for (let y = dc.yctr - dc.radius - 5; y <= dc.yctr + dc.radius + 5; y += 5) {
-          for (let x = dc.xctr - dc.radius - 5; x <= dc.xctr + dc.radius + 5; x += 5) {
+        for (let y = dc.yctr - dc.radius - skyResolution; y <= dc.yctr + dc.radius + skyResolution; y += skyResolution) {
+          for (let x = dc.xctr - dc.radius - skyResolution; x <= dc.xctr + dc.radius + skyResolution; x += skyResolution) {
             const pos = this.screenXYToHorizontal(x, y, dc);
             const skyAlt = pos.altitude.degrees;
 
             if (skyAlt >= minAlt2) {
               dc.context.fillStyle = this.getSkyColor(dc, multiColor ? null : dc.skyColor, dc.sunPos, pos, dc.totality, showMilkyWay);
-              dc.context.fillRect(x - 2, y - 2, 6, 6);
+              dc.context.fillRect(x - floor(skyResolution / 2), y - floor(skyResolution / 2), skyResolution + 1, skyResolution + 1);
             }
           }
         }
       }
       else {
-        for (let y = dc.y_ul; y < dc.y_br; y += 5) {
-          for (let x = dc.x_ul; x < dc.x_br; x += 5) {
-            const pos = this.screenXYToHorizontal(x + 3, y + 3, dc);
-            let rw = 6;
-            let rh = 6;
+        for (let y = dc.y_ul; y < dc.y_br; y += skyResolution) {
+          for (let x = dc.x_ul; x < dc.x_br; x += skyResolution) {
+            const pos = this.screenXYToHorizontal(x + ceil(skyResolution / 2), y + ceil(skyResolution / 2), dc);
+            let rw = skyResolution + 1;
+            let rh = skyResolution + 1;
 
             if (x + rw > dc.x_br)
               rw = dc.x_br - x;
@@ -684,7 +688,7 @@ export class SvcSkyViewComponent extends GenericSkyView implements AfterViewInit
   protected drawScaledPlanet(planet: number, pt: Point, dc: DrawingContextSky, colorOverride?: string): void {
     const cx = pt.x;
     const cy = pt.y;
-    let pSize = round(dc.ss.getAngularDiameter(planet, dc.jde, dc.skyObserver) * dc.pixelsPerArcSec);
+    let pSize = this.scaledRound(dc.ss.getAngularDiameter(planet, dc.jde, dc.skyObserver) * dc.pixelsPerArcSec);
 
     pSize += (pSize + 1) % 2;
 
@@ -790,7 +794,7 @@ export class SvcSkyViewComponent extends GenericSkyView implements AfterViewInit
 
     if (this.viewMode === VIEW_MODE.HORIZON) {
       for (let i = 0; i <= this.viewHeight; i += 5) {
-        const y = round(dc.y_br - i * (dc.plotHeight - 1) / this.viewHeight - 1);
+        const y = this.scaledRound(dc.y_br - i * (dc.plotHeight - 1) / this.viewHeight - 1);
         dc.context.fillRect(dc.x_ul - MARK_LENGTH, y, MARK_LENGTH, 1);
 
         if (i % 15 === 0) {
@@ -803,7 +807,7 @@ export class SvcSkyViewComponent extends GenericSkyView implements AfterViewInit
       let az = 0.0;
 
       for (let i = 0; i < 32; ++i, az += 11.25) {
-        const x = round(dc.xctr + mod2(az - this.facing, 360.0) * (dc.plotWidth - 1) / this.viewWidth);
+        const x = this.scaledRound(dc.xctr + mod2(az - this.facing, 360.0) * (dc.plotWidth - 1) / this.viewWidth);
 
         if (dc.x_ul <= x && x < dc.x_br) {
           dc.context.fillRect(x, dc.y_br, 1, MARK_LENGTH);
@@ -946,8 +950,8 @@ export class SvcSkyViewComponent extends GenericSkyView implements AfterViewInit
 
   protected sphericalToScreenXY(pos: SphericalPosition, dc: DrawingContextSky, subject: SUBJECT): Point {
     if (this.trackingPlanet !== NO_SELECTION) {
-      return {x: dc.xctr - round(pos.longitude.arcSeconds * dc.pixelsPerArcSec),
-              y: dc.yctr - round(pos.latitude.arcSeconds * dc.pixelsPerArcSec)};
+      return {x: dc.xctr - pos.longitude.arcSeconds * dc.pixelsPerArcSec,
+              y: dc.yctr - pos.latitude.arcSeconds * dc.pixelsPerArcSec};
     }
     else
       return this.horizontalToScreenXY(pos.altitude.degrees, pos.azimuth.degrees, dc, subject);
@@ -995,12 +999,12 @@ export class SvcSkyViewComponent extends GenericSkyView implements AfterViewInit
             x0 *= (1.0 - 0.29289 * y0);
         }
 
-        pt.x = round(dc.xctr + x0 * (dc.plotWidth - 1));
-        pt.y = round(dc.yctr - (dc.plotHeight - 1) / 2 + y0 * dc.plotHeight);
+        pt.x = dc.xctr + x0 * (dc.plotWidth - 1);
+        pt.y = dc.yctr - (dc.plotHeight - 1) / 2 + y0 * dc.plotHeight;
       }
       else {
-        pt.x = round(dc.xctr + azOffset * (dc.plotWidth - 1) / this.viewWidth);
-        pt.y = round(dc.yctr + (dc.plotHeight - 1) / 2 - alt * dc.plotHeight / this.viewHeight);
+        pt.x = dc.xctr + azOffset * (dc.plotWidth - 1) / this.viewWidth;
+        pt.y = dc.yctr + (dc.plotHeight - 1) / 2 - alt * dc.plotHeight / this.viewHeight;
       }
     }
     else {
@@ -1011,8 +1015,8 @@ export class SvcSkyViewComponent extends GenericSkyView implements AfterViewInit
       else
         r = 90.0 * cos_deg(alt) * dc.size / this.viewWidth * 0.995;
 
-      pt.x = round(dc.xctr + cos_deg(-az + this.facing + 90.0) * r);
-      pt.y = round(dc.yctr + sin_deg(-az + this.facing + 90.0) * r);
+      pt.x = dc.xctr + cos_deg(-az + this.facing + 90.0) * r;
+      pt.y = dc.yctr + sin_deg(-az + this.facing + 90.0) * r;
     }
 
     return pt;
@@ -1259,7 +1263,7 @@ export class SvcSkyViewComponent extends GenericSkyView implements AfterViewInit
 
   protected drawWhereTheEarthIsInTheWay(dc: DrawingContextSky): void {
     if (dc.parallacticAngle) {
-      let y = dc.yctr + round((dc.trackingAltitude + REFRACTION_AT_HORIZON) * dc.pixelsPerArcSec * 3600.0);
+      let y = dc.yctr + this.scaledRound((dc.trackingAltitude + REFRACTION_AT_HORIZON) * dc.pixelsPerArcSec * 3600.0);
 
       if (y > dc.plotHeight)
         return;
@@ -1313,8 +1317,8 @@ export class SvcSkyViewComponent extends GenericSkyView implements AfterViewInit
 
       if (lastPt != null && inSky !== lastInSky) {
         midPt = <Point> {};
-        midPt.x = round(interpolate(alt, -REFRACTION_AT_HORIZON, lastAlt, pt.x, lastPt.x));
-        midPt.y = round(interpolate(alt, -REFRACTION_AT_HORIZON, lastAlt, pt.y, lastPt.y));
+        midPt.x = this.scaledRound(interpolate(alt, -REFRACTION_AT_HORIZON, lastAlt, pt.x, lastPt.x));
+        midPt.y = this.scaledRound(interpolate(alt, -REFRACTION_AT_HORIZON, lastAlt, pt.y, lastPt.y));
         pts.push(midPt);
       }
 

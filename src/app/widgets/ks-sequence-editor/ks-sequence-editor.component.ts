@@ -23,7 +23,7 @@ import { Subscription, timer } from 'rxjs';
 import {
   eventToKey, FontMetrics, getCssValue, getFont, getFontMetrics, getTextWidth, isAndroid, isEdge, isIE, isIOS, isWindows
 } from 'ks-util';
-import { abs, max, Point } from 'ks-math';
+import { abs, ceil, floor, max, min, Point } from 'ks-math';
 import * as _ from 'lodash';
 
 export interface SequenceItemInfo {
@@ -121,7 +121,7 @@ export class KsSequenceEditorComponent implements AfterViewInit, OnInit, OnDestr
   public displayState = 'normal';
 
   protected static getPadding(metrics: FontMetrics): number {
-    return Math.max(metrics.descent + 1, Math.floor(metrics.ascent / 2));
+    return max(metrics.descent + 1, floor(metrics.ascent / 2));
   }
 
   get viewOnly(): boolean { return this._viewOnly; }
@@ -191,7 +191,7 @@ export class KsSequenceEditorComponent implements AfterViewInit, OnInit, OnDestr
         fontParts[4] = ' ';
 
       const fontSize = parseFloat(fontParts[2]);
-      let smallerSize = Math.ceil(fontSize * 0.833);
+      let smallerSize = ceil(fontSize * 0.833);
 
       // A little platform-dependent tweaking is needed here or the font comes out too small.
       if (isWindows() && fontSize <= 12)
@@ -274,22 +274,22 @@ export class KsSequenceEditorComponent implements AfterViewInit, OnInit, OnDestr
 
     for (const item of this.items) {
       this.hOffsets.push(hOffset);
-      hOffset += Math.floor(getTextWidth(item.sizing ? item.sizing : String(item.value), this.getFontForItem(item)));
+      hOffset += floor(getTextWidth(item.sizing ? item.sizing : String(item.value), this.getFontForItem(item)));
     }
 
     this.hOffsets.push(hOffset);
 
-    const w = hOffset + Math.ceil(this.metrics.ascent * 1.5) + padding;
+    const w = hOffset + ceil(this.metrics.ascent * 1.5) + padding;
     const h = this.metrics.ascent + padding * 2;
     const scaling = max(window.devicePixelRatio || 1, 2);
 
     this.hOffsets.push(w);
     this.width = w;
     this.canvas.style.width = w + 'px';
-    this.canvas.width = Math.ceil(w * scaling);
+    this.canvas.width = ceil(w * scaling);
     this.height = h;
     this.canvas.style.height = h + 'px';
-    this.canvas.height = Math.ceil(h * scaling);
+    this.canvas.height = ceil(h * scaling);
 
     // Scaling is not reset with each call to getContext('2d'). It will have cumulative effect if done more than once.
     if (!this.scaled) {
@@ -351,7 +351,7 @@ export class KsSequenceEditorComponent implements AfterViewInit, OnInit, OnDestr
   protected drawSpinner(context: CanvasRenderingContext2D): void {
     const h = this.height;
     const leftEdge = this.hOffsets[this.hOffsets.length - 2];
-    const spinnerCenter = Math.ceil((leftEdge + this.width) / 2) + 0.5;
+    const spinnerCenter = ceil((leftEdge + this.width) / 2) + 0.5;
     const spinnerInset = h / 8;
     const arrowH = this.metrics.ascent / 2.5;
     const arrowV = this.metrics.ascent / 2;
@@ -421,7 +421,7 @@ export class KsSequenceEditorComponent implements AfterViewInit, OnInit, OnDestr
 
   protected getSelectionForXY(x: number, y: number): number {
     const newSelection = _.findIndex(this.hOffsets, (offset: number, index: number) => {
-      return offset <= x && x < this.hOffsets[Math.min(index + 1, this.hOffsets.length - 1)];
+      return offset <= x && x < this.hOffsets[min(index + 1, this.hOffsets.length - 1)];
     });
 
     if (newSelection >= this.items.length)

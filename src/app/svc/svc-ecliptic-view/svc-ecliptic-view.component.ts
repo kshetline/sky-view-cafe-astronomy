@@ -1,5 +1,5 @@
 /*
-  Copyright © 2017 Kerry Shetline, kerry@shetline.com.
+  Copyright © 2017-2018 Kerry Shetline, kerry@shetline.com.
 
   This code is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -63,10 +63,6 @@ interface DrawingContextEcliptic extends DrawingContextPlanetary {
   span: number;
   spanDegrees: number;
 }
-
-const MARK_GAP = 3;
-const MARK_LENGTH = 5;
-const MESSAGE_INSET = 3;
 
 @Component({
   selector: 'svc-ecliptic-view',
@@ -222,8 +218,8 @@ export class SvcEclipticViewComponent extends GenericSkyView implements AfterVie
     dc.context.font = this.largeLabelFont;
 
     for (let longitude = 0; longitude < 360; longitude += 90) {
-      let x1 = round(dc.xctr + cos_deg(-longitude * dc.orientation) * (dc.size - 2) / 2.0);
-      let y1 = round(dc.yctr + sin_deg(-longitude * dc.orientation) * (dc.size - 2) / 2.0);
+      let x1 = this.scaledRound(dc.xctr + cos_deg(-longitude * dc.orientation) * (dc.size - 2) / 2.0);
+      let y1 = this.scaledRound(dc.yctr + sin_deg(-longitude * dc.orientation) * (dc.size - 2) / 2.0);
       const label = longitude + '°';
       const textWidth = dc.context.measureText(String(longitude)).width; // Center without the degree sign
 
@@ -293,8 +289,8 @@ export class SvcEclipticViewComponent extends GenericSkyView implements AfterVie
 
     const r = B * dc.orientation / dc.spanDegrees * dc.span + (dc.size - dc.span) / 2.0;
 
-    const pt = {x: round(dc.xctr + cos(-L * dc.orientation) * r),
-                y: round(dc.yctr + sin(-L * dc.orientation) * r)};
+    const pt = {x: (dc.xctr + cos(-L * dc.orientation) * r),
+                y: (dc.yctr + sin(-L * dc.orientation) * r)};
 
     return pt;
   }
@@ -347,11 +343,11 @@ export class SvcEclipticViewComponent extends GenericSkyView implements AfterVie
     }
 
     for (let longitude = 0; longitude < 360; longitude += 15) {
-      const x1 = round(dc.xctr + cos_deg(-longitude * dc.orientation) * (dc.size - 2) / 2.0);
-      const y1 = round(dc.yctr + sin_deg(-longitude * dc.orientation) * (dc.size - 2) / 2.0);
+      const x1 = (dc.xctr + cos_deg(-longitude * dc.orientation) * (dc.size - 2) / 2.0);
+      const y1 = (dc.yctr + sin_deg(-longitude * dc.orientation) * (dc.size - 2) / 2.0);
 
-      const x2 = round(dc.xctr + cos_deg(-longitude * dc.orientation) * (dc.size - dc.span * 2 + 2) / 2.0);
-      const y2 = round(dc.yctr + sin_deg(-longitude * dc.orientation) * (dc.size - dc.span * 2 + 2) / 2.0);
+      const x2 = (dc.xctr + cos_deg(-longitude * dc.orientation) * (dc.size - dc.span * 2 + 2) / 2.0);
+      const y2 = (dc.yctr + sin_deg(-longitude * dc.orientation) * (dc.size - dc.span * 2 + 2) / 2.0);
 
       if (longitude === 0)
         dc.context.strokeStyle = (dc.inkSaver ? eclipticPrintColor : eclipticColor);

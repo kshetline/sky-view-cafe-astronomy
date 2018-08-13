@@ -129,24 +129,9 @@ export class SvcLocationSettingsComponent {
         message: `Are you sure you want to replace the existing "${this.selectedName}"?`,
         accept: () => this.completeSave()
       });
-
-      this.fixConfirmationDialog();
     }
     else
       this.completeSave();
-  }
-
-  // TODO: Hack alert! What appears to be a PrimeNG bug is causing the confirmation dialog to get
-  // stuck behind a new dialog mask, instead of being placed on top of it. The result is the whole
-  // display being locked up, grayed-out and unclickable. The code below is a less-than-perfect,
-  // but workable temporary solution.
-  private fixConfirmationDialog(): void {
-    setTimeout(() => {
-      const masks = document.getElementsByClassName('ui-dialog-mask');
-
-      if (masks && masks.length > 0)
-        (masks[masks.length - 1] as HTMLElement).style.zIndex = 'auto';
-    });
   }
 
   doDelete(): void {

@@ -181,3 +181,15 @@ export function busyConfigFactory(): BusyConfig {
 })
 
 export class AppModule {}
+
+// TODO: Hack to be removed when bug is fixed in PrimeNG.
+import { ConfirmDialog } from 'primeng/confirmdialog';
+
+ConfirmDialog.prototype.appendContainer = function(): void {
+  if (this.appendTo) {
+    if (this.appendTo === 'body')
+      document.body.appendChild(this.el.nativeElement);
+    else
+      this.domHandler.appendChild(this.container, this.appendTo);
+  }
+};

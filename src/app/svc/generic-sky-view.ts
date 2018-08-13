@@ -1,5 +1,5 @@
 /*
-  Copyright © 2017 Kerry Shetline, kerry@shetline.com.
+  Copyright © 2017-2018 Kerry Shetline, kerry@shetline.com.
 
   This code is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -64,6 +64,8 @@ const opacitiesOfWhite: string[] = [];
 
 for (let i = 0; i <= 255; ++i)
   opacitiesOfWhite[i] = 'rgba(255,255,255,' + (i / 255).toFixed(3) + ')';
+
+const QUICK_DRAW_STAR_COUNT = 500;
 
 export abstract class GenericSkyView extends GenericPlanetaryView implements AfterViewInit {
   protected deepSkyLabelMagnitude = NO_DEEP_SKY;
@@ -155,7 +157,7 @@ export abstract class GenericSkyView extends GenericPlanetaryView implements Aft
       }
 
       if (!outOfView && starCount > 0 && this.labelConstellations) {
-        const pt = {x: round((minX + maxX) / 2), y: round((minY + maxY) / 2)};
+        const pt = {x: this.scaledRound((minX + maxX) / 2), y: this.scaledRound((minY + maxY) / 2)};
 
         if (this.withinPlot(pt.x, pt.y, dc)) {
           const name = dc.sc.getConstellationName(i).toUpperCase();
@@ -189,7 +191,9 @@ export abstract class GenericSkyView extends GenericPlanetaryView implements Aft
                               DIMMEST_ALLOWED_1x1_STAR_IMAGE_INDEX), BRIGHTEST_1x1_STAR_IMAGE_INDEX);
     dc.starLevelRange = dc.starBrightestLevel - dc.starDimmestLevel;
 
-    for (let i = 0; i < dc.sc.getStarCount(); ++i) {
+    const firstStar = (dc.fullDraw ? 0 : max(dc.sc.getStarCount() - QUICK_DRAW_STAR_COUNT, 0));
+
+    for (let i = firstStar; i < dc.sc.getStarCount(); ++i) {
       const bodyIndex = -i - 1;
       const isDeepSky = dc.sc.isDeepSkyObject(i);
       const vmag = dc.sc.getMagnitude(i);
