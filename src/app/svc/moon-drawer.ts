@@ -1,5 +1,5 @@
 /*
-  Copyright © 2000-2017 Kerry Shetline, kerry@shetline.com.
+  Copyright © 2017-2018 Kerry Shetline, kerry@shetline.com.
 
   This code is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -72,10 +72,10 @@ export class MoonDrawer {
   }
 
   private getPixelLevel(x: number, y: number): number {
-    const x0 = Math.floor(x);
+    const x0 = floor(x);
     const x1 = x0 + 1;
     const dx = x - x0;
-    const y0 = Math.floor(y);
+    const y0 = floor(y);
     const y1 = y0 + 1;
     const dy = y - y0;
 
@@ -86,13 +86,14 @@ export class MoonDrawer {
   }
 
   public drawMoon(context: CanvasRenderingContext2D, solarSystem: SolarSystem, time_JDE: number,
-                  cx: number, cy: number, size: number, pixelsPerArcSec: number,
+                  cx: number, cy: number, size: number, pixelsPerArcSec: number, pixelRatio = 1,
                   parallacticAngle?: Angle, observer?: ISkyObserver, showEclipses?: boolean): void {
     const originalImageSize = this.moonPixels.width;
 
     if (size === 0 && observer)
       size = ceil(solarSystem.getAngularDiameter(MOON, time_JDE, observer) * pixelsPerArcSec);
 
+    size *= pixelRatio;
     // Make sure that the size is odd, so that one pixel can be the exact center of the image.
     size += (size + 1) % 2;
 
@@ -232,6 +233,6 @@ export class MoonDrawer {
     }
 
     this.canvas.getContext('2d').putImageData(this.scaledBuffer, 0, 0);
-    context.drawImage(this.canvas, cx - r0, cy - r0);
+    context.drawImage(this.canvas, cx - r0 / pixelRatio, cy - r0 / pixelRatio, size / pixelRatio, size / pixelRatio);
   }
 }

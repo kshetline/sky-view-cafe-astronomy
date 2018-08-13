@@ -1,5 +1,5 @@
 /*
-  Copyright © 2017 Kerry Shetline, kerry@shetline.com.
+  Copyright © 2017-2018 Kerry Shetline, kerry@shetline.com.
 
   This code is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -87,6 +87,7 @@ interface DateInfo extends YMDDate {
 export class SvcCalendarViewComponent implements AfterViewInit {
   private wrapper: HTMLDivElement;
   private canvas: HTMLCanvasElement;
+  private canvasScaling = 1;
   private calendarTable: HTMLTableElement;
   private width = -1;
   private height = -1;
@@ -213,6 +214,7 @@ export class SvcCalendarViewComponent implements AfterViewInit {
     this.wrapper = this.wrapperRef.nativeElement;
     this.canvas = this.canvasRef.nativeElement;
     this.calendarTable = this.calendarTableRef.nativeElement;
+    this.canvasScaling = window.devicePixelRatio || 1;
     this.onResize();
 
     setTimeout(() => this.appService.requestViewSettings(VIEW_CALENDAR));
@@ -231,11 +233,11 @@ export class SvcCalendarViewComponent implements AfterViewInit {
     this.height = this.wrapper.clientHeight;
     this.dayTop = (<HTMLElement> (this.titleRowRef.nativeElement)).clientHeight + (<HTMLElement> (this.weekdaysRowRef.nativeElement)).clientHeight;
 
-    this.canvas.width = this.width;
-    this.canvas.height = this.height;
+    this.canvas.width = ceil(this.width * this.canvasScaling);
+    this.canvas.height = ceil(this.height * this.canvasScaling);
+    this.canvas.style.width = this.width + 'px';
     this.canvas.style.height = this.height + 'px';
-    this.canvas.style.height = this.height + 'px';
-    this.calendarTable.style.height = this.height + 'px';
+    this.calendarTable.style.width = this.width + 'px';
     this.calendarTable.style.height = this.height + 'px';
 
     this.draw();
@@ -253,6 +255,7 @@ export class SvcCalendarViewComponent implements AfterViewInit {
     const inset = (inkSaver ? MOON_IMAGE_PRINT_INSET : MOON_IMAGE_INSET);
     const imageSize = max(min(rowHeight, colWidth) - 2 * inset, MIN_MOON_IMAGE_SIZE);
 
+    context.setTransform(this.canvasScaling, 0, 0, this.canvasScaling, 0, 0);
     context.fillStyle = (inkSaver ? 'white' : 'black');
     context.fillRect(0, 0, this.width, this.height);
 
@@ -272,7 +275,7 @@ export class SvcCalendarViewComponent implements AfterViewInit {
 
         if (this.dailyMoonPhase && this.moonDrawer && !date.otherMonth && !date.voidDay) {
           const jde = date.jdeNoon;
-          this.moonDrawer.drawMoon(context, this.appService.solarSystem, jde, cx, cy, imageSize, 0);
+          this.moonDrawer.drawMoon(context, this.appService.solarSystem, jde, cx, cy, imageSize, 0, this.canvasScaling);
         }
       }
     }

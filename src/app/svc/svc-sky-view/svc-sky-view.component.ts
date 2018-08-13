@@ -699,7 +699,7 @@ export class SvcSkyViewComponent extends GenericSkyView implements AfterViewInit
       dc.planetSizes[planet] = pSize;
 
     if (planet === MOON && this.moonDrawer)
-      this.moonDrawer.drawMoon(dc.context, dc.ss, dc.jde, cx, cy, 0, dc.pixelsPerArcSec, dc.parallacticAngle,
+      this.moonDrawer.drawMoon(dc.context, dc.ss, dc.jde, cx, cy, 0, dc.pixelsPerArcSec, this.canvasScaling, dc.parallacticAngle,
                                dc.skyObserver, true);
     else {
       if (this.trackingPlanet !== NO_SELECTION && planet !== SUN) {

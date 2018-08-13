@@ -25,6 +25,7 @@ import {
 } from 'ks-util';
 import { abs, ceil, floor, max, min, Point } from 'ks-math';
 import * as _ from 'lodash';
+import { getXYForTouchEvent } from '../../util/ks-touch-events';
 
 export interface SequenceItemInfo {
   value: string | number;
@@ -402,21 +403,8 @@ export class KsSequenceEditorComponent implements AfterViewInit, OnInit, OnDestr
   }
 
   protected getSelectionForTouchEvent(event: TouchEvent): number {
-    const pt = this.getXYForTouchEvent(event);
+    const pt = getXYForTouchEvent(event);
     return this.getSelectionForXY(pt.x, pt.y);
-  }
-
-  // TODO: Turn into utility function
-  // noinspection JSMethodCanBeStatic
-  protected getXYForTouchEvent(event: TouchEvent): Point {
-    const touches = event.touches;
-
-    if (touches.length < 1)
-      return {x: -1, y: -1};
-
-    const rect = (touches.item(0).target as HTMLElement).getBoundingClientRect();
-
-    return {x: touches.item(0).clientX - rect.left, y: touches.item(0).clientY - rect.top};
   }
 
   protected getSelectionForXY(x: number, y: number): number {
@@ -466,7 +454,7 @@ export class KsSequenceEditorComponent implements AfterViewInit, OnInit, OnDestr
       return;
 
     event.preventDefault();
-    this.firstTouch = this.getXYForTouchEvent(event);
+    this.firstTouch = getXYForTouchEvent(event);
     this.touchDeltaY = 0;
 
     const newSelection = this.getSelectionForTouchEvent(event);
@@ -495,7 +483,7 @@ export class KsSequenceEditorComponent implements AfterViewInit, OnInit, OnDestr
     event.preventDefault();
 
     if (this.selection >= 0 && this.firstTouch) {
-      const pt = this.getXYForTouchEvent(event);
+      const pt = getXYForTouchEvent(event);
 
       this.touchDeltaY = pt.y - this.firstTouch.y;
       this.draw();

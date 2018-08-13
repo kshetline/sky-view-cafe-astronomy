@@ -26,12 +26,13 @@ import {
   ASTEROID_BASE, COMET_BASE, EARTH, FIRST_PLANET, HALF_MINUTE, ISkyObserver, LAST_PLANET, NO_MATCH, SkyObserver, SolarSystem,
   StarCatalog, UT_to_TDB
 } from 'ks-astronomy';
-import { ceil, max, Point, round, sqrt } from 'ks-math';
+import { ceil, max, round, sqrt } from 'ks-math';
 import { FontMetrics, getFontMetrics, isSafari } from 'ks-util';
 import * as _ from 'lodash';
 import { KsDateTime } from 'ks-date-time-zone';
 import { SafeStyle } from '@angular/platform-browser';
 import { Subscription, BehaviorSubject, Observable } from 'rxjs';
+import { getXYForTouchEvent } from '../util/ks-touch-events';
 
 export const PROPERTY_ADDITIONALS = 'additionals';
 export enum    ADDITIONALS {NONE, ALL_ASTEROIDS, ALL_COMETS, ALL}
@@ -161,7 +162,6 @@ export abstract class GenericView implements AfterViewInit {
 
   ngAfterViewInit(): void {
     this.canvasScaling = window.devicePixelRatio || 1;
-
     this.onResize();
 
     if ((this.canDrag || this.canTouchZoom) && this.canvas) {
@@ -179,7 +179,7 @@ export abstract class GenericView implements AfterViewInit {
     }
 
     GenericView.getPrintingUpdate(printing => {
-      this.doResize();
+      this.doResize(printing);
     });
   }
 
@@ -188,7 +188,7 @@ export abstract class GenericView implements AfterViewInit {
     this.throttledResize();
   }
 
-  private doResize(): void {
+  private doResize(forceFullDraw = false): void {
     if (this.wrapper.clientWidth === 0 || this.wrapper.clientHeight === 0)
       return;
 
@@ -204,20 +204,7 @@ export abstract class GenericView implements AfterViewInit {
       this.touchGuard.style.height = this.height + 'px';
     }
 
-    this.draw();
-  }
-
-  // TODO: Turn into utility function
-  // noinspection JSMethodCanBeStatic
-  protected getXYForTouchEvent(event: TouchEvent, index = 0): Point {
-    const touches = event.touches;
-
-    if (touches.length <= index)
-      return {x: -1, y: -1};
-
-    const rect = (touches[index].target as HTMLElement).getBoundingClientRect();
-
-    return {x: touches[index].clientX - rect.left, y: touches[0].clientY - rect.top};
+    this.draw(forceFullDraw);
   }
 
   onTouchStart(event: TouchEvent): void {
@@ -232,12 +219,12 @@ export abstract class GenericView implements AfterViewInit {
       return;
     }
 
-    const pt0 = this.getXYForTouchEvent(event);
+    const pt0 = getXYForTouchEvent(event);
     const pt = _.clone(pt0);
     let pt1;
 
     if (event.touches.length > 1) {
-      pt1 = this.getXYForTouchEvent(event, 1);
+      pt1 = getXYForTouchEvent(event, 1);
       pt.x = (pt0.x + pt1.x) / 2;
       pt.y = (pt0.y + pt1.y) / 2;
     }
@@ -282,12 +269,12 @@ export abstract class GenericView implements AfterViewInit {
 
   onTouchMove(event: TouchEvent): void {
     const notAFlick = performance.now() > this.dragStartTime + FLICK_REJECTION_THRESHOLD;
-    const pt0 = this.getXYForTouchEvent(event);
+    const pt0 = getXYForTouchEvent(event);
     const pt = _.clone(pt0);
     let pt1;
 
     if (event.touches.length > 1) {
-      pt1 = this.getXYForTouchEvent(event, 1);
+      pt1 = getXYForTouchEvent(event, 1);
       pt.x = (pt0.x + pt1.x) / 2;
       pt.y = (pt0.y + pt1.y) / 2;
     }
@@ -375,9 +362,6 @@ export abstract class GenericView implements AfterViewInit {
     return round(x * this.canvasScaling) / this.canvasScaling;
   }
 
-// tslint:disable-next-line
-lastDrawStart = 0;
-
   protected draw(forceFullDraw = false): void {
     if (this.tabId !== this.appService.currentTab)
       return;
@@ -391,7 +375,7 @@ lastDrawStart = 0;
     if (!this.canvas || dc.w < 0 || dc.h < 0)
       return;
 
-    dc.fullDraw = (forceFullDraw || this.slowFrameCount < MAX_SLOW_FRAMES);
+    dc.fullDraw = (forceFullDraw || GenericView.printing || this.slowFrameCount < MAX_SLOW_FRAMES);
 
     if (this.lastWidth !== dc.w || this.lastHeight !== dc.h) {
       this.canvas.width = ceil(dc.w * this.canvasScaling);
@@ -418,8 +402,6 @@ lastDrawStart = 0;
     this.additionalDrawingSteps(dc);
 
     this.lastDrawingContext = dc;
-this.marqueeText = (performance.now() - startTime) + ', ' + (startTime - this.lastDrawStart);
-this.lastDrawStart = startTime;
 
     if (dc.fullDraw) {
       const fullDrawingTime = performance.now() - startTime;
