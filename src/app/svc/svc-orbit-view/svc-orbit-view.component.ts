@@ -74,7 +74,6 @@ const EYE_OFFSET_DIVISOR      = 30.0;
 
 const MARKER_SIZE = 9;
 const MARKER_SIZE2 = floor(MARKER_SIZE / 2);
-const MARKER_GAP = 2;
 
 const DRAG_LOCK_DELTA = 5;
 
@@ -277,6 +276,9 @@ export class SvcOrbitViewComponent extends GenericPlanetaryView implements After
         let colorIndex = planet;
 
         if (SolarSystem.isAsteroidOrComet(planet)) {
+          if (!dc.fullDraw)
+            continue;
+
           // Don't use this orbit drawing method for highly eccentric asteroids and comets.
           if (!oe || oe.e > 0.98) {
             specialCases.push(planet);

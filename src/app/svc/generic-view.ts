@@ -20,19 +20,20 @@
   other uses are restricted.
 */
 
-import { AfterViewInit } from '@angular/core';
+import { AfterViewInit, ElementRef, ViewChild } from '@angular/core';
 import { AppService, CurrentTab } from '../app.service';
 import {
   ASTEROID_BASE, COMET_BASE, EARTH, FIRST_PLANET, HALF_MINUTE, ISkyObserver, LAST_PLANET, NO_MATCH, SkyObserver, SolarSystem,
   StarCatalog, UT_to_TDB
 } from 'ks-astronomy';
 import { ceil, max, round, sqrt } from 'ks-math';
-import { FontMetrics, getFontMetrics, isSafari } from 'ks-util';
+import { FontMetrics, getFontMetrics, isSafari, padLeft } from 'ks-util';
 import * as _ from 'lodash';
 import { KsDateTime } from 'ks-date-time-zone';
 import { SafeStyle } from '@angular/platform-browser';
 import { Subscription, BehaviorSubject, Observable } from 'rxjs';
 import { getXYForTouchEvent } from '../util/ks-touch-events';
+import { KsMarqueeComponent } from '../widgets/ks-marquee/ks-marquee.component';
 
 export const PROPERTY_ADDITIONALS = 'additionals';
 export enum    ADDITIONALS {NONE, ALL_ASTEROIDS, ALL_COMETS, ALL}
@@ -69,6 +70,9 @@ export abstract class GenericView implements AfterViewInit {
 
   protected wrapper: HTMLDivElement;
   protected canvas: HTMLCanvasElement;
+  protected marquee: HTMLElement;
+  protected lastMarqueeClick = 0;
+  protected marqueeClickCount = 0;
   protected canvasScaling = 1;
   protected touchGuard: HTMLDivElement;
   protected lastWidth = -1;
@@ -99,12 +103,18 @@ export abstract class GenericView implements AfterViewInit {
   protected planetsToDraw: number[] = [];
   protected additional: ADDITIONALS | string = ADDITIONALS.NONE;
 
+  protected showMetrics = false;
+  protected lastDrawStart = 0;
+  protected lastFullDrawTime: number;
+
   protected sanitizedHandCursor: SafeStyle;
   protected sanitizedLabelCrosshair: SafeStyle;
 
   protected readonly largeLabelFont  = '12px Arial, Helvetica, sans-serif';
   protected readonly mediumLabelFont = '11px Arial, Helvetica, sans-serif';
   protected readonly smallLabelFont  = '10px Arial, Helvetica, sans-serif';
+
+  @ViewChild(KsMarqueeComponent, {read: ElementRef}) protected marqueeRef: ElementRef;
 
   public marqueeText = '';
 
@@ -184,6 +194,47 @@ export abstract class GenericView implements AfterViewInit {
     GenericView.getPrintingUpdate(printing => {
       this.doResize(printing);
     });
+
+    if (this.marqueeRef) {
+      this.marquee = this.marqueeRef.nativeElement as HTMLElement;
+      this.marquee.addEventListener('click', event => this.marqueeClick(event));
+      this.marquee.addEventListener('touchstart', event => this.marqueeTouch(event));
+    }
+  }
+
+  private marqueeClick(event: MouseEvent): void {
+    if (event.detail === 3)
+      this.toggleMarqueeMetrics();
+    else if (event.detail === 0 || event.detail === undefined)
+      this.countMarqueeClicks();
+  }
+
+  private marqueeTouch(event: TouchEvent): void {
+    if (event.touches.length > 2)
+      this.toggleMarqueeMetrics();
+    else if (event.touches.length === 1)
+      this.countMarqueeClicks();
+  }
+
+  private countMarqueeClicks(): void {
+    const now = performance.now();
+
+    if (now > this.lastMarqueeClick + 500)
+      this.marqueeClickCount = 1;
+    else if (++this.marqueeClickCount === 3)
+      this.toggleMarqueeMetrics();
+
+    this.lastMarqueeClick = now;
+  }
+
+  private toggleMarqueeMetrics(): void {
+    const saveBackground = this.marquee.style.backgroundColor;
+
+    this.showMetrics = !this.showMetrics;
+    this.marqueeText = '';
+    this.clearMouseHighlighting();
+    this.marquee.style.backgroundColor = 'cyan';
+    setTimeout(() => this.marquee.style.backgroundColor = saveBackground, 500);
   }
 
   onResize(): void {
@@ -410,14 +461,15 @@ export abstract class GenericView implements AfterViewInit {
     this.lastDrawingContext = dc;
 
     const now = performance.now();
+    const drawingTime = now - startTime;
 
     if (dc.fullDraw) {
-      const fullDrawingTime = now - startTime;
+      this.lastFullDrawTime = max(drawingTime, 1);
 
       if (forceFullDraw)
         this.slowFrameCount = 0;
 
-      if (fullDrawingTime > SLOW_DRAWING_THRESHOLD) {
+      if (this.lastFullDrawTime > SLOW_DRAWING_THRESHOLD) {
         ++this.slowFrameCount;
         this.lastSlowFrameTime = now;
       }
@@ -426,6 +478,18 @@ export abstract class GenericView implements AfterViewInit {
       this.debouncedFullRedraw();
       this.lastSlowFrameTime = now;
     }
+
+    if (this.showMetrics) {
+      const interval = max(startTime - this.lastDrawStart, 1);
+
+      this.marqueeText = padLeft(drawingTime.toFixed(1), 6, '\u2007') + (dc.fullDraw ? 'F' : 'Q') + ', ' +
+        padLeft(interval.toFixed(1), 6, '\u2007');
+
+      if (!dc.fullDraw)
+        this.marqueeText += ', ' + padLeft(this.lastFullDrawTime.toFixed(1), 6, '\u2007') + 'F';
+    }
+
+    this.lastDrawStart = startTime;
   }
 
   protected additionalDrawingSetup(dc: DrawingContext): void {

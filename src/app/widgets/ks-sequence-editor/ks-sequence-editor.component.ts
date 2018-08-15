@@ -87,6 +87,7 @@ export class KsSequenceEditorComponent implements AfterViewInit, OnInit, OnDestr
   private static useHiddenInput = isAndroid();
   private static addFocusOutline = isEdge() || isIE() || isIOS();
   private static checkForRepeatedKeyTimestamps = isIOS();
+  private static disableContentEditable = isEdge() || isIE();
 
   private keyTimer: Subscription;
   private clickTimer: Subscription;
@@ -227,6 +228,9 @@ export class KsSequenceEditorComponent implements AfterViewInit, OnInit, OnDestr
       this.canvas.parentElement.appendChild(this.hiddenInput);
       this.canvas.setAttribute('tabindex', '-1');
     }
+
+    if (KsSequenceEditorComponent.disableContentEditable)
+      this.canvas.contentEditable = 'false';
 
     this.computeSize();
     this.draw();
