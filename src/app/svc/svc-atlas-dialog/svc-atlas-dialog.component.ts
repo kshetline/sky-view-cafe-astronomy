@@ -27,7 +27,7 @@ import { formatLatitude, formatLongitude } from '../svc-util';
 import { KsTimeZone } from 'ks-date-time-zone';
 import { Message } from 'primeng/components/common/api';
 import { Table } from 'primeng/table';
-import {  } from '@types/googlemaps';
+import { } from 'googlemaps';
 import { eventToKey, isIOS } from 'ks-util';
 
 interface LocationInfo {

@@ -1,5 +1,5 @@
 /*
-  Copyright © 2017-2018 Kerry Shetline, kerry@shetline.com
+  Copyright © 2017-2019 Kerry Shetline, kerry@shetline.com
 
   MIT license: https://opensource.org/licenses/MIT
 
@@ -138,7 +138,7 @@ export class KsDropdownComponent implements ControlValueAccessor {
   }
 
   private findMatchingOption(testValue: any): any {
-    return _.find(this._options, option => { return _.isObject(option) && option.value === testValue || option === testValue; });
+    return this._options.find(option => { return _.isObject(option as any) && option.value === testValue || option === testValue; });
   }
 
   private findMatchingPrimeOption(testValue: any): any {
