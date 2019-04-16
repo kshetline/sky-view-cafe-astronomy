@@ -1,5 +1,5 @@
 /*
-  Copyright © 2017-2018 Kerry Shetline, kerry@shetline.com.
+  Copyright © 2017-2019 Kerry Shetline, kerry@shetline.com.
 
   This code is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -264,8 +264,14 @@ export class SvcAtlasDialogComponent {
         center: center,
         zoom: 5,
         mapTypeControl: true,
+        mapTypeControlOptions: {
+          style: google.maps.MapTypeControlStyle.DROPDOWN_MENU
+        },
         disableDoubleClickZoom: true,
-        draggable: false
+        draggable: false,
+        streetViewControl: false,
+        fullscreenControl: false,
+        rotateControl: false
       };
 
       this.map = new google.maps.Map(this.atlasMap.nativeElement, mapOptions);
