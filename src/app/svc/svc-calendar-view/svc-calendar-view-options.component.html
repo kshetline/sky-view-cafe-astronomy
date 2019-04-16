@@ -3,20 +3,20 @@
     <div class="inc-dec-pair">
       <button pButton type="button" icon="fas fa-chevron-left" (click)="changeMonth(-1)"
         (touchstart)="onTouchStart($event, -1)" (touchend)="stopClickTimer()"
-        (mousedown)="onMouseDown(-1)" (mouseup)="stopClickTimer()" (mouseleave)="stopClickTimer()"></button>
+        (mousedown)="onMouseDown(-1, $event)" (mouseup)="stopClickTimer()" (mouseleave)="stopClickTimer()"></button>
       <span>Month</span>
       <button pButton type="button" icon="fas fa-chevron-right" (click)="changeMonth(1)"
         (touchstart)="onTouchStart($event, 1)" (touchend)="stopClickTimer()"
-        (mousedown)="onMouseDown(1)" (mouseup)="stopClickTimer()" (mouseleave)="stopClickTimer()"></button>
+        (mousedown)="onMouseDown(1, $event)" (mouseup)="stopClickTimer()" (mouseleave)="stopClickTimer()"></button>
     </div>
     <div class="inc-dec-pair">
       <button pButton type="button" icon="fas fa-chevron-left" (click)="changeMonth(-12)"
         (touchstart)="onTouchStart($event, -12)" (touchend)="stopClickTimer()"
-        (mousedown)="onMouseDown(-12)" (mouseup)="stopClickTimer()" (mouseleave)="stopClickTimer()"></button>
+        (mousedown)="onMouseDown(-12, $event)" (mouseup)="stopClickTimer()" (mouseleave)="stopClickTimer()"></button>
       <span>Year</span>
       <button pButton type="button" icon="fas fa-chevron-right" (click)="changeMonth(12)"
         (touchstart)="onTouchStart($event, 12)" (touchend)="stopClickTimer()"
-        (mousedown)="onMouseDown(12)" (mouseup)="stopClickTimer()" (mouseleave)="stopClickTimer()"></button>
+        (mousedown)="onMouseDown(12, $event)" (mouseup)="stopClickTimer()" (mouseleave)="stopClickTimer()"></button>
     </div>
   </div>
   <hr>

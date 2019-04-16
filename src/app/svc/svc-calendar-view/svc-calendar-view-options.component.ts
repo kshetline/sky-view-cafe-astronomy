@@ -1,5 +1,5 @@
 /*
-  Copyright © 2017 Kerry Shetline, kerry@shetline.com.
+  Copyright © 2017-2019 Kerry Shetline, kerry@shetline.com.
 
   This code is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -148,8 +148,8 @@ export class SvcCalendarViewOptionsComponent implements AfterViewInit, OnDestroy
     this.onMouseDown(delta);
   }
 
-  onMouseDown(delta: number): void {
-    if (!this.clickTimer) {
+  onMouseDown(delta: number, event?: MouseEvent): void {
+    if (!this.clickTimer && (!event || event.button === 0)) {
       this.clickTimer = timer(CLICK_REPEAT_DELAY, CLICK_REPEAT_RATE).subscribe(() => {
         this.changeMonth(delta);
       });

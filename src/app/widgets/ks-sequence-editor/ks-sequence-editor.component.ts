@@ -1,5 +1,5 @@
 /*
-  Copyright © 2017-2018 Kerry Shetline, kerry@shetline.com
+  Copyright © 2017-2019 Kerry Shetline, kerry@shetline.com
 
   MIT license: https://opensource.org/licenses/MIT
 
@@ -447,7 +447,7 @@ export class KsSequenceEditorComponent implements AfterViewInit, OnInit, OnDestr
   }
 
   onMouseDown(event: MouseEvent): void {
-    if (this.disabled || this.viewOnly)
+    if (this.disabled || this.viewOnly || event.button !== 0)
       return;
 
     this.startSelectionAction(this.getSelectionForEvent(event));

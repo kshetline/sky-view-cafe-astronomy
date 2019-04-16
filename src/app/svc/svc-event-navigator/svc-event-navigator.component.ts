@@ -1,5 +1,5 @@
 /*
-  Copyright © 2017-2018 Kerry Shetline, kerry@shetline.com.
+  Copyright © 2017-2019 Kerry Shetline, kerry@shetline.com.
 
   This code is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -192,8 +192,8 @@ export class SvcEventNavigatorComponent implements AfterViewInit, OnDestroy {
     this.onMouseDown(goBack);
   }
 
-  onMouseDown(goBack: boolean): void {
-    if (!this.clickTimer) {
+  onMouseDown(goBack: boolean, event?: MouseEvent): void {
+    if (!this.clickTimer && (!event || event.button === 0)) {
       this.lastGoBack = goBack;
 
       this.clickTimer = timer(CLICK_REPEAT_DELAY, CLICK_REPEAT_RATE).subscribe(() => {

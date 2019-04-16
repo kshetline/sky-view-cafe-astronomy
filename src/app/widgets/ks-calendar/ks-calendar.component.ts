@@ -1,5 +1,5 @@
 /*
-  Copyright © 2017 Kerry Shetline, kerry@shetline.com
+  Copyright © 2017-2019 Kerry Shetline, kerry@shetline.com
 
   MIT license: https://opensource.org/licenses/MIT
 
@@ -230,7 +230,7 @@ export class KsCalendarComponent implements ControlValueAccessor, OnDestroy {
   }
 
   onMouseDown(event: MouseEvent, delta: number): void {
-    if (!this.timerSubscription) {
+    if (!this.timerSubscription && (!event || event.button === 0)) {
       this.pendingEvent = event;
       this.pendingDelta = delta;
 

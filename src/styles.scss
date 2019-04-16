@@ -71,3 +71,7 @@ body {
 .ui-chkbox, .ui-radiobutton { // Prevent checkbox/radio button layout from changing as buttons are checked/unchecked.
   min-height: 14px;
 }
+
+button.ui-button-icon-only {
+  min-width: 2em;
+}
