@@ -428,7 +428,7 @@ export class AppService {
   }
 
   private getLocationFromIp(): void {
-    this.httpClient.jsonp('http://ip-api.com/json', 'callback').toPromise().then((location: IpLocation) => {
+    this.httpClient.jsonp('https://geo.skyviewcafe.com/json/', 'callback').toPromise().then((location: IpLocation) => {
       if (location.status === 'success') {
         const cc = location.countryCode;
         const reg = location.region;
