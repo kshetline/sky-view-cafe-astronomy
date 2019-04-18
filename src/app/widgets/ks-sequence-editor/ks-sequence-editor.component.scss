@@ -5,6 +5,7 @@ div {
 }
 
 canvas {
+  box-sizing: content-box !important;
   font-family: Verdana, Geneva, sans-serif;
   font-size: 12px;
   border: 1px solid #D8D8D8;

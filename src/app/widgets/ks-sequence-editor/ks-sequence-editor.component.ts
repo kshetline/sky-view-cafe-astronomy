@@ -119,6 +119,7 @@ export class KsSequenceEditorComponent implements AfterViewInit, OnInit, OnDestr
   protected items: SequenceItemInfo[] = [];
   protected hasFocus = false;
   protected selection = 0;
+  protected setupComplete = false;
 
   public displayState = 'normal';
 
@@ -183,6 +184,23 @@ export class KsSequenceEditorComponent implements AfterViewInit, OnInit, OnDestr
 
   ngAfterViewInit(): void {
     this.canvas = this.canvasRef.nativeElement;
+
+    if (document.body.contains(this.canvas))
+      this.setup();
+    else {
+      const observer = new MutationObserver(() => {
+        if (document.body.contains(this.canvas)) {
+          observer.disconnect();
+          this.setup();
+        }
+      });
+
+      observer.observe(document.body, {childList: true, subtree: true});
+    }
+  }
+
+  private setup(): void {
+    this.canvas = this.canvasRef.nativeElement;
     this.font = getFont(this.canvas);
 
     this.smallFont = this.fixedFont = this.smallFixedFont = this.font;
@@ -233,6 +251,7 @@ export class KsSequenceEditorComponent implements AfterViewInit, OnInit, OnDestr
       this.canvas.contentEditable = 'false';
 
     this.computeSize();
+    this.setupComplete = true;
     this.draw();
   }
 
@@ -310,7 +329,7 @@ export class KsSequenceEditorComponent implements AfterViewInit, OnInit, OnDestr
   }
 
   protected draw(): void {
-    if (!this.canvas)
+    if (!this.canvas || !this.setupComplete)
       return;
 
     const padding = KsSequenceEditorComponent.getPadding(this.metrics);
