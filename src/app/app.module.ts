@@ -87,7 +87,7 @@ import { SvcSkyViewComponent } from './svc/svc-sky-view/svc-sky-view.component';
 import { SvcSkyViewOptionsComponent } from './svc/svc-sky-view/svc-sky-view-options.component';
 import { SvcTableViewComponent } from './svc/svc-table-view/svc-table-view.component';
 import { SvcTableViewOptionsComponent } from './svc/svc-table-view/svc-table-view-options.component';
-import { SvcTimeEditorComponent } from './svc/svc-time-editor.component';
+import { SvcTimeEditorComponent } from './svc/svc-time-editor/svc-time-editor.component';
 import { SvcTimeViewComponent } from './svc/svc-time-view/svc-time-view.component';
 import { SvcZoneSelectorComponent } from './svc/svc-zone-selector/svc-zone-selector.component';
 

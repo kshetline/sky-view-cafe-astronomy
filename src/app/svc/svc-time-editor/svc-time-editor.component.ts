@@ -19,11 +19,11 @@
 
 import { Component, forwardRef, Input } from '@angular/core';
 import { NG_VALUE_ACCESSOR, ControlValueAccessor } from '@angular/forms';
-import { KsSequenceEditorComponent, BACKGROUND_ANIMATIONS, SequenceItemInfo } from '../widgets/ks-sequence-editor/ks-sequence-editor.component';
+import { KsSequenceEditorComponent, BACKGROUND_ANIMATIONS, SequenceItemInfo } from '../../widgets/ks-sequence-editor/ks-sequence-editor.component';
 import { DateAndTime, KsDateTime, KsTimeZone, DateTimeField } from 'ks-date-time-zone';
 import { abs, div_tt0, max, min } from 'ks-math';
 import { timer } from 'rxjs';
-import { SVC_MAX_YEAR, SVC_MIN_YEAR } from '../app.service';
+import { SVC_MAX_YEAR, SVC_MIN_YEAR } from '../../app.service';
 
 export const SVC_TIME_EDITOR_VALUE_ACCESSOR: any = {
   provide: NG_VALUE_ACCESSOR,
@@ -39,8 +39,8 @@ const THREE_PER_EM_SPACE = '\u2004';
 @Component({
   selector: 'svc-time-editor',
   animations: [BACKGROUND_ANIMATIONS],
-  templateUrl: '../widgets/ks-sequence-editor/ks-sequence-editor.component.html',
-  styleUrls: ['../widgets/ks-sequence-editor/ks-sequence-editor.component.scss'],
+  templateUrl: './svc-time-editor.component.html',
+  styleUrls: ['../../widgets/ks-sequence-editor/ks-sequence-editor.component.scss'],
   providers: [SVC_TIME_EDITOR_VALUE_ACCESSOR]
 })
 export class SvcTimeEditorComponent extends KsSequenceEditorComponent implements ControlValueAccessor {

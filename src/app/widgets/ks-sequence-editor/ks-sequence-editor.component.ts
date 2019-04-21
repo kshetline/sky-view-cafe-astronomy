@@ -94,7 +94,6 @@ export class KsSequenceEditorComponent implements AfterViewInit, OnInit, OnDestr
   private warningTimer: Subscription;
   private _viewOnly = false;
   private _blank = false;
-  private scaled = false;
   private lastDelta = 1;
   private firstTouch: Point;
   private touchDeltaY = 0;
@@ -120,6 +119,7 @@ export class KsSequenceEditorComponent implements AfterViewInit, OnInit, OnDestr
   protected hasFocus = false;
   protected selection = 0;
   protected setupComplete = false;
+  protected useAlternateTouchHandling = false;
 
   public displayState = 'normal';
 
@@ -289,6 +289,9 @@ export class KsSequenceEditorComponent implements AfterViewInit, OnInit, OnDestr
   }
 
   protected computeSize(): void {
+    const context = this.canvas.getContext('2d');
+
+    context.resetTransform();
     this.metrics = getFontMetrics(this.canvas);
 
     const padding = KsSequenceEditorComponent.getPadding(this.metrics);
@@ -315,12 +318,7 @@ export class KsSequenceEditorComponent implements AfterViewInit, OnInit, OnDestr
     this.canvas.style.height = h + 'px';
     this.canvas.height = ceil(h * scaling);
 
-    // Scaling is not reset with each call to getContext('2d'). It will have cumulative effect if done more than once.
-    if (!this.scaled) {
-      const context = this.canvas.getContext('2d');
-      context.scale(scaling, scaling);
-      this.scaled = true;
-    }
+    context.scale(scaling, scaling);
 
     if (this.hiddenInput) {
       this.hiddenInput.style.width = w + 'px';
@@ -472,11 +470,23 @@ export class KsSequenceEditorComponent implements AfterViewInit, OnInit, OnDestr
     this.startSelectionAction(this.getSelectionForEvent(event));
   }
 
+  onMouseLeave(): void {
+    this.stopClickTimer();
+  }
+
   onTouchStart(event: TouchEvent): void {
     if (this.disabled || this.viewOnly)
       return;
 
     event.preventDefault();
+
+    if (this.useAlternateTouchHandling)
+      this.onTouchStartAlternate(event);
+    else
+      this.onTouchStartDefault(event);
+  }
+
+  protected onTouchStartDefault(event: TouchEvent): void {
     this.firstTouch = getXYForTouchEvent(event);
     this.touchDeltaY = 0;
 
@@ -488,6 +498,8 @@ export class KsSequenceEditorComponent implements AfterViewInit, OnInit, OnDestr
     this.updateSelection(newSelection);
     this.startSelectionAction(newSelection);
   }
+
+  protected onTouchStartAlternate(event: TouchEvent): void {}
 
   protected startSelectionAction(newSelection: number): void {
     if ((newSelection === SPIN_UP || newSelection === SPIN_DOWN) && !this.clickTimer) {

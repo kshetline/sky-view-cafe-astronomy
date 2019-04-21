@@ -1,6 +1,6 @@
 {
   "name": "svc-ng",
-  "version": "1.5.0",
+  "version": "1.5.1",
   "license": "MIT AND GPL-3.0-or-later",
   "author": "Kerry Shetline <kerry@shetline.com>",
   "scripts": {
@@ -14,7 +14,7 @@
   "private": true,
   "dependencies": {
     "@angular/animations": "^7.2.13",
-    "@angular/cdk": "^6.4.7",
+    "@angular/cdk": "^7.3.7",
     "@angular/common": "^7.2.13",
     "@angular/compiler": "^7.2.13",
     "@angular/core": "^7.2.13",
@@ -33,11 +33,11 @@
     "ks-math": "^1.1.6",
     "ks-util": "^1.4.3",
     "lodash": "^4.17.11",
-    "ng-busy": "^6.2.0",
+    "ng-busy": "^7.0.0",
     "primeicons": "^1.0.0",
-    "primeng": "^6.1.7",
+    "primeng": "^7.1.1",
     "rxjs": "^6.4.0",
-    "zone.js": "^0.8.29"
+    "zone.js": "^0.9.0"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "^0.13.8",
@@ -45,21 +45,21 @@
     "@angular/compiler-cli": "^7.2.13",
     "@angular/language-service": "^7.2.13",
     "@types/googlemaps": "^3.30.19",
-    "@types/jasmine": "^2.8.16",
+    "@types/jasmine": "^3.3.12",
     "@types/jasminewd2": "^2.0.6",
     "@types/lodash": "^4.14.123",
     "@types/node": "^6.14.4",
-    "codelyzer": "^4.5.0",
-    "jasmine-core": "~2.8.0",
+    "codelyzer": "^5.0.0",
+    "jasmine-core": "~3.4.0",
     "jasmine-spec-reporter": "~4.2.1",
-    "karma": "^4.0.1",
+    "karma": "^4.1.0",
     "karma-chrome-launcher": "~2.2.0",
-    "karma-coverage-istanbul-reporter": "^1.4.3",
-    "karma-jasmine": "^1.1.2",
-    "karma-jasmine-html-reporter": "^0.2.2",
+    "karma-coverage-istanbul-reporter": "^2.0.5",
+    "karma-jasmine": "^2.0.1",
+    "karma-jasmine-html-reporter": "^1.4.0",
     "protractor": "^6.0.0",
-    "ts-node": "~4.1.0",
-    "tslint": "^5.15.0",
-    "typescript": "3.1.6"
+    "ts-node": "~8.1.0",
+    "tslint": "^5.16.0",
+    "typescript": "^3.2.4"
   }
 }

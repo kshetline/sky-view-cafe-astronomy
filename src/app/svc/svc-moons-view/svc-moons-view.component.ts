@@ -1,5 +1,5 @@
 /*
-  Copyright © 2017 Kerry Shetline, kerry@shetline.com.
+  Copyright © 2017-2019 Kerry Shetline, kerry@shetline.com.
 
   This code is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -505,7 +505,7 @@ export class SvcMoonsViewComponent extends GenericPlanetaryView implements After
   // noinspection JSUnusedGlobalSymbols
   onWheel(event: WheelEvent): void {
     const oldZoom = this.zoom;
-    let zoomDelta = event.wheelDeltaY;
+    let zoomDelta = (event as any).wheelDeltaY;
 
     if (zoomDelta === undefined)
       zoomDelta = event.deltaY / 5;
