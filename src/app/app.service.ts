@@ -1,5 +1,5 @@
 /*
-  Copyright © 2017 Kerry Shetline, kerry@shetline.com.
+  Copyright © 2017-2019 Kerry Shetline, kerry@shetline.com.
 
   This code is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -139,9 +139,12 @@ export class AppService {
   private _twilightMinutes = 80;
   private _gcDate = '1582-10-15';
   private _inkSaver = true;
+  private hostname: string;
 
   constructor(astroDataService: AstroDataService, private httpClient: HttpClient, private _sanitizer: DomSanitizer,
               private router: Router) {
+    this.hostname = document.location.hostname;
+
     const savedLocationsString = localStorage.getItem('locations');
 
     if (savedLocationsString)
@@ -428,30 +431,45 @@ export class AppService {
   }
 
   private getLocationFromIp(): void {
-    this.httpClient.jsonp('https://geo.skyviewcafe.com/json/', 'callback').toPromise().then((location: IpLocation) => {
-      if (location.status === 'success') {
-        const cc = location.countryCode;
-        const reg = location.region;
-        let state: string;
-        let timezone = location.timezone;
+    const localTesting = (this.hostname === 'localhost' || this.hostname === '127.0.0.1');
 
-        if (cc && (cc !== 'US' || !reg))
-          state = cc;
-        else if (reg)
-          state = reg;
-
-        const city = '(' + location.city + ', ' + state + ')';
-
-        if (!timezone)
-          timezone = 'OS';
-
-        this.location = new Location(city, location.lat, location.lon, timezone);
-      }
-      else
+    if (localTesting) {
+      this.httpClient.jsonp('https://skyviewcafe.com/ip/json/', 'callback').subscribe((location: IpLocation) => {
+        this.setLocationFromIpLocation(location);
+      }, () => {
         this.getLocationFromGeoLocation();
-    }).catch(() => {
+      });
+    }
+    else {
+      this.httpClient.get('/ip/json/').subscribe((location: IpLocation) => {
+        this.setLocationFromIpLocation(location);
+      }, () => {
+        this.getLocationFromGeoLocation();
+      });
+    }
+  }
+
+  private setLocationFromIpLocation(location: IpLocation): void {
+    if (location.status === 'success') {
+      const cc = location.countryCode;
+      const reg = location.region;
+      let state: string;
+      let timezone = location.timezone;
+
+      if (cc && (cc !== 'US' || !reg))
+        state = cc;
+      else if (reg)
+        state = reg;
+
+      const city = '(' + location.city + ', ' + state + ')';
+
+      if (!timezone)
+        timezone = 'OS';
+
+      this.location = new Location(city, location.lat, location.lon, timezone);
+    }
+    else
       this.getLocationFromGeoLocation();
-    });
   }
 
   private getLocationFromGeoLocation(): void {

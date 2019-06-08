@@ -17,7 +17,7 @@
   OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-import { Component, EventEmitter, forwardRef, Input, Output, ViewChild } from '@angular/core';
+import { Component, EventEmitter, forwardRef, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { NG_VALUE_ACCESSOR, ControlValueAccessor } from '@angular/forms';
 import { SelectItem } from 'primeng/components/common/api';
 import * as _ from 'lodash';
@@ -33,25 +33,26 @@ const noop = () => {};
 
 @Component({
   selector: 'ks-dropdown',
-  template: `
-    <p-dropdown #pDropdown [options]="primeOptions" [(ngModel)]="primeValue" appendTo="body"
-      [disabled]="(options.length === 0 && !editable) || disabled"
-      (onFocus)="onDropdownFocus($event)" (onBlur)="onDropdownBlur($event)" [scrollHeight]="scrollHeight"
-      [editable]="editable" [autoWidth]="autoWidth" [style]="style"></p-dropdown>`,
+  templateUrl: './ks-dropdown.component.html',
+  styleUrls: ['./ks-dropdown.component.scss'],
   providers: [DROPDOWN_VALUE_ACCESSOR]
 })
-export class KsDropdownComponent implements ControlValueAccessor {
+export class KsDropdownComponent implements ControlValueAccessor, OnInit {
   private _options: any[] = [];
   private _value: any;
   private _primeValue: any;
+  private _selectValue: string;
   private hasFocus = false;
   private onTouchedCallback: () => void = noop;
   private onChangeCallback: (_: any) => void = noop;
+  private usingTouch = false;
 
   @ViewChild('pDropdown') private pDropdown: Dropdown;
 
   public primeOptions: SelectItem[] = [];
+  public selectOptions: string[] = [];
   public disabled = false;
+  public useSelect = true;
 
   @Output() onFocus: EventEmitter<any> = new EventEmitter();
   @Output() onBlur: EventEmitter<any> = new EventEmitter();
@@ -65,8 +66,27 @@ export class KsDropdownComponent implements ControlValueAccessor {
     if (!_.isEqual(this._value, newValue)) {
       this._value = newValue;
       this._primeValue = this.findMatchingPrimeOption(newValue);
+      this._selectValue = this.findMatchingIndex(newValue);
       this.onChangeCallback(newValue);
     }
+  }
+
+  ngOnInit(): void {
+  }
+
+  selectClick(event: MouseEvent): void {
+    if (!this.usingTouch) {
+      this.useSelect = false;
+      event.preventDefault();
+      event.stopPropagation();
+      this.pDropdown.focus();
+      setTimeout(() => this.pDropdown.containerViewChild.nativeElement.click());
+    }
+  }
+
+  onTouchStart(): void {
+    // TODO: Disable special touch interface mode for now
+    // this.usingTouch = true;
   }
 
   onDropdownFocus(event: any): void {
@@ -108,6 +128,20 @@ export class KsDropdownComponent implements ControlValueAccessor {
     }
   }
 
+  get selectValue(): string { return this._selectValue; }
+  set selectValue(newSelectValue: string) {
+    if (this._selectValue !== newSelectValue) {
+      this._selectValue = newSelectValue;
+
+      let newValue = this._options[parseInt(newSelectValue, 10)];
+
+      if (typeof newValue === 'object' && newValue.value !== undefined)
+        newValue = newValue.value;
+
+      this.value = newValue;
+    }
+  }
+
   get options(): any[] { return this._options; }
   @Input() set options(newOptions: any[]) {
     if (!_.isEqual(this._options, newOptions)) {
@@ -124,6 +158,18 @@ export class KsDropdownComponent implements ControlValueAccessor {
         }
         else {
           item = option;
+        }
+
+        return item;
+      });
+      this.selectOptions = newOptions.map((option: any): string => {
+        let item: string;
+
+        if (_.isString(option)) {
+          item = option;
+        }
+        else {
+          item = option.label;
         }
 
         return item;
@@ -152,5 +198,11 @@ export class KsDropdownComponent implements ControlValueAccessor {
     }
 
     return result;
+  }
+
+  private findMatchingIndex(testValue: any): string {
+    const result = this._options.findIndex(option => { return _.isObject(option as any) && option.value === testValue || option === testValue; }) || 0;
+
+    return result.toString();
   }
 }

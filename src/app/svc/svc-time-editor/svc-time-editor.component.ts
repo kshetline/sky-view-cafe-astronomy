@@ -1,5 +1,5 @@
 /*
-  Copyright © 2017 Kerry Shetline, kerry@shetline.com
+  Copyright © 2017-2019 Kerry Shetline, kerry@shetline.com
 
   MIT license: https://opensource.org/licenses/MIT
 
@@ -17,13 +17,14 @@
   OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-import { Component, forwardRef, Input } from '@angular/core';
+import { Component, ElementRef, forwardRef, Input, OnInit, ViewChild } from '@angular/core';
 import { NG_VALUE_ACCESSOR, ControlValueAccessor } from '@angular/forms';
 import { KsSequenceEditorComponent, BACKGROUND_ANIMATIONS, SequenceItemInfo } from '../../widgets/ks-sequence-editor/ks-sequence-editor.component';
 import { DateAndTime, KsDateTime, KsTimeZone, DateTimeField } from 'ks-date-time-zone';
 import { abs, div_tt0, max, min } from 'ks-math';
 import { timer } from 'rxjs';
-import { SVC_MAX_YEAR, SVC_MIN_YEAR } from '../../app.service';
+import { currentMinuteMillis, SVC_MAX_YEAR, SVC_MIN_YEAR } from '../../app.service';
+import { padLeft } from 'ks-util';
 
 export const SVC_TIME_EDITOR_VALUE_ACCESSOR: any = {
   provide: NG_VALUE_ACCESSOR,
@@ -40,20 +41,30 @@ const THREE_PER_EM_SPACE = '\u2004';
   selector: 'svc-time-editor',
   animations: [BACKGROUND_ANIMATIONS],
   templateUrl: './svc-time-editor.component.html',
-  styleUrls: ['../../widgets/ks-sequence-editor/ks-sequence-editor.component.scss'],
+  styleUrls: ['../../widgets/ks-sequence-editor/ks-sequence-editor.component.scss', './svc-time-editor.component.scss'],
   providers: [SVC_TIME_EDITOR_VALUE_ACCESSOR]
 })
-export class SvcTimeEditorComponent extends KsSequenceEditorComponent implements ControlValueAccessor {
+export class SvcTimeEditorComponent extends KsSequenceEditorComponent implements ControlValueAccessor, OnInit {
   private dateTime = new KsDateTime();
   private _gregorianChangeDate = '1582-10-15';
   private onTouchedCallback: () => void = noop;
   private onChangeCallback: (_: any) => void = noop;
-  private _minYear = SVC_MIN_YEAR;
-  private _maxYear = SVC_MAX_YEAR;
+  private _minYear: number;
+  private _maxYear: number;
+  private _localTimeValue: string;
+
+  @ViewChild('localTime') private localTimeRef: ElementRef;
+  private localTime: HTMLInputElement;
+
+  localTimeMin: string;
+  localTimeMax: string;
 
   constructor() {
     super();
     this.signDigit = 0;
+    this.useAlternateTouchHandling = true;
+    this.minYear = SVC_MIN_YEAR;
+    this.maxYear = SVC_MAX_YEAR;
   }
 
   get value(): number { return this.dateTime.utcTimeMillis; }
@@ -65,8 +76,45 @@ export class SvcTimeEditorComponent extends KsSequenceEditorComponent implements
     }
   }
 
+  get localTimeValue(): string { return this._localTimeValue; }
+  set localTimeValue(newValue: string) {
+    if (this._localTimeValue !== newValue) {
+      this._localTimeValue = newValue;
+
+      let newTime: number = undefined;
+
+      if (newValue) {
+        const match = /(\d\d\d\d)-(\d\d)-(\d\d)T(\d\d):(\d\d)/.exec(newValue);
+
+        if (match) {
+          const d = match.slice(1).map(n => Number(n));
+          newTime = new KsDateTime({y: d[0], m: d[1], d: d[2], hrs: d[3], min: d[4], sec: 0}, this.timeZone, this._gregorianChangeDate).utcTimeMillis;
+        }
+      }
+      else
+        newTime = currentMinuteMillis();
+
+      if (newTime !== undefined && !isNaN(newTime))
+        this.value = newTime;
+
+      if (!this._localTimeValue)
+        setTimeout(() => this.updateLocalTime());
+    }
+  }
+
+  ngOnInit(): void {
+    super.ngOnInit();
+    this.localTime = this.localTimeRef.nativeElement;
+  }
+
   protected lostFocus(): void {
     this.onTouchedCallback();
+  }
+
+  protected onTouchStartAlternate(event: TouchEvent): void {
+    // TODO: Disable special touch interface mode for now
+    // this.localTime.focus();
+    // setTimeout(() => this.localTime.click(), 250);
   }
 
   writeValue(newValue: number): void {
@@ -93,6 +141,7 @@ export class SvcTimeEditorComponent extends KsSequenceEditorComponent implements
   @Input() set minYear(year: number) {
     if (this._minYear !== year) {
       this._minYear = year;
+      this.localTimeMin = padLeft(max(year, 1), 4, '0') + '-01-01T00:00';
     }
   }
 
@@ -100,6 +149,7 @@ export class SvcTimeEditorComponent extends KsSequenceEditorComponent implements
   @Input() set maxYear(year: number) {
     if (this._maxYear !== year) {
       this._maxYear = year;
+      this.localTimeMax = padLeft(year, 4, '0') + '-12-31T23:59';
     }
   }
 
@@ -216,7 +266,13 @@ export class SvcTimeEditorComponent extends KsSequenceEditorComponent implements
       i[19].value = KsTimeZone.getDstSymbol(wallTime.dstOffset);
     }
 
+    this.updateLocalTime();
     this.draw();
+  }
+
+  private updateLocalTime(): void {
+    const w = this.dateTime.wallTime;
+    this._localTimeValue = `${padLeft(w.y, 4, '0')}-${padLeft(w.m, 2, '0')}-${padLeft(w.d, 2, '0')}T${padLeft(w.hrs, 2, '0')}:${padLeft(w.min, 2, '0')}`;
   }
 
   private getWallTimeFromDigits(): DateAndTime {

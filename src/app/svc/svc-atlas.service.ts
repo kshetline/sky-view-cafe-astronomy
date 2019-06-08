@@ -1,5 +1,5 @@
 /*
-  Copyright © 2017 Kerry Shetline, kerry@shetline.com.
+  Copyright © 2017-2019 Kerry Shetline, kerry@shetline.com.
 
   IMPORTANT NOTE: The license below DOES NOT COVER use of the
   skyviewcafe.com web site for fulfilling API requests. Users of
@@ -83,10 +83,10 @@ export class SvcAtlasService {
     });
 
     if (localTesting) {
-      return this.httpClient.jsonp<AtlasResults>('http://test.skyviewcafe.com/atlasdb/atlas?' + params, 'callback').toPromise();
+      return this.httpClient.jsonp<AtlasResults>('https://test.skyviewcafe.com/atlas?' + params, 'callback').toPromise();
     }
     else {
-      return this.httpClient.get<AtlasResults>('/atlasdb/atlas?' + params).toPromise();
+      return this.httpClient.get<AtlasResults>('/atlas?' + params).toPromise();
     }
   }
 
@@ -98,18 +98,18 @@ export class SvcAtlasService {
 
     if (localTesting) {
       return this.httpClient.jsonp<string[]>
-        ('http://test.skyviewcafe.com/atlasdb/states', 'callback').toPromise().then(data => {
+        ('https://test.skyviewcafe.com/states', 'callback').toPromise().then(data => {
           SvcAtlasService.states = data;
 
           return data;
         });
     }
     else {
-      return this.httpClient.get<string[]>('/atlasdb/states').toPromise().then(data => {
-          SvcAtlasService.states = data;
+      return this.httpClient.get<string[]>('/states').toPromise().then(data => {
+        SvcAtlasService.states = data;
 
-          return data;
-        });
+        return data;
+      });
     }
   }
 }

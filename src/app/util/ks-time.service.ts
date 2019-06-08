@@ -1,5 +1,5 @@
 /*
-  Copyright © 2017 Kerry Shetline, kerry@shetline.com
+  Copyright © 2017-2019 Kerry Shetline, kerry@shetline.com
 
   IMPORTANT NOTE: The license below DOES NOT COVER use of the
   skyviewcafe.com web site for fulfilling API requests. Users of
@@ -23,7 +23,6 @@
 
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { ZoneInfo } from 'ks-date-time-zone';
 import { timeout } from 'rxjs/operators';
 
 export interface RegionAndSubzones {
@@ -48,34 +47,6 @@ export class KsTimeService {
     this.hostname = document.location.hostname;
   }
 
-  public getRegionsAndSubzones(): Promise<RegionAndSubzones[]> {
-    // Yes, localhost and 127.0.0.1 are really the same thing, but for testing purposes they look
-    // different enough for using as a trick for testing with different JSONP servers.
-    if (this.hostname === 'localhost') {
-      return this.httpClient.jsonp<RegionAndSubzones[]>('http://test.skyviewcafe.com/timeservices/zones', 'callback').toPromise();
-    }
-    else if (this.hostname === '127.0.0.1') {
-      return this.httpClient.jsonp<RegionAndSubzones[]>('http://localhost:8088/time/zones', 'callback').toPromise();
-    }
-    else {
-      return this.httpClient.get<RegionAndSubzones[]>('/timeservices/zones').toPromise();
-    }
-  }
-
-  public getZoneInfo(zoneName: string): Promise<ZoneInfo> {
-    const q = encodeURI(zoneName);
-
-    if (this.hostname === 'localhost') {
-      return this.httpClient.jsonp<ZoneInfo>('http://test.skyviewcafe.com/timeservices/zone?q=' + q, 'callback').toPromise();
-    }
-    else if (this.hostname === '127.0.0.1') {
-      return this.httpClient.jsonp<ZoneInfo>('http://localhost:8088/time/zone?q=' + q, 'callback').toPromise();
-    }
-    else {
-      return this.httpClient.get<ZoneInfo>('/timeservices/zone?q=' + q).toPromise();
-    }
-  }
-
   public getZoneForLocation(longitude: number, latitude: number, timestamp?: number | null, timeoutValue?: number): Promise<ZoneForLocation> {
     if (timestamp === null || timestamp === undefined)
       timestamp = Math.floor(Date.now() / 1000);
@@ -87,14 +58,14 @@ export class KsTimeService {
 
     if (this.hostname === 'localhost') {
       return this.httpClient.jsonp<ZoneForLocation>
-        ('http://test.skyviewcafe.com/timeservices/zoneloc?' + params, 'callback').pipe(timeout(timeoutValue)).toPromise();
+        ('https://test.skyviewcafe.com/zoneloc?' + params, 'callback').pipe(timeout(timeoutValue)).toPromise();
     }
     else if (this.hostname === '127.0.0.1') {
       return this.httpClient.jsonp<ZoneForLocation>
-        ('http://localhost:8088/time/zoneloc?' + params, 'callback').pipe(timeout(timeoutValue)).toPromise();
+        ('http://localhost:8088/zoneloc?' + params, 'callback').pipe(timeout(timeoutValue)).toPromise();
     }
     else {
-      return this.httpClient.get<ZoneForLocation>('/timeservices/zoneloc?' + params).pipe(timeout(timeoutValue)).toPromise();
+      return this.httpClient.get<ZoneForLocation>('/zoneloc?' + params).pipe(timeout(timeoutValue)).toPromise();
     }
   }
 }

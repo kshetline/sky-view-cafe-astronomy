@@ -1,0 +1,12 @@
+<div class="wrapper">
+  <p-dropdown #pDropdown [options]="primeOptions" [(ngModel)]="primeValue" appendTo="body"
+    [disabled]="(options.length === 0 && !editable) || disabled"
+    (onFocus)="onDropdownFocus($event)" (onBlur)="onDropdownBlur($event)" [scrollHeight]="scrollHeight"
+    [editable]="editable" [autoWidth]="autoWidth" [style]="style"></p-dropdown>
+  <!-- TODO: Disable special touch interface mode for now -->
+  <select *ngIf="useSelect && false" tabindex="0" [(ngModel)]="selectValue"
+    (touchstart)="onTouchStart()"
+    (click)="selectClick($event)">
+    <option *ngFor="let option of selectOptions; index as i" [value]="i">{{option}}</option>
+  </select>
+</div>
