@@ -42,3 +42,12 @@ hr {
 :host ::ng-deep .ui-dialog-content {
   overflow: hidden;
 }
+
+svc-zone-selector,
+ks-dropdown {
+  width: 100%;
+
+  ::ng-deep .ui-dropdown {
+    width: 100%;
+  }
+}

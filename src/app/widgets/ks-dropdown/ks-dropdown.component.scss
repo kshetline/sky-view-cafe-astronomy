@@ -10,3 +10,7 @@ select {
   top: 0;
   width: 100%;
 }
+
+:host ::ng-deep .ui-dropdown {
+  width: 100%;
+}
