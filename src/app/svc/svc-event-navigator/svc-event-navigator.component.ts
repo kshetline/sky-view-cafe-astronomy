@@ -34,7 +34,7 @@ import {
 import { KsDateTime, KsTimeZone } from 'ks-date-time-zone';
 import { AstroDataService } from '../../astronomy/astro-data.service';
 import { PROPERTY_FIXED_GRS, PROPERTY_GRS_OVERRIDE, VIEW_MOONS } from '../svc-moons-view/svc-moons-view.component';
-import * as _ from 'lodash';
+import { isString } from 'lodash';
 
 const CLICK_REPEAT_DELAY = 500;
 const CLICK_REPEAT_RATE  = 100;
@@ -283,7 +283,7 @@ export class SvcEventNavigatorComponent implements AfterViewInit, OnDestroy {
 
       let message: string;
 
-      if (_.isString(event.miscInfo))
+      if (isString(event.miscInfo))
         message = <string> event.miscInfo;
       else if (event.eventType === LUNAR_ECLIPSE || event.eventType === SOLAR_ECLIPSE) {
         const ei = <EclipseInfo> event.miscInfo;

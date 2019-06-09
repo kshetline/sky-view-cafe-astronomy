@@ -1,5 +1,5 @@
 /*
-  Copyright © 2017-2018 Kerry Shetline, kerry@shetline.com.
+  Copyright © 2017-2019 Kerry Shetline, kerry@shetline.com.
 
   This code is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -24,7 +24,7 @@ import { SelectItem } from 'primeng/components/common/api';
 import { AppService } from '../app.service';
 import { ADDITIONALS, PROPERTY_ADDITIONALS } from './generic-view';
 import { SolarSystem } from 'ks-astronomy';
-import * as _ from 'lodash';
+import { clone } from 'lodash';
 
 export class SvcGenericOptionsComponent {
   private _additional: ADDITIONALS | string = ADDITIONALS.NONE;
@@ -67,7 +67,7 @@ export class SvcGenericOptionsComponent {
     });
 
     // Force menu update.
-    this.additionals = _.clone(this.additionals);
+    this.additionals = clone(this.additionals);
   }
 
   get additional(): ADDITIONALS | string { return this._additional; }

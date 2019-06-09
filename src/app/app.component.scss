@@ -8,14 +8,22 @@
   padding: 2px;
   font: 12px Arial, Helvetica, sans-serif;
   text-align: start;
+
+  ::ng-deep fieldset {
+    border: 1px #D8D8D8 solid;
+  }
+
+  ::ng-deep .ui-tabview .ui-tabview-panel {
+    padding: 0;
+  }
+
+  ::ng-deep .calendar-popup .ui-overlaypanel-content {
+    padding: 2px;
+  }
 }
 
 .all-panels {
   height: 100%;
-}
-
-::ng-deep fieldset {
-  border: 1px #D8D8D8 solid;
 }
 
 .time-panel {
@@ -46,14 +54,6 @@
 
 svc-location-settings {
   white-space: nowrap;
-}
-
-::ng-deep .ui-tabview .ui-tabview-panel {
-  padding: 0;
-}
-
-::ng-deep .calendar-popup .ui-overlaypanel-content {
-  padding: 2px;
 }
 
 div.about-dialog {

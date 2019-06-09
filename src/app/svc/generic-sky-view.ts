@@ -1,5 +1,5 @@
 /*
-  Copyright © 2017-2018 Kerry Shetline, kerry@shetline.com.
+  Copyright © 2017-2019 Kerry Shetline, kerry@shetline.com.
 
   This code is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -29,7 +29,7 @@ import { AppService, CurrentTab } from '../app.service';
 import { strokeEllipse } from 'ks-util';
 import { max, min, Point, pow, round, SphericalPosition, SphericalPosition3D } from 'ks-math';
 import { LABEL_ANCHOR, LINE_BREAK, NO_MATCH, REFRACTION } from 'ks-astronomy';
-import * as _ from 'lodash';
+import { reverse, sortBy } from 'lodash';
 
 
 export const eclipticColor               = '#666699';
@@ -246,7 +246,7 @@ export abstract class GenericSkyView extends GenericPlanetaryView implements Aft
       planets.push({planet: p, pos: this.getSphericalPosition(p, dc)});
     });
 
-    planets = _.reverse(_.sortBy(planets, [(p: SortablePlanet) => { return (<SphericalPosition3D> p.pos).radius; }]));
+    planets = reverse(sortBy(planets, [(p: SortablePlanet) => { return (<SphericalPosition3D> p.pos).radius; }]));
 
     for (const planet of planets) {
       const p = planet.planet;

@@ -26,7 +26,7 @@ import { SolarSystem, StarCatalog } from 'ks-astronomy';
 import { BehaviorSubject, Observable, Subject, Subscription } from 'rxjs';
 import { AstroDataService } from './astronomy/astro-data.service';
 import { HttpClient } from '@angular/common/http';
-import * as _ from 'lodash';
+import { clone, compact, debounce, forEach, isEqual, isString, sortedIndexBy } from 'lodash';
 import { DomSanitizer } from '@angular/platform-browser';
 import { KsCalendar } from 'ks-date-time-zone';
 import { ceil } from 'ks-math';
@@ -148,10 +148,10 @@ export class AppService {
     const savedLocationsString = localStorage.getItem('locations');
 
     if (savedLocationsString)
-      this._locations = _.compact(Location.fromStringList(savedLocationsString));
+      this._locations = compact(Location.fromStringList(savedLocationsString));
 
     if (this._locations.length > 0) {
-      const userDefault = _.findIndex(this._locations, (location: Location) => location.isDefault);
+      const userDefault = this._locations.findIndex(location => location.isDefault);
 
       this.location = this._locations[Math.max(userDefault, 0)];
     }
@@ -181,7 +181,7 @@ export class AppService {
       }
     }
 
-    this.debouncedSaveSettings = _.debounce(() => {
+    this.debouncedSaveSettings = debounce(() => {
       localStorage.setItem('allSettings', JSON.stringify(this.allSettings));
     }, 1000);
 
@@ -206,7 +206,7 @@ export class AppService {
     return this.appEventObserver.subscribe(callback);
   }
   public sendAppEvent(appEventOrName: AppEvent | string, value?: any): void {
-    if (_.isString(appEventOrName))
+    if (isString(appEventOrName))
       this._appEvent.next({name: <string> appEventOrName, value: value});
     else
       this._appEvent.next(<AppEvent> appEventOrName);
@@ -230,7 +230,7 @@ export class AppService {
 
   public get location(): Location { return this._location.getValue(); }
   public set location(newObserver: Location) {
-    if (!_.isEqual(this._location.getValue(), newObserver))
+    if (!isEqual(this._location.getValue(), newObserver))
       this._location.next(newObserver);
   }
   public getLocationUpdates(callback: (observer: Location) => void): Subscription {
@@ -240,7 +240,7 @@ export class AppService {
   public get latitude(): number { return this._location.getValue().latitude; }
   public set latitude(newLatitude: number) {
     if (this._location.getValue().latitude !== newLatitude) {
-      const newLocation = _.clone(this._location.getValue());
+      const newLocation = clone(this._location.getValue());
 
       newLocation.latitude = newLatitude;
       this.renameIfMatchesSavedLocation(newLocation);
@@ -251,7 +251,7 @@ export class AppService {
   public get longitude(): number { return this._location.getValue().longitude; }
   public set longitude(newLongitude: number) {
     if (this._location.getValue().longitude !== newLongitude) {
-      const newLocation = _.clone(this._location.getValue());
+      const newLocation = clone(this._location.getValue());
 
       newLocation.longitude = newLongitude;
       this.renameIfMatchesSavedLocation(newLocation);
@@ -262,7 +262,7 @@ export class AppService {
   public get timeZone(): string { return this._location.getValue().zone; }
   public set timeZone(newZone: string) {
     if (this._location.getValue().zone !== newZone) {
-      const newLocation = _.clone(this._location.getValue());
+      const newLocation = clone(this._location.getValue());
 
       newLocation.zone = newZone;
       this.renameIfMatchesSavedLocation(newLocation);
@@ -276,24 +276,24 @@ export class AppService {
       this._locations.forEach(loc => loc.isDefault = false);
 
     // If a location already exists by the same name, modify that location rather than adding a new one.
-    const oldIndex = _.findIndex(this._locations, (loc: Location) => loc.name === location.name);
+    const oldIndex = this._locations.findIndex(loc => loc.name === location.name);
 
     if (oldIndex >= 0)
       this._locations[oldIndex] = location;
     else
-      this._locations.splice(_.sortedIndexBy(this._locations, location, 'name'), 0, location);
+      this._locations.splice(sortedIndexBy(this._locations, location, 'name'), 0, location);
 
     localStorage.setItem('locations', Location.toStringList(this._locations));
   }
   public deleteLocation(locationName: string): void {
-    const index = _.findIndex(this._locations, (loc: Location) => loc.name === locationName);
+    const index = this._locations.findIndex(loc => loc.name === locationName);
 
     if (index >= 0) {
       const deletedLocation = this._locations.splice(index, 1)[0];
       localStorage.setItem('locations', Location.toStringList(this._locations));
 
       if (this._location.getValue().name === deletedLocation.name) {
-        const newLocation = _.clone(this._location.getValue());
+        const newLocation = clone(this._location.getValue());
 
         newLocation.name = NEW_LOCATION;
         this._location.next(newLocation);
@@ -301,7 +301,7 @@ export class AppService {
     }
   }
   public setDefaultLocationByName(name: string): void {
-    const match = _.find(this.locations, (loc: Location) => loc.name === name);
+    const match = this.locations.find(loc => loc.name === name);
 
     if (match) {
       this._locations.forEach(loc => loc.isDefault = false);
@@ -342,7 +342,7 @@ export class AppService {
     const viewSettings = this.allSettings[view];
 
     if (viewSettings) {
-      _.forEach(viewSettings, (value: boolean | number | string, property: string) => {
+      forEach(viewSettings, (value, property) => {
         const userSetting = {view: view, property: property, value: value, source: this};
         this.settingsSource.next(userSetting);
       });
@@ -419,7 +419,7 @@ export class AppService {
   }
 
   private renameIfMatchesSavedLocation(loc: Location): void {
-    const match = _.find(this._locations, (loc2: Location) => {
+    const match = this._locations.find(loc2 => {
       return (Math.abs(loc.latitude - loc2.latitude) < 0.0084 && Math.abs(loc.longitude - loc2.longitude) < 0.0084 &&
               loc.zone === loc2.zone);
     });

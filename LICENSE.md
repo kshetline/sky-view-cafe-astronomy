@@ -637,25 +637,54 @@ END OF TERMS AND CONDITIONS
 
 ### Licensing and Copyright for Third Party Software Used by Sky View Café
 
-    name                      license type       link                                                 copyright
-    ----                      ------------       ----                                                 -------
-    animations                MIT                https://github.com/angular/angular.js                Copyright (c) 2010-2018 Google, Inc. http://angularjs.org
-    common                    MIT                https://github.com/angular/angular.js                Copyright (c) 2010-2018 Google, Inc. http://angularjs.org
-    compiler                  MIT                https://github.com/angular/angular.js                Copyright (c) 2010-2018 Google, Inc. http://angularjs.org
-    core                      MIT                https://github.com/angular/angular.js                Copyright (c) 2010-2018 Google, Inc. http://angularjs.org
-    flex-layout               MIT                https://github.com/angular/flex-layout               Copyright (c) 2018 Google LLC.
-    forms                     MIT                https://github.com/angular/angular.js                Copyright (c) 2010-2018 Google, Inc. http://angularjs.org
-    http                      MIT                https://github.com/angular/angular.js                Copyright (c) 2010-2018 Google, Inc. http://angularjs.org
-    platform-browser          MIT                https://github.com/angular/angular.js                Copyright (c) 2010-2018 Google, Inc. http://angularjs.org
-    platform-browser-dynamic  MIT                https://github.com/angular/angular.js                Copyright (c) 2010-2018 Google, Inc. http://angularjs.org
-    router                    MIT                https://github.com/angular/angular.js                Copyright (c) 2010-2018 Google, Inc. http://angularjs.org
-    core-js                   MIT                git+https://github.com/zloirock/core-js.git          Copyright (c) 2014-2018 Denis Pushkarev
-    font-awesome              (OFL-1.1 AND MIT)  git+https://github.com/FortAwesome/Font-Awesome.git  Copyright 2017 - Fonticons, Inc. All rights reserved
-    lodash                    MIT                git+https://github.com/lodash/lodash.git             Copyright JS Foundation and other contributors <https://js.foundation/>
-    ng-busy                   MIT                git+https://github.com/victos/ng-busy.git            Copyright (c) 2014-2016 Google, Inc.
-    primeng                   MIT                git+https://github.com/primefaces/primeng.git        Copyright (c) 2016-2017 PrimeTek
-    rxjs                      Apache-2.0         git+ssh://git@github.com/ReactiveX/RxJS.git          (Couldn't locate.)
-    zone.js                   MIT                git://github.com/angular/zone.js.git                 (Couldn't locate.)
+#####Via `license-report --output=table`
+    name                              license type  link
+    ----                              ------------  ----
+    animations                        n/a           n/a
+    cdk                               n/a           n/a
+    common                            n/a           n/a
+    compiler                          n/a           n/a
+    core                              n/a           n/a
+    flex-layout                       n/a           n/a
+    forms                             n/a           n/a
+    platform-browser                  n/a           n/a
+    platform-browser-dynamic          n/a           n/a
+    router                            n/a           n/a
+    fontawesome-free                  n/a           n/a
+    array-buffer-reader               MIT           git+https://github.com/kshetline/array-buffer-reader.git
+    core-js                           MIT           git+https://github.com/zloirock/core-js.git
+    detect-resize                     MIT           git+https://github.com/noderaider/detect-resize.git
+    ks-astronomy                      MIT           git+https://github.com/kshetline/ks-astronomy.git
+    ks-date-time-zone                 MIT           git+https://github.com/kshetline/ks-date-time-zone.git
+    ks-math                           MIT           git+https://github.com/kshetline/ks-math.git
+    ks-util                           MIT           git+https://github.com/kshetline/ks-util.git
+    lodash                            MIT           git+https://github.com/lodash/lodash.git
+    ng-busy                           MIT           git+https://github.com/victos/angular-opensource.git
+    primeicons                        MIT           git+https://github.com/primefaces/primeicons.git
+    primeng                           MIT           git+https://github.com/primefaces/primeng.git
+    rxjs                              Apache-2.0    git+https://github.com/reactivex/rxjs.git
+    zone.js                           MIT           git://github.com/angular/zone.js.git
+    build-angular                     n/a           n/a
+    cli                               n/a           n/a
+    compiler-cli                      n/a           n/a
+    language-service                  n/a           n/a
+    googlemaps                        n/a           n/a
+    jasmine                           n/a           n/a
+    jasminewd2                        n/a           n/a
+    lodash                            n/a           n/a
+    node                              n/a           n/a
+    codelyzer                         MIT           git+https://github.com/mgechev/codelyzer.git
+    jasmine-core                      MIT           git+https://github.com/jasmine/jasmine.git
+    jasmine-spec-reporter             Apache-2.0    git+https://github.com/bcaudan/jasmine-spec-reporter.git
+    karma                             MIT           git://github.com/karma-runner/karma.git
+    karma-chrome-launcher             MIT           git://github.com/karma-runner/karma-chrome-launcher.git
+    karma-coverage-istanbul-reporter  MIT           git+https://github.com/mattlewis92/karma-coverage-istanbul-reporter.git
+    karma-jasmine                     MIT           git://github.com/karma-runner/karma-jasmine.git
+    karma-jasmine-html-reporter       MIT           git+https://github.com/dfederm/karma-jasmine-html-reporter.git
+    protractor                        MIT           git://github.com/angular/protractor.git
+    ts-node                           MIT           git://github.com/TypeStrong/ts-node.git
+    tslint                            Apache-2.0    https://github.com/palantir/tslint.git
+    typescript                        n/a           n/a
 
 ### Apache 2.0 License
 

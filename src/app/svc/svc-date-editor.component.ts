@@ -1,5 +1,5 @@
 /*
-  Copyright © 2017 Kerry Shetline, kerry@shetline.com
+  Copyright © 2017-2019 Kerry Shetline, kerry@shetline.com
 
   MIT license: https://opensource.org/licenses/MIT
 
@@ -24,7 +24,7 @@ import { DateTimeField, KsCalendar, KsDateTime, KsTimeZone, YMDDate } from 'ks-d
 import * as M_ from 'ks-math';
 import { abs, max, min } from 'ks-math';
 import { timer } from 'rxjs';
-import * as _ from 'lodash';
+import { clone, isMatch } from 'lodash';
 import { SVC_MAX_YEAR, SVC_MIN_YEAR } from '../app.service';
 
 export const SVC_DATE_EDITOR_VALUE_ACCESSOR: any = {
@@ -57,9 +57,9 @@ export class SvcDateEditorComponent extends KsSequenceEditorComponent implements
     this.signDigit = 0;
   }
 
-  get value(): YMDDate { return _.clone(this.ymd); }
+  get value(): YMDDate { return clone(this.ymd); }
   set value(newDate: YMDDate) {
-    if (newDate !== null && !_.isMatch(newDate, this.ymd)) {
+    if (newDate !== null && !isMatch(newDate, this.ymd)) {
       this.ymd.y = newDate.y;
       this.ymd.m = newDate.m;
       this.ymd.d = newDate.d;
@@ -73,7 +73,7 @@ export class SvcDateEditorComponent extends KsSequenceEditorComponent implements
   }
 
   writeValue(newDate: YMDDate): void {
-    if (newDate !== null && !_.isMatch(newDate, this.ymd)) {
+    if (newDate !== null && !isMatch(newDate, this.ymd)) {
       this.ymd.y = newDate.y;
       this.ymd.m = newDate.m;
       this.ymd.d = newDate.d;
@@ -110,7 +110,7 @@ export class SvcDateEditorComponent extends KsSequenceEditorComponent implements
 
   get gregorianChange(): YMDDate { return this.calendar.getGregorianChange(); }
   @Input() set gregorianChange(changeDate: YMDDate) {
-    if (!_.isMatch(this.calendar.getGregorianChange(), changeDate)) {
+    if (!isMatch(this.calendar.getGregorianChange(), changeDate)) {
       this.calendar.setGregorianChange(<YMDDate> changeDate);
       this.updateDigits();
     }

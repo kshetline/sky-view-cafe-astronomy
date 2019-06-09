@@ -1,5 +1,5 @@
 /*
-  Copyright © 2017-2018 Kerry Shetline, kerry@shetline.com.
+  Copyright © 2017-2019 Kerry Shetline, kerry@shetline.com.
 
   This code is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -28,7 +28,7 @@ import {
 } from 'ks-astronomy';
 import { ceil, max, round, sqrt } from 'ks-math';
 import { FontMetrics, getFontMetrics, isSafari, padLeft } from 'ks-util';
-import * as _ from 'lodash';
+import { clone, debounce, isString, throttle } from 'lodash';
 import { KsDateTime } from 'ks-date-time-zone';
 import { SafeStyle } from '@angular/platform-browser';
 import { Subscription, BehaviorSubject, Observable } from 'rxjs';
@@ -125,16 +125,24 @@ export abstract class GenericView implements AfterViewInit {
 
     GenericView._printing.next(mql.matches);
 
-    mql.addListener(() => {
+    const printChange = () => {
+      console.log(mql.matches);
       GenericView._printing.next(mql.matches);
-    });
+    };
+
+    if (mql.addEventListener)
+      mql.addEventListener('change', printChange);
+    else {
+      // noinspection JSDeprecatedSymbols
+      mql.addListener(printChange);
+    }
   }
 
   public static getPrintingUpdate(callback: (printing: boolean) => void): Subscription {
     return GenericView.printingObserver.subscribe(callback);
   }
 
-  constructor(protected appService: AppService, protected tabId: CurrentTab) {
+  protected constructor(protected appService: AppService, protected tabId: CurrentTab) {
     this.isSafari = isSafari();
 
     this.sanitizedHandCursor = appService.sanitizer.bypassSecurityTrustStyle('url(/assets/resources/hand_cursor.cur), auto');
@@ -142,15 +150,15 @@ export abstract class GenericView implements AfterViewInit {
 
     this.updatePlanetsToDraw();
 
-    this.throttledRedraw = _.throttle(() => {
+    this.throttledRedraw = throttle(() => {
       this.draw();
     }, 100);
 
-    this.debouncedFullRedraw = _.debounce(() => {
+    this.debouncedFullRedraw = debounce(() => {
       this.draw(true);
     }, FULL_REDRAW_DELAY);
 
-    this.throttledResize = _.throttle(() => {
+    this.throttledResize = throttle(() => {
       this.doResize();
     }, 100);
 
@@ -274,7 +282,7 @@ export abstract class GenericView implements AfterViewInit {
     }
 
     const pt0 = getXYForTouchEvent(event);
-    const pt = _.clone(pt0);
+    const pt = clone(pt0);
     let pt1;
 
     if (event.touches.length > 1) {
@@ -324,7 +332,7 @@ export abstract class GenericView implements AfterViewInit {
   onTouchMove(event: TouchEvent): void {
     const notAFlick = performance.now() > this.dragStartTime + FLICK_REJECTION_THRESHOLD;
     const pt0 = getXYForTouchEvent(event);
-    const pt = _.clone(pt0);
+    const pt = clone(pt0);
     let pt1;
 
     if (event.touches.length > 1) {
@@ -532,7 +540,7 @@ export abstract class GenericView implements AfterViewInit {
     this.planetsToDraw = [];
 
     for (let i = FIRST_PLANET; i <= LAST_PLANET; ++i) {
-      if (_.indexOf(this.excludedPlanets, i) < 0)
+      if (this.excludedPlanets.indexOf(i) < 0)
         this.planetsToDraw.push(i);
     }
 
@@ -546,7 +554,7 @@ export abstract class GenericView implements AfterViewInit {
         this.planetsToDraw.push(i);
     }
 
-    if (_.isString(this.additional)) {
+    if (isString(this.additional)) {
       const id = this.appService.solarSystem.getPlanetByName(<string> this.additional);
 
       if (id !== NO_MATCH)

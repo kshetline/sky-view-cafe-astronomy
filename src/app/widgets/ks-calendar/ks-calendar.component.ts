@@ -21,7 +21,7 @@ import { Component, EventEmitter, forwardRef, Input, OnDestroy, Output } from '@
 import { DatePipe } from '@angular/common';
 import { NG_VALUE_ACCESSOR, ControlValueAccessor } from '@angular/forms';
 import { Subscription, timer } from 'rxjs';
-import * as _ from 'lodash';
+import { clone, isEqual, isObject, isString } from 'lodash';
 import { CalendarType, GregorianChange, KsDateTime, KsTimeZone, YMDDate } from 'ks-date-time-zone';
 
 const CLICK_REPEAT_DELAY = 500;
@@ -81,7 +81,7 @@ export class KsCalendarComponent implements ControlValueAccessor, OnDestroy {
 
   get value(): YMDDate { return this.ymd; }
   set value(newYMD: YMDDate) {
-    if (!_.isEqual(this.ymd, newYMD)) {
+    if (!isEqual(this.ymd, newYMD)) {
       this.ymd = newYMD;
       this.updateCalendar();
       this.onChangeCallback(newYMD);
@@ -89,7 +89,7 @@ export class KsCalendarComponent implements ControlValueAccessor, OnDestroy {
   }
 
   writeValue(newYMD: YMDDate): void {
-    if (!_.isEqual(this.ymd, newYMD)) {
+    if (!isEqual(this.ymd, newYMD)) {
       this.ymd = newYMD;
       this.updateCalendar();
     }
@@ -113,10 +113,10 @@ export class KsCalendarComponent implements ControlValueAccessor, OnDestroy {
 
   get gregorianChangeDate(): GregorianChange { return this._gregorianChange; }
   @Input() set gregorianChangeDate(newChange: GregorianChange) {
-    if (!_.isEqual(this._gregorianChange, newChange)) {
+    if (!isEqual(this._gregorianChange, newChange)) {
       this._gregorianChange = newChange;
 
-      if (_.isObject(newChange) || _.isString(newChange))
+      if (isObject(newChange) || isString(newChange))
         this.dateTime.setGregorianChange(<YMDDate | string> newChange);
       else if (newChange === CalendarType.PURE_GREGORIAN)
         this.dateTime.setPureGregorian(true);
@@ -243,7 +243,7 @@ export class KsCalendarComponent implements ControlValueAccessor, OnDestroy {
   }
 
   onClick(event: MouseEvent, delta: number): void {
-    const date: YMDDate = _.clone(this.ymd);
+    const date: YMDDate = clone(this.ymd);
 
     if (event && event.altKey)
       date.y += delta * 10;

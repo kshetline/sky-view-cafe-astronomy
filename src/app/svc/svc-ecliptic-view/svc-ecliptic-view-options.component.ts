@@ -1,5 +1,5 @@
 /*
-  Copyright © 2017-2018 Kerry Shetline, kerry@shetline.com.
+  Copyright © 2017-2019 Kerry Shetline, kerry@shetline.com.
 
   This code is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -28,7 +28,7 @@ import { VIEW_ECLIPTIC, PROPERTY_SPAN_25, PROPERTY_ORIENTATION, PROPERTY_ECLIPTI
          PROPERTY_TOPOCENTRIC_MOON, PROPERTY_ENLARGE_SUN_MOON, PROPERTY_LABEL_PLANETS, PROPERTY_LABEL_BRIGHT_STARS,
          PROPERTY_LABEL_STARS, PROPERTY_LABEL_CONSTELLATIONS, PROPERTY_LABEL_DSOS } from './svc-ecliptic-view.component';
 import { NO_DEEP_SKY, ALL_DEEP_SKY } from '../generic-sky-view';
-import * as _ from 'lodash';
+import { find } from 'lodash';
 import { SvcGenericOptionsComponent } from '../svc-generic-options.component';
 
 const CHECKED = 'far fa-check-square';
@@ -166,7 +166,7 @@ export class SvcEclipticViewOptionsComponent extends SvcGenericOptionsComponent 
   set showConstellations(value: boolean) {
     if (this._showConstellations !== value) {
       this._showConstellations = value;
-      _.find(this.namesCategories, {'property': PROPERTY_LABEL_CONSTELLATIONS}).disabled = !value;
+      find(this.namesCategories, {'property': PROPERTY_LABEL_CONSTELLATIONS}).disabled = !value;
       this.appService.updateUserSetting({view: VIEW_ECLIPTIC, property: PROPERTY_SHOW_CONSTELLATIONS, value: value, source: this});
     }
   }

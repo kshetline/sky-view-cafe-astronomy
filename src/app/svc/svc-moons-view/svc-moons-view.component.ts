@@ -28,7 +28,7 @@ import {
   AS_SEEN_FROM_SUN, AVG_SUN_MOON_RADIUS, DataQuality, JUPITER, JUPITER_FLATTENING, JupiterInfo, JupitersMoons, MOON_SHADOW, MoonInfo,
   NAUTICAL_TWILIGHT, PlanetaryMoons, REFRACTION_AT_HORIZON, SATURN, SATURN_FLATTENING, SaturnMoons, SUN
 } from 'ks-astronomy';
-import * as _ from 'lodash';
+import { find } from 'lodash';
 import { JupiterDrawer } from '../jupiter-drawer';
 import { SaturnDrawer } from '../saturn-drawer';
 import { AstroDataService } from '../../astronomy/astro-data.service';
@@ -259,7 +259,7 @@ export class SvcMoonsViewComponent extends GenericPlanetaryView implements After
         hidden = false;
 
         if (doShadows)
-          sunPos = _.find(smoons, (smoon: MoonInfo) => smoon.moonIndex === pos.moonIndex);
+          sunPos = find(smoons, smoon => smoon.moonIndex === pos.moonIndex);
 
         if (pos.behindDisc) {
           occultedNames = extendDelimited(occultedNames, longName);

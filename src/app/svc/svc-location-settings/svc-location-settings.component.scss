@@ -1,5 +1,23 @@
 @import "../../../styles";
 
+:host ::ng-deep select {
+  width: 12em;
+
+  ::ng-deep {
+    .ui-growl {
+      width: auto;
+    }
+
+    .ui-growl-message {
+      padding-right: 1em;
+    }
+
+    .ui-dialog-content {
+      overflow: hidden;
+    }
+  }
+}
+
 .latlong {
   display: table;
   border-spacing: 4px 0;
@@ -25,22 +43,6 @@ hr {
   border: 1px #D8D8D8 solid;
   margin-top: 0;
   margin-bottom: 6px !important;
-}
-
-::ng-deep .ui-growl {
-  width: auto;
-}
-
-::ng-deep .ui-growl-message {
-  padding-right: 1em;
-}
-
-:host ::ng-deep select {
-  width: 12em;
-}
-
-:host ::ng-deep .ui-dialog-content {
-  overflow: hidden;
 }
 
 svc-zone-selector,

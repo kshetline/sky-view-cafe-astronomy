@@ -20,7 +20,7 @@
 import { Component, EventEmitter, forwardRef, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { NG_VALUE_ACCESSOR, ControlValueAccessor } from '@angular/forms';
 import { SelectItem } from 'primeng/components/common/api';
-import * as _ from 'lodash';
+import { find, isArray, isEqual, isObject, isString, isUndefined } from 'lodash';
 import { Dropdown } from 'primeng/dropdown';
 
 const DROPDOWN_VALUE_ACCESSOR: any = {
@@ -63,7 +63,7 @@ export class KsDropdownComponent implements ControlValueAccessor, OnInit {
 
   get value(): any { return this._value; }
   set value(newValue: any) {
-    if (!_.isEqual(this._value, newValue)) {
+    if (!isEqual(this._value, newValue)) {
       this._value = newValue;
       this._primeValue = this.findMatchingPrimeOption(newValue);
       this._selectValue = this.findMatchingIndex(newValue);
@@ -121,7 +121,7 @@ export class KsDropdownComponent implements ControlValueAccessor, OnInit {
 
   get primeValue(): any { return this._primeValue; }
   set primeValue(newValue: any) {
-    if (!_.isEqual(this._primeValue, newValue)) {
+    if (!isEqual(this._primeValue, newValue)) {
       this._primeValue = newValue;
       this._value = this.findMatchingOption(newValue);
       this.onChangeCallback(newValue);
@@ -144,8 +144,8 @@ export class KsDropdownComponent implements ControlValueAccessor, OnInit {
 
   get options(): any[] { return this._options; }
   @Input() set options(newOptions: any[]) {
-    if (!_.isEqual(this._options, newOptions)) {
-      if (!_.isArray(newOptions)) {
+    if (!isEqual(this._options, newOptions)) {
+      if (!isArray(newOptions)) {
         newOptions = [];
       }
 
@@ -153,7 +153,7 @@ export class KsDropdownComponent implements ControlValueAccessor, OnInit {
       this.primeOptions = newOptions.map((option: any): SelectItem => {
         let item: SelectItem;
 
-        if (_.isString(option)) {
+        if (isString(option)) {
           item = {label: option, value: option};
         }
         else {
@@ -165,7 +165,7 @@ export class KsDropdownComponent implements ControlValueAccessor, OnInit {
       this.selectOptions = newOptions.map((option: any): string => {
         let item: string;
 
-        if (_.isString(option)) {
+        if (isString(option)) {
           item = option;
         }
         else {
@@ -184,16 +184,16 @@ export class KsDropdownComponent implements ControlValueAccessor, OnInit {
   }
 
   private findMatchingOption(testValue: any): any {
-    return this._options.find(option => { return _.isObject(option as any) && option.value === testValue || option === testValue; });
+    return this._options.find(option => { return isObject(option as any) && option.value === testValue || option === testValue; });
   }
 
   private findMatchingPrimeOption(testValue: any): any {
-    let result = _.find(this.primeOptions, option => { return _.isEqual(option, testValue); });
+    let result = find(this.primeOptions, option => { return isEqual(option, testValue); });
 
-    if (_.isUndefined(result)) {
-      result = _.find(this.primeOptions, option => { return option.value === testValue; });
+    if (isUndefined(result)) {
+      result = find(this.primeOptions, option => { return option.value === testValue; });
 
-      if (!_.isUndefined(result))
+      if (!isUndefined(result))
         result = result.value;
     }
 
@@ -201,7 +201,7 @@ export class KsDropdownComponent implements ControlValueAccessor, OnInit {
   }
 
   private findMatchingIndex(testValue: any): string {
-    const result = this._options.findIndex(option => { return _.isObject(option as any) && option.value === testValue || option === testValue; }) || 0;
+    const result = this._options.findIndex(option => { return isObject(option as any) && option.value === testValue || option === testValue; }) || 0;
 
     return result.toString();
   }

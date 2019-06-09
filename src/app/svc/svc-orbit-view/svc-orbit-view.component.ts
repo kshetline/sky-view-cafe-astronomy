@@ -31,7 +31,7 @@ import { EARTH, MARS, MOON, NEPTUNE, NMode, PLUTO, REFRACTION, SATURN, SolarSyst
 import { colorFromRGB, parseColor, replaceAlpha, RGBA } from 'ks-util';
 import { ZBuffer } from '../../util/ks-z-buffer';
 import { ADDITIONALS, GenericView, PROPERTY_ADDITIONALS } from '../generic-view';
-import * as _ from 'lodash';
+import { sortBy } from 'lodash';
 
 export const  VIEW_ORBITS = 'orbits';
 export const    PROPERTY_EXTENT = 'extent';
@@ -460,7 +460,7 @@ export class SvcOrbitViewComponent extends GenericPlanetaryView implements After
       positions.push({planet: planet, pos: pt0, pt: pt});
     }
 
-    positions = _.sortBy(positions, [(position: ZSortablePlanet) => { return position.pos.z; }]);
+    positions = sortBy(positions, [(position: ZSortablePlanet) => { return position.pos.z; }]);
 
     const overrideColor = this.get3DColor(mode);
 

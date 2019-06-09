@@ -1,5 +1,5 @@
 /*
-  Copyright © 2017 Kerry Shetline, kerry@shetline.com
+  Copyright © 2017-2019 Kerry Shetline, kerry@shetline.com
 
   MIT license: https://opensource.org/licenses/MIT
 
@@ -21,7 +21,7 @@ import { Component, forwardRef, Input } from '@angular/core';
 import { NG_VALUE_ACCESSOR, ControlValueAccessor } from '@angular/forms';
 import { KsSequenceEditorComponent, BACKGROUND_ANIMATIONS } from '../widgets/ks-sequence-editor/ks-sequence-editor.component';
 import { abs, div_rd, min, mod, mod2, round } from 'ks-math';
-import * as _ from 'lodash';
+import { isNil } from 'lodash';
 
 export const SVC_ANGLE_EDITOR_VALUE_ACCESSOR: any = {
   provide: NG_VALUE_ACCESSOR,
@@ -204,7 +204,7 @@ export class SvcAngleEditorComponent extends KsSequenceEditorComponent implement
 
   private updateDigits(): void {
     const i = this.items;
-    let angle = (_.isNil(this.angle) ? 0 : this.angle);
+    let angle = (isNil(this.angle) ? 0 : this.angle);
 
     if (this.signDigit >= 0) {
       if (angle < 0) {

@@ -1,5 +1,5 @@
 /*
-  Copyright © 2017 Kerry Shetline, kerry@shetline.com
+  Copyright © 2017-2019 Kerry Shetline, kerry@shetline.com
 
   MIT license: https://opensource.org/licenses/MIT
 
@@ -19,7 +19,7 @@
 
 import { Component, ElementRef, EventEmitter, forwardRef, Input, Output, ViewChild } from '@angular/core';
 import { NG_VALUE_ACCESSOR, ControlValueAccessor } from '@angular/forms';
-import * as _ from 'lodash';
+import { isEqual } from 'lodash';
 
 const CHECKBOX_VALUE_ACCESSOR: any = {
   provide: NG_VALUE_ACCESSOR,
@@ -53,7 +53,7 @@ export class KsCheckboxComponent implements ControlValueAccessor {
 
   get ngValue(): any { return this._ngValue; }
   set ngValue(newValue: any) {
-    if (!_.isEqual(this._ngValue, newValue)) {
+    if (!isEqual(this._ngValue, newValue)) {
       this._ngValue = newValue;
       this.onChangeCallback(newValue);
     }

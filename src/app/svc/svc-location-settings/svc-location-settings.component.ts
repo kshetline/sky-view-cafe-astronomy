@@ -1,5 +1,5 @@
 /*
-  Copyright © 2017-2018 Kerry Shetline, kerry@shetline.com.
+  Copyright © 2017-2019 Kerry Shetline, kerry@shetline.com.
 
   This code is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -22,7 +22,7 @@
 
 import { Component, ViewChild } from '@angular/core';
 import { AppService, Location, NEW_LOCATION } from '../../app.service';
-import * as _ from 'lodash';
+import { clone, find } from 'lodash';
 import { ConfirmationService } from 'primeng/components/common/api';
 import { KsDropdownComponent } from '../../widgets/ks-dropdown/ks-dropdown.component';
 
@@ -80,7 +80,7 @@ export class SvcLocationSettingsComponent {
 
   get locationName(): string { return this.app.location.name; }
   set locationName(newName: string) {
-    const newLocation = _.find(this.app.locations, {name: newName});
+    const newLocation = find(this.app.locations, {name: newName});
 
     if (newLocation)
       this.app.location = newLocation;
@@ -88,7 +88,7 @@ export class SvcLocationSettingsComponent {
 
   openSaveDialog(): void {
     this.showSaveDialog = true;
-    this.saveDialogNames = _.clone(this.savedLocationNames);
+    this.saveDialogNames = clone(this.savedLocationNames);
     this.selectedName = '';
     this.makeDefault = false;
 
@@ -106,7 +106,7 @@ export class SvcLocationSettingsComponent {
 
   openDeleteDialog(): void {
     this.showDeleteDialog = true;
-    this.deleteDialogNames = _.clone(this.savedLocationNames);
+    this.deleteDialogNames = clone(this.savedLocationNames);
     this.deleteDialogNames.splice(0, 0, SELECT_A_LOCATION);
     this.selectedName = SELECT_A_LOCATION;
 
@@ -123,7 +123,7 @@ export class SvcLocationSettingsComponent {
     if (matches)
       this.selectedName = matches[1];
 
-    if (_.find(this.app.locations, {name: this.selectedName })) {
+    if (find(this.app.locations, {name: this.selectedName })) {
       this.confirmationService.confirm({
         key: 'save-confirm',
         message: `Are you sure you want to replace the existing "${this.selectedName}"?`,

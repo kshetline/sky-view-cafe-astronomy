@@ -4,6 +4,34 @@
   flex-direction: column;
   justify-content: space-between;
   align-items: stretch;
+
+  ::ng-deep {
+    table.table-view {
+      border-collapse: collapse;
+      margin-right: 1em;
+    }
+
+    table.table-view td,
+    table.table-view th {
+      padding-right: 2em;
+    }
+
+    table.table-view tr td:last-child,
+    table.table-view tr th:last-child {
+      padding-right: 0;
+    }
+
+    table.table-view td {
+      font-family: Courier New, monospace;
+      white-space: pre;
+    }
+
+    table.table-view tr td:first-child {
+      font-family: inherit;
+      font-weight: bold;
+      text-align: right;
+    }
+  }
 }
 
 div.wrapper {
@@ -22,27 +50,4 @@ div.wrapper {
 .table-controls {
   padding: 4px;
   border-bottom: lightgray 1px solid;
-}
-
-::ng-deep table.table-view {
-  border-collapse: collapse;
-}
-
-::ng-deep table.table-view td, ::ng-deep table.table-view th {
-  padding-right: 2em;
-}
-
-::ng-deep table.table-view tr td:last-child, ::ng-deep table.table-view tr th:last-child {
-  padding-right: 0;
-}
-
-::ng-deep table.table-view td {
-  font-family: Courier New, monospace;
-  white-space: pre;
-}
-
-::ng-deep table.table-view tr td:first-child {
-  font-family: inherit;
-  font-weight: bold;
-  text-align: right;
 }

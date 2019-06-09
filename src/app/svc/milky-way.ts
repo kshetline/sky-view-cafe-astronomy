@@ -1,5 +1,5 @@
 /*
-  Copyright © 2017 Kerry Shetline, kerry@shetline.com.
+  Copyright © 2017-2019 Kerry Shetline, kerry@shetline.com.
 
   This code is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
   other uses are restricted.
 */
 
-import * as _ from 'lodash';
+import { isNumber } from 'lodash';
 import { floor, mod, SphericalPosition } from 'ks-math';
 
 export class MilkyWay {
@@ -62,7 +62,7 @@ export class MilkyWay {
   public getBrightness(posOrLongitude: SphericalPosition | number, latitude?: number): number {
     let longitude: number;
 
-    if (_.isNumber(posOrLongitude)) {
+    if (isNumber(posOrLongitude)) {
       longitude = <number> posOrLongitude;
       latitude = (latitude ? latitude : 0);
     }

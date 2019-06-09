@@ -24,7 +24,7 @@ import {
   eventToKey, FontMetrics, getCssValue, getFont, getFontMetrics, getTextWidth, isAndroid, isEdge, isIE, isIOS, isWindows
 } from 'ks-util';
 import { abs, ceil, floor, max, min, Point } from 'ks-math';
-import * as _ from 'lodash';
+import { isUndefined } from 'lodash';
 import { getXYForTouchEvent } from '../../util/ks-touch-events';
 
 export interface SequenceItemInfo {
@@ -207,7 +207,7 @@ export class KsSequenceEditorComponent implements AfterViewInit, OnInit, OnDestr
     const fontParts = /(.*?\b)((?:\d|\.)+)(px\b)(\s*\/\s*\w+\s+)?(.*)/.exec(this.font);
 
     if (fontParts) {
-      if (_.isUndefined(fontParts[4]))
+      if (isUndefined(fontParts[4]))
         fontParts[4] = ' ';
 
       const fontSize = parseFloat(fontParts[2]);
@@ -429,7 +429,7 @@ export class KsSequenceEditorComponent implements AfterViewInit, OnInit, OnDestr
   }
 
   protected getSelectionForXY(x: number, y: number): number {
-    const newSelection = _.findIndex(this.hOffsets, (offset: number, index: number) => {
+    const newSelection = this.hOffsets.findIndex((offset, index) => {
       return offset <= x && x < this.hOffsets[min(index + 1, this.hOffsets.length - 1)];
     });
 

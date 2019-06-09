@@ -1,5 +1,5 @@
 /*
-  Copyright © 2017-2018 Kerry Shetline, kerry@shetline.com.
+  Copyright © 2017-2019 Kerry Shetline, kerry@shetline.com.
 
   This code is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -27,7 +27,7 @@ import { Subscription, timer } from 'rxjs';
 import { MenuItem, Message } from 'primeng/components/common/api';
 import { KsDateTime, KsTimeZone, YMDDate } from 'ks-date-time-zone';
 import { toggleFullScreen } from 'ks-util';
-import * as _ from 'lodash';
+import { debounce } from 'lodash';
 
 const MIN_APP_WIDTH = 1040;
 const MIN_APP_HEIGHT = 640;
@@ -177,7 +177,7 @@ export class AppComponent implements AfterViewInit, OnDestroy {
 
   @HostListener('window:resize') private onResize(): void {
     if (!this.debouncedResize)
-      this.debouncedResize = _.debounce(() => this.doResize(), 1000);
+      this.debouncedResize = debounce(() => this.doResize(), 1000);
 
     this.debouncedResize();
   }

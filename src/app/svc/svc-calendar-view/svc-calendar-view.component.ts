@@ -1,5 +1,5 @@
 /*
-  Copyright © 2017-2018 Kerry Shetline, kerry@shetline.com.
+  Copyright © 2017-2019 Kerry Shetline, kerry@shetline.com.
 
   This code is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -34,7 +34,7 @@ import {
 import { DatePipe } from '@angular/common';
 import { ceil, floor, max, min, round } from 'ks-math';
 import { isEdge, isFirefox, isIE } from 'ks-util';
-import * as _ from 'lodash';
+import { throttle } from 'lodash';
 import { MoonDrawer } from '../moon-drawer';
 import { GenericView } from '../generic-view';
 
@@ -147,7 +147,7 @@ export class SvcCalendarViewComponent implements AfterViewInit {
     // TODO: Call method below whenever first day of week changes.
     this.updateDayHeadings();
 
-    this.throttledResize = _.throttle(() => {
+    this.throttledResize = throttle(() => {
       this.doResize();
     }, 100);
 

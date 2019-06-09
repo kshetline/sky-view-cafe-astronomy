@@ -1,5 +1,5 @@
 /*
-  Copyright © 2017-2018 Kerry Shetline, kerry@shetline.com.
+  Copyright © 2017-2019 Kerry Shetline, kerry@shetline.com.
 
   This code is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -24,7 +24,7 @@ import { AfterViewInit, Component, ElementRef, ViewChild } from '@angular/core';
 import { AppService, CurrentTab, Location, UserSetting } from '../../app.service';
 import { AstroDataService } from '../../astronomy/astro-data.service';
 import { DateAndTime, GregorianChange, KsDateTime, KsTimeZone } from 'ks-date-time-zone';
-import * as _ from 'lodash';
+import { clone, isEqual, isString, throttle } from 'lodash';
 import {
   EARTH, EventFinder, ISkyObserver, JUPITER, JupiterInfo, MARS, MERCURY, MOON, NEPTUNE, PLUTO, SATURN, SkyObserver, SUN, URANUS, VENUS
 } from 'ks-astronomy';
@@ -96,7 +96,7 @@ export class SvcTableViewComponent implements AfterViewInit {
       this.updateView();
     });
 
-    this.throttledResize = _.throttle(() => {
+    this.throttledResize = throttle(() => {
       this.doResize();
     }, 100);
 
@@ -217,11 +217,11 @@ export class SvcTableViewComponent implements AfterViewInit {
     if (force ||
         this.lastTableType !== this._tableType ||
         this.lastZone !== this.zone ||
-        !_.isEqual(this.lastGregorianChange, this.appService.gregorianChangeDate) ||
+        !isEqual(this.lastGregorianChange, this.appService.gregorianChangeDate) ||
         checkYearChanged &&  lt.y !== wt.y ||
         checkDayChanged  && (lt.y !== wt.y || lt.m !== wt.m || lt.d !== wt.d) ||
         checkTimeChanged && (lt.y !== wt.y || lt.m !== wt.m || lt.d !== wt.d || lt.hrs !== wt.hrs || lt.min !== wt.min || lt.occurrence !== wt.occurrence) ||
-        checkObserverChanged && !_.isEqual(this.lastObserver, this.observer)) {
+        checkObserverChanged && !isEqual(this.lastObserver, this.observer)) {
       let newTable: Promise<string> | string;
 
       switch (this._tableType) {
@@ -254,15 +254,15 @@ export class SvcTableViewComponent implements AfterViewInit {
         break;
       }
 
-      if (_.isString(newTable))
+      if (isString(newTable))
         this.tableHtml = newTable;
       else
         newTable.then(html => this.tableHtml = html);
     }
 
-    this.lastGregorianChange = _.clone(this.appService.gregorianChangeDate);
+    this.lastGregorianChange = clone(this.appService.gregorianChangeDate);
     this.lastObserver = new SkyObserver(this.observer.longitude, this.observer.latitude);
-    this.lastTableTime = _.clone(wt);
+    this.lastTableTime = clone(wt);
     this.lastTableType = this._tableType;
     this.lastZone = this.zone;
   }

@@ -1,5 +1,5 @@
 /*
-  Copyright © 2017 Kerry Shetline, kerry@shetline.com
+  Copyright © 2017-2019 Kerry Shetline, kerry@shetline.com
 
   MIT license: https://opensource.org/licenses/MIT
 
@@ -17,7 +17,7 @@
   OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-import * as _ from 'lodash';
+import { sortBy } from 'lodash';
 import { strokeCircle, strokeLine } from 'ks-util';
 
 enum DrawAction {FILLED_RECT, LINE, CIRCLE, RECT}
@@ -99,7 +99,7 @@ export class ZBuffer {
 
   public draw(context: CanvasRenderingContext2D, maxZ = Number.MAX_VALUE): void {
     if (!this.sorted) {
-      this.items = _.sortBy(this.items, [(item: ZBufferItem) => { return item.z; }]);
+      this.items = sortBy(this.items, [(item: ZBufferItem) => { return item.z; }]);
       this.sorted = true;
     }
 

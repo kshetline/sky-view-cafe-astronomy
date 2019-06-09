@@ -1,5 +1,5 @@
 /*
-  Copyright © 2017 Kerry Shetline, kerry@shetline.com.
+  Copyright © 2017-2019 Kerry Shetline, kerry@shetline.com.
 
   MIT license: https://opensource.org/licenses/MIT
 
@@ -17,7 +17,7 @@
   OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-import * as _ from 'lodash';
+import { isNil, isUndefined } from 'lodash';
 import { Component, EventEmitter, forwardRef, OnInit, Output } from '@angular/core';
 import { NG_VALUE_ACCESSOR, ControlValueAccessor } from '@angular/forms';
 import { timer } from 'rxjs';
@@ -70,7 +70,7 @@ export class SvcZoneSelectorComponent implements ControlValueAccessor, OnInit {
   @Output() onBlur: EventEmitter<any> = new EventEmitter();
 
   get value(): string | null {
-    if (!this._region || _.isNil(this._subzone)) {
+    if (!this._region || isNil(this._subzone)) {
       return null;
     }
     else if (this._region === MISC_OPTION || this._region === UT_OPTION) {
@@ -115,7 +115,7 @@ export class SvcZoneSelectorComponent implements ControlValueAccessor, OnInit {
         g1 = groups[1].slice(0, -1);
       }
 
-      if (_.isUndefined(g2)) {
+      if (isUndefined(g2)) {
         if (g1.startsWith(UT)) {
           this.setRegion(UT_OPTION);
           this.subzone = g1;
