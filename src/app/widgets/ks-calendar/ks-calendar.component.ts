@@ -17,12 +17,12 @@
   OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-import { Component, EventEmitter, forwardRef, Input, OnDestroy, Output } from '@angular/core';
 import { DatePipe } from '@angular/common';
-import { NG_VALUE_ACCESSOR, ControlValueAccessor } from '@angular/forms';
-import { Subscription, timer } from 'rxjs';
-import { clone, isEqual, isObject, isString } from 'lodash';
+import { Component, EventEmitter, forwardRef, Input, OnDestroy, Output } from '@angular/core';
+import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { CalendarType, GregorianChange, KsDateTime, KsTimeZone, YMDDate } from 'ks-date-time-zone';
+import { clone, isEqual, isObject, isString } from 'lodash';
+import { Subscription, timer } from 'rxjs';
 
 const CLICK_REPEAT_DELAY = 500;
 const CLICK_REPEAT_RATE  = 100;

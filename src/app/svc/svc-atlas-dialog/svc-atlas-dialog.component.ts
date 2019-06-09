@@ -21,14 +21,14 @@
 */
 
 import { Component, ElementRef, EventEmitter, Input, Output, ViewChild } from '@angular/core';
-import { AppService, Location } from '../../app.service';
-import { SvcAtlasService, AtlasLocation, AtlasResults } from '../svc-atlas.service';
-import { formatLatitude, formatLongitude } from '../svc-util';
+import { } from 'googlemaps';
 import { KsTimeZone } from 'ks-date-time-zone';
+import { eventToKey, isIOS } from 'ks-util';
 import { Message } from 'primeng/components/common/api';
 import { Table } from 'primeng/table';
-import { } from 'googlemaps';
-import { eventToKey, isIOS } from 'ks-util';
+import { AppService, Location } from '../../app.service';
+import { AtlasLocation, AtlasResults, SvcAtlasService } from '../svc-atlas.service';
+import { formatLatitude, formatLongitude } from '../svc-util';
 
 interface LocationInfo {
   rank: number;

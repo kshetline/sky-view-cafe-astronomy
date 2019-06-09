@@ -20,12 +20,12 @@
   other uses are restricted.
 */
 
-import { PlanetDrawer } from './planet-drawer';
+import { HttpClient } from '@angular/common/http';
 import { JUPITER_FLATTENING, JupiterInfo } from 'ks-astronomy';
+import { mod } from 'ks-math';
 import { AstroDataService } from '../astronomy/astro-data.service';
 import { JpegCommentReader } from '../util/ks-read-jpeg-comment';
-import { HttpClient } from '@angular/common/http';
-import { mod } from 'ks-math';
+import { PlanetDrawer } from './planet-drawer';
 
 export class JupiterDrawer extends PlanetDrawer {
   private static jupiterImage: HTMLImageElement;
@@ -60,7 +60,7 @@ export class JupiterDrawer extends PlanetDrawer {
     return Promise.all([commentPromise, jupiterInfoPromise, imagePromise]).then(([grsPos, jupiterInfo, image]: [string, JupiterInfo, HTMLImageElement]) => {
       this.jupiterImage = image;
 
-      const grsParts = grsPos ? grsPos.split(/=|,/) : [];
+      const grsParts = grsPos ? grsPos.split(/[=,]/) : [];
 
       if (grsParts.length === 3) {
         this.imageGrsLong = Number(grsParts[1]);

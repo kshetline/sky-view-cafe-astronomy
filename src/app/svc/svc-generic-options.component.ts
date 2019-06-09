@@ -20,11 +20,11 @@
   other uses are restricted.
 */
 
+import { SolarSystem } from 'ks-astronomy';
+import { clone } from 'lodash';
 import { SelectItem } from 'primeng/components/common/api';
 import { AppService } from '../app.service';
 import { ADDITIONALS, PROPERTY_ADDITIONALS } from './generic-view';
-import { SolarSystem } from 'ks-astronomy';
-import { clone } from 'lodash';
 
 export class SvcGenericOptionsComponent {
   private _additional: ADDITIONALS | string = ADDITIONALS.NONE;

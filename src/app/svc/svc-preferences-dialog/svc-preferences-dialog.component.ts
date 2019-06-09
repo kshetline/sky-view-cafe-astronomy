@@ -1,5 +1,5 @@
 /*
-  Copyright © 2017-2018 Kerry Shetline, kerry@shetline.com.
+  Copyright © 2017-2019 Kerry Shetline, kerry@shetline.com.
 
   This code is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -21,12 +21,12 @@
 */
 
 import { Component, EventEmitter, Input, Output, ViewChild } from '@angular/core';
+import { getISOFormatDate, parseISODate, YMDDate } from 'ks-date-time-zone';
+import { MenuItem } from 'primeng/components/common/api';
 import {
   AppService, CalendarSetting, CurrentTab, PROPERTY_DEFAULT_TAB, PROPERTY_GREGORIAN_CHANGE_DATE, PROPERTY_INK_SAVER, PROPERTY_NORTH_AZIMUTH, PROPERTY_TWILIGHT_BY_DEGREES,
   PROPERTY_TWILIGHT_DEGREES, PROPERTY_TWILIGHT_MINUTES, VIEW_APP
 } from '../../app.service';
-import { MenuItem } from 'primeng/components/common/api';
-import { getISOFormatDate, parseISODate, YMDDate } from 'ks-date-time-zone';
 import { KsDropdownComponent } from '../../widgets/ks-dropdown/ks-dropdown.component';
 
 interface MenuItemPlus extends MenuItem {
@@ -95,15 +95,15 @@ export class SvcPreferencesDialogComponent {
   inkSaver = true;
 
   formErrors = {
-    'twilightInput': ''
+    twilightInput: ''
   };
 
   validationMessages = {
-    'twilightInput': {
-      'required':       'Twilight value is required.',
-      'minlength':      'Twilight value must be at least one digit long.',
-      'maxlength':      'Twilight value must be 1-3 digits.',
-      'forbiddenValue': 'Only whole numbers are allowed.'
+    twilightInput: {
+      required:       'Twilight value is required.',
+      minlength:      'Twilight value must be at least one digit long.',
+      maxlength:      'Twilight value must be 1-3 digits.',
+      forbiddenValue: 'Only whole numbers are allowed.'
     }
   };
 
@@ -155,7 +155,6 @@ export class SvcPreferencesDialogComponent {
   }
 
   @Input() get calendarOption(): CalendarSetting { return this._calendarOption; }
-  @Output() calendarOptionChange = new EventEmitter();
   set calendarOption(value: CalendarSetting) {
     if (this._calendarOption !== value) {
       this._calendarOption = value;
@@ -166,25 +165,26 @@ export class SvcPreferencesDialogComponent {
           this.gcdVisible = true;
           this.gcdDisabled = true;
           this.gcdValue = {y: 1582, m: 10, d: 15};
-        break;
+          break;
 
         case CalendarSetting.PURE_GREGORIAN:
           this.gcdVisible = false;
           this.gcdDisabled = true;
-        break;
+          break;
 
         case CalendarSetting.PURE_JULIAN:
           this.gcdVisible = false;
           this.gcdDisabled = true;
-        break;
+          break;
 
         case CalendarSetting.CUSTOM_GCD:
           this.gcdVisible = true;
           this.gcdDisabled = false;
-        break;
+          break;
       }
     }
   }
+  @Output() calendarOptionChange = new EventEmitter();
 
   constructor(private appService: AppService) {
   }

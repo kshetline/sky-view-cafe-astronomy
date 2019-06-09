@@ -18,10 +18,10 @@
 */
 
 import { Component, forwardRef, Input } from '@angular/core';
-import { NG_VALUE_ACCESSOR, ControlValueAccessor } from '@angular/forms';
-import { KsSequenceEditorComponent, BACKGROUND_ANIMATIONS } from '../widgets/ks-sequence-editor/ks-sequence-editor.component';
+import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { abs, div_rd, min, mod, mod2, round } from 'ks-math';
 import { isNil } from 'lodash';
+import { BACKGROUND_ANIMATIONS, KsSequenceEditorComponent } from '../widgets/ks-sequence-editor/ks-sequence-editor.component';
 
 export const SVC_ANGLE_EDITOR_VALUE_ACCESSOR: any = {
   provide: NG_VALUE_ACCESSOR,
@@ -131,7 +131,7 @@ export class SvcAngleEditorComponent extends KsSequenceEditorComponent implement
         this.maxAngle = 90;
         this.maxNormalMagnitude = 0;
         this.wrapAtMax = false;
-      break;
+        break;
 
       case DDD_MM_EW:
         firstDelim = '\u00B0'; // Degree sign.
@@ -148,7 +148,7 @@ export class SvcAngleEditorComponent extends KsSequenceEditorComponent implement
 
         this.items.push({value: 0, editable: true, selected: true }); // Hundreds of degrees.
         selectionPending = false;
-      break;
+        break;
 
       case HH_MM:
         firstDelim = 'h';
@@ -162,7 +162,7 @@ export class SvcAngleEditorComponent extends KsSequenceEditorComponent implement
         this.maxAngle = 24;
         this.maxNormalMagnitude = 0;
         this.wrapAtMax = true;
-      break;
+        break;
 
       case PN_DDD_D:
         firstDelim = '.';
@@ -180,7 +180,7 @@ export class SvcAngleEditorComponent extends KsSequenceEditorComponent implement
         this.items.push({value: '+', editable: true, selected: true, fixedWidth: true }); // sign
         this.items.push({value: 0, editable: true, selected: false }); // Hundreds of degrees.
         selectionPending = false;
-      break;
+        break;
     }
 
     this.items.push({value: 0, editable: true, selected: selectionPending }); // Tens of degrees/hours.

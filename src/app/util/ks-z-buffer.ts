@@ -17,8 +17,8 @@
   OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-import { sortBy } from 'lodash';
 import { strokeCircle, strokeLine } from 'ks-util';
+import { sortBy } from 'lodash';
 
 enum DrawAction {FILLED_RECT, LINE, CIRCLE, RECT}
 
@@ -99,7 +99,7 @@ export class ZBuffer {
 
   draw(context: CanvasRenderingContext2D, maxZ = Number.MAX_VALUE): void {
     if (!this.sorted) {
-      this.items = sortBy(this.items, [(item: ZBufferItem) => { return item.z; }]);
+      this.items = sortBy(this.items, [(item: ZBufferItem) => item.z]);
       this.sorted = true;
     }
 

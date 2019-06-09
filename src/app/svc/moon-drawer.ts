@@ -85,8 +85,8 @@ export class MoonDrawer {
   }
 
   drawMoon(context: CanvasRenderingContext2D, solarSystem: SolarSystem, time_JDE: number,
-                  cx: number, cy: number, size: number, pixelsPerArcSec: number, pixelRatio = 1,
-                  parallacticAngle?: Angle, observer?: ISkyObserver, showEclipses?: boolean): void {
+           cx: number, cy: number, size: number, pixelsPerArcSec: number, pixelRatio = 1,
+           parallacticAngle?: Angle, observer?: ISkyObserver, showEclipses?: boolean): void {
     const originalImageSize = this.moonPixels.width;
 
     if (size === 0 && observer)

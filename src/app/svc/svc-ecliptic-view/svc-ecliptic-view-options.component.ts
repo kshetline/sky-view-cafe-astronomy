@@ -21,15 +21,15 @@
 */
 
 import { AfterViewInit, Component } from '@angular/core';
+import { find } from 'lodash';
 import { MenuItem, SelectItem } from 'primeng/components/common/api';
 import { AppService, UserSetting } from '../../app.service';
-import { VIEW_ECLIPTIC, PROPERTY_SPAN_25, PROPERTY_ORIENTATION, PROPERTY_ECLIPTIC_GRID, PROPERTY_CELESTIAL_EQUATOR,
-         PROPERTY_SHOW_CONSTELLATIONS, PROPERTY_LOCAL_HORIZON, PROPERTY_SHOW_STARS, PROPERTY_BRIGHTEN_STARS,
-         PROPERTY_TOPOCENTRIC_MOON, PROPERTY_ENLARGE_SUN_MOON, PROPERTY_LABEL_PLANETS, PROPERTY_LABEL_BRIGHT_STARS,
-         PROPERTY_LABEL_STARS, PROPERTY_LABEL_CONSTELLATIONS, PROPERTY_LABEL_DSOS } from './svc-ecliptic-view.component';
-import { NO_DEEP_SKY, ALL_DEEP_SKY } from '../generic-sky-view';
-import { find } from 'lodash';
+import { ALL_DEEP_SKY, NO_DEEP_SKY } from '../generic-sky-view';
 import { SvcGenericOptionsComponent } from '../svc-generic-options.component';
+import { PROPERTY_BRIGHTEN_STARS, PROPERTY_CELESTIAL_EQUATOR, PROPERTY_ECLIPTIC_GRID, PROPERTY_ENLARGE_SUN_MOON, PROPERTY_LABEL_BRIGHT_STARS,
+         PROPERTY_LABEL_CONSTELLATIONS, PROPERTY_LABEL_DSOS, PROPERTY_LABEL_PLANETS, PROPERTY_LABEL_STARS,
+         PROPERTY_LOCAL_HORIZON, PROPERTY_ORIENTATION, PROPERTY_SHOW_CONSTELLATIONS, PROPERTY_SHOW_STARS,
+         PROPERTY_SPAN_25, PROPERTY_TOPOCENTRIC_MOON, VIEW_ECLIPTIC } from './svc-ecliptic-view.component';
 
 const CHECKED = 'far fa-check-square';
 const UNCHECKED = 'far fa-square';
@@ -166,7 +166,7 @@ export class SvcEclipticViewOptionsComponent extends SvcGenericOptionsComponent 
   set showConstellations(value: boolean) {
     if (this._showConstellations !== value) {
       this._showConstellations = value;
-      find(this.namesCategories, {'property': PROPERTY_LABEL_CONSTELLATIONS}).disabled = !value;
+      find(this.namesCategories, {property: PROPERTY_LABEL_CONSTELLATIONS}).disabled = !value;
       this.appService.updateUserSetting({view: VIEW_ECLIPTIC, property: PROPERTY_SHOW_CONSTELLATIONS, value: value, source: this});
     }
   }
@@ -229,7 +229,7 @@ export class SvcEclipticViewOptionsComponent extends SvcGenericOptionsComponent 
     const property = event.item.property;
 
     for (const item of this.namesCategories) {
-      let value: boolean = undefined;
+      let value: boolean;
 
       if (item.label === EM_DASH)
         continue;

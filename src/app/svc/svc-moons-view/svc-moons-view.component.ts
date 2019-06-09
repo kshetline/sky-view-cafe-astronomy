@@ -20,21 +20,21 @@
   other uses are restricted.
 */
 
-import { DrawingContextPlanetary, GenericPlanetaryView, LABEL_TYPE, SELECTION_TYPE, SUBJECT } from '../generic-planetary-view';
+import { HttpClient } from '@angular/common/http';
 import { AfterViewInit, Component, ElementRef, ViewChild } from '@angular/core';
-import { floor, log10, max, min, PI, Point, pow, round, sin_deg, sqrt } from 'ks-math';
-import { AppService, CurrentTab, UserSetting } from '../../app.service';
 import {
   AS_SEEN_FROM_SUN, AVG_SUN_MOON_RADIUS, DataQuality, JUPITER, JUPITER_FLATTENING, JupiterInfo, JupitersMoons, MOON_SHADOW, MoonInfo,
   NAUTICAL_TWILIGHT, PlanetaryMoons, REFRACTION_AT_HORIZON, SATURN, SATURN_FLATTENING, SaturnMoons, SUN
 } from 'ks-astronomy';
-import { find } from 'lodash';
-import { JupiterDrawer } from '../jupiter-drawer';
-import { SaturnDrawer } from '../saturn-drawer';
-import { AstroDataService } from '../../astronomy/astro-data.service';
-import { HttpClient } from '@angular/common/http';
-import { PlanetDrawer } from '../planet-drawer';
+import { floor, log10, max, min, PI, Point, pow, round, sin_deg, sqrt } from 'ks-math';
 import { extendDelimited, fillEllipse, getFontMetrics, padLeft, strokeEllipse } from 'ks-util';
+import { find } from 'lodash';
+import { AppService, CurrentTab, UserSetting } from '../../app.service';
+import { AstroDataService } from '../../astronomy/astro-data.service';
+import { DrawingContextPlanetary, GenericPlanetaryView, LABEL_TYPE, SELECTION_TYPE, SUBJECT } from '../generic-planetary-view';
+import { JupiterDrawer } from '../jupiter-drawer';
+import { PlanetDrawer } from '../planet-drawer';
+import { SaturnDrawer } from '../saturn-drawer';
 
 export const  VIEW_MOONS = 'moons';
 export const    PROPERTY_NORTH_ON_TOP = 'north_on_top';
@@ -491,7 +491,7 @@ export class SvcMoonsViewComponent extends GenericPlanetaryView implements After
 
   // noinspection JSMethodCanBeStatic
   protected drawRing(ctx: CanvasRenderingContext2D, xctr: number, yctr: number, ringWidth: number, ringHeight: number,
-    outside: number, outerAdj: number, inside: number, innerAdj: number): void {
+                     outside: number, outerAdj: number, inside: number, innerAdj: number): void {
     for (let a = outside * ringWidth + outerAdj; a >= inside * ringWidth + innerAdj; a -= 0.5) {
       const b = max(round(a * ringHeight / ringWidth), 1);
 

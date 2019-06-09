@@ -21,17 +21,17 @@
 */
 
 import { AfterViewInit, ElementRef, ViewChild } from '@angular/core';
-import { AppService, CurrentTab } from '../app.service';
+import { SafeStyle } from '@angular/platform-browser';
 import {
   ASTEROID_BASE, COMET_BASE, EARTH, FIRST_PLANET, HALF_MINUTE, ISkyObserver, LAST_PLANET, NO_MATCH, SkyObserver, SolarSystem,
   StarCatalog, UT_to_TDB
 } from 'ks-astronomy';
+import { KsDateTime } from 'ks-date-time-zone';
 import { ceil, max, round, sqrt } from 'ks-math';
 import { FontMetrics, getFontMetrics, isSafari, padLeft } from 'ks-util';
 import { clone, debounce, isString, throttle } from 'lodash';
-import { KsDateTime } from 'ks-date-time-zone';
-import { SafeStyle } from '@angular/platform-browser';
-import { Subscription, BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject, Observable, Subscription } from 'rxjs';
+import { AppService, CurrentTab } from '../app.service';
 import { getXYForTouchEvent } from '../util/ks-touch-events';
 import { KsMarqueeComponent } from '../widgets/ks-marquee/ks-marquee.component';
 

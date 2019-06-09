@@ -21,13 +21,13 @@
 */
 
 import { AfterViewInit, Component, OnDestroy } from '@angular/core';
-import { SelectItem } from 'primeng/components/common/api';
-import { AppService, SVC_MAX_YEAR, SVC_MIN_YEAR, UserSetting } from '../../app.service';
-import { VIEW_CALENDAR, PROPERTY_KEY_MOON_PHASES, PROPERTY_EQUISOLSTICE, PROPERTY_DAILY_DAYLIGHT, PROPERTY_DAILY_MOON_PHASE,
-         PROPERTY_EVENT_TYPE, PROPERTY_INCLUDE_TRANSITS
-} from './svc-calendar-view.component';
 import { DateTimeField, KsDateTime, KsTimeZone } from 'ks-date-time-zone';
+import { SelectItem } from 'primeng/components/common/api';
 import { Subscription, timer } from 'rxjs';
+import { AppService, SVC_MAX_YEAR, SVC_MIN_YEAR, UserSetting } from '../../app.service';
+import { PROPERTY_DAILY_DAYLIGHT, PROPERTY_DAILY_MOON_PHASE, PROPERTY_EQUISOLSTICE, PROPERTY_EVENT_TYPE, PROPERTY_INCLUDE_TRANSITS,
+         PROPERTY_KEY_MOON_PHASES, VIEW_CALENDAR
+} from './svc-calendar-view.component';
 
 const CLICK_REPEAT_DELAY = 500;
 const CLICK_REPEAT_RATE  = 250;

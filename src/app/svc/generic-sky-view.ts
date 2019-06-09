@@ -20,17 +20,16 @@
   other uses are restricted.
 */
 
+import { AfterViewInit } from '@angular/core';
+import { LABEL_ANCHOR, LINE_BREAK, NO_MATCH, REFRACTION } from 'ks-astronomy';
+import { max, min, Point, pow, round, SphericalPosition, SphericalPosition3D } from 'ks-math';
+import { strokeEllipse } from 'ks-util';
+import { reverse, sortBy } from 'lodash';
+import { AppService, CurrentTab } from '../app.service';
 import {
   DrawingContextPlanetary, FAR_AWAY, GenericPlanetaryView, highlightedStarColor, LABEL_TYPE, NONPLANET, SELECTION_TYPE,
   SortablePlanet, SUBJECT
 } from './generic-planetary-view';
-import { AfterViewInit } from '@angular/core';
-import { AppService, CurrentTab } from '../app.service';
-import { strokeEllipse } from 'ks-util';
-import { max, min, Point, pow, round, SphericalPosition, SphericalPosition3D } from 'ks-math';
-import { LABEL_ANCHOR, LINE_BREAK, NO_MATCH, REFRACTION } from 'ks-astronomy';
-import { reverse, sortBy } from 'lodash';
-
 
 export const eclipticColor               = '#666699';
 export const eclipticGridColor           = 'rgba(102,102,153,0.4)';
@@ -246,7 +245,7 @@ export abstract class GenericSkyView extends GenericPlanetaryView implements Aft
       planets.push({planet: p, pos: this.getSphericalPosition(p, dc)});
     });
 
-    planets = reverse(sortBy(planets, [(p: SortablePlanet) => { return (<SphericalPosition3D> p.pos).radius; }]));
+    planets = reverse(sortBy(planets, [(p: SortablePlanet) => (<SphericalPosition3D> p.pos).radius]));
 
     for (const planet of planets) {
       const p = planet.planet;

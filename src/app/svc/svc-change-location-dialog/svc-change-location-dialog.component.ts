@@ -1,5 +1,5 @@
 /*
-  Copyright © 2017 Kerry Shetline, kerry@shetline.com.
+  Copyright © 2017-2019 Kerry Shetline, kerry@shetline.com.
 
   This code is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -21,9 +21,9 @@
 */
 
 import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { floor, mod } from 'ks-math';
 import { AppService, Location } from '../../app.service';
 import { formatLatitude, formatLongitude } from '../svc-util';
-import { mod, floor } from 'ks-math';
 
 @Component({
   selector: 'svc-change-location-dialog',

@@ -21,9 +21,6 @@
 */
 
 import { AfterViewInit, Component, Input, OnDestroy } from '@angular/core';
-import { AppService, UserSetting } from '../../app.service';
-import { Message, SelectItem } from 'primeng/components/common/api';
-import { Subscription, timer } from 'rxjs';
 import {
   APHELION, EARTH, EclipseInfo, EventFinder, FALL_EQUINOX, FIRST_QUARTER, FULL_MOON, GALILEAN_MOON_EVENT, GREATEST_ELONGATION,
   GRS_TRANSIT_EVENT, INFERIOR_CONJUNCTION, JUPITER, JupiterInfo, LAST_QUARTER, LUNAR_ECLIPSE, MARS, MERCURY, MOON, NEPTUNE, NEW_MOON,
@@ -32,9 +29,12 @@ import {
   VENUS, WINTER_SOLSTICE
 } from 'ks-astronomy';
 import { KsDateTime, KsTimeZone } from 'ks-date-time-zone';
+import { isString } from 'lodash';
+import { Message, SelectItem } from 'primeng/components/common/api';
+import { Subscription, timer } from 'rxjs';
+import { AppService, UserSetting } from '../../app.service';
 import { AstroDataService } from '../../astronomy/astro-data.service';
 import { PROPERTY_FIXED_GRS, PROPERTY_GRS_OVERRIDE, VIEW_MOONS } from '../svc-moons-view/svc-moons-view.component';
-import { isString } from 'lodash';
 
 const CLICK_REPEAT_DELAY = 500;
 const CLICK_REPEAT_RATE  = 100;
@@ -263,7 +263,7 @@ export class SvcEventNavigatorComponent implements AfterViewInit, OnDestroy {
     this.messages = [];
 
     const observer = new SkyObserver(this.app.location.longitude, this.app.location.latitude);
-    let altMins: number = undefined;
+    let altMins: number;
 
     if (this._selectedEvent === TWILIGHT_BEGINS || this._selectedEvent === TWILIGHT_ENDS) {
       if (this.app.twilightByDegrees)

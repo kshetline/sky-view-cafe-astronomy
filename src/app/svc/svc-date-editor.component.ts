@@ -19,13 +19,13 @@
 
 import { Component, forwardRef, Input } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { BACKGROUND_ANIMATIONS, KsSequenceEditorComponent } from '../widgets/ks-sequence-editor/ks-sequence-editor.component';
 import { DateTimeField, KsCalendar, KsDateTime, KsTimeZone, YMDDate } from 'ks-date-time-zone';
 import * as M_ from 'ks-math';
 import { abs, max, min } from 'ks-math';
-import { timer } from 'rxjs';
 import { clone, isMatch } from 'lodash';
+import { timer } from 'rxjs';
 import { SVC_MAX_YEAR, SVC_MIN_YEAR } from '../app.service';
+import { BACKGROUND_ANIMATIONS, KsSequenceEditorComponent } from '../widgets/ks-sequence-editor/ks-sequence-editor.component';
 
 export const SVC_DATE_EDITOR_VALUE_ACCESSOR: any = {
   provide: NG_VALUE_ACCESSOR,

@@ -21,11 +21,11 @@
 */
 
 import { Component } from '@angular/core';
-import { AppService, CurrentTab, Location } from '../../app.service';
-import { DAY_MSEC, KsDateTime, KsTimeZone } from 'ks-date-time-zone';
-import { padLeft, toDefaultLocaleFixed } from 'ks-util';
-import { Angle, FMT_MINS, mod2, Mode, round, Unit } from 'ks-math';
 import { SkyObserver, UT_to_TDB } from 'ks-astronomy';
+import { DAY_MSEC, KsDateTime, KsTimeZone } from 'ks-date-time-zone';
+import { Angle, FMT_MINS, mod2, Mode, round, Unit } from 'ks-math';
+import { padLeft, toDefaultLocaleFixed } from 'ks-util';
+import { AppService, CurrentTab, Location } from '../../app.service';
 
 const nbsp = '\u00A0';
 

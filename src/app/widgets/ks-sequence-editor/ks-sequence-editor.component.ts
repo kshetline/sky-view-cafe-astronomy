@@ -17,14 +17,14 @@
   OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-import { AfterViewInit, Component, ElementRef, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { animate, state, style, transition, trigger } from '@angular/animations';
-import { Subscription, timer } from 'rxjs';
+import { AfterViewInit, Component, ElementRef, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { abs, ceil, floor, max, min, Point } from 'ks-math';
 import {
   eventToKey, FontMetrics, getCssValue, getFont, getFontMetrics, getTextWidth, isAndroid, isEdge, isIE, isIOS, isWindows
 } from 'ks-util';
-import { abs, ceil, floor, max, min, Point } from 'ks-math';
 import { isUndefined } from 'lodash';
+import { Subscription, timer } from 'rxjs';
 import { getXYForTouchEvent } from '../../util/ks-touch-events';
 
 export interface SequenceItemInfo {
@@ -708,22 +708,22 @@ export class KsSequenceEditorComponent implements AfterViewInit, OnInit, OnDestr
     switch (key) {
       case 'ArrowUp':
         this.increment();
-      break;
+        break;
 
       case 'ArrowDown':
         this.decrement();
-      break;
+        break;
 
       case 'Backspace':
       case 'ArrowLeft':
         this.cursorLeft();
-      break;
+        break;
 
       case ' ':
       case 'ArrowRight':
       case 'Enter':
         this.cursorRight();
-      break;
+        break;
 
       default:
         if (key && key.length === 1)

@@ -1,5 +1,5 @@
 /*
-  Copyright © 2017-2018 Kerry Shetline, kerry@shetline.com.
+  Copyright © 2017-2019 Kerry Shetline, kerry@shetline.com.
 
   This code is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -20,14 +20,14 @@
   other uses are restricted.
 */
 
-import { DrawingContext, GenericView } from '../generic-view';
 import { AfterViewInit, Component, ElementRef, ViewChild } from '@angular/core';
-import { AppService, CurrentTab, Location, UserSetting } from '../../app.service';
+import { SafeStyle } from '@angular/platform-browser';
 import { getInsolationColor, MOON, SUN, UT_to_TDB } from 'ks-astronomy';
 import { KsDateTime, KsTimeZone } from 'ks-date-time-zone';
 import { floor, FMT_DD, FMT_MINS, min, round } from 'ks-math';
 import { strokeLine } from 'ks-util';
-import { SafeStyle } from '@angular/platform-browser';
+import { AppService, CurrentTab, Location, UserSetting } from '../../app.service';
+import { DrawingContext, GenericView } from '../generic-view';
 
 export const  VIEW_INSOLATION = 'insolation';
 export const    PROPERTY_CENTER_MIDNIGHT = 'center_midnight';

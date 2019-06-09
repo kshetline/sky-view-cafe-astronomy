@@ -21,12 +21,12 @@
 */
 
 import { AfterViewInit, Component } from '@angular/core';
+import { SUN } from 'ks-astronomy';
+import { SelectItem } from 'primeng/components/common/api';
 import { AppService, UserSetting } from '../../app.service';
 import {
-  VIEW_TABLES, PROPERTY_TABLE_TYPE, PROPERTY_TWILIGHT, TableType, PROPERTY_PLANET_CHOICE
+  PROPERTY_PLANET_CHOICE, PROPERTY_TABLE_TYPE, PROPERTY_TWILIGHT, TableType, VIEW_TABLES
 } from './svc-table-view.component';
-import { SelectItem } from 'primeng/components/common/api';
-import { SUN } from 'ks-astronomy';
 
 @Component({
   selector: 'svc-table-view-options',

@@ -20,24 +20,23 @@
   other uses are restricted.
 */
 
-import {
-  eclipticColor, eclipticGridColor, eclipticGridPrintColor, eclipticPrintColor, equatorColor, equatorPrintColor, GenericSkyView,
-  horizonColor, horizonPrintColor
-} from '../generic-sky-view';
-import {
-  DrawingContextPlanetary, MARQUEE_ECLIPTIC, MARQUEE_EQUATORIAL, MARQUEE_ILLUMINATION, MARQUEE_MAGNITUDE, MARQUEE_SIZE, NONPLANET,
-  OUTER_LABEL_GAP, SUBJECT
-} from '../generic-planetary-view';
 import { AfterViewInit, Component, ElementRef, ViewChild } from '@angular/core';
-import { AppService, CurrentTab, UserSetting } from '../../app.service';
 import { MOON, TOPOCENTRIC } from 'ks-astronomy';
 import {
   abs, Angle, ceil, cos, cos_deg, floor, limitNeg1to1, max, min, Point, round, sin, sin_deg, SphericalPosition, squared, tan_deg,
   TWO_PI, Unit
 } from 'ks-math';
 import { strokeCircle, strokeLine } from 'ks-util';
+import { AppService, CurrentTab, UserSetting } from '../../app.service';
+import {
+  DrawingContextPlanetary, MARQUEE_ECLIPTIC, MARQUEE_EQUATORIAL, MARQUEE_ILLUMINATION, MARQUEE_MAGNITUDE, MARQUEE_SIZE, NONPLANET,
+  OUTER_LABEL_GAP, SUBJECT
+} from '../generic-planetary-view';
+import {
+  eclipticColor, eclipticGridColor, eclipticGridPrintColor, eclipticPrintColor, equatorColor, equatorPrintColor, GenericSkyView,
+  horizonColor, horizonPrintColor
+} from '../generic-sky-view';
 import { ADDITIONALS, PROPERTY_ADDITIONALS } from '../generic-view';
-
 
 export const  VIEW_ECLIPTIC = 'ecliptic';
 export const    PROPERTY_SPAN_25 = 'span_25';

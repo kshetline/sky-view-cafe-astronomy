@@ -17,8 +17,8 @@
   OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { Injectable } from '@angular/core';
 
 // To work around IE's lack of support for slice on Uint8ClampedArray. The standard polyfills apparently don't fix this.
 function altSlice(array: Uint8ClampedArray, start: number, end: number): ArrayLike<number> {

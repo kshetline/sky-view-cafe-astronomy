@@ -20,30 +20,30 @@
   other uses are restricted.
 */
 
-import {
-  eclipticColor, eclipticGridColor, eclipticGridPrintColor, eclipticPrintColor, equatorColor, equatorialGridColor,
-  equatorialGridPrintColor, equatorPrintColor, GenericSkyView, moonPathColor, sunPathColor
-} from '../generic-sky-view';
-import {
-  asteroidColor, cometColor, DrawingContextPlanetary, FAR_AWAY, LabelInfo, MARQUEE_EQUATORIAL, MARQUEE_HORIZONTAL, MARQUEE_ILLUMINATION,
-  MARQUEE_MAGNITUDE, MARQUEE_SIZE, NONPLANET, OUTER_LABEL_GAP, planetColors, planetPrintColors,
-  SUBJECT
-} from '../generic-planetary-view';
 import { AfterViewInit, Component, ElementRef, ViewChild } from '@angular/core';
-import { AppService, CurrentTab, PROPERTY_NORTH_AZIMUTH, UserSetting, VIEW_APP } from '../../app.service';
 import {
   AVG_SUN_MOON_RADIUS, equatorialToGalactic, getSkyColor, LOW_PRECISION, MOON, NO_SELECTION, QUICK_SUN, refractedAltitude,
   REFRACTION, REFRACTION_AT_HORIZON, SolarSystem, SUN, TOPOCENTRIC
 } from 'ks-astronomy';
+import { DAY_MINUTES } from 'ks-date-time-zone';
 import {
   abs, Angle, asin_deg, atan2_deg, ceil, cos, cos_deg, floor, interpolate, limitNeg1to1, max, min, mod, mod2, PI, Point, round, sin,
   sin_deg, SphericalPosition, SphericalPosition3D, sqrt, tan, tan_deg, TWO_PI, Unit
 } from 'ks-math';
 import { colorFromRGB, drawOutlinedText, padLeft, parseColor, replaceAlpha, strokeLine } from 'ks-util';
-import { DAY_MINUTES } from 'ks-date-time-zone';
-import { MoonDrawer } from '../moon-drawer';
-import { MilkyWay } from '../milky-way';
+import { AppService, CurrentTab, PROPERTY_NORTH_AZIMUTH, UserSetting, VIEW_APP } from '../../app.service';
+import {
+  asteroidColor, cometColor, DrawingContextPlanetary, FAR_AWAY, LabelInfo, MARQUEE_EQUATORIAL, MARQUEE_HORIZONTAL, MARQUEE_ILLUMINATION,
+  MARQUEE_MAGNITUDE, MARQUEE_SIZE, NONPLANET, OUTER_LABEL_GAP, planetColors, planetPrintColors,
+  SUBJECT
+} from '../generic-planetary-view';
+import {
+  eclipticColor, eclipticGridColor, eclipticGridPrintColor, eclipticPrintColor, equatorColor, equatorialGridColor,
+  equatorialGridPrintColor, equatorPrintColor, GenericSkyView, moonPathColor, sunPathColor
+} from '../generic-sky-view';
 import { ADDITIONALS, PROPERTY_ADDITIONALS } from '../generic-view';
+import { MilkyWay } from '../milky-way';
+import { MoonDrawer } from '../moon-drawer';
 
 export const  VIEW_SKY = 'sky';
 export const    PROPERTY_VIEW_TYPE = 'view_type';
@@ -299,14 +299,14 @@ export class SvcSkyViewComponent extends GenericSkyView implements AfterViewInit
           this.lastFullSkyType = value;
           this.viewWidth = 180.0;
           this.minAlt = -0.00833; // half arc-minute
-        break;
+          break;
 
         case VIEW_TYPE.FULL_SKY_DOME:
           this.viewMode = VIEW_MODE.FULL_SKY;
           this.lastFullSkyType = value;
           this.viewWidth = 180.0;
           this.minAlt = -0.00833;
-        break;
+          break;
 
         case VIEW_TYPE.HORIZON_45:
           this.viewMode = VIEW_MODE.HORIZON;
@@ -314,7 +314,7 @@ export class SvcSkyViewComponent extends GenericSkyView implements AfterViewInit
           this.viewWidth = 45.0;
           this.viewHeight = 45.0;
           this.minAlt = -0.00833;
-        break;
+          break;
 
         case VIEW_TYPE.HORIZON_90:
           this.viewMode = VIEW_MODE.HORIZON;
@@ -322,7 +322,7 @@ export class SvcSkyViewComponent extends GenericSkyView implements AfterViewInit
           this.viewWidth = 90.0;
           this.viewHeight = 45.0;
           this.minAlt = -0.00833;
-        break;
+          break;
 
         case VIEW_TYPE.HORIZON_120:
           this.viewMode = VIEW_MODE.HORIZON;
@@ -330,7 +330,7 @@ export class SvcSkyViewComponent extends GenericSkyView implements AfterViewInit
           this.viewWidth = 120.0;
           this.viewHeight = 45.0;
           this.minAlt = -0.00833;
-        break;
+          break;
 
         case VIEW_TYPE.HORIZON_TO_ZENITH:
           this.viewMode = VIEW_MODE.HORIZON;
@@ -338,13 +338,13 @@ export class SvcSkyViewComponent extends GenericSkyView implements AfterViewInit
           this.viewWidth = 90.0;
           this.viewHeight = 90.0;
           this.minAlt = -0.00833;
-        break;
+          break;
 
         case VIEW_TYPE.ZENITH_100:
           this.viewMode = VIEW_MODE.ZENITH;
           this.viewWidth = 100.0;
           this.minAlt = 40.0;
-        break;
+          break;
 
         case VIEW_TYPE.MOON_CLOSEUP_1:
           this.viewMode = VIEW_MODE.MOON_CLOSEUP;
@@ -352,7 +352,7 @@ export class SvcSkyViewComponent extends GenericSkyView implements AfterViewInit
           this.trackingPlanet = MOON;
           this.viewWidth = 1.0;
           this.minAlt = -90.0;
-        break;
+          break;
 
         case VIEW_TYPE.MOON_CLOSEUP_4:
           this.viewMode = VIEW_MODE.MOON_CLOSEUP;
@@ -360,7 +360,7 @@ export class SvcSkyViewComponent extends GenericSkyView implements AfterViewInit
           this.trackingPlanet = MOON;
           this.viewWidth = 4.0;
           this.minAlt = -90.0;
-        break;
+          break;
 
         case VIEW_TYPE.MOON_CLOSEUP_8:
           this.viewMode = VIEW_MODE.MOON_CLOSEUP;
@@ -368,7 +368,7 @@ export class SvcSkyViewComponent extends GenericSkyView implements AfterViewInit
           this.trackingPlanet = MOON;
           this.viewWidth = 8.0;
           this.minAlt = -90.0;
-        break;
+          break;
 
         case VIEW_TYPE.MOON_CLOSEUP_16:
           this.viewMode = VIEW_MODE.MOON_CLOSEUP;
@@ -376,7 +376,7 @@ export class SvcSkyViewComponent extends GenericSkyView implements AfterViewInit
           this.trackingPlanet = MOON;
           this.viewWidth = 16.0;
           this.minAlt = -90.0;
-        break;
+          break;
 
         case VIEW_TYPE.SUN_CLOSEUP_1:
           this.viewMode = VIEW_MODE.SUN_CLOSEUP;
@@ -384,7 +384,7 @@ export class SvcSkyViewComponent extends GenericSkyView implements AfterViewInit
           this.trackingPlanet = SUN;
           this.viewWidth = 1.0;
           this.minAlt = -90.0;
-        break;
+          break;
 
         case VIEW_TYPE.SUN_CLOSEUP_4:
           this.viewMode = VIEW_MODE.SUN_CLOSEUP;
@@ -392,7 +392,7 @@ export class SvcSkyViewComponent extends GenericSkyView implements AfterViewInit
           this.trackingPlanet = SUN;
           this.viewWidth = 4.0;
           this.minAlt = -90.0;
-        break;
+          break;
 
         case VIEW_TYPE.SUN_CLOSEUP_8:
           this.viewMode = VIEW_MODE.SUN_CLOSEUP;
@@ -400,7 +400,7 @@ export class SvcSkyViewComponent extends GenericSkyView implements AfterViewInit
           this.trackingPlanet = SUN;
           this.viewWidth = 8.0;
           this.minAlt = -90.0;
-        break;
+          break;
 
         case VIEW_TYPE.SUN_CLOSEUP_16:
           this.viewMode = VIEW_MODE.SUN_CLOSEUP;
@@ -408,7 +408,7 @@ export class SvcSkyViewComponent extends GenericSkyView implements AfterViewInit
           this.trackingPlanet = SUN;
           this.viewWidth = 16.0;
           this.minAlt = -90.0;
-        break;
+          break;
       }
 
       this.onResize();

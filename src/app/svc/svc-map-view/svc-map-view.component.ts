@@ -20,14 +20,14 @@
   other uses are restricted.
 */
 
-import { DrawingContext, GenericView } from '../generic-view';
 import { AfterViewInit, Component, ElementRef, ViewChild } from '@angular/core';
-import { abs, ceil, cos_deg, floor, max, min, mod, mod2, Point, round, sin_deg, SphericalPosition3D } from 'ks-math';
-import { AppEvent, AppService, CurrentTab, UserSetting } from '../../app.service';
 import {
   ABERRATION, AVG_SUN_MOON_RADIUS, MOON, QUICK_SUN, REFRACTION_AT_HORIZON, SkyObserver, SolarSystem, SUN, TOPOCENTRIC
 } from 'ks-astronomy';
+import { abs, ceil, cos_deg, floor, max, min, mod, mod2, Point, round, sin_deg, SphericalPosition3D } from 'ks-math';
+import { AppEvent, AppService, CurrentTab, UserSetting } from '../../app.service';
 import { KsTimeService, ZoneForLocation } from '../../util/ks-time.service';
+import { DrawingContext, GenericView } from '../generic-view';
 import { formatLatitude, formatLongitude } from '../svc-util';
 
 export const  VIEW_MAP = 'map';
@@ -315,7 +315,7 @@ export class SvcMapViewComponent extends GenericView implements AfterViewInit {
     const ctx = dc.context;
     let ymMin = Number.MAX_VALUE;
     let ymMax = -Number.MAX_VALUE;
-    let ymLast = undefined;
+    let ymLast;
 
     dc.context.fillStyle = shadowColor;
 

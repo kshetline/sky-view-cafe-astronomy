@@ -1,5 +1,5 @@
 /*
-  Copyright © 2017-2018 Kerry Shetline, kerry@shetline.com.
+  Copyright © 2017-2019 Kerry Shetline, kerry@shetline.com.
 
   This code is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -21,13 +21,13 @@
 */
 
 import { AfterViewInit, Component } from '@angular/core';
+import { SelectItem } from 'primeng/components/common/api';
 import { AppEvent, AppService, UserSetting } from '../../app.service';
 import {
   EVENT_MAP_ACTIVE_ECLIPSE, EVENT_MAP_ACTIVE_ECLIPSE_REQUEST, EVENT_MAP_GO_TO_ECLIPSE_CENTER, EVENT_MAP_GO_TO_SUBSOLAR_POINT, MapType,
   PROPERTY_BLINK_LOCATION_MARKERS, PROPERTY_MAP_TYPE, PROPERTY_SHOW_DAY_NIGHT, PROPERTY_SHOW_ECLIPSE_SHADOWS, PROPERTY_SHOW_LOCATION_MARKERS,
   VIEW_MAP
 } from './svc-map-view.component';
-import { SelectItem } from 'primeng/components/common/api';
 
 @Component({
   selector: 'svc-map-view-options',

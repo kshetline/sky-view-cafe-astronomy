@@ -20,18 +20,18 @@
   other uses are restricted.
 */
 
+import { AfterViewInit, Component, ElementRef, ViewChild } from '@angular/core';
+import { EARTH, MARS, MOON, NEPTUNE, NMode, PLUTO, REFRACTION, SATURN, SolarSystem, SUN } from 'ks-astronomy';
+import { abs, cos_deg, floor, log10, max, min, mod, mod2, Point, Point3D, pow, round, sin_deg, SphericalPosition3D, } from 'ks-math';
+import { colorFromRGB, parseColor, replaceAlpha, RGBA } from 'ks-util';
+import { sortBy } from 'lodash';
+import { AppService, CurrentTab, UserSetting } from '../../app.service';
+import { ZBuffer } from '../../util/ks-z-buffer';
 import {
   ASTEROID_COLOR_INDEX, COMET_COLOR_INDEX, DrawingContextPlanetary, GenericPlanetaryView, LABEL_TYPE, LabelInfo, MARQUEE_AU,
   MARQUEE_DISTANCE, MARQUEE_ECLIPTIC, MARQUEE_HELIOCENTRIC, planetColors, planetPrintColors, SELECTION_TYPE, SUBJECT
 } from '../generic-planetary-view';
-import { AfterViewInit, Component, ElementRef, ViewChild } from '@angular/core';
-import { abs, cos_deg, floor, log10, max, min, mod, mod2, Point, Point3D, pow, round, sin_deg, SphericalPosition3D, } from 'ks-math';
-import { AppService, CurrentTab, UserSetting } from '../../app.service';
-import { EARTH, MARS, MOON, NEPTUNE, NMode, PLUTO, REFRACTION, SATURN, SolarSystem, SUN } from 'ks-astronomy';
-import { colorFromRGB, parseColor, replaceAlpha, RGBA } from 'ks-util';
-import { ZBuffer } from '../../util/ks-z-buffer';
 import { ADDITIONALS, GenericView, PROPERTY_ADDITIONALS } from '../generic-view';
-import { sortBy } from 'lodash';
 
 export const  VIEW_ORBITS = 'orbits';
 export const    PROPERTY_EXTENT = 'extent';
@@ -460,7 +460,7 @@ export class SvcOrbitViewComponent extends GenericPlanetaryView implements After
       positions.push({planet: planet, pos: pt0, pt: pt});
     }
 
-    positions = sortBy(positions, [(position: ZSortablePlanet) => { return position.pos.z; }]);
+    positions = sortBy(positions, [(position: ZSortablePlanet) => position.pos.z]);
 
     const overrideColor = this.get3DColor(mode);
 

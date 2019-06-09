@@ -20,20 +20,20 @@
   other uses are restricted.
 */
 
-import { SvcGenericOptionsComponent } from '../svc-generic-options.component';
 import { AfterViewInit, Component } from '@angular/core';
+import { find } from 'lodash';
 import { MenuItem, SelectItem } from 'primeng/components/common/api';
 import { AppService, UserSetting } from '../../app.service';
-import {
-  SKY_COLOR, VIEW_SKY, VIEW_TYPE, PROPERTY_SKY_COLOR, PROPERTY_VIEW_TYPE,
-  PROPERTY_REFRACTION, PROPERTY_CELESTIAL_GRID, PROPERTY_ECLIPTIC_GRID,
-  PROPERTY_PATH_OF_SUN, PROPERTY_PATH_OF_MOON, PROPERTY_BRIGHTEN_STARS,
-  PROPERTY_SHOW_CONSTELLATIONS, PROPERTY_ENLARGE_SUN_MOON, PROPERTY_LABEL_PLANETS, PROPERTY_LABEL_BRIGHT_STARS,
-  PROPERTY_LABEL_STARS, PROPERTY_LABEL_CONSTELLATIONS, PROPERTY_LABEL_DSOS, PROPERTY_SHOW_MILKY_WAY,
-} from './svc-sky-view.component';
-import { NO_DEEP_SKY, ALL_DEEP_SKY } from '../generic-sky-view';
-import { find } from 'lodash';
+import { ALL_DEEP_SKY, NO_DEEP_SKY } from '../generic-sky-view';
 import { ADDITIONALS, PROPERTY_ADDITIONALS } from '../generic-view';
+import { SvcGenericOptionsComponent } from '../svc-generic-options.component';
+import {
+  PROPERTY_BRIGHTEN_STARS, PROPERTY_CELESTIAL_GRID, PROPERTY_ECLIPTIC_GRID, PROPERTY_ENLARGE_SUN_MOON, PROPERTY_LABEL_BRIGHT_STARS,
+  PROPERTY_LABEL_CONSTELLATIONS, PROPERTY_LABEL_DSOS, PROPERTY_LABEL_PLANETS,
+  PROPERTY_LABEL_STARS, PROPERTY_PATH_OF_MOON, PROPERTY_PATH_OF_SUN,
+  PROPERTY_REFRACTION, PROPERTY_SHOW_CONSTELLATIONS, PROPERTY_SHOW_MILKY_WAY, PROPERTY_SKY_COLOR,
+  PROPERTY_VIEW_TYPE, SKY_COLOR, VIEW_SKY, VIEW_TYPE,
+} from './svc-sky-view.component';
 
 const CHECKED = 'far fa-check-square';
 const UNCHECKED = 'far fa-square';
@@ -231,7 +231,7 @@ export class SvcSkyViewOptionsComponent extends SvcGenericOptionsComponent imple
   set showConstellations(value: boolean) {
     if (this._showConstellations !== value) {
       this._showConstellations = value;
-      find(this.namesCategories, {'property': PROPERTY_LABEL_CONSTELLATIONS}).disabled = !value;
+      find(this.namesCategories, {property: PROPERTY_LABEL_CONSTELLATIONS}).disabled = !value;
       this.appService.updateUserSetting({view: VIEW_SKY, property: PROPERTY_SHOW_CONSTELLATIONS, value: value, source: this});
     }
   }
@@ -270,7 +270,7 @@ export class SvcSkyViewOptionsComponent extends SvcGenericOptionsComponent imple
     const property = event.item.property;
 
     for (const item of this.namesCategories) {
-      let value: boolean = undefined;
+      let value: boolean;
 
       if (item.label === EM_DASH)
         continue;

@@ -20,9 +20,7 @@
   other uses are restricted.
 */
 
-import { DrawingContext, GenericView } from './generic-view';
 import { AfterViewInit } from '@angular/core';
-import { AppService, CurrentTab, PROPERTY_NORTH_AZIMUTH, UserSetting, VIEW_APP } from '../app.service';
 import * as C_ from 'ks-astronomy';
 import {
   ABERRATION, EARTH, Ecliptic, KM_PER_AU, MOON, MOON_SHADOW, NEPTUNE, NO_MATCH, NO_SELECTION, NUTATION, PlanetaryMoons, PLUTO,
@@ -33,7 +31,8 @@ import {
   SphericalPosition3D, sqrt, TWO_PI, union
 } from 'ks-math';
 import { getTextWidth, toDefaultLocaleFixed } from 'ks-util';
-
+import { AppService, CurrentTab, PROPERTY_NORTH_AZIMUTH, UserSetting, VIEW_APP } from '../app.service';
+import { DrawingContext, GenericView } from './generic-view';
 
 export interface SortablePlanet {
   planet: number;
@@ -439,7 +438,7 @@ export abstract class GenericPlanetaryView extends GenericView implements AfterV
             labelColor = highlightedStarColor;
           else
             labelColor = (li.labelType === LABEL_TYPE.DSO ? dsoColor : starColor);
-        break;
+          break;
 
         case LABEL_TYPE.PLANET:
           if (C_.FIRST_PLANET <= li.bodyIndex && li.bodyIndex <= C_.LAST_PLANET)
@@ -448,21 +447,21 @@ export abstract class GenericPlanetaryView extends GenericView implements AfterV
             labelColor = asteroidColor;
           else
             labelColor = cometColor;
-        break;
+          break;
 
         case LABEL_TYPE.CONSTELLATION:
         case LABEL_TYPE.SOLE_CONSTELLATION:
           labelColor = constellationLabelColor;
-        break;
+          break;
 
         case LABEL_TYPE.HIDDEN_MOON:
           labelColor = hiddenMoonColor;
-        break;
+          break;
 
         case LABEL_TYPE.MOON:
         default:
           labelColor = (dc.inkSaver ? moonPrintColor : moonColor);
-        break;
+          break;
       }
     }
 
@@ -808,7 +807,7 @@ export abstract class GenericPlanetaryView extends GenericView implements AfterV
 
         if ((this.marqueeFlags & MARQUEE_MAGNITUDE) !== 0)
           vmag = dc.sc.getMagnitude(starIndex);
-      break;
+        break;
 
       case SELECTION_TYPE.PLANET:
         name = dc.ss.getPlanetName(dc.selectionIndex);
@@ -848,12 +847,12 @@ export abstract class GenericPlanetaryView extends GenericView implements AfterV
 
         if (dc.selectionIndex !== SUN && (this.marqueeFlags & MARQUEE_HELIOCENTRIC) !== 0)
           helPos = dc.ss.getHeliocentricPosition(dc.selectionIndex, dc.jde);
-      break;
+        break;
 
       case SELECTION_TYPE.MOON:
         name = PlanetaryMoons.getMoonName(dc.selectionIndex) + ' (' +
                PlanetaryMoons.getMoonNumber(dc.selectionIndex) + ')';
-      break;
+        break;
 
       case SELECTION_TYPE.MOON_SHADOW:
         name = PlanetaryMoons.getMoonName(dc.selectionIndex, MOON_SHADOW) + ' (' +

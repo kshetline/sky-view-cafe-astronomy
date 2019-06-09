@@ -21,14 +21,14 @@
 */
 
 import { AfterViewInit, Component, ElementRef, ViewChild } from '@angular/core';
-import { AppService, CurrentTab, Location, UserSetting } from '../../app.service';
-import { AstroDataService } from '../../astronomy/astro-data.service';
-import { DateAndTime, GregorianChange, KsDateTime, KsTimeZone } from 'ks-date-time-zone';
-import { clone, isEqual, isString, throttle } from 'lodash';
 import {
   EARTH, EventFinder, ISkyObserver, JUPITER, JupiterInfo, MARS, MERCURY, MOON, NEPTUNE, PLUTO, SATURN, SkyObserver, SUN, URANUS, VENUS
 } from 'ks-astronomy';
+import { DateAndTime, GregorianChange, KsDateTime, KsTimeZone } from 'ks-date-time-zone';
+import { clone, isEqual, isString, throttle } from 'lodash';
 import { SelectItem } from 'primeng/components/common/api';
+import { AppService, CurrentTab, Location, UserSetting } from '../../app.service';
+import { AstroDataService } from '../../astronomy/astro-data.service';
 
 export enum TableType {NONE, EPHEMERIS, EPHEMERIS_TBD, RISE_SET_TIMES, LUNAR_PHASES, EQUINOX_SOLSTICE, GALILEAN_MOONS}
 
@@ -202,16 +202,16 @@ export class SvcTableViewComponent implements AfterViewInit {
       case TableType.RISE_SET_TIMES:
         checkDayChanged = true;
         checkObserverChanged = true;
-      break;
+        break;
 
       case TableType.LUNAR_PHASES:
       case TableType.EQUINOX_SOLSTICE:
         checkYearChanged = true;
-      break;
+        break;
 
       case TableType.GALILEAN_MOONS:
         checkTimeChanged = true;
-      break;
+        break;
     }
 
     if (force ||
@@ -228,30 +228,30 @@ export class SvcTableViewComponent implements AfterViewInit {
         case TableType.EPHEMERIS:
         case TableType.EPHEMERIS_TBD:
           newTable = '<i>Not yet implemented</i>';
-        break;
+          break;
 
         case TableType.RISE_SET_TIMES:
           const daysInMonth = this.dateTime.getDaysInMonth(wt.y, wt.m);
 
           newTable = this.eventFinder.getRiseAndSetEventsAsHtml(this._planetChoice, wt.y, wt.m, wt.d, daysInMonth, this.observer, timeZone,
               this.appService.gregorianChangeDate, this.twilight, {tableClass: 'table-view'});
-        break;
+          break;
 
         case TableType.LUNAR_PHASES:
           newTable = this.eventFinder.getLunarPhasesByYearAsHtml(wt.y, wt.y + 1, timeZone, this.appService.gregorianChangeDate,
               {tableClass: 'table-view'});
-        break;
+          break;
 
         case TableType.EQUINOX_SOLSTICE:
           newTable = this.eventFinder.getEquinoxesAndSolsticesByYearAsHtml(wt.y, wt.y + 9, timeZone, this.appService.gregorianChangeDate,
               {tableClass: 'table-view'});
-        break;
+          break;
 
         case TableType.GALILEAN_MOONS:
           const jdu = KsDateTime.julianDay(this.time);
           newTable = this.eventFinder.getGalileanMoonEventsAsHtml(jdu, jdu + 3, true, timeZone, this.appService.gregorianChangeDate,
               {tableClass: 'table-view'});
-        break;
+          break;
       }
 
       if (isString(newTable))

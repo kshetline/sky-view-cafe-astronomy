@@ -18,13 +18,13 @@
 */
 
 import { Component, ElementRef, forwardRef, Input, OnInit, ViewChild } from '@angular/core';
-import { NG_VALUE_ACCESSOR, ControlValueAccessor } from '@angular/forms';
-import { KsSequenceEditorComponent, BACKGROUND_ANIMATIONS, SequenceItemInfo } from '../../widgets/ks-sequence-editor/ks-sequence-editor.component';
-import { DateAndTime, KsDateTime, KsTimeZone, DateTimeField } from 'ks-date-time-zone';
+import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { DateAndTime, DateTimeField, KsDateTime, KsTimeZone } from 'ks-date-time-zone';
 import { abs, div_tt0, max, min } from 'ks-math';
+import { padLeft } from 'ks-util';
 import { timer } from 'rxjs';
 import { currentMinuteMillis, SVC_MAX_YEAR, SVC_MIN_YEAR } from '../../app.service';
-import { padLeft } from 'ks-util';
+import { BACKGROUND_ANIMATIONS, KsSequenceEditorComponent, SequenceItemInfo } from '../../widgets/ks-sequence-editor/ks-sequence-editor.component';
 
 export const SVC_TIME_EDITOR_VALUE_ACCESSOR: any = {
   provide: NG_VALUE_ACCESSOR,
@@ -81,7 +81,7 @@ export class SvcTimeEditorComponent extends KsSequenceEditorComponent implements
     if (this._localTimeValue !== newValue) {
       this._localTimeValue = newValue;
 
-      let newTime: number = undefined;
+      let newTime: number;
 
       if (newValue) {
         const match = /(\d\d\d\d)-(\d\d)-(\d\d)T(\d\d):(\d\d)/.exec(newValue);
