@@ -114,7 +114,7 @@ export abstract class GenericView implements AfterViewInit {
   protected readonly mediumLabelFont = '11px Arial, Helvetica, sans-serif';
   protected readonly smallLabelFont  = '10px Arial, Helvetica, sans-serif';
 
-  @ViewChild(KsMarqueeComponent, {read: ElementRef}) protected marqueeRef: ElementRef;
+  @ViewChild(KsMarqueeComponent, { read: ElementRef, static: false }) protected marqueeRef: ElementRef;
 
   public marqueeText = '';
 

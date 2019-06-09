@@ -1,6 +1,6 @@
 {
   "name": "svc-ng",
-  "version": "1.6.0",
+  "version": "1.7.0",
   "license": "MIT AND GPL-3.0-or-later",
   "author": "Kerry Shetline <kerry@shetline.com>",
   "scripts": {
@@ -9,7 +9,8 @@
     "build": "ng build --prod",
     "test": "ng test",
     "lint": "ng lint",
-    "e2e": "ng e2e"
+    "e2e": "ng e2e",
+    "postinstall": "bash ./dev-tools/patch-ngprime-for-ivy.sh && ivy-ngcc"
   },
   "private": true,
   "dependencies": {

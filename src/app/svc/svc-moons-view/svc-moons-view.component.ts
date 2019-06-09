@@ -96,8 +96,8 @@ export class SvcMoonsViewComponent extends GenericPlanetaryView implements After
   private zoom = SvcMoonsViewComponent.zoomToZoomSteps(DEFAULT_ZOOM);
   private initialZoomScale: number;
 
-  @ViewChild('canvasWrapper') private wrapperRef: ElementRef;
-  @ViewChild('orbitCanvas') private canvasRef: ElementRef;
+  @ViewChild('canvasWrapper', { static: true }) private wrapperRef: ElementRef;
+  @ViewChild('orbitCanvas', { static: true }) private canvasRef: ElementRef;
 
   constructor(appService: AppService, private astroDataService: AstroDataService, private httpClient: HttpClient) {
     super(appService, CurrentTab.MOONS_GRS);

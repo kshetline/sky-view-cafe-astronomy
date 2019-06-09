@@ -20,7 +20,7 @@
       <button pButton type="button" label="Delete" (click)="openDeleteDialog()"></button>
     </div>
   </div>
-  <p-dialog header="Save Location" [modal]="true" [(visible)]="showSaveDialog" width="350" height="190">
+  <p-dialog header="Save Location" [modal]="true" [(visible)]="showSaveDialog" [style]="{width: '350px', height: '190px'}">
     <div style="height: 60px;">
       Save location as:&nbsp;
       <ks-dropdown #saveNameDropdown [(ngModel)]="selectedName" [options]="saveDialogNames" [editable]="true" [style]="{width: '200px'}"></ks-dropdown>
@@ -32,9 +32,9 @@
         <button type="button" pButton icon="fas fa-check" (click)="doSave()" label="OK" [disabled]="!selectedName.trim()"></button>
       </div>
     </p-footer>
-    <p-confirmDialog key="save-confirm" header="Same location name in use" icon="fas fa-question-circle" width="400" appendTo="body"></p-confirmDialog>
+    <p-confirmDialog key="save-confirm" header="Same location name in use" icon="fas fa-question-circle" [style]="{width: '400px'}" appendTo="body"></p-confirmDialog>
   </p-dialog>
-  <p-dialog header="Delete Location" [modal]="true" [(visible)]="showDeleteDialog" width="350" height="165">
+  <p-dialog header="Delete Location" [modal]="true" [(visible)]="showDeleteDialog" [style]="{width: '350px', height: '165px'}">
     <div style="height: 35px;">
       <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="4px">
         <span>Location to delete:&nbsp;</span>

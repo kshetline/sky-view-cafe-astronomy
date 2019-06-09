@@ -45,7 +45,7 @@ export class SvcPreferencesDialogComponent {
   private twilightDegrees = 12;
   private twilightMinutes = 80;
 
-  @ViewChild('defaultLocationDropdown') private defaultLocationDropdown: KsDropdownComponent;
+  @ViewChild('defaultLocationDropdown', { static: true }) private defaultLocationDropdown: KsDropdownComponent;
 
 // SKY, ECLIPTIC, ORBITS, MOONS_GRS, INSOLATION, MAP, CALENDAR, TIME, TABLES
   tabs: MenuItemPlus[] = [

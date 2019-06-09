@@ -47,7 +47,7 @@ export class KsDropdownComponent implements ControlValueAccessor, OnInit {
   private onChangeCallback: (_: any) => void = noop;
   private usingTouch = false;
 
-  @ViewChild('pDropdown') private pDropdown: Dropdown;
+  @ViewChild('pDropdown', { static: true }) private pDropdown: Dropdown;
 
   public primeOptions: SelectItem[] = [];
   public selectOptions: string[] = [];
@@ -56,7 +56,7 @@ export class KsDropdownComponent implements ControlValueAccessor, OnInit {
 
   @Output() onFocus: EventEmitter<any> = new EventEmitter();
   @Output() onBlur: EventEmitter<any> = new EventEmitter();
-  @Input() autoWidth = true;
+  @Input() autoWidth = false; // TODO: Add my own support for autoWidth, now that PrimeNG doesn't support it?
   @Input() editable = false;
   @Input() scrollHeight = '200px';
   @Input() style = '';

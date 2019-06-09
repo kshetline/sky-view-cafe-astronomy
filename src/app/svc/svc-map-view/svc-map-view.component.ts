@@ -95,8 +95,8 @@ export class SvcMapViewComponent extends GenericView implements AfterViewInit {
   private lastEclipseCenterLongitude = 0;
   private activeEclipse = false;
 
-  @ViewChild('canvasWrapper') private wrapperRef: ElementRef;
-  @ViewChild('mapCanvas') private canvasRef: ElementRef;
+  @ViewChild('canvasWrapper', { static: true }) private wrapperRef: ElementRef;
+  @ViewChild('mapCanvas', { static: true }) private canvasRef: ElementRef;
 
   public showLocationDialog = false;
   public latitude: number;

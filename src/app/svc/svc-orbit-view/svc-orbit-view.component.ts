@@ -145,8 +145,8 @@ export class SvcOrbitViewComponent extends GenericPlanetaryView implements After
   public rotation_xz = 0.0;
   public rotation_yz = 0.0;
 
-  @ViewChild('canvasWrapper') private wrapperRef: ElementRef;
-  @ViewChild('orbitCanvas') private canvasRef: ElementRef;
+  @ViewChild('canvasWrapper', { static: true }) private wrapperRef: ElementRef;
+  @ViewChild('orbitCanvas', { static: true }) private canvasRef: ElementRef;
 
   constructor(appService: AppService) {
     super(appService, CurrentTab.ORBITS);

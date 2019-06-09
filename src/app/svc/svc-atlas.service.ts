@@ -65,7 +65,8 @@ export interface AtlasLocation {
 
 @Injectable()
 export class SvcAtlasService {
-  private static states: string[] = null;
+  private static states: string[];
+  private static statesPromise: Promise<string[]>;
 
   private hostname: string;
 
@@ -93,23 +94,27 @@ export class SvcAtlasService {
   public getStates(): Promise<string[]> {
     if (SvcAtlasService.states)
       return Promise.resolve(SvcAtlasService.states);
+    else if (SvcAtlasService.statesPromise)
+      return SvcAtlasService.statesPromise;
 
     const localTesting = (this.hostname === 'localhost' || this.hostname === '127.0.0.1');
 
     if (localTesting) {
-      return this.httpClient.jsonp<string[]>
+      SvcAtlasService.statesPromise = this.httpClient.jsonp<string[]>
         ('https://test.skyviewcafe.com/states', 'callback').toPromise().then(data => {
           SvcAtlasService.states = data;
 
           return data;
-        });
+        }, reason => { console.log(reason); return []; });
     }
     else {
-      return this.httpClient.get<string[]>('/states').toPromise().then(data => {
+      SvcAtlasService.statesPromise = this.httpClient.get<string[]>('/states').toPromise().then(data => {
         SvcAtlasService.states = data;
 
         return data;
       });
     }
+
+    return SvcAtlasService.statesPromise;
   }
 }

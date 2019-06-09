@@ -40,8 +40,8 @@ export class KsMarqueeComponent implements AfterViewInit, OnDestroy {
   private animationWidth: number;
   private animationDuration: number;
 
-  @ViewChild('wrapper') wrapperRef: ElementRef;
-  @ViewChild('marquee') marqueeRef: ElementRef;
+  @ViewChild('wrapper', { static: true }) wrapperRef: ElementRef;
+  @ViewChild('marquee', { static: true }) marqueeRef: ElementRef;
 
   @Input() get text(): string { return this._text; }
   set text(value: string) {

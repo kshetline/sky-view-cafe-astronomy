@@ -1,4 +1,4 @@
-<p-dialog header="Change Location" [modal]="true" [(visible)]="visible" width="425" height="220"
+<p-dialog header="Change Location" [modal]="true" [(visible)]="visible" [style]="{width: '425px', height: '220px'}"
           (keyup)="onKey($event)">
   <div class="zone-choices">
     Change location to {{formattedLatitude}}, {{formattedLongitude}} and:<br>

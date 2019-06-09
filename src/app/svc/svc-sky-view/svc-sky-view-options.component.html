@@ -1,7 +1,7 @@
 <div class="flex-container options" fxLayout="column" fxLayoutAlign="start stretch" fxLayoutGap="4px">
-  <ks-dropdown fxFlex="0 0 auto" [options]="viewTypes" [(ngModel)]="viewType" [autoWidth]="false"></ks-dropdown>
-  <ks-dropdown fxFlex="0 0 auto" [options]="skyColors" [(ngModel)]="skyColor" [autoWidth]="false"></ks-dropdown>
-  <p-dropdown fxFlex="0 0 auto" [options]="additionals" [(ngModel)]="additional" [autoWidth]="false"
+  <ks-dropdown fxFlex="0 0 auto" [options]="viewTypes" [(ngModel)]="viewType"></ks-dropdown>
+  <ks-dropdown fxFlex="0 0 auto" [options]="skyColors" [(ngModel)]="skyColor"></ks-dropdown>
+  <p-dropdown fxFlex="0 0 auto" [options]="additionals" [(ngModel)]="additional"
     [disabled]="!asteroidsReady"></p-dropdown>
   <ks-checkbox fxFlex="0 0 auto" [(ngModel)]="refraction" binary="true" label="Refraction effect"
     [disabled]="viewType > 6"></ks-checkbox>

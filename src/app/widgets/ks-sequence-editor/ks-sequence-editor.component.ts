@@ -102,7 +102,7 @@ export class KsSequenceEditorComponent implements AfterViewInit, OnInit, OnDestr
   private hasHiddenInputFocus = false;
   private getCharFromInputEvent = false;
 
-  @ViewChild('canvas') private canvasRef: ElementRef;
+  @ViewChild('canvas', { static: true }) private canvasRef: ElementRef;
 
   protected canvas: HTMLCanvasElement;
   protected signDigit = -1;

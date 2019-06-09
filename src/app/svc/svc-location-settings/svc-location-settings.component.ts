@@ -46,8 +46,8 @@ export class SvcLocationSettingsComponent {
   makeDefault = false;
   mapsReady = false;
 
-  @ViewChild('saveNameDropdown') private saveNameDropdown: KsDropdownComponent;
-  @ViewChild('deleteNameDropdown') private deleteNameDropdown: KsDropdownComponent;
+  @ViewChild('saveNameDropdown', { static: true }) private saveNameDropdown: KsDropdownComponent;
+  @ViewChild('deleteNameDropdown', { static: true }) private deleteNameDropdown: KsDropdownComponent;
 
   constructor(private app: AppService, private confirmationService: ConfirmationService) {
     app.getLocationUpdates(() => this.buildLocationMenu());

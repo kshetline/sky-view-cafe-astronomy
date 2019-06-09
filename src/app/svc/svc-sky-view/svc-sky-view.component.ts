@@ -139,8 +139,8 @@ export class SvcSkyViewComponent extends GenericSkyView implements AfterViewInit
   public facingOrigin = 'W of S';
   public trackingPlanet = NO_SELECTION;
 
-  @ViewChild('canvasWrapper') private wrapperRef: ElementRef;
-  @ViewChild('skyCanvas') private canvasRef: ElementRef;
+  @ViewChild('canvasWrapper', { static: true }) private wrapperRef: ElementRef;
+  @ViewChild('skyCanvas', { static: true }) private canvasRef: ElementRef;
 
   private readonly gridFont  = 'italic bold 14px Arial, Helvetica, sans-serif';
 

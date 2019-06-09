@@ -53,7 +53,7 @@ export class SvcTimeEditorComponent extends KsSequenceEditorComponent implements
   private _maxYear: number;
   private _localTimeValue: string;
 
-  @ViewChild('localTime') private localTimeRef: ElementRef;
+  @ViewChild('localTime', { static: true }) private localTimeRef: ElementRef;
   private localTime: HTMLInputElement;
 
   localTimeMin: string;

@@ -65,10 +65,10 @@ export class SvcTableViewComponent implements AfterViewInit {
   private wrapper: HTMLDivElement;
   private zone: string;
 
-  @ViewChild('wrapper') private wrapperRef: ElementRef;
-  @ViewChild('tableContainer') private tableContainerRef: ElementRef;
-  @ViewChild('tableTypesDropdown') private tableTypesDropdown: ElementRef;
-  @ViewChild('planetsDropdown') private planetsDropdown: ElementRef;
+  @ViewChild('wrapper', { static: true }) private wrapperRef: ElementRef;
+  @ViewChild('tableContainer', { static: true }) private tableContainerRef: ElementRef;
+  @ViewChild('tableTypesDropdown', { static: true }) private tableTypesDropdown: ElementRef;
+  @ViewChild('planetsDropdown', { static: true }) private planetsDropdown: ElementRef;
 
   planetChoices: SelectItem[] = [];
 
@@ -105,8 +105,6 @@ export class SvcTableViewComponent implements AfterViewInit {
         setTimeout(() => {
           this.throttledResize();
           this.updateView();
-          (<any> this.tableTypesDropdown).updateDimensions();
-          (<any> this.planetsDropdown).updateDimensions();
         });
       }
     });
@@ -288,9 +286,5 @@ export class SvcTableViewComponent implements AfterViewInit {
 
     if (this._tableType === TableType.RISE_SET_TIMES)
       this.planetChoices.splice(4, 1); // Remove Earth
-
-    setTimeout(() => {
-      (<any> this.planetsDropdown).updateDimensions();
-    });
   }
 }

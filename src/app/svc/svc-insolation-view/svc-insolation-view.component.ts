@@ -78,8 +78,8 @@ export class SvcInsolationViewComponent extends GenericView implements AfterView
 
   private sanitizedOpenCrosshair: SafeStyle;
 
-  @ViewChild('canvasWrapper') private wrapperRef: ElementRef;
-  @ViewChild('insolationCanvas') private canvasRef: ElementRef;
+  @ViewChild('canvasWrapper', { static: true }) private wrapperRef: ElementRef;
+  @ViewChild('insolationCanvas', { static: true }) private canvasRef: ElementRef;
 
   skyColor = 'black';
   moonColor = 'black';

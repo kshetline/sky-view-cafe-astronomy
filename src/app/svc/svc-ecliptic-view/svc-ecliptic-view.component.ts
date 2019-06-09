@@ -77,8 +77,8 @@ export class SvcEclipticViewComponent extends GenericSkyView implements AfterVie
   private localHorizon = true;
   private showStars = true;
 
-  @ViewChild('canvasWrapper') private wrapperRef: ElementRef;
-  @ViewChild('skyCanvas') private canvasRef: ElementRef;
+  @ViewChild('canvasWrapper', { static: true }) private wrapperRef: ElementRef;
+  @ViewChild('skyCanvas', { static: true }) private canvasRef: ElementRef;
 
   constructor(appService: AppService) {
     super(appService, CurrentTab.ECLIPTIC);

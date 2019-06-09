@@ -43,7 +43,7 @@ export class KsCheckboxComponent implements ControlValueAccessor {
 
   public disabled = false;
 
-  @ViewChild('checkbox') private checkboxRef: ElementRef;
+  @ViewChild('checkbox', { static: true }) private checkboxRef: ElementRef;
 
   @Output() onFocus: EventEmitter<any> = new EventEmitter();
   @Output() onBlur: EventEmitter<any> = new EventEmitter();

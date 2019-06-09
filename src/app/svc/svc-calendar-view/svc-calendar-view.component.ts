@@ -128,11 +128,11 @@ export class SvcCalendarViewComponent implements AfterViewInit {
     {planet: SUN,     altitude: -18}
   ];
 
-  @ViewChild('wrapper') private wrapperRef: ElementRef;
-  @ViewChild('canvas') private canvasRef: ElementRef;
-  @ViewChild('calendarTable') private calendarTableRef: ElementRef;
-  @ViewChild('titleRow') private titleRowRef: ElementRef;
-  @ViewChild('weekdaysRow') private weekdaysRowRef: ElementRef;
+  @ViewChild('wrapper', { static: true }) private wrapperRef: ElementRef;
+  @ViewChild('canvas', { static: true }) private canvasRef: ElementRef;
+  @ViewChild('calendarTable', { static: true }) private calendarTableRef: ElementRef;
+  @ViewChild('titleRow', { static: true }) private titleRowRef: ElementRef;
+  @ViewChild('weekdaysRow', { static: true }) private weekdaysRowRef: ElementRef;
 
   title: string;
   calendar: DateInfo[][] = [];

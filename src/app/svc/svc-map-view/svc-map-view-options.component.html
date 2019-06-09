@@ -3,7 +3,7 @@
   <button pButton type="button" label="Subsolar point" (click)="goToSubsolarPoint()"></button>
   <button pButton type="button" label="Greatest eclipse" (click)="goToEclipseCenter()" [disabled]="!eclipseActive"></button>
   <hr>
-  <ks-dropdown fxFlex="0 0 auto" [options]="mapTypes" [(ngModel)]="mapType" [autoWidth]="false"></ks-dropdown>
+  <ks-dropdown fxFlex="0 0 auto" [options]="mapTypes" [(ngModel)]="mapType"></ks-dropdown>
   <ks-checkbox fxFlex="0 0 auto" [(ngModel)]="showDayNight" binary="true" label="Show day/night"></ks-checkbox>
   <ks-checkbox fxFlex="0 0 auto" [(ngModel)]="showEclipseShadows" binary="true" label="Show eclipse shadows"></ks-checkbox>
   <ks-checkbox fxFlex="0 0 auto" [(ngModel)]="showMarkers" binary="true" label="Show location markers"></ks-checkbox>

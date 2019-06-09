@@ -56,9 +56,9 @@ export class SvcAtlasDialogComponent {
   private map: google.maps.Map;
   private marker: google.maps.Marker;
 
-  @ViewChild('searchField') private searchField: ElementRef;
-  @ViewChild('atlasMap') private atlasMap: ElementRef;
-  @ViewChild('locationTable') private locationTable: Table;
+  @ViewChild('searchField', { static: true }) private searchField: ElementRef;
+  @ViewChild('atlasMap', { static: true }) private atlasMap: ElementRef;
+  @ViewChild('locationTable', { static: true }) private locationTable: Table;
 
   locations: LocationInfo[] = [];
   city = '';

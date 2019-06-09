@@ -108,17 +108,9 @@
     "use-pipe-transform-interface": true,
     "component-class-suffix": true,
     "directive-class-suffix": true,
-    "pipe-naming": [
-      true,
-      "camelCase",
-      ["my", "ks", "svc"]
-    ],
     "prefer-const": true,
     "no-attribute-decorator": true,
     "no-forward-ref": false,
-    "import-destructuring-spacing": true,
-    "no-access-missing-member": true,
-    "templates-use-public": true,
-    "invoke-injectable": true
+    "import-destructuring-spacing": true
   }
 }
