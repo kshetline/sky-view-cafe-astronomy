@@ -44,7 +44,7 @@ export class SvcTableViewOptionsComponent implements AfterViewInit {
     {label: 'Astronomical Twilight (-18°)', value: -18.0}
   ];
 
-  public twilightDisabled = false;
+  twilightDisabled = false;
 
   constructor(private appService: AppService) {
     appService.getUserSettingUpdates((setting: UserSetting) => {

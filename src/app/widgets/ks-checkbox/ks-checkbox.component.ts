@@ -41,7 +41,7 @@ export class KsCheckboxComponent implements ControlValueAccessor {
   private onTouchedCallback: () => void = noop;
   private onChangeCallback: (_: any) => void = noop;
 
-  public disabled = false;
+  disabled = false;
 
   @ViewChild('checkbox', { static: true }) private checkboxRef: ElementRef;
 

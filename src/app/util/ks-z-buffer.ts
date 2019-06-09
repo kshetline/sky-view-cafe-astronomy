@@ -40,12 +40,12 @@ export class ZBuffer {
   private items: ZBufferItem[] = [];
   private sorted = true;
 
-  public clear(): void {
+  clear(): void {
     this.items = [];
     this.sorted = true;
   }
 
-  public addFilledRect(color: string, x: number, y: number, w: number, h: number, z: number): void {
+  addFilledRect(color: string, x: number, y: number, w: number, h: number, z: number): void {
     this.items.push({
       action: DrawAction.FILLED_RECT,
       color: color,
@@ -58,7 +58,7 @@ export class ZBuffer {
     this.sorted = false;
   }
 
-  public addLine(color: string, x1: number, y1: number, x2: number, y2: number, z: number, heavy = false): void {
+  addLine(color: string, x1: number, y1: number, x2: number, y2: number, z: number, heavy = false): void {
     this.items.push({
       action: DrawAction.LINE,
       color: color,
@@ -72,7 +72,7 @@ export class ZBuffer {
     this.sorted = false;
   }
 
-  public addCircle(color: string, x: number, y: number, r: number, z: number): void {
+  addCircle(color: string, x: number, y: number, r: number, z: number): void {
     this.items.push({
       action: DrawAction.CIRCLE,
       color: color,
@@ -84,7 +84,7 @@ export class ZBuffer {
     this.sorted = false;
   }
 
-  public addRect(color: string, x: number, y: number, w: number, h: number, z: number): void {
+  addRect(color: string, x: number, y: number, w: number, h: number, z: number): void {
     this.items.push({
       action: DrawAction.RECT,
       color: color,
@@ -97,7 +97,7 @@ export class ZBuffer {
     this.sorted = false;
   }
 
-  public draw(context: CanvasRenderingContext2D, maxZ = Number.MAX_VALUE): void {
+  draw(context: CanvasRenderingContext2D, maxZ = Number.MAX_VALUE): void {
     if (!this.sorted) {
       this.items = sortBy(this.items, [(item: ZBufferItem) => { return item.z; }]);
       this.sorted = true;
@@ -114,22 +114,22 @@ export class ZBuffer {
         case DrawAction.FILLED_RECT:
           context.fillStyle = item.color;
           context.fillRect(item.x1, item.y1, item.w, item.h);
-        break;
+          break;
 
         case DrawAction.LINE:
           context.strokeStyle = item.color;
           strokeLine(context, item.x1, item.y1, item.x2, item.y2);
-        break;
+          break;
 
         case DrawAction.CIRCLE:
           context.strokeStyle = item.color;
           strokeCircle(context, item.x1, item.y1, item.r);
-        break;
+          break;
 
         case DrawAction.RECT:
           context.strokeStyle = item.color;
           context.strokeRect(item.x1, item.y1, item.w, item.h);
-        break;
+          break;
       }
 
       if (item.heavy)

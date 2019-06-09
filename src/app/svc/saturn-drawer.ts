@@ -20,14 +20,14 @@
   other uses are restricted.
 */
 
-import { PlanetDrawer } from './planet-drawer';
 import { SATURN_FLATTENING } from 'ks-astronomy';
 import { mod } from 'ks-math';
+import { PlanetDrawer } from './planet-drawer';
 
 export class SaturnDrawer extends PlanetDrawer {
   private static saturnImage: HTMLImageElement;
 
-  public static getSaturnDrawer(): Promise<SaturnDrawer> {
+  static getSaturnDrawer(): Promise<SaturnDrawer> {
     return new Promise<SaturnDrawer>((resolve, reject) => {
       const image = new Image();
 
@@ -43,7 +43,7 @@ export class SaturnDrawer extends PlanetDrawer {
     });
   }
 
-  private constructor () {
+  private constructor() {
     super(SaturnDrawer.saturnImage, SATURN_FLATTENING, '#FFFF33');
   }
 

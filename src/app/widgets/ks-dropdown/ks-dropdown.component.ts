@@ -49,10 +49,10 @@ export class KsDropdownComponent implements ControlValueAccessor, OnInit {
 
   @ViewChild('pDropdown', { static: true }) private pDropdown: Dropdown;
 
-  public primeOptions: SelectItem[] = [];
-  public selectOptions: string[] = [];
-  public disabled = false;
-  public useSelect = true;
+  primeOptions: SelectItem[] = [];
+  selectOptions: string[] = [];
+  disabled = false;
+  useSelect = true;
 
   @Output() onFocus: EventEmitter<any> = new EventEmitter();
   @Output() onBlur: EventEmitter<any> = new EventEmitter();
@@ -179,7 +179,7 @@ export class KsDropdownComponent implements ControlValueAccessor, OnInit {
     }
   }
 
-  public applyFocus(): void {
+  applyFocus(): void {
     this.pDropdown.applyFocus();
   }
 

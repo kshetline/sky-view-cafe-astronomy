@@ -56,10 +56,6 @@ export class SvcAtlasDialogComponent {
   private map: google.maps.Map;
   private marker: google.maps.Marker;
 
-  @ViewChild('searchField', { static: true }) private searchField: ElementRef;
-  @ViewChild('atlasMap', { static: true }) private atlasMap: ElementRef;
-  @ViewChild('locationTable', { static: true }) private locationTable: Table;
-
   locations: LocationInfo[] = [];
   city = '';
   emptyMessage = '';
@@ -70,17 +66,20 @@ export class SvcAtlasDialogComponent {
   messages: Message[] = [];
   busy: Promise<any> = null;
 
+  @ViewChild('searchField', { static: true }) private searchField: ElementRef;
+  @ViewChild('atlasMap', { static: true }) private atlasMap: ElementRef;
+  @ViewChild('locationTable', { static: true }) private locationTable: Table;
+
   @Input() get extended(): boolean { return this._extended; }
-  @Output() extendedChange: EventEmitter<any> = new EventEmitter();
   set extended(isExtended: boolean) {
     if (this._extended !== isExtended) {
       this._extended = isExtended;
       this.extendedChange.emit(isExtended);
     }
   }
+  @Output() extendedChange: EventEmitter<any> = new EventEmitter();
 
   @Input() get visible(): boolean { return this._visible; }
-  @Output() visibleChange: EventEmitter<any> = new EventEmitter();
   set visible(isVisible: boolean) {
     if (this._visible !== isVisible) {
       this._visible = isVisible;
@@ -108,9 +107,9 @@ export class SvcAtlasDialogComponent {
       }
     }
   }
+  @Output() visibleChange: EventEmitter<any> = new EventEmitter();
 
   @Input() get selection(): LocationInfo { return this._selection; }
-  @Output() selectionChange: EventEmitter<any> = new EventEmitter();
   set selection(newSelection: LocationInfo) {
     if (this._selection !== newSelection) {
       this._selection = newSelection;
@@ -118,15 +117,16 @@ export class SvcAtlasDialogComponent {
       this.showMap();
     }
   }
+  @Output() selectionChange: EventEmitter<any> = new EventEmitter();
 
   @Input() get state(): string { return this._state; }
-  @Output() stateChange: EventEmitter<any> = new EventEmitter();
   set state(newState: string) {
     if (this._state !== newState) {
       this._state = (newState && newState.includes('---') ? '' : newState);
       this.stateChange.emit(this._state);
     }
   }
+  @Output() stateChange: EventEmitter<any> = new EventEmitter();
 
   private static stripNameQualifiers(name: string): string {
     while (true) {
@@ -235,7 +235,7 @@ export class SvcAtlasDialogComponent {
     searchWithID(this.searchId);
   }
 
-  public setLocation(): void {
+  setLocation(): void {
     const loc = this.selection;
 
     this.visible = false;
@@ -244,7 +244,7 @@ export class SvcAtlasDialogComponent {
   }
 
   // noinspection JSMethodCanBeStatic
-  public showTooltip(tooltip: string): string {
+  showTooltip(tooltip: string): string {
     if (!isIOS())
       return tooltip;
     else

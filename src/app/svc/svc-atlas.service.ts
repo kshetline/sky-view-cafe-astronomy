@@ -24,8 +24,8 @@
   other uses are restricted.
 */
 
-import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { Injectable } from '@angular/core';
 import { urlEncodeParams } from 'ks-util';
 
 export interface AtlasResults {
@@ -74,7 +74,7 @@ export class SvcAtlasService {
     this.hostname = document.location.hostname;
   }
 
-  public search(q: string, extend?: boolean): Promise<AtlasResults> {
+  search(q: string, extend?: boolean): Promise<AtlasResults> {
     const localTesting = (this.hostname === 'localhost' || this.hostname === '127.0.0.1');
     const params = urlEncodeParams({
       client: 'web',
@@ -91,7 +91,7 @@ export class SvcAtlasService {
     }
   }
 
-  public getStates(): Promise<string[]> {
+  getStates(): Promise<string[]> {
     if (SvcAtlasService.states)
       return Promise.resolve(SvcAtlasService.states);
     else if (SvcAtlasService.statesPromise)

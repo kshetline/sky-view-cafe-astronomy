@@ -142,8 +142,8 @@ export class SvcOrbitViewComponent extends GenericPlanetaryView implements After
   private zoom = SvcOrbitViewComponent.zoomToZoomSteps(scales[this.extent]);
   private zoomLastSet = 0;
 
-  public rotation_xz = 0.0;
-  public rotation_yz = 0.0;
+  rotation_xz = 0.0;
+  rotation_yz = 0.0;
 
   @ViewChild('canvasWrapper', { static: true }) private wrapperRef: ElementRef;
   @ViewChild('orbitCanvas', { static: true }) private canvasRef: ElementRef;
@@ -655,18 +655,18 @@ export class SvcOrbitViewComponent extends GenericPlanetaryView implements After
             0 <= y && y < this.height);
   }
 
-  public resetOrientation(): void {
+  resetOrientation(): void {
     this.rotation_xz = 0.0;
     this.rotation_yz = 0.0;
     this.draw();
   }
 
-  public tapChangeOrientation(event: TouchEvent, deltaX: number, deltaY: number): void {
+  tapChangeOrientation(event: TouchEvent, deltaX: number, deltaY: number): void {
     event.preventDefault();
     this.changeOrientation(deltaX, deltaY);
   }
 
-  public changeOrientation(deltaX: number, deltaY: number): void {
+  changeOrientation(deltaX: number, deltaY: number): void {
     this.rotation_xz = mod2(floor(this.rotation_xz / 15 + deltaX) * 15, 360);
 
     if (this.rotation_xz === -180)
@@ -681,7 +681,7 @@ export class SvcOrbitViewComponent extends GenericPlanetaryView implements After
   }
 
   protected static translate(mode: DrawingMode, pt: Point3D, ctr: Point3D, viewingDistance: number,
-                              cos_xz: number, sin_xz: number, cos_yz: number, sin_yz: number): Point3D {
+                             cos_xz: number, sin_xz: number, cos_yz: number, sin_yz: number): Point3D {
     const x  = pt.x - ctr.x;
     const y  = pt.y - ctr.y;
     const z  = pt.z - ctr.z;

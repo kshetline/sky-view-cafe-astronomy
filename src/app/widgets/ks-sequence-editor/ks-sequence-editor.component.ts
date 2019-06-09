@@ -121,7 +121,7 @@ export class KsSequenceEditorComponent implements AfterViewInit, OnInit, OnDestr
   protected setupComplete = false;
   protected useAlternateTouchHandling = false;
 
-  public displayState = 'normal';
+  displayState = 'normal';
 
   protected static getPadding(metrics: FontMetrics): number {
     return max(metrics.descent + 1, floor(metrics.ascent / 2));

@@ -29,7 +29,7 @@ import { clone } from 'lodash';
 export class SvcGenericOptionsComponent {
   private _additional: ADDITIONALS | string = ADDITIONALS.NONE;
 
-  public asteroidsReady = false;
+  asteroidsReady = false;
 
   additionals: SelectItem[] = [
     {label: 'No asteroids or comets', value: ADDITIONALS.NONE},

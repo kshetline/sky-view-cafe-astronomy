@@ -19,17 +19,16 @@
   negotiated by contacting the author, Kerry Shetline, otherwise all
   other uses are restricted.
 */
-
-import { isNumber } from 'lodash';
 import { floor, mod, SphericalPosition } from 'ks-math';
+import { isNumber } from 'lodash';
 
 export class MilkyWay {
   private static milkyWayPixels: ImageData;
 
-  public static getMilkyWay(): Promise<MilkyWay> {
+  static getMilkyWay(): Promise<MilkyWay> {
     return new Promise<MilkyWay>((resolve, reject) => {
       if (MilkyWay.milkyWayPixels)
-        resolve(new MilkyWay);
+        resolve(new MilkyWay());
       else {
         const image = new Image();
 
@@ -59,7 +58,7 @@ export class MilkyWay {
   }
 
   // noinspection JSMethodCanBeStatic
-  public getBrightness(posOrLongitude: SphericalPosition | number, latitude?: number): number {
+  getBrightness(posOrLongitude: SphericalPosition | number, latitude?: number): number {
     let longitude: number;
 
     if (isNumber(posOrLongitude)) {

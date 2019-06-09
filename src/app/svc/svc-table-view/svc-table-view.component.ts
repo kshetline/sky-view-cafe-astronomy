@@ -81,8 +81,8 @@ export class SvcTableViewComponent implements AfterViewInit {
     {label: 'Galilean Moons/GRS', value: TableType.GALILEAN_MOONS}
   ];
 
-  public tableHtml = '&nbsp;';
-  public planetChoiceEnabled = true;
+  tableHtml = '&nbsp;';
+  planetChoiceEnabled = true;
 
   constructor(private appService: AppService, dataService: AstroDataService) {
     JupiterInfo.getJupiterInfo(dataService).then((jupiterInfo: JupiterInfo) => {
@@ -153,8 +153,8 @@ export class SvcTableViewComponent implements AfterViewInit {
     });
   }
 
-  public get tableType(): TableType { return this._tableType; }
-  public set tableType(value: TableType) {
+  get tableType(): TableType { return this._tableType; }
+  set tableType(value: TableType) {
     if (this._tableType !== value) {
       this._tableType = value;
       this.appService.updateUserSetting({view: VIEW_TABLES, property: PROPERTY_TABLE_TYPE, value: value, source: this});
@@ -163,8 +163,8 @@ export class SvcTableViewComponent implements AfterViewInit {
     }
   }
 
-  public get planetChoice(): number { return this._planetChoice; }
-  public set planetChoice(value: number) {
+  get planetChoice(): number { return this._planetChoice; }
+  set planetChoice(value: number) {
     if (this._planetChoice !== value) {
       this._planetChoice = value;
       this.appService.updateUserSetting({view: VIEW_TABLES, property: PROPERTY_PLANET_CHOICE, value: value, source: this});

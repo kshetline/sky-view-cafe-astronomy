@@ -47,7 +47,7 @@ export class KsTimeService {
     this.hostname = document.location.hostname;
   }
 
-  public getZoneForLocation(longitude: number, latitude: number, timestamp?: number | null, timeoutValue?: number): Promise<ZoneForLocation> {
+  getZoneForLocation(longitude: number, latitude: number, timestamp?: number | null, timeoutValue?: number): Promise<ZoneForLocation> {
     if (timestamp === null || timestamp === undefined)
       timestamp = Math.floor(Date.now() / 1000);
 

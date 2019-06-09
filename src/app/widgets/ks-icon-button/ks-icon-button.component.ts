@@ -40,7 +40,7 @@ export class KsIconButtonComponent {
     this._icon = value;
   }
 
-  public onClick(event: MouseEvent): void {
+  onClick(event: MouseEvent): void {
     event.stopPropagation();
     event.preventDefault();
 

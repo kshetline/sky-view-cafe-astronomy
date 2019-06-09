@@ -136,8 +136,8 @@ export class SvcSkyViewComponent extends GenericSkyView implements AfterViewInit
   private viewWidth = 180.0;
   private moonDrawer: MoonDrawer;
 
-  public facingOrigin = 'W of S';
-  public trackingPlanet = NO_SELECTION;
+  facingOrigin = 'W of S';
+  trackingPlanet = NO_SELECTION;
 
   @ViewChild('canvasWrapper', { static: true }) private wrapperRef: ElementRef;
   @ViewChild('skyCanvas', { static: true }) private canvasRef: ElementRef;

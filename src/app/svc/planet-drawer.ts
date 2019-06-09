@@ -55,16 +55,16 @@ export abstract class PlanetDrawer {
     return 0.0;
   }
 
-  public hasImage(): boolean {
+  hasImage(): boolean {
     return !!this.baseImage;
   }
 
-  public resetCachedTime(): void {
+  resetCachedTime(): void {
     this.lastTime = Number.MAX_VALUE;
   }
 
-  public draw(context: CanvasRenderingContext2D, time_JDE: number, cx: number, cy: number, discWidth: number,
-              flipHorizontal: boolean, flipVertical: boolean): void {
+  draw(context: CanvasRenderingContext2D, time_JDE: number, cx: number, cy: number, discWidth: number,
+       flipHorizontal: boolean, flipVertical: boolean): void {
     const discHeight = discWidth / this.flattening;
 
     this.width  = round(discWidth) + 1;

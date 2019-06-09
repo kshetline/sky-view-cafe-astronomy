@@ -34,7 +34,7 @@ export class JupiterDrawer extends PlanetDrawer {
 
   private grsLong = 267.0;
 
-  public static getJupiterDrawer(astroDataService: AstroDataService, httpClient: HttpClient): Promise<JupiterDrawer> {
+  static getJupiterDrawer(astroDataService: AstroDataService, httpClient: HttpClient): Promise<JupiterDrawer> {
     const jupiterInfoPromise = JupiterInfo.getJupiterInfo(astroDataService);
 
     if (JupiterDrawer.jupiterImage) {
@@ -74,15 +74,15 @@ export class JupiterDrawer extends PlanetDrawer {
   }
 
   // noinspection JSMethodCanBeStatic
-  public getGrsLatitude(): number {
+  getGrsLatitude(): number {
     return JupiterDrawer.imageGrsLat;
   }
 
-  public getJupiterInfo(): JupiterInfo {
+  getJupiterInfo(): JupiterInfo {
     return this.jupiterInfo;
   }
 
-  private constructor (private jupiterInfo: JupiterInfo) {
+  private constructor(private jupiterInfo: JupiterInfo) {
     super(JupiterDrawer.jupiterImage, JUPITER_FLATTENING, '#FFCC66');
   }
 

@@ -98,10 +98,10 @@ export class SvcMapViewComponent extends GenericView implements AfterViewInit {
   @ViewChild('canvasWrapper', { static: true }) private wrapperRef: ElementRef;
   @ViewChild('mapCanvas', { static: true }) private canvasRef: ElementRef;
 
-  public showLocationDialog = false;
-  public latitude: number;
-  public longitude: number;
-  public timezone: string;
+  showLocationDialog = false;
+  latitude: number;
+  longitude: number;
+  timezone: string;
 
   private static getImagePromise(path: string): Promise<HTMLImageElement> {
     return new Promise<HTMLImageElement>((resolve, reject) => {
@@ -520,21 +520,21 @@ export class SvcMapViewComponent extends GenericView implements AfterViewInit {
       this.marqueeText = '';
   }
 
-  public onClick(event: MouseEvent): void {
+  onClick(event: MouseEvent): void {
     if (this.withinPlot(event.offsetX, event.offsetY))
       this.goToLocation(this.y_to_latitude(event.offsetY - this.mapYOffset),
                         this.x_to_longitude(event.offsetX - this.xOffset));
   }
 
-  public goToSubsolarPoint(): void {
+  goToSubsolarPoint(): void {
     this.goToLocation(this.lastSunLatitude, this.lastSunLongitude);
   }
 
-  public goToEclipseCenter(): void {
+  goToEclipseCenter(): void {
     this.goToLocation(this.lastEclipseCenterLatitude, this.lastEclipseCenterLongitude);
   }
 
-  public goToLocation(lat: number, lon: number): void {
+  goToLocation(lat: number, lon: number): void {
     this.latitude = lat;
     this.longitude = lon;
 

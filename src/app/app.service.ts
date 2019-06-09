@@ -20,16 +20,16 @@
   other uses are restricted.
 */
 
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { DomSanitizer } from '@angular/platform-browser';
 import { NavigationEnd, Router } from '@angular/router';
 import { SolarSystem, StarCatalog } from 'ks-astronomy';
-import { BehaviorSubject, Observable, Subject, Subscription } from 'rxjs';
-import { AstroDataService } from './astronomy/astro-data.service';
-import { HttpClient } from '@angular/common/http';
-import { clone, compact, debounce, forEach, isEqual, isString, sortedIndexBy } from 'lodash';
-import { DomSanitizer } from '@angular/platform-browser';
 import { KsCalendar } from 'ks-date-time-zone';
 import { ceil } from 'ks-math';
+import { clone, compact, debounce, forEach, isEqual, isString, sortedIndexBy } from 'lodash';
+import { BehaviorSubject, Observable, Subject, Subscription } from 'rxjs';
+import { AstroDataService } from './astronomy/astro-data.service';
 
 export const SVC_MIN_YEAR = -6000;
 export const SVC_MAX_YEAR = 9999;
@@ -61,6 +61,11 @@ export interface AppEvent {
 export class Location {
   isDefault?: boolean;
 
+  constructor(public name: string, public latitude: number, public longitude: number,
+              public zone: string, isDefault?: boolean) {
+    this.isDefault = !!isDefault;
+  }
+
   static fromString(s: string): Location {
     const parts = s.split('\t');
 
@@ -80,11 +85,6 @@ export class Location {
     const strLocations = locations.map((location: Location) => location.toString());
 
     return strLocations.join('\n');
-  }
-
-  constructor(public name: string, public latitude: number, public longitude: number,
-              public zone: string, isDefault?: boolean) {
-    this.isDefault = Boolean(isDefault);
   }
 
   toString(): string {
@@ -131,7 +131,7 @@ export class AppService {
   private settingsObserver: Observable<UserSetting> = this.settingsSource.asObservable();
   private allSettings: {[view: string]: {[setting: string]: boolean | number | string}} = {};
   private debouncedSaveSettings: () => void;
-  private knownIanaTimezones: Set<String>;
+  private knownIanaTimezones: Set<string>;
   private _northAzimuth = false;
   private _defaultTab = CurrentTab.SKY;
   private _twilightByDegrees = true;
@@ -198,47 +198,47 @@ export class AppService {
     });
   }
 
-  public static get title(): string { return 'Sky View Café'; }
+  static get title(): string { return 'Sky View Café'; }
 
-  public get sanitizer(): DomSanitizer { return this._sanitizer; }
+  get sanitizer(): DomSanitizer { return this._sanitizer; }
 
-  public getAppEventUpdates(callback: (appEvent: AppEvent) => void): Subscription {
+  getAppEventUpdates(callback: (appEvent: AppEvent) => void): Subscription {
     return this.appEventObserver.subscribe(callback);
   }
-  public sendAppEvent(appEventOrName: AppEvent | string, value?: any): void {
+  sendAppEvent(appEventOrName: AppEvent | string, value?: any): void {
     if (isString(appEventOrName))
-      this._appEvent.next({name: <string> appEventOrName, value: value});
+      this._appEvent.next({name: appEventOrName, value: value});
     else
-      this._appEvent.next(<AppEvent> appEventOrName);
+      this._appEvent.next(appEventOrName);
   }
 
-  public getRightEdgeOfViewArea(): number {
+  getRightEdgeOfViewArea(): number {
     const qt = window.document.getElementById('quickTips');
     const lo = window.document.getElementById('locationAndOptions');
 
     return ceil(window.document.documentElement.clientWidth - qt.getBoundingClientRect().width - lo.getBoundingClientRect().width);
   }
 
-  public get time(): number { return this._time.getValue(); }
-  public set time(newTime: number) {
+  get time(): number { return this._time.getValue(); }
+  set time(newTime: number) {
     if (this._time.getValue() !== newTime)
       this._time.next(newTime);
   }
-  public getTimeUpdates(callback: (time: number) => void): Subscription {
+  getTimeUpdates(callback: (time: number) => void): Subscription {
     return this.timeObserver.subscribe(callback);
   }
 
-  public get location(): Location { return this._location.getValue(); }
-  public set location(newObserver: Location) {
+  get location(): Location { return this._location.getValue(); }
+  set location(newObserver: Location) {
     if (!isEqual(this._location.getValue(), newObserver))
       this._location.next(newObserver);
   }
-  public getLocationUpdates(callback: (observer: Location) => void): Subscription {
+  getLocationUpdates(callback: (observer: Location) => void): Subscription {
     return this.locationObserver.subscribe(callback);
   }
 
-  public get latitude(): number { return this._location.getValue().latitude; }
-  public set latitude(newLatitude: number) {
+  get latitude(): number { return this._location.getValue().latitude; }
+  set latitude(newLatitude: number) {
     if (this._location.getValue().latitude !== newLatitude) {
       const newLocation = clone(this._location.getValue());
 
@@ -248,8 +248,8 @@ export class AppService {
     }
   }
 
-  public get longitude(): number { return this._location.getValue().longitude; }
-  public set longitude(newLongitude: number) {
+  get longitude(): number { return this._location.getValue().longitude; }
+  set longitude(newLongitude: number) {
     if (this._location.getValue().longitude !== newLongitude) {
       const newLocation = clone(this._location.getValue());
 
@@ -259,8 +259,8 @@ export class AppService {
     }
   }
 
-  public get timeZone(): string { return this._location.getValue().zone; }
-  public set timeZone(newZone: string) {
+  get timeZone(): string { return this._location.getValue().zone; }
+  set timeZone(newZone: string) {
     if (this._location.getValue().zone !== newZone) {
       const newLocation = clone(this._location.getValue());
 
@@ -270,8 +270,9 @@ export class AppService {
     }
   }
 
-  public get locations(): Location[] { return this._locations; }
-  public addLocation(location: Location): void {
+  get locations(): Location[] { return this._locations; }
+
+  addLocation(location: Location): void {
     if (location.isDefault)
       this._locations.forEach(loc => loc.isDefault = false);
 
@@ -285,7 +286,8 @@ export class AppService {
 
     localStorage.setItem('locations', Location.toStringList(this._locations));
   }
-  public deleteLocation(locationName: string): void {
+
+  deleteLocation(locationName: string): void {
     const index = this._locations.findIndex(loc => loc.name === locationName);
 
     if (index >= 0) {
@@ -300,7 +302,8 @@ export class AppService {
       }
     }
   }
-  public setDefaultLocationByName(name: string): void {
+
+  setDefaultLocationByName(name: string): void {
     const match = this.locations.find(loc => loc.name === name);
 
     if (match) {
@@ -310,21 +313,21 @@ export class AppService {
     }
   }
 
-  public get currentTab(): CurrentTab { return this._currentTab.getValue(); }
-  public set currentTab(newTab: CurrentTab) {
+  get currentTab(): CurrentTab { return this._currentTab.getValue(); }
+  set currentTab(newTab: CurrentTab) {
     if (this._currentTab.getValue() !== newTab) {
       this._currentTab.next(newTab);
       this.router.navigate(['/' + tabNames[this._currentTab.getValue()]]);
     }
   }
-  public getCurrentTabUpdates(callback: (tabIndex: CurrentTab) => void): Subscription {
+  getCurrentTabUpdates(callback: (tabIndex: CurrentTab) => void): Subscription {
     return this.currentTabObserver.subscribe(callback);
   }
 
-  public getUserSettingUpdates(callback: (setting: UserSetting) => void): Subscription {
+  getUserSettingUpdates(callback: (setting: UserSetting) => void): Subscription {
     return this.settingsObserver.subscribe(callback);
   }
-  public updateUserSetting(setting: UserSetting): void {
+  updateUserSetting(setting: UserSetting): void {
     let viewSettings = this.allSettings[setting.view];
 
     if (!viewSettings)
@@ -338,7 +341,7 @@ export class AppService {
 
     this.settingsSource.next(setting);
   }
-  public requestViewSettings(view: string): void {
+  requestViewSettings(view: string): void {
     const viewSettings = this.allSettings[view];
 
     if (viewSettings) {
@@ -349,31 +352,31 @@ export class AppService {
     }
   }
 
-  public get solarSystem(): SolarSystem { return this._solarSystem; }
+  get solarSystem(): SolarSystem { return this._solarSystem; }
 
-  public get starCatalog(): StarCatalog { return this._starCatalog; }
+  get starCatalog(): StarCatalog { return this._starCatalog; }
 
-  public get starsReady(): boolean { return this._starsReady.getValue(); }
-  public getStarsReadyUpdate(callback: (initialized: boolean) => void): Subscription {
+  get starsReady(): boolean { return this._starsReady.getValue(); }
+  getStarsReadyUpdate(callback: (initialized: boolean) => void): Subscription {
     return this.starsReadyObserver.subscribe(callback);
   }
 
-  public get asteroidsReady(): boolean { return this._asteroidsReady.getValue(); }
-  public getAsteroidsReadyUpdate(callback: (initialized: boolean) => void): Subscription {
+  get asteroidsReady(): boolean { return this._asteroidsReady.getValue(); }
+  getAsteroidsReadyUpdate(callback: (initialized: boolean) => void): Subscription {
     return this.asteroidsReadyObserver.subscribe(callback);
   }
 
-  public setKnownIanaTimezones(zones: Set<String>): void {
+  setKnownIanaTimezones(zones: Set<string>): void {
     this.knownIanaTimezones = zones;
   }
 
-  public isKnownIanaTimezone(zone: string): boolean {
+  isKnownIanaTimezone(zone: string): boolean {
     return this.knownIanaTimezones && this.knownIanaTimezones.has(zone);
   }
 
-  public get northAzimuth(): boolean { return this._northAzimuth; }
+  get northAzimuth(): boolean { return this._northAzimuth; }
 
-  public get defaultTab(): CurrentTab { return this._defaultTab; }
+  get defaultTab(): CurrentTab { return this._defaultTab; }
 
   get twilightByDegrees(): boolean { return this._twilightByDegrees; }
 
@@ -394,12 +397,12 @@ export class AppService {
       return CalendarSetting.CUSTOM_GCD;
   }
 
-  public applyCalendarType(dateTime: KsCalendar): void {
+  applyCalendarType(dateTime: KsCalendar): void {
     if (dateTime)
       dateTime.setGregorianChange(this._gcDate);
   }
 
-  public get inkSaver(): boolean { return this._inkSaver; }
+  get inkSaver(): boolean { return this._inkSaver; }
 
   private checkAppSetting(property: string, value: any): void {
     if (property === PROPERTY_NORTH_AZIMUTH)

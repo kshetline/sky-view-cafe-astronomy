@@ -64,7 +64,7 @@ export abstract class GenericView implements AfterViewInit {
   private static _printing = new BehaviorSubject<boolean>(false);
   private static printingObserver: Observable<boolean> = GenericView._printing.asObservable();
 
-  public static get printing(): boolean {
+  static get printing(): boolean {
     return GenericView._printing.getValue();
   }
 
@@ -116,8 +116,7 @@ export abstract class GenericView implements AfterViewInit {
 
   @ViewChild(KsMarqueeComponent, { read: ElementRef, static: false }) protected marqueeRef: ElementRef;
 
-  public marqueeText = '';
-
+  marqueeText = '';
   cursor: SafeStyle;
 
   static initialize(): void {
@@ -138,7 +137,7 @@ export abstract class GenericView implements AfterViewInit {
     }
   }
 
-  public static getPrintingUpdate(callback: (printing: boolean) => void): Subscription {
+  static getPrintingUpdate(callback: (printing: boolean) => void): Subscription {
     return GenericView.printingObserver.subscribe(callback);
   }
 

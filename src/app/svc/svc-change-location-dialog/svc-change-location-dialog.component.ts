@@ -37,32 +37,31 @@ export class SvcChangeLocationDialogComponent {
   private _timezone;
   private hourOffset: number;
 
-  public formattedLatitude: string;
-  public formattedLongitude: string;
-  public formattedHourOffset: string;
-  public zoneChoice = '0';
-  public currentZone;
+  formattedLatitude: string;
+  formattedLongitude: string;
+  formattedHourOffset: string;
+  zoneChoice = '0';
+  currentZone;
 
   @Input() get visible(): boolean { return this._visible; }
-  @Output() visibleChange: EventEmitter<any> = new EventEmitter();
   set visible(isVisible: boolean) {
     if (this._visible !== isVisible) {
       this._visible = isVisible;
       this.visibleChange.emit(isVisible);
     }
   }
+  @Output() visibleChange: EventEmitter<any> = new EventEmitter();
 
   @Input() get latitude(): number { return this._latitude; }
-  @Output() latitudeChange: EventEmitter<any> = new EventEmitter();
   set latitude(value: number) {
     if (this._latitude !== value) {
       this._latitude = value;
       this.formattedLatitude = formatLatitude(value);
     }
   }
+  @Output() latitudeChange: EventEmitter<any> = new EventEmitter();
 
   @Input() get longitude(): number { return this._longitude; }
-  @Output() longitudeChange: EventEmitter<any> = new EventEmitter();
   set longitude(value: number) {
     if (this._longitude !== value) {
       this._longitude = value;
@@ -77,15 +76,16 @@ export class SvcChangeLocationDialogComponent {
         this.formattedHourOffset += '+' + (h >  9 ? '' : '0') +   h  + ':00';
     }
   }
+  @Output() longitudeChange: EventEmitter<any> = new EventEmitter();
 
   @Input() get timezone(): string { return this._timezone; }
-  @Output() timezoneChange: EventEmitter<any> = new EventEmitter();
   set timezone(value: string) {
     if (this._timezone !== value) {
       this._timezone = value;
       this.updateZoneChoice();
     }
   }
+  @Output() timezoneChange: EventEmitter<any> = new EventEmitter();
 
   constructor(private appService: AppService) {
     appService.getLocationUpdates((observer: Location) => {
@@ -109,7 +109,7 @@ export class SvcChangeLocationDialogComponent {
       this.goToLocation();
   }
 
-  public goToLocation(): void {
+  goToLocation(): void {
     this.visible = false;
 
     let newZone;

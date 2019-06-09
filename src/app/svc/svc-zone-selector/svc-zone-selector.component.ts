@@ -17,17 +17,17 @@
   OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-import { isNil, isUndefined } from 'lodash';
 import { Component, EventEmitter, forwardRef, OnInit, Output } from '@angular/core';
-import { NG_VALUE_ACCESSOR, ControlValueAccessor } from '@angular/forms';
+import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { KsTimeZone, RegionAndSubzones } from 'ks-date-time-zone';
+import { isNil, isUndefined } from 'lodash';
 import { timer } from 'rxjs';
 import { AppService } from '../../app.service';
-import { KsTimeZone, RegionAndSubzones } from 'ks-date-time-zone';
 
 export const SVC_ZONE_SELECTOR_VALUE_ACCESSOR: any = {
   provide: NG_VALUE_ACCESSOR,
   useExisting: forwardRef(() => SvcZoneSelectorComponent),
-  multi: true
+  multi: true,
 };
 
 const noop = () => {};
@@ -46,11 +46,11 @@ const LMT  = 'LMT';
   selector: 'svc-zone-selector',
   templateUrl: './svc-zone-selector.component.html',
   styleUrls: ['./svc-zone-selector.component.scss'],
-  providers: [SVC_ZONE_SELECTOR_VALUE_ACCESSOR]
+  providers: [SVC_ZONE_SELECTOR_VALUE_ACCESSOR],
 })
 export class SvcZoneSelectorComponent implements ControlValueAccessor, OnInit {
-  public regions: string[] = [UT_OPTION];
-  public subzones: string[] = [UT];
+  regions: string[] = [UT_OPTION];
+  subzones: string[] = [UT];
 
   private _region: string = this.regions[0];
   private _subzone: string = this.subzones[0];
@@ -61,13 +61,19 @@ export class SvcZoneSelectorComponent implements ControlValueAccessor, OnInit {
   private focusCount = 0;
   private onTouchedCallback: () => void = noop;
   private onChangeCallback: (_: any) => void = noop;
-  private knownIanaZones = new Set<String>();
+  private knownIanaZones = new Set<string>();
 
-  public disabled = false;
-  public error: string;
+  // tslint:disable:member-ordering
+  disabled = false;
+  error: string;
 
   @Output() onFocus: EventEmitter<any> = new EventEmitter();
   @Output() onBlur: EventEmitter<any> = new EventEmitter();
+
+  constructor(private appService: AppService) {
+    this.lastSubzones[this._region] = this._subzone;
+    this.subzonesByRegion[this._region] = this.subzones;
+  }
 
   get value(): string | null {
     if (!this._region || isNil(this._subzone)) {
@@ -157,7 +163,7 @@ export class SvcZoneSelectorComponent implements ControlValueAccessor, OnInit {
     // If focus is lost and hasn't come back to a different selection on the next event cycle, assume
     // the selector as a whole has lost focus.
     timer().subscribe(() => {
-        --this.focusCount;
+      --this.focusCount;
 
       if (!this.hasFocus) {
         this.onTouchedCallback();
@@ -198,11 +204,6 @@ export class SvcZoneSelectorComponent implements ControlValueAccessor, OnInit {
       this._value = this.value;
       this.onChangeCallback(this._value);
     }
-  }
-
-  constructor(private appService: AppService) {
-    this.lastSubzones[this._region] = this._subzone;
-    this.subzonesByRegion[this._region] = this.subzones;
   }
 
   ngOnInit(): void {

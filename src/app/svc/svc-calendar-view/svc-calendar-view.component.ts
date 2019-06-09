@@ -443,7 +443,7 @@ export class SvcCalendarViewComponent implements AfterViewInit {
     }
   }
 
-  public onClick(yearOrMillis: number, month?: number, day?: number): void {
+  onClick(yearOrMillis: number, month?: number, day?: number): void {
     if (month === undefined)
       this.appService.time = yearOrMillis;
     else {

@@ -563,7 +563,7 @@ export class SvcMoonsViewComponent extends GenericPlanetaryView implements After
             0 <= y && y < this.height);
   }
 
-  public static zoomToZoomSteps(zoom: number): number {
+  static zoomToZoomSteps(zoom: number): number {
     return min(max(0, round((log10(zoom) - LOG_MIN_ZOOM) / ZOOM_LOG_RANGE * ZOOM_STEPS)), ZOOM_STEPS);
   }
 }

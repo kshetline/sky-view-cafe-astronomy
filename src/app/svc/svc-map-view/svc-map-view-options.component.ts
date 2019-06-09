@@ -41,7 +41,7 @@ export class SvcMapViewOptionsComponent implements AfterViewInit {
   private _showMarkers = true;
   private _blink = true;
 
-  public eclipseActive = false;
+  eclipseActive = false;
 
   mapTypes: SelectItem[] = [
     {label: 'Terrain map', value: MapType.TERRAIN},
@@ -116,11 +116,11 @@ export class SvcMapViewOptionsComponent implements AfterViewInit {
     }
   }
 
-  public goToSubsolarPoint(): void {
+  goToSubsolarPoint(): void {
     this.appService.sendAppEvent(EVENT_MAP_GO_TO_SUBSOLAR_POINT);
   }
 
-  public goToEclipseCenter(): void {
+  goToEclipseCenter(): void {
     this.appService.sendAppEvent(EVENT_MAP_GO_TO_ECLIPSE_CENTER);
   }
 }

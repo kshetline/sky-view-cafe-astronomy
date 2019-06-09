@@ -24,13 +24,12 @@ import { ISkyObserver, MOON, SolarSystem } from 'ks-astronomy';
 import { abs, Angle, ceil, floor, interpolate, max, round, sqrt, TWO_PI, Unit } from 'ks-math';
 import { getPixel, setPixel } from 'ks-util';
 
-
 export class MoonDrawer {
   private moonPixels: ImageData;
   private canvas: HTMLCanvasElement;
   private scaledBuffer: ImageData;
 
-  public static getMoonDrawer(): Promise<MoonDrawer> {
+  static getMoonDrawer(): Promise<MoonDrawer> {
     return new Promise<MoonDrawer>((resolve, reject) => {
       const image = new Image();
 
@@ -85,7 +84,7 @@ export class MoonDrawer {
     return v0 * (1.0 - dy) + v1 * dy;
   }
 
-  public drawMoon(context: CanvasRenderingContext2D, solarSystem: SolarSystem, time_JDE: number,
+  drawMoon(context: CanvasRenderingContext2D, solarSystem: SolarSystem, time_JDE: number,
                   cx: number, cy: number, size: number, pixelsPerArcSec: number, pixelRatio = 1,
                   parallacticAngle?: Angle, observer?: ISkyObserver, showEclipses?: boolean): void {
     const originalImageSize = this.moonPixels.width;

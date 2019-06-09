@@ -44,7 +44,7 @@ export class SvcMoonsViewOptionsComponent implements AfterViewInit {
   private _fixedGrs = DEFAULT_FIXED_GRS;
   private _reverseZoom = ZOOM_STEPS - SvcMoonsViewComponent.zoomToZoomSteps(DEFAULT_ZOOM);
 
-  public readonly zoomSteps = ZOOM_STEPS;
+  readonly zoomSteps = ZOOM_STEPS;
 
   constructor(private appService: AppService) {
     appService.getUserSettingUpdates((setting: UserSetting) => {
@@ -143,7 +143,7 @@ export class SvcMoonsViewOptionsComponent implements AfterViewInit {
     }
   }
 
-  public setDefaultZoom(): void {
+  setDefaultZoom(): void {
     this.reverseZoom = ZOOM_STEPS - SvcMoonsViewComponent.zoomToZoomSteps(DEFAULT_ZOOM);
   }
 }

@@ -305,11 +305,11 @@ export class SvcEventNavigatorComponent implements AfterViewInit, OnDestroy {
     }
   }
 
-  public nextEvent(): void {
+  nextEvent(): void {
     this.getEvent(false);
   }
 
-  public previousEvent(): void {
+  previousEvent(): void {
     this.getEvent(true);
   }
 }

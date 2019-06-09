@@ -17,8 +17,8 @@
   OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { Injectable } from '@angular/core';
 import { AsteroidCometInfo, IAstroDataService } from 'ks-astronomy';
 
 @Injectable()
@@ -35,7 +35,7 @@ export class AstroDataService implements IAstroDataService {
   constructor(private httpClient: HttpClient) {
   }
 
-  public getStars(): Promise<ArrayBuffer> {
+  getStars(): Promise<ArrayBuffer> {
     if (AstroDataService.starData)
       return Promise.resolve(AstroDataService.starData);
     else if (AstroDataService.starDataPromise)
@@ -50,7 +50,7 @@ export class AstroDataService implements IAstroDataService {
     return AstroDataService.starDataPromise;
   }
 
-  public getGrsData(): Promise<ArrayBuffer> {
+  getGrsData(): Promise<ArrayBuffer> {
     if (AstroDataService.grsData)
       return Promise.resolve(AstroDataService.grsData);
     else if (AstroDataService.grsDataPromise)
@@ -65,7 +65,7 @@ export class AstroDataService implements IAstroDataService {
     return AstroDataService.grsDataPromise;
   }
 
-  public getAsteroidData(): Promise<AsteroidCometInfo[]> {
+  getAsteroidData(): Promise<AsteroidCometInfo[]> {
     if (AstroDataService.asteroidData)
       return Promise.resolve(AstroDataService.asteroidData);
     else if (AstroDataService.asteroidDataPromise)
@@ -80,13 +80,13 @@ export class AstroDataService implements IAstroDataService {
     return AstroDataService.asteroidDataPromise;
   }
 
-  public getCometData(): Promise<AsteroidCometInfo[]> {
+  getCometData(): Promise<AsteroidCometInfo[]> {
     if (AstroDataService.cometData)
       return Promise.resolve(AstroDataService.cometData);
     else if (AstroDataService.cometDataPromise)
       return AstroDataService.cometDataPromise;
 
-    return this.httpClient.get<AsteroidCometInfo[]>('/assets/resources/comets.json').toPromise().then(data => {
+    AstroDataService.cometDataPromise = this.httpClient.get<AsteroidCometInfo[]>('/assets/resources/comets.json').toPromise().then(data => {
       AstroDataService.cometData = data;
 
       return AstroDataService.cometData;
