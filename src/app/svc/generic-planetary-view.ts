@@ -1,5 +1,5 @@
 /*
-  Copyright © 2017-2018 Kerry Shetline, kerry@shetline.com.
+  Copyright © 2017-2019 Kerry Shetline, kerry@shetline.com.
 
   This code is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -152,6 +152,7 @@ const PLANET_EXTRA_SPAN     = 2;
 const STAR_REDUCED_SPAN     = 2;
 export const FAR_AWAY = 999999;
 
+// tslint:disable-next-line:variable-name
 const DIMMEST_AT_SCALE_1x1_STAR_IMAGE_INDEX = 100;
 
 const opacitiesOfWhite: string[] = [];

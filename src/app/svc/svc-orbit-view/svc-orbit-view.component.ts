@@ -85,7 +85,7 @@ enum DrawingMode { FULL_COLOR, LEFT_EYE, RIGHT_EYE }
 const orbitColors: string[][] = [];
 const SHADES = 50;
 
-(function(): void {
+((): void => {
   for (let i = 0; i < planetColors.length + 4; ++i) {
     const shades = [];
     let rgb: RGBA;
@@ -265,9 +265,7 @@ export class SvcOrbitViewComponent extends GenericPlanetaryView implements After
       const orbitStep = 1.0;
       this.zBuffer.clear();
 
-      for (let i = 0; i < this.planetsToDraw.length; ++i) {
-        const planet = this.planetsToDraw[i];
-
+      for (const planet of this.planetsToDraw) {
         // Don't draw an orbit for the Sun.
         if (planet === SUN)
           continue;
@@ -448,9 +446,7 @@ export class SvcOrbitViewComponent extends GenericPlanetaryView implements After
 
     let positions: ZSortablePlanet[] = [];
 
-    for (let i = 0; i < this.planetsToDraw.length; ++i) {
-      const planet = this.planetsToDraw[i];
-
+    for (const planet of this.planetsToDraw) {
       pt0 = dc.ss.getHeliocentricPosition(planet, dc.jde).xyz;
       SvcOrbitViewComponent.translate(mode, pt0, ctr, viewingDistance, cos_xz, sin_xz, cos_yz, sin_yz);
 

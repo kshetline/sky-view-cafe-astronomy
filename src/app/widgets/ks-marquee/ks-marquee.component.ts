@@ -1,5 +1,5 @@
 /*
-  Copyright © 2018 Kerry Shetline, kerry@shetline.com
+  Copyright © 2018-2019 Kerry Shetline, kerry@shetline.com
 
   MIT license: https://opensource.org/licenses/MIT
 
@@ -32,7 +32,7 @@ const MARQUEE_SPEED = 100; // pixels per second.
 })
 export class KsMarqueeComponent implements AfterViewInit, OnDestroy {
   private _text = '';
-  private resizeFunction: Function;
+  private resizeFunction: () => void;
   private wrapper: HTMLElement;
   private marquee: HTMLElement;
   private animationRequestId = 0;

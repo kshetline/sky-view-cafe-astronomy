@@ -1,5 +1,5 @@
 /*
-  Copyright © 2017-2018 Kerry Shetline, kerry@shetline.com.
+  Copyright © 2017-2019 Kerry Shetline, kerry@shetline.com.
 
   This code is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by

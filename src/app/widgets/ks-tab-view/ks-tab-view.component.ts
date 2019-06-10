@@ -1,5 +1,5 @@
 /*
-  Copyright © 2017 Kerry Shetline, kerry@shetline.com
+  Copyright © 2017-2019 Kerry Shetline, kerry@shetline.com
 
   MIT license: https://opensource.org/licenses/MIT
 
@@ -28,7 +28,7 @@ import { KsTabComponent } from '../ks-tab/ks-tab.component';
 export class KsTabViewComponent implements AfterContentInit {
   private _activeTab = -1;
 
-  @Output() onChange = new EventEmitter();
+  @Output() change = new EventEmitter();
 
   @ContentChildren(KsTabComponent) tabs: QueryList<KsTabComponent>;
 
@@ -38,7 +38,7 @@ export class KsTabViewComponent implements AfterContentInit {
       this._activeTab = value;
       this.tabs.toArray().forEach((tab: KsTabComponent, index: number) => tab.active = (index === value));
 
-      this.onChange.emit(value);
+      this.change.emit(value);
     }
   }
 

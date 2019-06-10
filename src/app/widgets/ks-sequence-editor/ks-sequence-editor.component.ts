@@ -230,8 +230,8 @@ export class KsSequenceEditorComponent implements AfterViewInit, OnInit, OnDestr
       this.hiddenInput.setAttribute('autocorrect', 'off');
       this.hiddenInput.style.position = 'absolute';
       this.hiddenInput.style.opacity = '0';
-      this.hiddenInput.style['caret-color'] = 'transparent';
-      this.hiddenInput.style['pointer-events'] = 'none';
+      (this.hiddenInput.style as any)['caret-color'] = 'transparent';
+      (this.hiddenInput.style as any)['pointer-events'] = 'none';
       this.hiddenInput.style.left = '0';
       this.hiddenInput.style.top = '-6px';
 

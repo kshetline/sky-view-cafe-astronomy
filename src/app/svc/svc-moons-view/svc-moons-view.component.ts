@@ -218,7 +218,7 @@ export class SvcMoonsViewComponent extends GenericPlanetaryView implements After
     let planetShown = false;
     let colorOfMoon: string = null;
     const pt = <Point> {};
-    let number = '', name = '', longName = '';
+    let num = '', name = '', longName = '';
     let transitNames = '';
     let offscreenNames = '';
     let eclipsedNames = '';
@@ -252,9 +252,9 @@ export class SvcMoonsViewComponent extends GenericPlanetaryView implements After
     for (let i = 0; i <= moons.length; ++i) {
       if (i < moons.length) {
         pos = moons[i];
-        number = PlanetaryMoons.getMoonNumber(pos.moonIndex);
+        num = PlanetaryMoons.getMoonNumber(pos.moonIndex);
         name = PlanetaryMoons.getMoonName(pos.moonIndex);
-        longName = name + ' (' + number + ')';
+        longName = name + ' (' + num + ')';
         drawMoon = true;
         hidden = false;
 
@@ -372,7 +372,7 @@ export class SvcMoonsViewComponent extends GenericPlanetaryView implements After
             if (this.moonNumbers && this.moonNames)
               name = longName;
             else if (this.moonNumbers)
-              name = number;
+              name = num;
 
             const li = {name: name, pt: pt, labelType: hidden ? LABEL_TYPE.HIDDEN_MOON : LABEL_TYPE.MOON, bodyIndex: pos.moonIndex};
             this.addLabel(li, dc);

@@ -34,14 +34,14 @@ export class SvcChangeLocationDialogComponent {
   private _visible = false;
   private _latitude: number;
   private _longitude: number;
-  private _timezone;
+  private _timezone: string;
   private hourOffset: number;
 
   formattedLatitude: string;
   formattedLongitude: string;
   formattedHourOffset: string;
   zoneChoice = '0';
-  currentZone;
+  currentZone: string;
 
   @Input() get visible(): boolean { return this._visible; }
   set visible(isVisible: boolean) {

@@ -108,7 +108,6 @@ export class SvcPreferencesDialogComponent {
   };
 
   @Input() get visible(): boolean { return this._visible; }
-  @Output() visibleChange: EventEmitter<any> = new EventEmitter();
   set visible(isVisible: boolean) {
     if (this._visible !== isVisible) {
       this._visible = isVisible;
@@ -144,6 +143,7 @@ export class SvcPreferencesDialogComponent {
       }
     }
   }
+  @Output() visibleChange: EventEmitter<any> = new EventEmitter();
 
   get twilightByDegrees(): boolean { return this._twilightByDegrees; }
   set twilightByDegrees(value) {

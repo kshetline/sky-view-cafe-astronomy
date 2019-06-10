@@ -9,6 +9,7 @@
   "jsRules": {},
   "rules": {
     "arrow-parens": false,
+    "arrow-return-shorthand": true,
     "curly": false,
     "indent": [
       true,
@@ -24,6 +25,7 @@
     "member-ordering": false,
     "no-angle-bracket-type-assertion": false,
     "no-bitwise": false,
+    "no-conditional-assignment": false,
     "no-console": [
       true,
       "time",
@@ -44,11 +46,49 @@
       "single"
     ],
     "trailing-comma": false,
+    "typedef": [
+      true,
+      "call-signature"
+    ],
     "variable-name": {
       "options": [
         "allow-leading-underscore",
-        "allow-snake-case"
+        "allow-snake-case",
+        "ban-keywords",
+        "check-format"
       ]
-    }
+    },
+    // Angular stuff
+    "component-class-suffix": true,
+    "component-selector": [
+      true,
+      "element",
+      ["my", "ks", "svc"],
+      "kebab-case"
+    ],
+    "directive-class-suffix": true,
+    "directive-selector": [
+      true,
+      "attribute",
+      ["my", "ks", "svc"],
+      "camelCase"
+    ],
+    "import-blacklist": [
+      true,
+      "rxjs/Rx"
+    ],
+    "no-input-rename": true,
+    "no-inputs-metadata-property": true,
+    "no-host-metadata-property": true,
+    "no-output-on-prefix": true,
+    "no-output-rename": true,
+    "no-outputs-metadata-property": true,
+    "use-lifecycle-interface": true,
+    "use-pipe-transform-interface": true
+  },
+  "linterOptions": {
+    "exclude": [
+      "src/polyfills.ts"
+    ]
   }
 }

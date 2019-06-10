@@ -1,5 +1,5 @@
 /*
-  Copyright © 2017 Kerry Shetline, kerry@shetline.com.
+  Copyright © 2017-2019 Kerry Shetline, kerry@shetline.com.
 
   This code is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -86,8 +86,8 @@ export class SvcMapViewComponent extends GenericView implements AfterViewInit {
 
   private xOffset: number;
   private mapYOffset: number;
-  private mapWidth;
-  private mapHeight;
+  private mapWidth: number;
+  private mapHeight: number;
   private moonShadowPts: number[];
   private lastSunLatitude = 0;
   private lastSunLongitude = 0;

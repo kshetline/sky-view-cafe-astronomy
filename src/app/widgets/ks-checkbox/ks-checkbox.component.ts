@@ -45,8 +45,8 @@ export class KsCheckboxComponent implements ControlValueAccessor {
 
   @ViewChild('checkbox', { static: true }) private checkboxRef: ElementRef;
 
-  @Output() onFocus: EventEmitter<any> = new EventEmitter();
-  @Output() onBlur: EventEmitter<any> = new EventEmitter();
+  @Output() focus: EventEmitter<any> = new EventEmitter();
+  @Output() blur: EventEmitter<any> = new EventEmitter();
   @Input() label: string;
   @Input() binary: boolean;
   @Input() value: any;
@@ -61,13 +61,13 @@ export class KsCheckboxComponent implements ControlValueAccessor {
 
   onDropdownFocus(event: any): void {
     this.hasFocus = true;
-    this.onFocus.emit(event);
+    this.focus.emit(event);
   }
 
   onDropdownBlur(event: any): void {
     this.hasFocus = false;
     this.onTouchedCallback();
-    this.onBlur.emit(event);
+    this.blur.emit(event);
   }
 
   writeValue(newValue: any): void {

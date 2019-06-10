@@ -1,14 +1,14 @@
 <div class="zone-selector">
   <div class="zone-selector-row">
-    <ks-dropdown [options]="regions"  [(ngModel)]="region"  [disabled]="disabled" (onFocus)="onDropdownFocus($event)"
-                 (onBlur)="onDropdownBlur($event)" scrollHeight="420px"></ks-dropdown><br>
+    <ks-dropdown [options]="regions"  [(ngModel)]="region"  [disabled]="disabled" (focus)="onDropdownFocus($event)"
+                 (blur)="onDropdownBlur($event)" scrollHeight="420px"></ks-dropdown><br>
   </div>
   <div class="zone-selector-row">
     <span class="caption">time zone region/category &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><br>
   </div>
   <div class="zone-selector-row">
-    <ks-dropdown [options]="subzones" [(ngModel)]="subzone" [disabled]="disabled" (onFocus)="onDropdownFocus($event)"
-                 (onBlur)="onDropdownBlur($event)" scrollHeight="300px"></ks-dropdown><br>
+    <ks-dropdown [options]="subzones" [(ngModel)]="subzone" [disabled]="disabled" (focus)="onDropdownFocus($event)"
+                 (blur)="onDropdownBlur($event)" scrollHeight="300px"></ks-dropdown><br>
   </div>
   <div class="zone-selector-row">
     <span class="caption">specific time zone &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>

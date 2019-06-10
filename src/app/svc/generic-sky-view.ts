@@ -53,10 +53,14 @@ export const BRIGHT_STAR_LIMIT = 1.5;
   // stars anyway because of its importance for orientation.
 export const POLARIS_FK5_NUM = 907;
 
+// tslint:disable-next-line:variable-name
 const SCALE_WHERE_BRIGHTEST_STAR_IS_3x3 = 0.0026;
+// tslint:disable-next-line:variable-name
 const DIMMEST_ALLOWED_1x1_STAR_IMAGE_INDEX  = 33;
 // const DIMMEST_AT_SCALE_1x1_STAR_IMAGE_INDEX = 100;
+// tslint:disable-next-line:variable-name
 const BRIGHTEST_1x1_STAR_IMAGE_INDEX        = 500;
+// tslint:disable-next-line:variable-name
 const BRIGHTEST_3x3_STAR_IMAGE_INDEX        = 1500;
 
 const opacitiesOfWhite: string[] = [];

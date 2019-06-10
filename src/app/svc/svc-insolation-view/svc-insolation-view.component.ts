@@ -183,7 +183,7 @@ export class SvcInsolationViewComponent extends GenericView implements AfterView
       let y0 = this.lastPlotY;
       let timedOut = false;
 
-    outerLoop:
+      outerLoop:
       for (let plotSize = this.lastPlotSize; plotSize >= 1; plotSize /= 2) {
         for (let y = y0; y < this.daysInYear; y += plotSize) {
           let time_jdu = this.baseTime + y + 2.5 / MINS_PER_DAY - 5.0 / MINS_PER_DAY * plotSize;

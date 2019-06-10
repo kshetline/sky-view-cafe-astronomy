@@ -38,7 +38,7 @@ export class SvcGenericOptionsComponent {
     {label: 'All asteroids and comets', value: ADDITIONALS.ALL}
   ];
 
-  constructor(protected appService: AppService, protected viewName) {
+  constructor(protected appService: AppService, protected viewName: string) {
     this.asteroidsReady = appService.asteroidsReady;
 
     if (!this.asteroidsReady) {

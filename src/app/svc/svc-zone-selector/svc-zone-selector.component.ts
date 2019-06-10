@@ -67,8 +67,8 @@ export class SvcZoneSelectorComponent implements ControlValueAccessor, OnInit {
   disabled = false;
   error: string;
 
-  @Output() onFocus: EventEmitter<any> = new EventEmitter();
-  @Output() onBlur: EventEmitter<any> = new EventEmitter();
+  @Output() focus: EventEmitter<any> = new EventEmitter();
+  @Output() blur: EventEmitter<any> = new EventEmitter();
 
   constructor(private appService: AppService) {
     this.lastSubzones[this._region] = this._subzone;
@@ -154,7 +154,7 @@ export class SvcZoneSelectorComponent implements ControlValueAccessor, OnInit {
     this.hasFocus = true;
 
     if (this.focusCount++ === 0) {
-      this.onFocus.emit(event);
+      this.focus.emit(event);
     }
   }
 
@@ -167,7 +167,7 @@ export class SvcZoneSelectorComponent implements ControlValueAccessor, OnInit {
 
       if (!this.hasFocus) {
         this.onTouchedCallback();
-        this.onBlur.emit(event);
+        this.blur.emit(event);
       }
     });
   }

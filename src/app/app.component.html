@@ -57,7 +57,7 @@
       </div>
     </div>
     <div class="lower-panel flex-container" fxFlex="100%" fxLayout="row" fxLayoutAlign="start stretch" fxLayoutGap="4px">
-      <ks-tab-view fxFlex="1 0 auto" (onChange)="tabChanged($event)" [activeTab]="selectedTab">
+      <ks-tab-view fxFlex="1 0 auto" (change)="tabChanged($event)" [activeTab]="selectedTab">
         <ks-tab header="Sky">
           <svc-sky-view></svc-sky-view>
         </ks-tab>
