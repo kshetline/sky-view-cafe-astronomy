@@ -10,6 +10,7 @@
     "experimentalDecorators": true,
     "noImplicitAny": true,
     "target": "es2015",
+    "allowSyntheticDefaultImports": true,
     "typeRoots": [
       "node_modules/@types"
     ],

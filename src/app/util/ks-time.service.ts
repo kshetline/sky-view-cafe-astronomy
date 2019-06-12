@@ -42,9 +42,11 @@ export interface ZoneForLocation {
 @Injectable()
 export class KsTimeService {
   private hostname: string;
+  private port: number;
 
   constructor(private httpClient: HttpClient) {
     this.hostname = document.location.hostname;
+    this.port = parseInt(document.location.port, 10);
   }
 
   getZoneForLocation(longitude: number, latitude: number, timestamp?: number | null, timeoutValue?: number): Promise<ZoneForLocation> {
@@ -56,7 +58,7 @@ export class KsTimeService {
     if (!timeoutValue)
       timeoutValue = 60000;
 
-    if (this.hostname === 'localhost') {
+    if (this.hostname === 'localhost' || this.port === 3000) {
       return this.httpClient.jsonp<ZoneForLocation>
         ('https://test.skyviewcafe.com/zoneloc?' + params, 'callback').pipe(timeout(timeoutValue)).toPromise();
     }

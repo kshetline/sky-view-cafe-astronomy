@@ -63,7 +63,7 @@ export class MilkyWay {
 
     if (isNumber(posOrLongitude)) {
       longitude = <number> posOrLongitude;
-      latitude = (latitude ? latitude : 0);
+      latitude = latitude || 0;
     }
     else {
       longitude = (<SphericalPosition> posOrLongitude).longitude.degrees;

@@ -52,6 +52,7 @@ import { TooltipModule } from 'primeng/tooltip';
 import { AppComponent } from './app.component';
 import { AppService } from './app.service';
 import { AstroDataService } from './astronomy/astro-data.service';
+import { KsSizerDirective } from './directives/ks-sizer.directive';
 import { SvcAngleEditorComponent } from './svc/svc-angle-editor.component';
 import { SvcAtlasDialogComponent } from './svc/svc-atlas-dialog/svc-atlas-dialog.component';
 import { SvcAtlasService } from './svc/svc-atlas.service';
@@ -164,7 +165,8 @@ export function busyConfigFactory(): BusyConfig {
     SvcTableViewOptionsComponent,
     SvcTimeEditorComponent,
     SvcTimeViewComponent,
-    SvcZoneSelectorComponent
+    SvcZoneSelectorComponent,
+    KsSizerDirective
   ],
   providers: [
     AppService,

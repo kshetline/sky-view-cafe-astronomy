@@ -83,6 +83,28 @@
       <div style="font: 14px Arial, Helvetica, sans-serif; text-align: center;
         position: absolute; top: 0; bottom: 0; left: 0; right: 0; margin: auto; height: 3em;">
         <i class="fas fa-spinner fa-pulse fa-2x fa-fw"></i> Loading...</div>
-    </svc-app></div>
+    </svc-app></div><script>
+      var supportsES6 = function() {
+        try {
+          new Function("(a = 0) => a");
+          return true;
+        }
+        catch (err) {
+          return false;
+        }
+      }();
+
+      if (!supportsES6) {
+        var appParent = document.querySelector('.appWrapper');
+
+        if (appParent) {
+          appParent.children[0].style.display = 'none';
+          var message = document.createElement('p');
+          message.textContent = 'Sky View Café requires an up-to-date ES6 (ES2015)-capable web browser. Internet Explorer \
+and other older web browsers are not supported.';
+          appParent.appendChild(message);
+        }
+      }
+    </script>
   </body>
 </html>

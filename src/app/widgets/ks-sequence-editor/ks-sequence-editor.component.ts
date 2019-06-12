@@ -119,6 +119,7 @@ export class KsSequenceEditorComponent implements AfterViewInit, OnInit, OnDestr
   protected hasFocus = false;
   protected selection = 0;
   protected setupComplete = false;
+  protected touchEnabled = false;
   protected useAlternateTouchHandling = false;
 
   displayState = 'normal';
@@ -184,6 +185,9 @@ export class KsSequenceEditorComponent implements AfterViewInit, OnInit, OnDestr
 
   ngAfterViewInit(): void {
     this.canvas = this.canvasRef.nativeElement;
+    // In case canvas doesn't initialize, don't let it stay the huge default 300x150 size.
+    this.canvas.width = 1;
+    this.canvas.height = 1;
 
     if (document.body.contains(this.canvas))
       this.setup();
@@ -291,7 +295,7 @@ export class KsSequenceEditorComponent implements AfterViewInit, OnInit, OnDestr
   protected computeSize(): void {
     const context = this.canvas.getContext('2d');
 
-    context.resetTransform();
+    context.setTransform(1, 0, 0, 1, 0, 0); // resetTransform();
     this.metrics = getFontMetrics(this.canvas);
 
     const padding = KsSequenceEditorComponent.getPadding(this.metrics);
@@ -475,7 +479,7 @@ export class KsSequenceEditorComponent implements AfterViewInit, OnInit, OnDestr
   }
 
   onTouchStart(event: TouchEvent): void {
-    if (this.disabled || this.viewOnly)
+    if (this.disabled || this.viewOnly || !this.touchEnabled)
       return;
 
     event.preventDefault();
@@ -512,7 +516,7 @@ export class KsSequenceEditorComponent implements AfterViewInit, OnInit, OnDestr
   }
 
   onTouchMove(event: TouchEvent): void {
-    if (this.disabled || this.viewOnly)
+    if (this.disabled || this.viewOnly || !this.touchEnabled)
       return;
 
     event.preventDefault();
@@ -543,7 +547,7 @@ export class KsSequenceEditorComponent implements AfterViewInit, OnInit, OnDestr
       this.draw();
     }
 
-    if (this.disabled || this.viewOnly)
+    if (this.disabled || this.viewOnly || !this.touchEnabled)
       return;
 
     event.preventDefault();

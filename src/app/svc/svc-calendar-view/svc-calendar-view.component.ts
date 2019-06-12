@@ -359,7 +359,7 @@ export class SvcCalendarViewComponent implements AfterViewInit {
       const altitude = this.eventTypes[this.eventType].altitude;
 
       this.events = this.eventFinder.getMonthOfEvents(planet, this.year, this.month, this.observer, timeZone, this.appService.gregorianChangeDate,
-        altitude !== 0 ? altitude : undefined);
+        altitude || undefined);
       this.updateViewTime();
     }
     else {

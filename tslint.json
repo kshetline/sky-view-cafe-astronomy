@@ -40,7 +40,7 @@
       "check-whitespace"
     ],
     "one-variable-per-declaration": false,
-    "prefer-const": true,
+    "prefer-const": [true, {"destructuring": "all"}],
     "quotemark": [
       true,
       "single"

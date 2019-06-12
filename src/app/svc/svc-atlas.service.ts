@@ -69,17 +69,19 @@ export class SvcAtlasService {
   private static statesPromise: Promise<string[]>;
 
   private hostname: string;
+  private port: number;
 
   constructor(private httpClient: HttpClient) {
     this.hostname = document.location.hostname;
+    this.port = parseInt(document.location.port, 10);
   }
 
   search(q: string, extend?: boolean): Promise<AtlasResults> {
-    const localTesting = (this.hostname === 'localhost' || this.hostname === '127.0.0.1');
+    const localTesting = (this.hostname === 'localhost' || this.hostname === '127.0.0.1' || this.port === 3000);
     const params = urlEncodeParams({
       client: 'web',
       notrace: localTesting ? 'true' : null,
-      q: q,
+      q,
       remote: extend ? 'extend' : null
     });
 
@@ -97,7 +99,7 @@ export class SvcAtlasService {
     else if (SvcAtlasService.statesPromise)
       return SvcAtlasService.statesPromise;
 
-    const localTesting = (this.hostname === 'localhost' || this.hostname === '127.0.0.1');
+    const localTesting = (this.hostname === 'localhost' || this.hostname === '127.0.0.1' || this.port === 3000);
 
     if (localTesting) {
       SvcAtlasService.statesPromise = this.httpClient.jsonp<string[]>

@@ -637,7 +637,8 @@ END OF TERMS AND CONDITIONS
 
 ### Licensing and Copyright for Third Party Software Used by Sky View Café
 
-#####Via `license-report --output=table`
+##### Via `license-report --output=table`
+
     name                              license type  link
     ----                              ------------  ----
     animations                        n/a           n/a
