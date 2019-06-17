@@ -141,11 +141,13 @@ export class AppService {
   private _inkSaver = true;
   private hostname: string;
   private port: number;
+  private localTesting: boolean;
 
   constructor(astroDataService: AstroDataService, private httpClient: HttpClient, private _sanitizer: DomSanitizer,
               private router: Router) {
     this.hostname = document.location.hostname;
     this.port = parseInt(document.location.port, 10);
+    this.localTesting = (this.hostname === 'localhost' || this.hostname === '127.0.0.1' || this.port === 3000);
 
     const savedLocationsString = localStorage.getItem('locations');
 
@@ -436,9 +438,7 @@ export class AppService {
   }
 
   private getLocationFromIp(): void {
-    const localTesting = (this.hostname === 'localhost' || this.hostname === '127.0.0.1' || this.port === 3000);
-
-    if (localTesting) {
+    if (this.localTesting) {
       this.httpClient.jsonp('https://skyviewcafe.com/ip/json/', 'callback').subscribe((location: IpLocation) => {
         this.setLocationFromIpLocation(location);
       }, () => {

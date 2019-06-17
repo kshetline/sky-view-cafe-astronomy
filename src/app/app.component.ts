@@ -28,6 +28,7 @@ import { debounce } from 'lodash';
 import { MenuItem, Message } from 'primeng/components/common/api';
 import { Subscription, timer } from 'rxjs';
 import { AppService, currentMinuteMillis, CurrentTab, PROPERTY_GREGORIAN_CHANGE_DATE, UserSetting, VIEW_APP } from './app.service';
+import { SvcAtlasService } from './svc/svc-atlas.service';
 
 const MIN_APP_WIDTH = 1040;
 const MIN_APP_HEIGHT = 640;
@@ -60,8 +61,10 @@ export class AppComponent implements AfterViewInit, OnDestroy {
   selectedTab = <number> CurrentTab.SKY;
   gcDate = '1582-10-15';
 
-  constructor(private app: AppService, private router: Router) {
+  constructor(private app: AppService, private router: Router, atlasService: SvcAtlasService) {
     this.time = app.time;
+
+    atlasService.ping();
 
     this.updateTimeZone();
     this.dateTime.setGregorianChange(app.gregorianChangeDate);

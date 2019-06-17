@@ -33,49 +33,7 @@
     <link rel="icon" type="image/x-icon" href="favicon.ico">
 
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <script>
-      var minWidth = 1024;
-      var minHeight = 640;
-      var width = Math.max(screen.width, screen.height);
-      var origWidth = width;
-      var height = Math.min(screen.height, screen.width);
-
-      if (width < minWidth || height < minHeight) {
-        var metaViewport = document.querySelector('meta[name=viewport]');
-        var ratio = width / height;
-
-        if (height / ratio < minHeight) {
-          width = Math.round(minHeight * ratio);
-          // The extra +2 ensures that a tiny amount of scrolling is possible, needed in some cases to scroll away
-          // browser tabs and/or the address bar from a mobile screen.
-          height = minHeight + 2;
-        }
-        else {
-          width = minWidth;
-          height = Math.round(minWidth / ratio) + 2;
-        }
-
-        var scale = origWidth / width;
-
-        metaViewport.setAttribute('content', 'width=' + width + ', height=' + height + ', initial-scale=' + scale);
-      }
-
-      var mapsInitialized = false;
-      var mapsCallback = null;
-
-      function initGoogleMaps(callback) {
-        if (callback)
-          mapsCallback = callback;
-        else {
-          mapsInitialized = true;
-
-          if (mapsCallback)
-            mapsCallback();
-        }
-      }
-    </script>
-    <script type="text/javascript" async defer
-        src="https://skyviewcafe.com/maps/"></script>
+    <script type="text/javascript" src="/assets/svc-setup.js"></script>
   </head>
   <body>
     <div class="appWrapper"><svc-app>

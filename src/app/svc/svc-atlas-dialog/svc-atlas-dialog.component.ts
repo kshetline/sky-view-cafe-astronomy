@@ -86,6 +86,7 @@ export class SvcAtlasDialogComponent {
       this.visibleChange.emit(isVisible);
 
       if (isVisible) {
+        this.atlasService.ping();
         // Reset state of dialog before showing it again.
         this.city = '';
         this.state = '';
@@ -199,6 +200,7 @@ export class SvcAtlasDialogComponent {
         if (this.searchId !== id) // Bail out if this is an old, abandoned search.
           return;
 
+        this.atlasService.ping();
         this.emptyMessage = (!results.matches || results.matches.length === 0 ? 'No matches' : '');
         this.searching = false;
 
@@ -256,6 +258,8 @@ export class SvcAtlasDialogComponent {
       this.obscureMap();
       return;
     }
+
+    this.atlasService.ping();
 
     const center = new google.maps.LatLng(this._selection.atlasLocation.latitude, this._selection.atlasLocation.longitude);
 

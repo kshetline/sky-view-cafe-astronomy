@@ -28,6 +28,8 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { urlEncodeParams } from 'ks-util';
 
+const PING_INTERVAL = 1800000; // half hour
+
 export interface AtlasResults {
   originalSearch: string;
   normalizedSearch: string;
@@ -70,26 +72,28 @@ export class SvcAtlasService {
 
   private hostname: string;
   private port: number;
+  private localTesting: boolean;
+  private lastPing = -Number.MAX_SAFE_INTEGER;
 
   constructor(private httpClient: HttpClient) {
     this.hostname = document.location.hostname;
     this.port = parseInt(document.location.port, 10);
+    this.localTesting = (this.hostname === 'localhost' || this.hostname === '127.0.0.1' || this.port === 3000);
   }
 
   search(q: string, extend?: boolean): Promise<AtlasResults> {
-    const localTesting = (this.hostname === 'localhost' || this.hostname === '127.0.0.1' || this.port === 3000);
     const params = urlEncodeParams({
       client: 'web',
-      notrace: localTesting ? 'true' : null,
+      notrace: this.localTesting ? 'true' : null,
       q,
       remote: extend ? 'extend' : null
     });
 
-    if (localTesting) {
-      return this.httpClient.jsonp<AtlasResults>('https://test.skyviewcafe.com/atlas?' + params, 'callback').toPromise();
+    if (this.localTesting) {
+      return this.httpClient.jsonp<AtlasResults>('https://test.skyviewcafe.com/atlas/?' + params, 'callback').toPromise();
     }
     else {
-      return this.httpClient.get<AtlasResults>('/atlas?' + params).toPromise();
+      return this.httpClient.get<AtlasResults>('/atlas/?' + params).toPromise();
     }
   }
 
@@ -99,18 +103,16 @@ export class SvcAtlasService {
     else if (SvcAtlasService.statesPromise)
       return SvcAtlasService.statesPromise;
 
-    const localTesting = (this.hostname === 'localhost' || this.hostname === '127.0.0.1' || this.port === 3000);
-
-    if (localTesting) {
+    if (this.localTesting) {
       SvcAtlasService.statesPromise = this.httpClient.jsonp<string[]>
-        ('https://test.skyviewcafe.com/states', 'callback').toPromise().then(data => {
+        ('https://test.skyviewcafe.com/states/', 'callback').toPromise().then(data => {
           SvcAtlasService.states = data;
 
           return data;
         }, reason => { console.log(reason); return []; });
     }
     else {
-      SvcAtlasService.statesPromise = this.httpClient.get<string[]>('/states').toPromise().then(data => {
+      SvcAtlasService.statesPromise = this.httpClient.get<string[]>('/states/').toPromise().then(data => {
         SvcAtlasService.states = data;
 
         return data;
@@ -118,5 +120,17 @@ export class SvcAtlasService {
     }
 
     return SvcAtlasService.statesPromise;
+  }
+
+  ping(): void {
+    if (performance.now() > this.lastPing + PING_INTERVAL) {
+      // We don't care about nor need to return these results.
+      if (this.localTesting) {
+        this.httpClient.jsonp('https://test.skyviewcafe.com/maps/ping/', 'callback').subscribe(() => this.lastPing = performance.now());
+      }
+      else {
+        this.httpClient.get('/maps/ping').subscribe(() => this.lastPing = performance.now());
+      }
+    }
   }
 }
