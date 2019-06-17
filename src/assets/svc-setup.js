@@ -45,7 +45,7 @@ function initGoogleMaps(callback) {
   var realWorld = true;
   var $ = /^(http(?:s?)):\/\/([^\/]+)/.exec(location);
 
-  if ($ && !/\b(3000|8080)\b/.test($[2])) {
+  if ($ && !/:(3000|8080)\b/.test($[2])) {
     protocol = $[1];
     host = $[2];
   }
