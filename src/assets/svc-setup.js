@@ -45,7 +45,7 @@ function initGoogleMaps(callback) {
   var realWorld = true;
   var $ = /^(http(?:s?)):\/\/([^\/]+)/.exec(location);
 
-  if ($ && !/\b(3000|8080)\b/.test(location)) {
+  if ($ && !/\b(3000|8080)\b/.test($[2])) {
     protocol = $[1];
     host = $[2];
   }
@@ -57,7 +57,7 @@ function initGoogleMaps(callback) {
 
   document.head.appendChild = function(node) {
     if (node.localName === 'script' && ($ = /^https:\/\/maps.googleapis.com(.*)$/.exec(node.src))) {
-      node.src = protocol + '://' + host + '/maps/proxy' + $[1];
+      node.src = base + '/maps/proxy' + $[1];
 
       if (window.svcModKey)
         node.src = node.src.replace(new RegExp(window.svcModKey, 'g'), window.svcOrigKey);
