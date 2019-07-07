@@ -117,6 +117,7 @@ export class SvcPreferencesDialogComponent {
         this.twilightDegrees = this.appService.twilightDegrees;
         this.twilightMinutes = this.appService.twilightMinutes;
         this.twilightByDegrees = this.appService.twilightByDegrees;
+        this.twilightValue = (this.twilightByDegrees ? this.twilightDegrees : this.twilightMinutes);
         this.calendarOption = this.appService.calendarType;
         this.inkSaver = this.appService.inkSaver;
         this.nativeDateTime = this.appService.nativeDateTime;
