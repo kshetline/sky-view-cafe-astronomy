@@ -146,6 +146,12 @@ export class KsSequenceEditorComponent implements AfterViewInit, OnInit, OnDestr
   @Input() set viewOnly(value: boolean) {
     this._viewOnly = value;
     this.displayState = value ? 'viewOnly' : (this.disabled ? 'disabled' : 'normal');
+
+    if (this.canvas) {
+      this.canvas.setAttribute('tabindex', value ? '-1' : '0');
+      this.canvas.setAttribute('disabled', value ? 'true' : null);
+      this.canvas.setAttribute('contenteditable', value ? null : 'true');
+    }
   }
 
   get blank(): boolean { return this._blank; }
@@ -611,6 +617,9 @@ export class KsSequenceEditorComponent implements AfterViewInit, OnInit, OnDestr
   }
 
   onFocus(value: boolean): void {
+    if (value && this.viewOnly)
+      return;
+
     if (this.hasCanvasFocus !== value) {
       this.hasCanvasFocus = value;
 
@@ -622,6 +631,9 @@ export class KsSequenceEditorComponent implements AfterViewInit, OnInit, OnDestr
   }
 
   onHiddenInputFocus(value: boolean): void {
+    if (value && this.viewOnly)
+      return;
+
     if (this.hasHiddenInputFocus !== value) {
       this.hasHiddenInputFocus = value;
       this.checkFocus();

@@ -29,7 +29,7 @@
     "core-js": "^2.6.9",
     "detect-resize": "^0.1.5",
     "ks-astronomy": "^1.0.5",
-    "ks-date-time-zone": "^1.6.4",
+    "ks-date-time-zone": "^1.6.5",
     "ks-math": "^1.1.6",
     "ks-util": "^1.6.0",
     "lodash": "^4.17.11",

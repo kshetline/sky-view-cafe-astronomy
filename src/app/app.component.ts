@@ -71,6 +71,7 @@ export class AppComponent implements AfterViewInit, OnDestroy {
     this.updateTimeZone();
     this.dateTime.setGregorianChange(app.gregorianChangeDate);
     this.gcDate = app.gregorianChangeDate;
+    this.nativeDateTime = app.nativeDateTime;
 
     app.getTimeUpdates((newTime: number) => {
       this.time = newTime;

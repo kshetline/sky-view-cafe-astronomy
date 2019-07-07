@@ -47,7 +47,7 @@ const THREE_PER_EM_SPACE = '\u2004';
   providers: [SVC_TIME_EDITOR_VALUE_ACCESSOR]
 })
 export class SvcTimeEditorComponent extends KsSequenceEditorComponent implements ControlValueAccessor, OnInit {
-  private static get supportsNativeDateTime(): boolean { return platformNativeDateTime; }
+  static get supportsNativeDateTime(): boolean { return platformNativeDateTime; }
 
   private dateTime = new KsDateTime();
   private _gregorianChangeDate = '1582-10-15';
@@ -123,6 +123,9 @@ export class SvcTimeEditorComponent extends KsSequenceEditorComponent implements
   }
 
   onLocalTimeFocus(value: boolean): void {
+    if (value && this.viewOnly)
+      return;
+
     if (this.hasLocalTimeFocus !== value) {
       this.hasLocalTimeFocus = value;
       this.checkFocus();
@@ -136,12 +139,12 @@ export class SvcTimeEditorComponent extends KsSequenceEditorComponent implements
   protected checkFocus(): void {
     super.checkFocus();
 
-    if (!KsSequenceEditorComponent.addFocusOutline && this.isNativeTouchActive())
+    if (!KsSequenceEditorComponent.addFocusOutline && this.isNativeDateTimeActive())
       this.canvas.style.outline = getCssValue(this.localTime, 'outline');
   }
 
   protected gainedFocus(): void {
-    if (!this.hasLocalTimeFocus && this.isNativeTouchActive() && performance.now() > this.lastTabTime + FORWARD_TAB_DELAY)
+    if (!this.hasLocalTimeFocus && this.isNativeDateTimeActive() && performance.now() > this.lastTabTime + FORWARD_TAB_DELAY)
       this.localTime.focus();
   }
 
@@ -202,7 +205,12 @@ export class SvcTimeEditorComponent extends KsSequenceEditorComponent implements
   }
 
   private adjustLocalTimeMin(): void {
-    this.localTimeMin = padLeft(max(this._minYear, 1), 4, '0') + '-01-01' + (this.localTimeFormat === 'date' ? '' : 'T00:00');
+    let minYear = this._minYear;
+
+    if (this.isNativeDateTimeActive() && minYear < 1)
+      minYear = 1;
+
+    this.localTimeMin = padLeft(max(minYear, 1), 4, '0') + '-01-01' + (this.localTimeFormat === 'date' ? '' : 'T00:00');
   }
 
   get maxYear(): number { return this._maxYear; }
@@ -246,12 +254,23 @@ export class SvcTimeEditorComponent extends KsSequenceEditorComponent implements
       if (this.localTime && SvcTimeEditorComponent.supportsNativeDateTime)
         this.localTime.setAttribute('tabindex', newValue ? '0' : '-1');
 
+      if (newValue) {
+        const wallTime = this.dateTime.wallTime;
+
+        if (wallTime.y < 1) {
+          wallTime.y = 1;
+          this.dateTime.wallTime = wallTime;
+          this.onChangeCallback(this.dateTime.utcTimeMillis);
+          this.updateDigits();
+        }
+      }
+
       this.cd.detectChanges();
       this.draw();
     }
   }
 
-  isNativeTouchActive(): boolean {
+  isNativeDateTimeActive(): boolean {
     return KsSequenceEditorComponent.touchHasOccurred && this.nativeDateTime && SvcTimeEditorComponent.supportsNativeDateTime;
   }
 
@@ -366,7 +385,12 @@ export class SvcTimeEditorComponent extends KsSequenceEditorComponent implements
 
   private updateLocalTime(): void {
     const w = this.dateTime.wallTime;
-    this._localTimeValue = `${padLeft(w.y, 4, '0')}-${padLeft(w.m, 2, '0')}-${padLeft(w.d, 2, '0')}` +
+    let year = w.y;
+
+    if (this.isNativeDateTimeActive() && year < 1)
+      year = 1;
+
+    this._localTimeValue = `${padLeft(year, 4, '0')}-${padLeft(w.m, 2, '0')}-${padLeft(w.d, 2, '0')}` +
       (this.localTimeFormat === 'date' ? '' : `T${padLeft(w.hrs, 2, '0')}:${padLeft(w.min, 2, '0')}`);
   }
 

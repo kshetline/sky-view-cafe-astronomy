@@ -41,8 +41,8 @@ export const    PROPERTY_TWILIGHT_BY_DEGREES = 'twilight_by_degrees';
 export const    PROPERTY_TWILIGHT_DEGREES = 'twilight_degrees';
 export const    PROPERTY_TWILIGHT_MINUTES = 'twilight_minutes';
 export const    PROPERTY_GREGORIAN_CHANGE_DATE = 'gregorian_change_date';
-export const    PROPERTY_NATIVE_DATE_TIME = 'native_date_time';
 export const    PROPERTY_INK_SAVER = 'ink_saver';
+export const    PROPERTY_NATIVE_DATE_TIME = 'native_date_time';
 
 export const NEW_LOCATION = '(new location)';
 
@@ -140,6 +140,7 @@ export class AppService {
   private _twilightMinutes = 80;
   private _gcDate = '1582-10-15';
   private _inkSaver = true;
+  private _nativeDateTime = true;
   private hostname: string;
   private port: number;
   private localTesting: boolean;
@@ -178,12 +179,8 @@ export class AppService {
 
       const appSettings = this.allSettings[VIEW_APP];
 
-      if (appSettings) {
-        for (const property in appSettings) {
-          if (appSettings.hasOwnProperty(property))
-            this.checkAppSetting(property, appSettings[property]);
-        }
-      }
+      if (appSettings)
+        Object.keys(appSettings).forEach(property => this.checkAppSetting(property, appSettings[property]));
     }
 
     this.debouncedSaveSettings = debounce(() => {
@@ -409,6 +406,8 @@ export class AppService {
 
   get inkSaver(): boolean { return this._inkSaver; }
 
+  get nativeDateTime(): boolean { return this._nativeDateTime; }
+
   private checkAppSetting(property: string, value: any): void {
     if (property === PROPERTY_NORTH_AZIMUTH)
       this._northAzimuth = <boolean> value;
@@ -424,6 +423,8 @@ export class AppService {
       this._gcDate = <string> value;
     else if (property === PROPERTY_INK_SAVER)
       this._inkSaver = <boolean> value;
+    else if (property === PROPERTY_NATIVE_DATE_TIME)
+      this._nativeDateTime = <boolean> value;
   }
 
   private renameIfMatchesSavedLocation(loc: Location): void {
