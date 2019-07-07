@@ -26,7 +26,6 @@ import { DomSanitizer } from '@angular/platform-browser';
 import { NavigationEnd, Router } from '@angular/router';
 import { SolarSystem, StarCatalog } from 'ks-astronomy';
 import { KsCalendar } from 'ks-date-time-zone';
-import { ceil } from 'ks-math';
 import { clone, compact, debounce, forEach, isEqual, isString, sortedIndexBy } from 'lodash';
 import { BehaviorSubject, Observable, Subject, Subscription } from 'rxjs';
 import { AstroDataService } from './astronomy/astro-data.service';
@@ -43,6 +42,7 @@ export const    PROPERTY_TWILIGHT_MINUTES = 'twilight_minutes';
 export const    PROPERTY_GREGORIAN_CHANGE_DATE = 'gregorian_change_date';
 export const    PROPERTY_INK_SAVER = 'ink_saver';
 export const    PROPERTY_NATIVE_DATE_TIME = 'native_date_time';
+export const    PROPERTY_WARNING_NATIVE_DATE_TIME = 'WARNING_native_date_time';
 
 export const NEW_LOCATION = '(new location)';
 
@@ -140,7 +140,9 @@ export class AppService {
   private _twilightMinutes = 80;
   private _gcDate = '1582-10-15';
   private _inkSaver = true;
-  private _nativeDateTime = true;
+  private _nativeDateTime = false;
+  private _showNativeInputDialog = false;
+  private _warningNativeDateTime = false;
   private hostname: string;
   private port: number;
   private localTesting: boolean;
@@ -212,13 +214,6 @@ export class AppService {
       this._appEvent.next({name: appEventOrName, value: value});
     else
       this._appEvent.next(appEventOrName);
-  }
-
-  getRightEdgeOfViewArea(): number {
-    const qt = window.document.getElementById('quickTips');
-    const lo = window.document.getElementById('locationAndOptions');
-
-    return ceil(window.document.documentElement.clientWidth - qt.getBoundingClientRect().width - lo.getBoundingClientRect().width);
   }
 
   get time(): number { return this._time.getValue(); }
@@ -408,6 +403,11 @@ export class AppService {
 
   get nativeDateTime(): boolean { return this._nativeDateTime; }
 
+  get showNativeInputDialog(): boolean { return this._showNativeInputDialog; }
+  set showNativeInputDialog(newValue: boolean) { this._showNativeInputDialog = newValue; }
+
+  get warningNativeDateTime(): boolean { return this._warningNativeDateTime; }
+
   private checkAppSetting(property: string, value: any): void {
     if (property === PROPERTY_NORTH_AZIMUTH)
       this._northAzimuth = <boolean> value;
@@ -425,6 +425,24 @@ export class AppService {
       this._inkSaver = <boolean> value;
     else if (property === PROPERTY_NATIVE_DATE_TIME)
       this._nativeDateTime = <boolean> value;
+    else if (property === PROPERTY_WARNING_NATIVE_DATE_TIME)
+      this._warningNativeDateTime = <boolean> value;
+  }
+
+  resetWarnings(): void {
+    const appSettings = this.allSettings[VIEW_APP];
+
+    if (appSettings) {
+      Object.keys(appSettings).forEach(property => {
+        if (property.startsWith('WARNING_')) {
+          appSettings[property] = false;
+          this.checkAppSetting(property, false);
+          this.settingsSource.next({ view: VIEW_APP, property, value: false, source: this });
+        }
+      });
+
+      this.debouncedSaveSettings();
+    }
   }
 
   private renameIfMatchesSavedLocation(loc: Location): void {

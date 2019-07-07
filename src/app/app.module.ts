@@ -70,6 +70,7 @@ import { SvcMapViewOptionsComponent } from './svc/svc-map-view/svc-map-view-opti
 import { SvcMapViewComponent } from './svc/svc-map-view/svc-map-view.component';
 import { SvcMoonsViewOptionsComponent } from './svc/svc-moons-view/svc-moons-view-options.component';
 import { SvcMoonsViewComponent } from './svc/svc-moons-view/svc-moons-view.component';
+import { SvcNativeDateTimeDialogComponent } from './svc/svc-native-date-time-dialog/svc-native-date-time-dialog.component';
 import { SvcOptionsPanelComponent } from './svc/svc-options-panel/svc-options-panel.component';
 import { SvcOrbitViewOptionsComponent } from './svc/svc-orbit-view/svc-orbit-view-options.component';
 import { SvcOrbitViewComponent } from './svc/svc-orbit-view/svc-orbit-view.component';
@@ -159,6 +160,7 @@ export function busyConfigFactory(): BusyConfig {
     SvcOrbitViewComponent,
     SvcOrbitViewOptionsComponent,
     SvcPreferencesDialogComponent,
+    SvcNativeDateTimeDialogComponent,
     SvcSkyViewComponent,
     SvcSkyViewOptionsComponent,
     SvcTableViewComponent,

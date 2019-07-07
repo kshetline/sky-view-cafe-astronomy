@@ -1,0 +1,30 @@
+<p-dialog header="Mobile Date/Time Input Options" [(visible)]="visible" [ksSizer]="dialogSize" (keyup)="onKey($event)">
+  <p-radioButton name="native-date-time-0" [value]="false" [(ngModel)]="nativeDateTime" label="Use the Sky View Café date/time input method"></p-radioButton>
+  <div class="explanation">
+    This gives you the most flexibility entering a wide range of dates and times over a span of thousands of years,
+    but might be more difficult to use on a phone or tablet.
+  </div>
+  <p-radioButton name="native-date-time-1" [value]="true"  [(ngModel)]="nativeDateTime" label="Use your web browser's own date/time input method"></p-radioButton>
+  <div class="explanation">
+    This provides greater ease of use with mobile devices, but can't be used to enter dates before the year 1 CE.
+    <ng-container *ngIf="isIOS">
+      <p>
+        For iOS devices, there is no native date/time input that covers the full range of time from years down to minutes.
+        When using the web browser's input method, touch the left side of the clock to set year, month and date. Touch the
+        right side to enter month, date, hour and minute.
+      </p>
+      <p>
+        When setting years a century or more ago there might be a discrepancy of a few minutes between the time shown in
+        the native date/time input and the time shown by the Sky View Café clock.
+      </p>
+    </ng-container>
+  </div>
+  This setting can be changed later using the <strong>More.../Preferences</strong> dialog
+
+  <p-footer>
+    <div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix">
+      <button type="button" pButton icon="far fa-window-close" (click)="visible=false" label="Cancel"></button>
+      <button type="button" pButton icon="fas fa-check" (click)="setPreferences()" label="OK"></button>
+    </div>
+  </p-footer>
+</p-dialog>

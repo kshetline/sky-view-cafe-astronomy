@@ -100,22 +100,10 @@ export class SvcPreferencesDialogComponent {
   formValid = true;
   invalidMessage = '';
   inkSaver = true;
-  nativeDateTime = true;
+  nativeDateTime = false;
   showDateTimeOptions = SvcTimeEditorComponent.supportsNativeDateTime;
-  dialogSize = SvcTimeEditorComponent.supportsNativeDateTime ? '590!,295' : '590!,270';
-
-  formErrors = {
-    twilightInput: ''
-  };
-
-  validationMessages = {
-    twilightInput: {
-      required:       'Twilight value is required.',
-      minlength:      'Twilight value must be at least one digit long.',
-      maxlength:      'Twilight value must be 1-3 digits.',
-      forbiddenValue: 'Only whole numbers are allowed.'
-    }
-  };
+  resetWarnings = false;
+  get dialogSize(): string { return SvcTimeEditorComponent.supportsNativeDateTime ? '590!,335' : '590!,300'; }
 
   @Input() get visible(): boolean { return this._visible; }
   set visible(isVisible: boolean) {
@@ -236,6 +224,9 @@ export class SvcPreferencesDialogComponent {
     if (this.defaultLocation)
       this.appService.setDefaultLocationByName(this.defaultLocation);
 
+    if (this.resetWarnings)
+      this.appService.resetWarnings();
+
     this.visible = false;
   }
 
@@ -243,8 +234,12 @@ export class SvcPreferencesDialogComponent {
     if (value && typeof value !== 'string')
       value = (value as HTMLInputElement).value;
 
-    if (!/^\d{1,3}$/.test(value as string)) {
+    value = value || (value as any) === 0 ? value.toString() : '';
+
+    if (!/^\d{0,4}$/.test(value)) {
       this.formValid = false;
+      this.invalidMessage = 'Invalid value.';
+
       return;
     }
 
@@ -253,8 +248,12 @@ export class SvcPreferencesDialogComponent {
     this.formValid = ((this.twilightByDegrees && 1 <= val && val <= 18) ||
                       (!this.twilightByDegrees && 4 <= val && val <= 160));
 
-    if (!this.formValid)
-      this.invalidMessage = this.twilightByDegrees ? 'Must be a value from 1 to 18 degrees.' : 'Must be a value from 4 to 160 minutes.';
+    if (!this.formValid) {
+      if (value.length === 0)
+        this.invalidMessage = 'Twilight value is required.';
+      else
+        this.invalidMessage = this.twilightByDegrees ? 'Must be a value from 1 to 18 degrees.' : 'Must be a value from 4 to 160 minutes.';
+    }
     else if (this.twilightByDegrees)
       this.twilightDegrees = val;
     else

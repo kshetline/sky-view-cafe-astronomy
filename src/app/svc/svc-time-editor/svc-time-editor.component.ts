@@ -24,7 +24,7 @@ import { abs, div_tt0, max, min } from 'ks-math';
 import { getCssValue, isAndroid, isChrome, isIOS, padLeft } from 'ks-util';
 import { isNil } from 'lodash';
 import { timer } from 'rxjs';
-import { currentMinuteMillis, SVC_MAX_YEAR, SVC_MIN_YEAR } from '../../app.service';
+import { AppService, currentMinuteMillis, SVC_MAX_YEAR, SVC_MIN_YEAR } from '../../app.service';
 import { BACKGROUND_ANIMATIONS, FORWARD_TAB_DELAY, KsSequenceEditorComponent, SequenceItemInfo } from '../../widgets/ks-sequence-editor/ks-sequence-editor.component';
 
 export const SVC_TIME_EDITOR_VALUE_ACCESSOR: any = {
@@ -53,11 +53,13 @@ export class SvcTimeEditorComponent extends KsSequenceEditorComponent implements
   private _gregorianChangeDate = '1582-10-15';
   private onTouchedCallback: () => void = noop;
   private onChangeCallback: (_: any) => void = noop;
+  private originalMinYear: number;
   private _minYear: number;
   private _maxYear: number;
   private _localTimeValue: string;
   private _nativeDateTime = false;
   private hasLocalTimeFocus = false;
+  private firstTouch = true;
 
   @ViewChild('localTime', { static: true }) private localTimeRef: ElementRef;
   private localTime: HTMLInputElement;
@@ -66,12 +68,12 @@ export class SvcTimeEditorComponent extends KsSequenceEditorComponent implements
   localTimeMin: string;
   localTimeMax: string;
 
-  constructor(private cd: ChangeDetectorRef) {
+  constructor(private app: AppService, private cd: ChangeDetectorRef) {
     super();
     this.signDigit = 0;
     this.touchEnabled = false;
     this.useAlternateTouchHandling = false;
-    this.minYear = SVC_MIN_YEAR;
+    this.originalMinYear = this.minYear = SVC_MIN_YEAR;
     this.maxYear = SVC_MAX_YEAR;
   }
 
@@ -123,7 +125,7 @@ export class SvcTimeEditorComponent extends KsSequenceEditorComponent implements
   }
 
   onLocalTimeFocus(value: boolean): void {
-    if (value && this.viewOnly)
+    if (value && this.viewOnly || this.initialNativeDateTimePrompt())
       return;
 
     if (this.hasLocalTimeFocus !== value) {
@@ -137,6 +139,9 @@ export class SvcTimeEditorComponent extends KsSequenceEditorComponent implements
   }
 
   protected checkFocus(): void {
+    if (this.initialNativeDateTimePrompt())
+      return;
+
     super.checkFocus();
 
     if (!KsSequenceEditorComponent.addFocusOutline && this.isNativeDateTimeActive())
@@ -144,12 +149,37 @@ export class SvcTimeEditorComponent extends KsSequenceEditorComponent implements
   }
 
   protected gainedFocus(): void {
+    if (this.initialNativeDateTimePrompt())
+      return;
+
     if (!this.hasLocalTimeFocus && this.isNativeDateTimeActive() && performance.now() > this.lastTabTime + FORWARD_TAB_DELAY)
       this.localTime.focus();
   }
 
   protected lostFocus(): void {
     this.onTouchedCallback();
+  }
+
+  onTouchStart(event: TouchEvent): void {
+    if (!this.initialNativeDateTimePrompt(event))
+      super.onTouchStart(event);
+  }
+
+  protected initialNativeDateTimePrompt(event?: Event): boolean {
+    if (SvcTimeEditorComponent.supportsNativeDateTime && !this.disabled && !this.viewOnly && this.firstTouch) {
+      this.firstTouch = false;
+
+      if (!this.app.warningNativeDateTime) {
+        if (event)
+          event.preventDefault();
+
+        this.app.showNativeInputDialog = true;
+
+        return true;
+      }
+    }
+
+    return false;
   }
 
   protected onTouchStartAlternate(event: TouchEvent): void {
@@ -205,12 +235,7 @@ export class SvcTimeEditorComponent extends KsSequenceEditorComponent implements
   }
 
   private adjustLocalTimeMin(): void {
-    let minYear = this._minYear;
-
-    if (this.isNativeDateTimeActive() && minYear < 1)
-      minYear = 1;
-
-    this.localTimeMin = padLeft(max(minYear, 1), 4, '0') + '-01-01' + (this.localTimeFormat === 'date' ? '' : 'T00:00');
+    this.localTimeMin = padLeft(max(this._minYear, 1), 4, '0') + '-01-01' + (this.localTimeFormat === 'date' ? '' : 'T00:00');
   }
 
   get maxYear(): number { return this._maxYear; }
@@ -255,15 +280,19 @@ export class SvcTimeEditorComponent extends KsSequenceEditorComponent implements
         this.localTime.setAttribute('tabindex', newValue ? '0' : '-1');
 
       if (newValue) {
-        const wallTime = this.dateTime.wallTime;
+        let wallTime = this.dateTime.wallTime;
 
-        if (wallTime.y < 1) {
-          wallTime.y = 1;
+        this.minYear = max(this.originalMinYear, 1);
+
+        if (wallTime.y < this.minYear) {
+          wallTime = { y: this.minYear, m: 1, d: 1, hrs: 0, min: 0, sec: 0 };
           this.dateTime.wallTime = wallTime;
           this.onChangeCallback(this.dateTime.utcTimeMillis);
           this.updateDigits();
         }
       }
+      else
+        this.minYear = this.originalMinYear;
 
       this.cd.detectChanges();
       this.draw();

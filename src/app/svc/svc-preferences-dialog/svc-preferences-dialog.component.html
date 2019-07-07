@@ -66,6 +66,14 @@
         <ks-dropdown [options]="dateTimeOptions" [(ngModel)]="nativeDateTime"></ks-dropdown>
       </div>
     </div>
+    <div class="settings-row">
+      <div class="settings-label">
+        &nbsp;
+      </div>
+      <div class="settings-value checkbox-wrapper">
+        <p-checkbox [(ngModel)]="resetWarnings" binary="true" label="Reset warnings"></p-checkbox>
+      </div>
+    </div>
   </div>
   <p-footer>
     <div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix">

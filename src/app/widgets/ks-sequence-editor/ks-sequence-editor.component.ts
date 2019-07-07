@@ -107,7 +107,7 @@ export class KsSequenceEditorComponent implements AfterViewInit, OnInit, OnDestr
   private _viewOnly = false;
   private _blank = false;
   private lastDelta = 1;
-  private firstTouch: Point;
+  private firstTouchPoint: Point;
   private touchDeltaY = 0;
   private hasCanvasFocus = false;
   private hasHiddenInputFocus = false;
@@ -522,7 +522,7 @@ export class KsSequenceEditorComponent implements AfterViewInit, OnInit, OnDestr
   }
 
   protected onTouchStartDefault(event: TouchEvent): void {
-    this.firstTouch = getXYForTouchEvent(event);
+    this.firstTouchPoint = getXYForTouchEvent(event);
     this.touchDeltaY = 0;
 
     const newSelection = this.getSelectionForTouchEvent(event);
@@ -552,10 +552,10 @@ export class KsSequenceEditorComponent implements AfterViewInit, OnInit, OnDestr
 
     event.preventDefault();
 
-    if (this.selection >= 0 && this.firstTouch) {
+    if (this.selection >= 0 && this.firstTouchPoint) {
       const pt = getXYForTouchEvent(event);
 
-      this.touchDeltaY = pt.y - this.firstTouch.y;
+      this.touchDeltaY = pt.y - this.firstTouchPoint.y;
       this.draw();
     }
   }
@@ -585,7 +585,7 @@ export class KsSequenceEditorComponent implements AfterViewInit, OnInit, OnDestr
 
     this.onMouseUp();
 
-    if (this.selection >= 0 && this.firstTouch) {
+    if (this.selection >= 0 && this.firstTouchPoint) {
       if (abs(lastDeltaY) >= DIGIT_SWIPE_THRESHOLD) {
         if (lastDeltaY < 0)
           this.increment();

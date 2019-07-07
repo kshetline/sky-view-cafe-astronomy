@@ -61,9 +61,9 @@ export class AppComponent implements AfterViewInit, OnDestroy {
   displayPreferences = false;
   selectedTab = <number> CurrentTab.SKY;
   gcDate = '1582-10-15';
-  nativeDateTime = true;
+  nativeDateTime = false;
 
-  constructor(private app: AppService, private router: Router, atlasService: SvcAtlasService) {
+  constructor(public app: AppService, private router: Router, atlasService: SvcAtlasService) {
     this.time = app.time;
 
     atlasService.ping();
