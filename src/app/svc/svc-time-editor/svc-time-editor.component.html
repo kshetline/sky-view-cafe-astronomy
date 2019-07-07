@@ -8,6 +8,6 @@
   (touchstart)="onTouchStart($event)" (touchmove)="onTouchMove($event)" (touchend)="onTouchEnd($event)"
   [@displayState]="displayState" (@displayState.start)="onAnimate()"
   (@displayState.done)="onAnimate()"></canvas>
-  <input #localTime class="local-time" type="datetime-local" tabindex="0" [(ngModel)]="localTimeValue"
-    [min]="localTimeMin" [max]="localTimeMax">
+  <input #localTime class="local-time" [type]="localTimeFormat" tabindex="-1" [(ngModel)]="localTimeValue"
+    [min]="localTimeMin" [max]="localTimeMax" (focus)="onLocalTimeFocus(true)" (blur)="onLocalTimeFocus(false)">
 </div>

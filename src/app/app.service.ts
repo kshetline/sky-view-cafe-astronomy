@@ -41,6 +41,7 @@ export const    PROPERTY_TWILIGHT_BY_DEGREES = 'twilight_by_degrees';
 export const    PROPERTY_TWILIGHT_DEGREES = 'twilight_degrees';
 export const    PROPERTY_TWILIGHT_MINUTES = 'twilight_minutes';
 export const    PROPERTY_GREGORIAN_CHANGE_DATE = 'gregorian_change_date';
+export const    PROPERTY_NATIVE_DATE_TIME = 'native_date_time';
 export const    PROPERTY_INK_SAVER = 'ink_saver';
 
 export const NEW_LOCATION = '(new location)';

@@ -27,7 +27,8 @@ import { toggleFullScreen } from 'ks-util';
 import { debounce } from 'lodash';
 import { MenuItem, Message } from 'primeng/components/common/api';
 import { Subscription, timer } from 'rxjs';
-import { AppService, currentMinuteMillis, CurrentTab, PROPERTY_GREGORIAN_CHANGE_DATE, UserSetting, VIEW_APP } from './app.service';
+import { AppService, currentMinuteMillis, CurrentTab, PROPERTY_GREGORIAN_CHANGE_DATE, PROPERTY_NATIVE_DATE_TIME,
+  UserSetting, VIEW_APP } from './app.service';
 import { SvcAtlasService } from './svc/svc-atlas.service';
 
 const MIN_APP_WIDTH = 1040;
@@ -60,6 +61,7 @@ export class AppComponent implements AfterViewInit, OnDestroy {
   displayPreferences = false;
   selectedTab = <number> CurrentTab.SKY;
   gcDate = '1582-10-15';
+  nativeDateTime = true;
 
   constructor(private app: AppService, private router: Router, atlasService: SvcAtlasService) {
     this.time = app.time;
@@ -77,9 +79,13 @@ export class AppComponent implements AfterViewInit, OnDestroy {
     app.getLocationUpdates(() => this.updateTimeZone());
 
     app.getUserSettingUpdates((setting: UserSetting) => {
-      if (setting.view === VIEW_APP && setting.property === PROPERTY_GREGORIAN_CHANGE_DATE) {
-        app.applyCalendarType(this.dateTime);
-        this.gcDate = app.gregorianChangeDate;
+      if (setting.view === VIEW_APP) {
+        if (setting.property === PROPERTY_GREGORIAN_CHANGE_DATE) {
+          app.applyCalendarType(this.dateTime);
+          this.gcDate = app.gregorianChangeDate;
+        }
+        else if (setting.property === PROPERTY_NATIVE_DATE_TIME)
+          this.nativeDateTime = <boolean> setting.value;
       }
     });
 
