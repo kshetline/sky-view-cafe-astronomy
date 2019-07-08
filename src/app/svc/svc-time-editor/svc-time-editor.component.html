@@ -10,6 +10,6 @@
   (@displayState.done)="onAnimate()"></canvas>
   <input #localTime class="local-time" [type]="localTimeFormat" tabindex="-1" [(ngModel)]="localTimeValue"
     autocomplete="off" autocapitalize="off" autocorrect="off"
-    [min]="localTimeMin" [max]="localTimeMax" [disabled]="viewOnly"
+    [min]="localTimeMin" [max]="localTimeMax" [disabled]="viewOnly || !useAlternateTouchHandling"
     (focus)="onLocalTimeFocus(true)" (blur)="onLocalTimeFocus(false)">
 </div>
