@@ -122,6 +122,7 @@ export class SvcPreferencesDialogComponent {
         this.calendarOption = this.appService.calendarType;
         this.inkSaver = this.appService.inkSaver;
         this.nativeDateTime = this.appService.nativeDateTime;
+        this.resetWarnings = false;
 
         const gcd = this.appService.gregorianChangeDate;
 
