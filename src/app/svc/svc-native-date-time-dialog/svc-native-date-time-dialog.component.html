@@ -7,17 +7,11 @@
   <p-radioButton name="native-date-time-1" [value]="true"  [(ngModel)]="nativeDateTime" label="Use your web browser's own date/time input method"></p-radioButton>
   <div class="explanation">
     This provides greater ease of use with mobile devices, but can't be used to enter dates before the year 1 CE.
-    <ng-container *ngIf="isIOS">
-      <p>
-        For iOS devices, there is no native date/time input that covers the full range of time from years down to minutes.
-        When using the web browser's input method, touch the left side of the clock to set year, month and date. Touch the
-        right side to enter month, date, hour and minute.
-      </p>
-      <p>
-        When setting years a century or more ago there might be a discrepancy of a few minutes between the time shown in
-        the native date/time input and the time shown by the Sky View Café clock.
-      </p>
-    </ng-container>
+    <p *ngIf="isIOS">
+      For iOS devices, there is no native date/time input that covers the full range of time from years down to minutes.
+      When using the web browser's input method, touch the left side of the clock to set year, month and date. Touch the
+      right side to enter hour and minute.
+    </p>
   </div>
   This setting can be changed later using the <strong>More.../Preferences</strong> dialog
 

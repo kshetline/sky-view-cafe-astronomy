@@ -184,6 +184,7 @@ export class SvcDateEditorComponent extends KsSequenceEditorComponent implements
     else
       i[0].value = NO_BREAK_SPACE;
 
+    // noinspection JSSuspiciousNameCombination
     const y4 = M_.div_tt0(y, 1000);
     const y3 = M_.div_tt0(y - y4 * 1000, 100);
     const y2 = M_.div_tt0(y - y4 * 1000 - y3 * 100, 10);

@@ -39,6 +39,8 @@ const platformNativeDateTime = (isIOS() || isAndroid() && isChrome());
 const NO_BREAK_SPACE = '\u00A0';
 const THREE_PER_EM_SPACE = '\u2004';
 
+type TimeFormat = 'date' | 'time' | 'datetime-local';
+
 @Component({
   selector: 'svc-time-editor',
   animations: [BACKGROUND_ANIMATIONS],
@@ -64,7 +66,7 @@ export class SvcTimeEditorComponent extends KsSequenceEditorComponent implements
   @ViewChild('localTime', { static: true }) private localTimeRef: ElementRef;
   private localTime: HTMLInputElement;
 
-  localTimeFormat: 'date' | 'datetime-local' = 'datetime-local';
+  localTimeFormat: TimeFormat = 'datetime-local';
   localTimeMin: string;
   localTimeMax: string;
 
@@ -94,17 +96,23 @@ export class SvcTimeEditorComponent extends KsSequenceEditorComponent implements
       let newTime: number;
 
       if (newValue) {
-        const match = /(\d\d\d\d)-(\d\d)-(\d\d)(?:T(\d\d):(\d\d))?/.exec(newValue);
+        const w = this.dateTime.wallTime;
+        let $;
 
-        if (match) {
-          const d = match.slice(1).map(n => Number(n));
+        if (($ = /(\d\d\d\d)-(\d\d)-(\d\d)(?:T(\d\d):(\d\d))?/.exec(newValue))) {
+          const d = $.slice(1).map(n => Number(n));
 
-          if (isNil(match[4])) {
-            d[3] = this.dateTime.wallTime.hrs;
-            d[4] = this.dateTime.wallTime.min;
+          if (isNil($[4])) {
+            d[3] = w.hrs;
+            d[4] = w.min;
           }
 
-          newTime = new KsDateTime({y: d[0], m: d[1], d: d[2], hrs: d[3], min: d[4], sec: 0}, this.timeZone, this._gregorianChangeDate).utcTimeMillis;
+          newTime = new KsDateTime({ y: d[0], m: d[1], d: d[2], hrs: d[3], min: d[4], sec: 0 }, this.timeZone, this._gregorianChangeDate).utcTimeMillis;
+        }
+        else if (($ = /(\d\d):(\d\d)/.exec(newValue))) {
+          const t = $.slice(1).map(n => Number(n));
+
+          newTime = new KsDateTime({ y: w.y, m: w.m, d: w.d, hrs: t[0], min: t[1], sec: 0 }, this.timeZone, this._gregorianChangeDate).utcTimeMillis;
         }
       }
       else
@@ -183,8 +191,13 @@ export class SvcTimeEditorComponent extends KsSequenceEditorComponent implements
   }
 
   protected onTouchStartAlternate(event: TouchEvent): void {
-    const selection = this.getSelectionForTouchEvent(event);
-    const format = (isIOS() && 0 <= selection && selection < 11 ? 'date' : 'datetime-local');
+    let format: TimeFormat = 'datetime-local';
+
+    if (isIOS()) {
+      const selection = this.getSelectionForTouchEvent(event);
+
+      format = (0 <= selection && selection < 11 ? 'date' : 'time');
+    }
 
     if (this.localTimeFormat !== format) {
       // Changing the format of the input (using the "type" attribute) sets off a number of updates
@@ -235,7 +248,10 @@ export class SvcTimeEditorComponent extends KsSequenceEditorComponent implements
   }
 
   private adjustLocalTimeMin(): void {
-    this.localTimeMin = padLeft(max(this._minYear, 1), 4, '0') + '-01-01' + (this.localTimeFormat === 'date' ? '' : 'T00:00');
+    if (this.localTimeFormat === 'time')
+      this.localTimeMin = null;
+    else
+      this.localTimeMin = padLeft(max(this._minYear, 1), 4, '0') + '-01-01' + (this.localTimeFormat === 'date' ? '' : 'T00:00');
   }
 
   get maxYear(): number { return this._maxYear; }
@@ -247,7 +263,10 @@ export class SvcTimeEditorComponent extends KsSequenceEditorComponent implements
   }
 
   private adjustLocalTimeMax(): void {
-    this.localTimeMax = padLeft(this._maxYear, 4, '0') + '-12-31' + (this.localTimeFormat === 'date' ? '' : 'T23:59');
+    if (this.localTimeFormat === 'time')
+      this.localTimeMax = null;
+    else
+      this.localTimeMax = padLeft(this._maxYear, 4, '0') + '-12-31' + (this.localTimeFormat === 'date' ? '' : 'T23:59');
   }
 
   get timeZone(): KsTimeZone { return this.dateTime.timeZone; }
@@ -419,8 +438,11 @@ export class SvcTimeEditorComponent extends KsSequenceEditorComponent implements
     if (this.isNativeDateTimeActive() && year < 1)
       year = 1;
 
-    this._localTimeValue = `${padLeft(year, 4, '0')}-${padLeft(w.m, 2, '0')}-${padLeft(w.d, 2, '0')}` +
-      (this.localTimeFormat === 'date' ? '' : `T${padLeft(w.hrs, 2, '0')}:${padLeft(w.min, 2, '0')}`);
+    if (this.localTimeFormat === 'time')
+      this._localTimeValue = `${padLeft(w.hrs, 2, '0')}:${padLeft(w.min, 2, '0')}`;
+    else
+      this._localTimeValue = `${padLeft(year, 4, '0')}-${padLeft(w.m, 2, '0')}-${padLeft(w.d, 2, '0')}` +
+        (this.localTimeFormat === 'date' ? '' : `T${padLeft(w.hrs, 2, '0')}:${padLeft(w.min, 2, '0')}`);
   }
 
   private getWallTimeFromDigits(): DateAndTime {
