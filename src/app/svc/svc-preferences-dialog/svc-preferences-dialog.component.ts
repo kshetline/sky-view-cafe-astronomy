@@ -22,12 +22,14 @@
 
 import { Component, EventEmitter, Input, Output, ViewChild } from '@angular/core';
 import { getISOFormatDate, parseISODate, YMDDate } from 'ks-date-time-zone';
+import { eventToKey } from 'ks-util';
 import { MenuItem } from 'primeng/components/common/api';
 import {
-  AppService, CalendarSetting, CurrentTab, PROPERTY_DEFAULT_TAB, PROPERTY_GREGORIAN_CHANGE_DATE, PROPERTY_INK_SAVER, PROPERTY_NORTH_AZIMUTH, PROPERTY_TWILIGHT_BY_DEGREES,
-  PROPERTY_TWILIGHT_DEGREES, PROPERTY_TWILIGHT_MINUTES, VIEW_APP
+  AppService, CalendarSetting, CurrentTab, PROPERTY_DEFAULT_TAB, PROPERTY_GREGORIAN_CHANGE_DATE, PROPERTY_INK_SAVER, PROPERTY_NATIVE_DATE_TIME, PROPERTY_NORTH_AZIMUTH,
+  PROPERTY_TWILIGHT_BY_DEGREES, PROPERTY_TWILIGHT_DEGREES, PROPERTY_TWILIGHT_MINUTES, VIEW_APP
 } from '../../app.service';
 import { KsDropdownComponent } from '../../widgets/ks-dropdown/ks-dropdown.component';
+import { SvcTimeEditorComponent } from '../svc-time-editor/svc-time-editor.component';
 
 interface MenuItemPlus extends MenuItem {
   value?: any;
@@ -82,6 +84,11 @@ export class SvcPreferencesDialogComponent {
     {label: 'Print using on-screen colors', value: false}
   ];
 
+  dateTimeOptions: MenuItemPlus[] = [
+    {label: 'Use web browser\'s own date/time input method (no years BCE)', value: true},
+    {label: 'Use Sky View Café date/time input method', value: false}
+  ];
+
   locations: string[] = [''];
   defaultLocation = '';
   defaultTab = CurrentTab.SKY;
@@ -93,19 +100,10 @@ export class SvcPreferencesDialogComponent {
   formValid = true;
   invalidMessage = '';
   inkSaver = true;
-
-  formErrors = {
-    twilightInput: ''
-  };
-
-  validationMessages = {
-    twilightInput: {
-      required:       'Twilight value is required.',
-      minlength:      'Twilight value must be at least one digit long.',
-      maxlength:      'Twilight value must be 1-3 digits.',
-      forbiddenValue: 'Only whole numbers are allowed.'
-    }
-  };
+  nativeDateTime = false;
+  showDateTimeOptions = SvcTimeEditorComponent.supportsNativeDateTime;
+  resetWarnings = false;
+  get dialogSize(): string { return SvcTimeEditorComponent.supportsNativeDateTime ? '590!,335' : '590!,300'; }
 
   @Input() get visible(): boolean { return this._visible; }
   set visible(isVisible: boolean) {
@@ -119,8 +117,12 @@ export class SvcPreferencesDialogComponent {
         this.twilightDegrees = this.appService.twilightDegrees;
         this.twilightMinutes = this.appService.twilightMinutes;
         this.twilightByDegrees = this.appService.twilightByDegrees;
+        this.twilightValue = (this.twilightByDegrees ? this.twilightDegrees : this.twilightMinutes);
+        this.invalidMessage = '';
         this.calendarOption = this.appService.calendarType;
         this.inkSaver = this.appService.inkSaver;
+        this.nativeDateTime = this.appService.nativeDateTime;
+        this.resetWarnings = false;
 
         const gcd = this.appService.gregorianChangeDate;
 
@@ -190,7 +192,9 @@ export class SvcPreferencesDialogComponent {
   }
 
   onKey(event: KeyboardEvent): void {
-    if (event.keyCode === 13) {
+    const key = eventToKey(event);
+
+    if (key === 'Enter') {
       event.preventDefault();
       this.setPreferences();
     }
@@ -202,6 +206,7 @@ export class SvcPreferencesDialogComponent {
 
     this.appService.updateUserSetting({view: VIEW_APP, property: PROPERTY_NORTH_AZIMUTH, value: this.northAzimuth, source: this});
     this.appService.updateUserSetting({view: VIEW_APP, property: PROPERTY_INK_SAVER, value: this.inkSaver, source: this});
+    this.appService.updateUserSetting({view: VIEW_APP, property: PROPERTY_NATIVE_DATE_TIME, value: this.nativeDateTime, source: this});
     this.appService.updateUserSetting({view: VIEW_APP, property: PROPERTY_DEFAULT_TAB, value: this.defaultTab, source: this});
     this.appService.updateUserSetting({view: VIEW_APP, property: PROPERTY_TWILIGHT_BY_DEGREES, value: this.twilightByDegrees, source: this});
 
@@ -222,12 +227,22 @@ export class SvcPreferencesDialogComponent {
     if (this.defaultLocation)
       this.appService.setDefaultLocationByName(this.defaultLocation);
 
+    if (this.resetWarnings)
+      this.appService.resetWarnings();
+
     this.visible = false;
   }
 
-  onTwilightChange(value: string): void {
-    if (!/\d{1,3}/.test(value)) {
+  onTwilightChange(value: string | EventTarget): void {
+    if (value && typeof value !== 'string')
+      value = (value as HTMLInputElement).value;
+
+    value = value || (value as any) === 0 ? value.toString() : '';
+
+    if (!/^\d{0,4}$/.test(value)) {
       this.formValid = false;
+      this.invalidMessage = 'Invalid value.';
+
       return;
     }
 
@@ -236,8 +251,12 @@ export class SvcPreferencesDialogComponent {
     this.formValid = ((this.twilightByDegrees && 1 <= val && val <= 18) ||
                       (!this.twilightByDegrees && 4 <= val && val <= 160));
 
-    if (!this.formValid)
-      this.invalidMessage = this.twilightByDegrees ? 'Must be a value from 1 to 18 degrees.' : 'Must be a value from 4 to 160 minutes.';
+    if (!this.formValid) {
+      if (value.length === 0)
+        this.invalidMessage = 'Twilight value is required.';
+      else
+        this.invalidMessage = this.twilightByDegrees ? 'Must be a value from 1 to 18 degrees.' : 'Must be a value from 4 to 160 minutes.';
+    }
     else if (this.twilightByDegrees)
       this.twilightDegrees = val;
     else

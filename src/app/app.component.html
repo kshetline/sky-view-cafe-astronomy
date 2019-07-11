@@ -3,10 +3,11 @@
   <div class="about-dialog">
     <img src="/assets/resources/svc_lunar_eclipse.png" alt="lunar eclipse" width="64" height="64">
     <h2>Sky View Café NP</h2>
-    Version 1.7.3<br><br>
+    Version 1.8.2<br><br>
     Copyright © 2016-2019 Kerry Shetline.
   </div>
 </p-dialog>
+<svc-native-date-time-dialog [(visible)]="app.showNativeInputDialog"></svc-native-date-time-dialog>
 <svc-preferences-dialog [(visible)]="displayPreferences"></svc-preferences-dialog>
 <div class="flex-container all-panels" fxLayout="row" fxLayoutAlign="start stretch" fxLayoutGap="4px">
   <div class="flex-container" fxLayout="column" fxLayoutAlign="start stretch" fxLayoutGap="4px" fxFlex="1 0 auto">
@@ -26,7 +27,8 @@
             <button pButton type="button" (click)="setToNow()" [disabled]="trackTime" label="Now"></button>
           </div>
           <div class="time-panel-item">
-            <svc-time-editor [(ngModel)]="time" [timeZone]="timeZone" [viewOnly]="trackTime" [gregorianChangeDate]="gcDate"></svc-time-editor>
+            <svc-time-editor [(ngModel)]="time" [timeZone]="timeZone" [viewOnly]="trackTime" [gregorianChangeDate]="gcDate"
+              [nativeDateTime]="nativeDateTime"></svc-time-editor>
           </div>
           <div class="time-panel-item">
             <p-overlayPanel #calendarPopup class="calendar-popup">

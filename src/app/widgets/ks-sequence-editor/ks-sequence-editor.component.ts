@@ -37,6 +37,8 @@ export interface SequenceItemInfo {
   sizing?: string | string[];
 }
 
+export const FORWARD_TAB_DELAY = 250;
+
 const KEY_REPEAT_DELAY = 500;
 const KEY_REPEAT_RATE  = 100;
 const WARNING_DURATION = 5000;
@@ -75,6 +77,13 @@ const VIEW_ONLY_TEXT       = '#0F0';
 
 const DEFAULT_BORDER_COLOR = '#D8D8D8';
 
+const touchListener = () => {
+  KsSequenceEditorComponent.touchHasOccurred = true;
+  document.removeEventListener('touchstart', touchListener);
+};
+
+document.addEventListener('touchstart', touchListener);
+
 @Component({
   selector: 'ks-sequence-editor',
   animations: [BACKGROUND_ANIMATIONS],
@@ -85,9 +94,12 @@ export class KsSequenceEditorComponent implements AfterViewInit, OnInit, OnDestr
   private static lastKeyTimestamp = 0;
   private static lastKeyKey = '';
   private static useHiddenInput = isAndroid();
-  private static addFocusOutline = isEdge() || isIE() || isIOS();
   private static checkForRepeatedKeyTimestamps = isIOS();
   private static disableContentEditable = isEdge() || isIE();
+
+  protected static addFocusOutline = isEdge() || isIE() || isIOS();
+
+  static touchHasOccurred = false;
 
   private keyTimer: Subscription;
   private clickTimer: Subscription;
@@ -95,15 +107,15 @@ export class KsSequenceEditorComponent implements AfterViewInit, OnInit, OnDestr
   private _viewOnly = false;
   private _blank = false;
   private lastDelta = 1;
-  private firstTouch: Point;
+  private firstTouchPoint: Point;
   private touchDeltaY = 0;
-  private hiddenInput: HTMLInputElement;
   private hasCanvasFocus = false;
   private hasHiddenInputFocus = false;
   private getCharFromInputEvent = false;
 
   @ViewChild('canvas', { static: true }) private canvasRef: ElementRef;
 
+  protected hiddenInput: HTMLInputElement;
   protected canvas: HTMLCanvasElement;
   protected signDigit = -1;
   protected disabled = false;
@@ -120,9 +132,11 @@ export class KsSequenceEditorComponent implements AfterViewInit, OnInit, OnDestr
   protected selection = 0;
   protected setupComplete = false;
   protected touchEnabled = false;
-  protected useAlternateTouchHandling = false;
+  protected selectionHidden = false;
+  protected lastTabTime = 0;
 
   displayState = 'normal';
+  useAlternateTouchHandling = false;
 
   protected static getPadding(metrics: FontMetrics): number {
     return max(metrics.descent + 1, floor(metrics.ascent / 2));
@@ -132,6 +146,12 @@ export class KsSequenceEditorComponent implements AfterViewInit, OnInit, OnDestr
   @Input() set viewOnly(value: boolean) {
     this._viewOnly = value;
     this.displayState = value ? 'viewOnly' : (this.disabled ? 'disabled' : 'normal');
+
+    if (this.canvas) {
+      this.canvas.setAttribute('tabindex', value ? '-1' : '0');
+      this.canvas.setAttribute('disabled', value ? 'true' : null);
+      this.canvas.setAttribute('contenteditable', value ? null : 'true');
+    }
   }
 
   get blank(): boolean { return this._blank; }
@@ -226,11 +246,23 @@ export class KsSequenceEditorComponent implements AfterViewInit, OnInit, OnDestr
       this.smallFixedFont = fontParts[1] + smallerSize + fontParts[3] + fontParts[4] + '"Lucida Console", "Lucida Sans Typewriter", Monaco, monospace';
     }
 
+    this.createHiddenInput();
+
+    if (KsSequenceEditorComponent.disableContentEditable)
+      this.canvas.contentEditable = 'false';
+
+    this.computeSize();
+    this.setupComplete = true;
+    this.draw();
+  }
+
+  protected createHiddenInput(): void {
     if (KsSequenceEditorComponent.useHiddenInput) {
       this.hiddenInput = document.createElement('input');
       this.hiddenInput.type = 'text';
       this.hiddenInput.autocomplete = 'off';
       this.hiddenInput.setAttribute('autocapitalize', 'off');
+      this.hiddenInput.setAttribute('autocomplete', 'off');
       this.hiddenInput.setAttribute('autocorrect', 'off');
       this.hiddenInput.style.position = 'absolute';
       this.hiddenInput.style.opacity = '0';
@@ -250,13 +282,6 @@ export class KsSequenceEditorComponent implements AfterViewInit, OnInit, OnDestr
       this.canvas.parentElement.appendChild(this.hiddenInput);
       this.canvas.setAttribute('tabindex', '-1');
     }
-
-    if (KsSequenceEditorComponent.disableContentEditable)
-      this.canvas.contentEditable = 'false';
-
-    this.computeSize();
-    this.setupComplete = true;
-    this.draw();
   }
 
   protected getFontForItem(item: SequenceItemInfo): string {
@@ -360,7 +385,7 @@ export class KsSequenceEditorComponent implements AfterViewInit, OnInit, OnDestr
       if (!item.hidden && (!item.editable || !this.blank)) {
         context.fillStyle = this.getColorForItem(item, index);
 
-        if (index === this.selection && this.hasFocus && !this.disabled && !this._viewOnly) {
+        if (index === this.selection && this.hasFocus && !this.disabled && !this._viewOnly && !this.selectionHidden) {
           context.fillRect(this.hOffsets[index], 1, this.hOffsets[index + 1] - this.hOffsets[index], h - 2);
           context.fillStyle = SELECTED_TEXT;
         }
@@ -482,7 +507,13 @@ export class KsSequenceEditorComponent implements AfterViewInit, OnInit, OnDestr
     if (this.disabled || this.viewOnly || !this.touchEnabled)
       return;
 
-    event.preventDefault();
+    const pt = getXYForTouchEvent(event);
+
+    if (pt.x < 1 || pt.y < 1 || pt.x >= this.width || pt.y >= this.height)
+      return;
+
+    if (event.cancelable)
+      event.preventDefault();
 
     if (this.useAlternateTouchHandling)
       this.onTouchStartAlternate(event);
@@ -491,7 +522,7 @@ export class KsSequenceEditorComponent implements AfterViewInit, OnInit, OnDestr
   }
 
   protected onTouchStartDefault(event: TouchEvent): void {
-    this.firstTouch = getXYForTouchEvent(event);
+    this.firstTouchPoint = getXYForTouchEvent(event);
     this.touchDeltaY = 0;
 
     const newSelection = this.getSelectionForTouchEvent(event);
@@ -521,10 +552,10 @@ export class KsSequenceEditorComponent implements AfterViewInit, OnInit, OnDestr
 
     event.preventDefault();
 
-    if (this.selection >= 0 && this.firstTouch) {
+    if (this.selection >= 0 && this.firstTouchPoint) {
       const pt = getXYForTouchEvent(event);
 
-      this.touchDeltaY = pt.y - this.firstTouch.y;
+      this.touchDeltaY = pt.y - this.firstTouchPoint.y;
       this.draw();
     }
   }
@@ -554,7 +585,7 @@ export class KsSequenceEditorComponent implements AfterViewInit, OnInit, OnDestr
 
     this.onMouseUp();
 
-    if (this.selection >= 0 && this.firstTouch) {
+    if (this.selection >= 0 && this.firstTouchPoint) {
       if (abs(lastDeltaY) >= DIGIT_SWIPE_THRESHOLD) {
         if (lastDeltaY < 0)
           this.increment();
@@ -586,10 +617,13 @@ export class KsSequenceEditorComponent implements AfterViewInit, OnInit, OnDestr
   }
 
   onFocus(value: boolean): void {
+    if (value && this.viewOnly)
+      return;
+
     if (this.hasCanvasFocus !== value) {
       this.hasCanvasFocus = value;
 
-      if (this.hiddenInput)
+      if (value && this.hiddenInput && !this.hiddenInput.disabled)
         this.hiddenInput.focus();
 
       this.checkFocus();
@@ -597,14 +631,21 @@ export class KsSequenceEditorComponent implements AfterViewInit, OnInit, OnDestr
   }
 
   onHiddenInputFocus(value: boolean): void {
+    if (value && this.viewOnly)
+      return;
+
     if (this.hasHiddenInputFocus !== value) {
       this.hasHiddenInputFocus = value;
       this.checkFocus();
     }
   }
 
-  private checkFocus(): void {
-    const newFocus = this.hasCanvasFocus || this.hasHiddenInputFocus;
+  protected hasAComponentInFocus(): boolean {
+    return this.hasCanvasFocus || this.hasHiddenInputFocus;
+  }
+
+  protected checkFocus(): void {
+    const newFocus = this.hasAComponentInFocus();
 
     if (this.hasFocus !== newFocus) {
       this.hasFocus = newFocus;
@@ -654,7 +695,10 @@ export class KsSequenceEditorComponent implements AfterViewInit, OnInit, OnDestr
       return true;
     }
 
-    if (key === 'Tab' || event.altKey || event.ctrlKey || event.metaKey)
+    if (key === 'Tab')
+      this.lastTabTime = performance.now();
+
+    if (key === 'Tab' || event.altKey || event.ctrlKey || event.metaKey || /^F\d+$/.test(key))
       return true;
 
     // If the built-in auto-repeat is in effect, ignore keystrokes that come along until that auto-repeat ends.
@@ -680,7 +724,10 @@ export class KsSequenceEditorComponent implements AfterViewInit, OnInit, OnDestr
   onKeyPress(event: KeyboardEvent): boolean {
     const key = eventToKey(event);
 
-    if (key === 'Tab' || event.altKey || event.ctrlKey || event.metaKey)
+    if (key === 'Tab')
+      this.lastTabTime = performance.now();
+
+    if (key === 'Tab' || event.altKey || event.ctrlKey || event.metaKey || /^F\d+$/.test(key))
       return true;
 
     event.preventDefault();

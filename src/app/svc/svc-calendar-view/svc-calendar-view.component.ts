@@ -137,6 +137,7 @@ export class SvcCalendarViewComponent implements AfterViewInit {
   title: string;
   calendar: DateInfo[][] = [];
   daysOfWeek: string[] = [];
+  hasBeenDrawn = false;
   includeTransits = false;
   isFirefox = false;
   isEdgeOrIE = false;
@@ -279,6 +280,8 @@ export class SvcCalendarViewComponent implements AfterViewInit {
         }
       }
     }
+
+    this.hasBeenDrawn = true;
   }
 
   private updateDayHeadings(): void {

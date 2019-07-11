@@ -1,4 +1,4 @@
-<p-dialog header="Preferences" [(visible)]="visible" ksSizer="590!,280" (keyup)="onKey($event)">
+<p-dialog header="Preferences" [(visible)]="visible" [ksSizer]="dialogSize" (keyup)="onKey($event)">
   <div class="settings-grid">
     <div class="settings-row">
       <div class="settings-label">
@@ -31,7 +31,7 @@
       <div class="settings-value flex-container" fxLayout="row" fxLayoutAlign="space-between center">
         <ks-dropdown [options]="twilightOptions" [(ngModel)]="twilightByDegrees" [style]="{width: '27em'}" fxFlex="0 0 auto"></ks-dropdown>
         <input type="text" [(ngModel)]="twilightValue" pInputText class="twilight-input form-control" fxFlex="0 0 auto"
-               id="twilightInput" required minlength="1" maxlength="3" pattern="\d{1,3}" (input)="onTwilightChange($event.target.value)"/>
+               id="twilightInput" required minlength="1" maxlength="3" pattern="\d{1,3}" (input)="onTwilightChange($event.target)"/>
       </div>
     </div>
     <div *ngIf="!formValid" class="settings-row">
@@ -56,6 +56,22 @@
       </div>
       <div class="settings-value">
         <ks-dropdown [options]="inkSaverOptions" [(ngModel)]="inkSaver"></ks-dropdown>
+      </div>
+    </div>
+    <div *ngIf="showDateTimeOptions" class="settings-row">
+      <div class="settings-label">
+        Date/time input:
+      </div>
+      <div class="settings-value">
+        <ks-dropdown [options]="dateTimeOptions" [(ngModel)]="nativeDateTime"></ks-dropdown>
+      </div>
+    </div>
+    <div class="settings-row">
+      <div class="settings-label">
+        &nbsp;
+      </div>
+      <div class="settings-value checkbox-wrapper">
+        <p-checkbox [(ngModel)]="resetWarnings" binary="true" label="Reset warnings"></p-checkbox>
       </div>
     </div>
   </div>

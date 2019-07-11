@@ -17,14 +17,15 @@
   OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-import { Component, ElementRef, forwardRef, Input, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, forwardRef, Input, OnInit, ViewChild } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { DateAndTime, DateTimeField, KsDateTime, KsTimeZone } from 'ks-date-time-zone';
 import { abs, div_tt0, max, min } from 'ks-math';
-import { padLeft } from 'ks-util';
+import { getCssValue, isAndroid, isChrome, isIOS, padLeft } from 'ks-util';
+import { isNil } from 'lodash';
 import { timer } from 'rxjs';
-import { currentMinuteMillis, SVC_MAX_YEAR, SVC_MIN_YEAR } from '../../app.service';
-import { BACKGROUND_ANIMATIONS, KsSequenceEditorComponent, SequenceItemInfo } from '../../widgets/ks-sequence-editor/ks-sequence-editor.component';
+import { AppService, currentMinuteMillis, SVC_MAX_YEAR, SVC_MIN_YEAR } from '../../app.service';
+import { BACKGROUND_ANIMATIONS, FORWARD_TAB_DELAY, KsSequenceEditorComponent, SequenceItemInfo } from '../../widgets/ks-sequence-editor/ks-sequence-editor.component';
 
 export const SVC_TIME_EDITOR_VALUE_ACCESSOR: any = {
   provide: NG_VALUE_ACCESSOR,
@@ -33,6 +34,7 @@ export const SVC_TIME_EDITOR_VALUE_ACCESSOR: any = {
 };
 
 const noop = () => {};
+const platformNativeDateTime = (isIOS() || isAndroid() && isChrome());
 
 const NO_BREAK_SPACE = '\u00A0';
 const THREE_PER_EM_SPACE = '\u2004';
@@ -45,25 +47,33 @@ const THREE_PER_EM_SPACE = '\u2004';
   providers: [SVC_TIME_EDITOR_VALUE_ACCESSOR]
 })
 export class SvcTimeEditorComponent extends KsSequenceEditorComponent implements ControlValueAccessor, OnInit {
+  static get supportsNativeDateTime(): boolean { return platformNativeDateTime; }
+
   private dateTime = new KsDateTime();
   private _gregorianChangeDate = '1582-10-15';
   private onTouchedCallback: () => void = noop;
   private onChangeCallback: (_: any) => void = noop;
+  private originalMinYear: number;
   private _minYear: number;
   private _maxYear: number;
   private _localTimeValue: string;
+  private _nativeDateTime = false;
+  private hasLocalTimeFocus = false;
+  private firstTouch = true;
 
   @ViewChild('localTime', { static: true }) private localTimeRef: ElementRef;
   private localTime: HTMLInputElement;
 
+  localTimeFormat: 'date' | 'datetime-local' = 'datetime-local';
   localTimeMin: string;
   localTimeMax: string;
 
-  constructor() {
+  constructor(private app: AppService, private cd: ChangeDetectorRef) {
     super();
     this.signDigit = 0;
-    this.useAlternateTouchHandling = true;
-    this.minYear = SVC_MIN_YEAR;
+    this.touchEnabled = false;
+    this.useAlternateTouchHandling = false;
+    this.originalMinYear = this.minYear = SVC_MIN_YEAR;
     this.maxYear = SVC_MAX_YEAR;
   }
 
@@ -84,10 +94,16 @@ export class SvcTimeEditorComponent extends KsSequenceEditorComponent implements
       let newTime: number;
 
       if (newValue) {
-        const match = /(\d\d\d\d)-(\d\d)-(\d\d)T(\d\d):(\d\d)/.exec(newValue);
+        const match = /(\d\d\d\d)-(\d\d)-(\d\d)(?:T(\d\d):(\d\d))?/.exec(newValue);
 
         if (match) {
           const d = match.slice(1).map(n => Number(n));
+
+          if (isNil(match[4])) {
+            d[3] = this.dateTime.wallTime.hrs;
+            d[4] = this.dateTime.wallTime.min;
+          }
+
           newTime = new KsDateTime({y: d[0], m: d[1], d: d[2], hrs: d[3], min: d[4], sec: 0}, this.timeZone, this._gregorianChangeDate).utcTimeMillis;
         }
       }
@@ -105,16 +121,89 @@ export class SvcTimeEditorComponent extends KsSequenceEditorComponent implements
   ngOnInit(): void {
     super.ngOnInit();
     this.localTime = this.localTimeRef.nativeElement;
+    this.localTime.setAttribute('tabindex', this.useAlternateTouchHandling ? '0' : '-1');
+  }
+
+  onLocalTimeFocus(value: boolean): void {
+    if (value && this.viewOnly || this.initialNativeDateTimePrompt())
+      return;
+
+    if (this.hasLocalTimeFocus !== value) {
+      this.hasLocalTimeFocus = value;
+      this.checkFocus();
+    }
+  }
+
+  protected hasAComponentInFocus(): boolean {
+    return super.hasAComponentInFocus() || this.hasLocalTimeFocus;
+  }
+
+  protected checkFocus(): void {
+    if (this.initialNativeDateTimePrompt())
+      return;
+
+    super.checkFocus();
+
+    if (!KsSequenceEditorComponent.addFocusOutline && this.isNativeDateTimeActive())
+      this.canvas.style.outline = getCssValue(this.localTime, 'outline');
+  }
+
+  protected gainedFocus(): void {
+    if (this.initialNativeDateTimePrompt())
+      return;
+
+    if (!this.hasLocalTimeFocus && this.isNativeDateTimeActive() && performance.now() > this.lastTabTime + FORWARD_TAB_DELAY)
+      this.localTime.focus();
   }
 
   protected lostFocus(): void {
     this.onTouchedCallback();
   }
 
+  onTouchStart(event: TouchEvent): void {
+    if (!this.initialNativeDateTimePrompt(event))
+      super.onTouchStart(event);
+  }
+
+  protected initialNativeDateTimePrompt(event?: Event): boolean {
+    if (SvcTimeEditorComponent.supportsNativeDateTime && !this.disabled && !this.viewOnly && this.firstTouch) {
+      this.firstTouch = false;
+
+      if (!this.app.warningNativeDateTime) {
+        if (event)
+          event.preventDefault();
+
+        this.app.showNativeInputDialog = true;
+
+        return true;
+      }
+    }
+
+    return false;
+  }
+
   protected onTouchStartAlternate(event: TouchEvent): void {
-    // TODO: Disable special touch interface mode for now
-    // this.localTime.focus();
-    // setTimeout(() => this.localTime.click(), 250);
+    const selection = this.getSelectionForTouchEvent(event);
+    const format = (isIOS() && 0 <= selection && selection < 11 ? 'date' : 'datetime-local');
+
+    if (this.localTimeFormat !== format) {
+      // Changing the format of the input (using the "type" attribute) sets off a number of updates
+      // that don't stabilize very well if we leave it up to Angular's change detection process to do
+      // all of the updating, so we'll update all of the changing input attributes and input value
+      // directly, all in one go.
+      this.localTimeFormat = format;
+      this.adjustLocalTimeMin();
+      this.adjustLocalTimeMax();
+      this.updateLocalTime();
+      this.localTime.type = format;
+      this.localTime.min = this.localTimeMin;
+      this.localTime.max = this.localTimeMax;
+      this.localTime.value = this._localTimeValue;
+      this.cd.detectChanges();
+    }
+
+    this.localTime.focus();
+    setTimeout(() => this.localTime.click(), 250);
   }
 
   writeValue(newValue: number): void {
@@ -141,16 +230,24 @@ export class SvcTimeEditorComponent extends KsSequenceEditorComponent implements
   @Input() set minYear(year: number) {
     if (this._minYear !== year) {
       this._minYear = year;
-      this.localTimeMin = padLeft(max(year, 1), 4, '0') + '-01-01T00:00';
+      this.adjustLocalTimeMin();
     }
+  }
+
+  private adjustLocalTimeMin(): void {
+    this.localTimeMin = padLeft(max(this._minYear, 1), 4, '0') + '-01-01' + (this.localTimeFormat === 'date' ? '' : 'T00:00');
   }
 
   get maxYear(): number { return this._maxYear; }
   @Input() set maxYear(year: number) {
     if (this._maxYear !== year) {
       this._maxYear = year;
-      this.localTimeMax = padLeft(year, 4, '0') + '-12-31T23:59';
+      this.adjustLocalTimeMax();
     }
+  }
+
+  private adjustLocalTimeMax(): void {
+    this.localTimeMax = padLeft(this._maxYear, 4, '0') + '-12-31' + (this.localTimeFormat === 'date' ? '' : 'T23:59');
   }
 
   get timeZone(): KsTimeZone { return this.dateTime.timeZone; }
@@ -167,6 +264,50 @@ export class SvcTimeEditorComponent extends KsSequenceEditorComponent implements
       this.dateTime.setGregorianChange(value);
       this.updateDigits();
     }
+  }
+
+  get nativeDateTime(): boolean { return this._nativeDateTime; }
+  @Input() set nativeDateTime(newValue: boolean) {
+    if (this._nativeDateTime !== newValue) {
+      this._nativeDateTime = newValue;
+      this.useAlternateTouchHandling = this.touchEnabled = this.selectionHidden =
+        newValue && SvcTimeEditorComponent.supportsNativeDateTime;
+
+      if (this.hiddenInput)
+        this.hiddenInput.disabled = this.useAlternateTouchHandling;
+
+      if (this.localTime && SvcTimeEditorComponent.supportsNativeDateTime)
+        this.localTime.setAttribute('tabindex', newValue ? '0' : '-1');
+
+      if (newValue) {
+        let wallTime = this.dateTime.wallTime;
+
+        this.minYear = max(this.originalMinYear, 1);
+
+        if (wallTime.y < this.minYear) {
+          wallTime = { y: this.minYear, m: 1, d: 1, hrs: 0, min: 0, sec: 0 };
+          this.dateTime.wallTime = wallTime;
+          this.onChangeCallback(this.dateTime.utcTimeMillis);
+          this.updateDigits();
+        }
+      }
+      else
+        this.minYear = this.originalMinYear;
+
+      this.cd.detectChanges();
+      this.draw();
+    }
+  }
+
+  isNativeDateTimeActive(): boolean {
+    return KsSequenceEditorComponent.touchHasOccurred && this.nativeDateTime && SvcTimeEditorComponent.supportsNativeDateTime;
+  }
+
+  protected createHiddenInput(): void {
+    super.createHiddenInput();
+
+    if (this.hiddenInput)
+      this.hiddenInput.disabled = this.useAlternateTouchHandling;
   }
 
   protected createDigits(): void {
@@ -231,6 +372,7 @@ export class SvcTimeEditorComponent extends KsSequenceEditorComponent implements
     else
       i[0].value = NO_BREAK_SPACE;
 
+    // noinspection JSSuspiciousNameCombination
     const y4 = div_tt0(y, 1000);
     const y3 = div_tt0(y - y4 * 1000, 100);
     const y2 = div_tt0(y - y4 * 1000 - y3 * 100, 10);
@@ -272,7 +414,13 @@ export class SvcTimeEditorComponent extends KsSequenceEditorComponent implements
 
   private updateLocalTime(): void {
     const w = this.dateTime.wallTime;
-    this._localTimeValue = `${padLeft(w.y, 4, '0')}-${padLeft(w.m, 2, '0')}-${padLeft(w.d, 2, '0')}T${padLeft(w.hrs, 2, '0')}:${padLeft(w.min, 2, '0')}`;
+    let year = w.y;
+
+    if (this.isNativeDateTimeActive() && year < 1)
+      year = 1;
+
+    this._localTimeValue = `${padLeft(year, 4, '0')}-${padLeft(w.m, 2, '0')}-${padLeft(w.d, 2, '0')}` +
+      (this.localTimeFormat === 'date' ? '' : `T${padLeft(w.hrs, 2, '0')}:${padLeft(w.min, 2, '0')}`);
   }
 
   private getWallTimeFromDigits(): DateAndTime {
