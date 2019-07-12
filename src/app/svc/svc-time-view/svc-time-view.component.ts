@@ -88,9 +88,7 @@ export class SvcTimeViewComponent {
     this.formattedLst = this.skyObserver.getLocalHourAngle(jdu, true).toTimeString(FMT_MINS);
 
     const longitudeMinutes = round(mod2(this.longitude, 360) * 4);
-    const lmtWallTime = new KsDateTime(this.time, new KsTimeZone({zoneName: 'LMT',
-                            currentUtcOffset: longitudeMinutes,
-                            usesDst: false, dstOffset: 0, transitions: null})).wallTime;
+    const lmtWallTime = new KsDateTime(this.time, KsTimeZone.getTimeZone('LMT', this.longitude)).wallTime;
 
     this.formattedLmt = padLeft(lmtWallTime.hrs, 2, '0') + ':' + padLeft(lmtWallTime.min, 2, '0');
     this.lmtLongitude = new Angle(longitudeMinutes, Unit.HOUR_ANGLE_MINUTES).toSuffixedString('E', 'W', FMT_MINS);
