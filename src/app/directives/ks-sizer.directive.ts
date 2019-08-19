@@ -22,7 +22,6 @@
 
 import { Directive, ElementRef, HostBinding, Input, ViewContainerRef } from '@angular/core';
 import { DomSanitizer, SafeStyle } from '@angular/platform-browser';
-import { toNumber } from 'ks-util';
 
 @Directive({
   selector: '[ksSizer]'
@@ -35,12 +34,12 @@ export class KsSizerDirective {
 
     if (!width)
       width = 'auto';
-    else if (toNumber(width) !== 0)
+    else if (!isNaN(Number(width)))
       width += 'px';
 
     if (!height)
       height = 'auto';
-    else if (toNumber(height) !== 0)
+    else if (!isNaN(Number(height)))
       height += 'px';
 
     if (this.hostComponent)
@@ -56,15 +55,11 @@ export class KsSizerDirective {
   constructor(
     private sanitizer: DomSanitizer,
     private elementRef: ElementRef,
-    viewContainerRef: ViewContainerRef
+    private viewContainerRef: ViewContainerRef
   ) {
     const vcr = viewContainerRef as any;
 
-    if (vcr && vcr._data && vcr._data.componentView && vcr._data.componentView.component) {
-      const comp = vcr._data.componentView.component;
-
-      if (comp.el instanceof ElementRef && comp.el.nativeElement)
-        this.hostComponent = comp;
-    }
+    if (vcr && vcr._data && vcr._data.componentView && vcr._data.componentView.component)
+      this.hostComponent = vcr._data.componentView.component;
   }
 }

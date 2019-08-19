@@ -54,6 +54,11 @@ body {
     }
   }
 
+  .ui-confirmdialog.ui-dialog .ui-dialog-content {
+    display: grid;
+    grid-template-columns: auto 1fr;
+  }
+
   .ui-dialog {
     .ui-dialog-titlebar {
       font-size: 1.25em;

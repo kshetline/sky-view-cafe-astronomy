@@ -11,7 +11,7 @@
         <span><input #searchField type="text" pInputText class="city-field" [(ngModel)]="city" [disabled]="searching"
                  (focus)="searchFocus(true)" (blur)="searchFocus(false)"
                  autocorrect="off" autocapitalize="off" autocomplete="off"/></span>
-        <span><ks-dropdown [(ngModel)]="state" [options]="states" [editable]="true" [style]="{width: '19em'}"></ks-dropdown></span>
+        <span><ks-dropdown [(ngModel)]="state" [options]="states" [editable]="true" ksSizer="19em"></ks-dropdown></span>
         <span><button type="button" pButton icon="fas fa-search" (click)="search()" label="Search" [disabled]="searching || becomingVisible"
                       (focus)="searchFocus(true)" (blur)="searchFocus(false)"></button></span>
       </div>

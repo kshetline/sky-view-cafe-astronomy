@@ -29,7 +29,7 @@
         <label for="twilightInput">Twilight begin/end events:</label>
       </div>
       <div class="settings-value flex-container" fxLayout="row" fxLayoutAlign="space-between center">
-        <ks-dropdown [options]="twilightOptions" [(ngModel)]="twilightByDegrees" [style]="{width: '27em'}" fxFlex="0 0 auto"></ks-dropdown>
+        <ks-dropdown [options]="twilightOptions" [(ngModel)]="twilightByDegrees" ksSizer="27em" fxFlex="0 0 auto"></ks-dropdown>
         <input type="text" [(ngModel)]="twilightValue" pInputText class="twilight-input form-control" fxFlex="0 0 auto"
                id="twilightInput" required minlength="1" maxlength="3" pattern="\d{1,3}" (input)="onTwilightChange($event.target)"/>
       </div>
@@ -45,7 +45,7 @@
         Calendar:
       </div>
       <div class="settings-value flex-container" fxLayout="row" fxLayoutAlign="space-between center">
-        <ks-dropdown [options]="calendarOptions" [(ngModel)]="calendarOption" [style]="{width: '23em'}" fxFlex="0 0 auto"></ks-dropdown>
+        <ks-dropdown [options]="calendarOptions" [(ngModel)]="calendarOption" ksSizer="23em" fxFlex="0 0 auto"></ks-dropdown>
         <svc-date-editor [pureGregorian]="true" [minYear]="300" [maxYear]="3900"
                          fxFlex="0 0 auto" [blank]="!gcdVisible" [disabled]="gcdDisabled" [(ngModel)]="gcdValue"></svc-date-editor>
       </div>
