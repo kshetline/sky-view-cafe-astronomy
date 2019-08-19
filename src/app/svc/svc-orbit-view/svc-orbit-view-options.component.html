@@ -8,7 +8,7 @@
   <ks-checkbox fxFlex="0 0 auto" [(ngModel)]="showMarkers" binary="true" label="Orbital markers"></ks-checkbox>
   <div fxFlex="0 0 auto" class="flex-container" fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="4px">
     <ks-checkbox fxFlex="0 0 auto" [(ngModel)]="anaglyph3d" binary="true" label="Anaglyph 3-D"></ks-checkbox>
-    <div fxFlex="0 0 auto">
+    <div fxFlex="0 0 auto" class="anaglyph-radio">
       <p-radioButton name="anaglyphColors" [value]="true" [(ngModel)]="anaglyphRC" [disabled]="!anaglyph3d"></p-radioButton>
       <img src="/assets/resources/anaglyph-rc.png" width="38" height="14" alt="anaglyph red-cyan" class="glasses-3d"
            [ngClass]="{'faded': !anaglyph3d}" (click)="anaglyph3d && setAnaglyphRC(true)"><br>

@@ -1,4 +1,4 @@
-<p-dialog header="Find Latitude, Longitude, and Time Zone" [modal]="true" [(visible)]="visible" ksSizer="795!,500"
+<p-dialog header="Find Latitude, Longitude, and Time Zone" [modal]="true" [(visible)]="visible" ksSizer="797!,auto"
           (keyup)="onKey($event)">
   <p-growl [value]="messages" sticky="true"></p-growl>
   <div style="position: relative">
@@ -21,16 +21,15 @@
     </div>
   </div>
   <p-checkbox [(ngModel)]="extended" binary="true" label="Extended search (slower, possibly more matches)"></p-checkbox>
-  <p-table #locationTable [value]="locations" selectionMode="single" [scrollable]="true" scrollHeight="273px"
-           sortMode="none" [style]="{width: '446px', height: '310px', 'padding-top': '12px'}"
-           [(selection)]="selection" metaKeySelection="true">
+  <p-table #locationTable [value]="locations" selectionMode="single" [scrollable]="true" scrollHeight="275px"
+           sortMode="none" [(selection)]="selection" metaKeySelection="true" class="results-table">
     <ng-template pTemplate="colgroup">
       <colgroup>
         <col style="width: 40px">
         <col style="width: 200px">
         <col style="width: 55px">
         <col style="width: 62px">
-        <col style="width: 72px">
+        <col style="width: 74px">
       </colgroup>
     </ng-template>
     <ng-template pTemplate="header">

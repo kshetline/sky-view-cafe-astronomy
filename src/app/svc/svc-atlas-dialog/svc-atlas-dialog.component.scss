@@ -32,7 +32,7 @@ input.city-field {
 
 .map-wrapper {
   position: absolute;
-  top: 90px;
+  top: 85px;
   right: 16px;
   width: 300px;
   height: 300px;
@@ -55,4 +55,12 @@ input.city-field {
   padding: 1px;
   border: lightgray 1px solid;
   box-sizing: content-box;
+}
+
+.results-table {
+  display: block;
+  height: 312px;
+  margin-bottom: 12px;
+  padding-top: 12px;
+  width: 448px;
 }

@@ -23,3 +23,21 @@ p-slider {
 .faded {
   opacity: 0.33;
 }
+
+.anaglyph-radio {
+  padding-left: 0.25em;
+
+  img {
+    cursor: pointer;
+    padding-left: 0.25em;
+
+    &.faded {
+      cursor: default;
+    }
+  }
+
+  p-radioButton {
+    display: inline-block;
+    padding: 3px 3px 3px 0;
+  }
+}

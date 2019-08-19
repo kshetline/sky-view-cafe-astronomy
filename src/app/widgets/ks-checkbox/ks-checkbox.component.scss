@@ -1,9 +1,10 @@
 @import "../../../styles";
 
 span {
+  cursor: default;
+  padding-left: 0.5em;
   position: relative;
   top: 0.1em;
-  cursor: default;
   @include selectable(none);
 }
 

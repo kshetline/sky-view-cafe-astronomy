@@ -1,12 +1,10 @@
 @import "../styles";
 
-// styles applied on :host are applied on the current component, "app" in this case
 :host {
   display: block;
   height: 100%;
   background: white;
   padding: 2px;
-  font: 12px Arial, Helvetica, sans-serif;
   text-align: start;
 
   ::ng-deep fieldset {
