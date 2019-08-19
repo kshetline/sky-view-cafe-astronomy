@@ -1,4 +1,4 @@
-<p-dialog header="Find Latitude, Longitude, and Time Zone" [modal]="true" [(visible)]="visible" ksSizer="797!,auto"
+<p-dialog header="Find Latitude, Longitude, and Time Zone" [modal]="true" [(visible)]="visible" ksSizer="797"
           (keyup)="onKey($event)">
   <p-growl [value]="messages" sticky="true"></p-growl>
   <div style="position: relative">
@@ -8,12 +8,12 @@
         <span></span>
       </div>
       <div class="search-row">
-        <input #searchField type="text" pInputText class="city-field" [(ngModel)]="city" [disabled]="searching"
-               (focus)="searchFocus(true)" (blur)="searchFocus(false)"
-               autocorrect="off" autocapitalize="off" autocomplete="off"/>
-        <ks-dropdown [(ngModel)]="state" [options]="states" [editable]="true" [style]="{width: '19em'}"></ks-dropdown>
-        <button type="button" pButton icon="fas fa-search" (click)="search()" label="Search" [disabled]="searching || becomingVisible"
-                (focus)="searchFocus(true)" (blur)="searchFocus(false)"></button>
+        <span><input #searchField type="text" pInputText class="city-field" [(ngModel)]="city" [disabled]="searching"
+                 (focus)="searchFocus(true)" (blur)="searchFocus(false)"
+                 autocorrect="off" autocapitalize="off" autocomplete="off"/></span>
+        <span><ks-dropdown [(ngModel)]="state" [options]="states" [editable]="true" [style]="{width: '19em'}"></ks-dropdown></span>
+        <span><button type="button" pButton icon="fas fa-search" (click)="search()" label="Search" [disabled]="searching || becomingVisible"
+                      (focus)="searchFocus(true)" (blur)="searchFocus(false)"></button></span>
       </div>
       <div class="bottom-caption-row">
         <span>Required</span><span>(Optional)</span><span></span>

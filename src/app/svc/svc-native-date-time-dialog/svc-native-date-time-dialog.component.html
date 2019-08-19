@@ -1,4 +1,4 @@
-<p-dialog header="Mobile Date/Time Input Options" [(visible)]="visible" [ksSizer]="dialogSize" (keyup)="onKey($event)">
+<p-dialog header="Mobile Date/Time Input Options" [(visible)]="visible" ksSizer="500" (keyup)="onKey($event)">
   <p-radioButton name="native-date-time-0" [value]="false" [(ngModel)]="nativeDateTime" label="Use the Sky View Café date/time input method"></p-radioButton>
   <div class="explanation">
     This gives you the most flexibility entering a wide range of dates and times over a span of thousands of years,

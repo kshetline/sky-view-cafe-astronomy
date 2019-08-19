@@ -1,4 +1,7 @@
 $theme-font: 12px Arial, Helvetica, sans-serif;
+$table-cell-border-color: #C8C8C8;
+$input-border-default-color: #D8D8D8;
+$input-border-hover-color: #999;
 
 body {
   font: $theme-font;
@@ -9,6 +12,10 @@ body {
 
   .ui-button {
     font-size: 12px;
+
+    &.ui-button-icon-only {
+      min-width: 2em;
+    }
 
     &.ui-button-text-icon-left .ui-button-text {
       padding: 0.25em 1em 0.25em 2.1em;
@@ -53,9 +60,17 @@ body {
     }
   }
 
+  .ui-dropdown:not(.ui-state-disabled):hover {
+    border-color: $input-border-hover-color;
+  }
+
   .ui-inputtext {
     font-size: 12px;
     padding: 0.25em 2.5em 0.25em 0.25em;
+
+    &:enabled:hover:not(.ui-state-error) {
+      border-color: $input-border-hover-color;
+    }
   }
 
   .ui-menu {
@@ -88,6 +103,7 @@ body {
     -moz-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.6) inset;
     -webkit-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.6) inset;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.6) inset;
+    margin: 0 0.6em;
 
     .ui-slider-handle {
       background: transparent url("assets/theme/images/slider_handles@2x.png") 0 0 no-repeat !important;
@@ -131,6 +147,7 @@ body {
     &.ui-slider-vertical {
       height: 100px;
       width: 0.8em !important;
+      margin: 0.75em 0.5em;
 
       .ui-slider-handle {
         left: -0.27em !important;
@@ -141,6 +158,10 @@ body {
     }
   }
 
+  .ui-state-default {
+    border-color: $input-border-default-color;
+  }
+
   .ui-table {
     .ui-table-tbody>tr>td,
     .ui-table-thead>tr>th{
@@ -149,7 +170,7 @@ body {
   }
 
   .ui-table-scrollable-view {
-    border-bottom: solid 1px #C8C8C8;
+    border-bottom: solid 1px $table-cell-border-color;
   }
 
   .ui-widget {

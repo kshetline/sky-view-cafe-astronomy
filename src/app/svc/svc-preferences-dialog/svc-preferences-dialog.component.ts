@@ -103,7 +103,6 @@ export class SvcPreferencesDialogComponent {
   nativeDateTime = false;
   showDateTimeOptions = SvcTimeEditorComponent.supportsNativeDateTime;
   resetWarnings = false;
-  get dialogSize(): string { return SvcTimeEditorComponent.supportsNativeDateTime ? '590!,auto' : '590!,auto'; }
 
   @Input() get visible(): boolean { return this._visible; }
   set visible(isVisible: boolean) {

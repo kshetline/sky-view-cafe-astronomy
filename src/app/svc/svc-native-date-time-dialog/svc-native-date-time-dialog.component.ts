@@ -44,7 +44,6 @@ export class SvcNativeDateTimeDialogComponent {
   nativeDateTime = this.app.nativeDateTime;
   // noinspection JSMethodCanBeStatic
   get isIOS(): boolean { return isIOS(); }
-  get dialogSize(): string { return isIOS() ? '500!,auto' : '500!,auto'; }
 
   constructor(private app: AppService) { }
 

@@ -20,10 +20,9 @@
   other uses are restricted.
 */
 
-import { Directive, ElementRef, HostBinding, Input } from '@angular/core';
+import { Directive, ElementRef, HostBinding, Input, ViewContainerRef } from '@angular/core';
 import { DomSanitizer, SafeStyle } from '@angular/platform-browser';
-import { isIOS, toNumber } from 'ks-util';
-import { Dialog } from 'primeng/dialog';
+import { toNumber } from 'ks-util';
 
 @Directive({
   selector: '[ksSizer]'
@@ -33,36 +32,39 @@ export class KsSizerDirective {
 
   @Input() set ksSizer(size: string) {
     let [width, height] = size.split(',').map(s => s.trim());
-    let iosWidthFix = false;
 
-    if (/!$/.test(width)) {
-      iosWidthFix = true;
-      width = width.substr(0, width.length - 1);
-    }
-
-    if (toNumber(width) !== 0)
+    if (!width)
+      width = 'auto';
+    else if (toNumber(width) !== 0)
       width += 'px';
 
-    if (toNumber(height) !== 0)
+    if (!height)
+      height = 'auto';
+    else if (toNumber(height) !== 0)
       height += 'px';
 
-    if (this.pDialogHost) {
-      const style: any = {width, height};
-
-      if (iosWidthFix && isIOS())
-        style['max-width'] = width;
-
-      this.pDialogHost.style = style;
-    }
+    if (this.hostComponent)
+      this.hostComponent.style = { width, height };
     else {
       const style = `width: ${width}; height: ${height};`;
       this.style = this.sanitizer.bypassSecurityTrustStyle(style);
     }
   }
 
+  hostComponent: any;
+
   constructor(
     private sanitizer: DomSanitizer,
     private elementRef: ElementRef,
-    private pDialogHost: Dialog
-  ) { }
+    viewContainerRef: ViewContainerRef
+  ) {
+    const vcr = viewContainerRef as any;
+
+    if (vcr && vcr._data && vcr._data.componentView && vcr._data.componentView.component) {
+      const comp = vcr._data.componentView.component;
+
+      if (comp.el instanceof ElementRef && comp.el.nativeElement)
+        this.hostComponent = comp;
+    }
+  }
 }

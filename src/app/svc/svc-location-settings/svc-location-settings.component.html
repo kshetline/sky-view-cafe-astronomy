@@ -20,7 +20,7 @@
       <button pButton type="button" label="Delete" (click)="openDeleteDialog()"></button>
     </div>
   </div>
-  <p-dialog header="Save Location" [modal]="true" [(visible)]="showSaveDialog" ksSizer="350!,auto">
+  <p-dialog header="Save Location" [modal]="true" [(visible)]="showSaveDialog" ksSizer="350">
     <div style="height: 80px;">
       Save location as:&nbsp;
       <ks-dropdown #saveNameDropdown [(ngModel)]="selectedName" [options]="saveDialogNames" [editable]="true" [style]="{width: '200px'}"></ks-dropdown>
@@ -34,7 +34,7 @@
     </p-footer>
     <p-confirmDialog key="save-confirm" header="Same location name in use" icon="fas fa-question-circle" [style]="{width: '400px'}" appendTo="body"></p-confirmDialog>
   </p-dialog>
-  <p-dialog header="Delete Location" [modal]="true" [(visible)]="showDeleteDialog" ksSizer="350!,auto">
+  <p-dialog header="Delete Location" [modal]="true" [(visible)]="showDeleteDialog" ksSizer="350">
     <div style="height: 35px;">
       <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="4px">
         <span>Location to delete:&nbsp;</span>

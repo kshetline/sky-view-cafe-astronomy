@@ -21,7 +21,7 @@
   vertical-align: top;
 }
 
-.search-row input, .search-row ks-dropdown, .search-row button {
+.search-row > span {
   display: table-cell;
   vertical-align: middle;
 }

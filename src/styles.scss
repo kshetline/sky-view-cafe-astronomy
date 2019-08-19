@@ -4,7 +4,6 @@
 @mixin selectable($state) {
   -webkit-touch-callout: $state;
   -webkit-user-select: $state;
-  -khtml-user-select: $state;
   -moz-user-select: $state;
   -ms-user-select: $state;
   user-select: $state;
@@ -49,29 +48,4 @@ body {
   color: #C00;
   font-style: italic;
   font-size: 11px;
-}
-
-// If a setting of 'nowrap' leaks through, dialog headers (and probably other headers) get screwed up on Firefox.
-.ui-widget-header {
-  white-space: normal;
-}
-
-.ui-tabview .ui-tabview-nav > li.ui-state-default {
-  background-color: #E8E8F0;
-}
-
-.ui-tabview .ui-tabview-nav > li.ui-state-default.ui-tabview-selected {
-  background-color: white;
-}
-
-.ui-dialog-buttonpane {
-  border: none;
-}
-
-.ui-chkbox, .ui-radiobutton { // Prevent checkbox/radio button layout from changing as buttons are checked/unchecked.
-  min-height: 14px;
-}
-
-button.ui-button-icon-only {
-  min-width: 2em;
 }

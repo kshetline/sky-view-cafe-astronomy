@@ -8,7 +8,11 @@
 }
 
 p-slider {
-  margin-top: 0.5em;
+  margin-top: 0.75em;
+}
+
+p-dropdown ::ng-deep .ui-dropdown {
+  width: 100%;
 }
 
 .marker-legend {
