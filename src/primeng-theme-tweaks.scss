@@ -1,9 +1,18 @@
 $theme-font: 12px Arial, Helvetica, sans-serif;
 $table-cell-border-color: #C8C8C8;
 $input-border-default-color: #D8D8D8;
-$input-border-hover-color: #999;
+$input-border-hover-color: #8BF;
+$input-border-focus-color: #5E9ED6;
+$input-border-focus-shadow-color: #8DCDFF;
 
 body {
+
+  *:focus {
+    border-color: $input-border-focus-color;
+    box-shadow: 0 0 2px 2px $input-border-focus-shadow-color;
+    outline: none;
+  }
+
   font: $theme-font;
 
   .pi {
@@ -65,8 +74,16 @@ body {
     }
   }
 
-  .ui-dropdown:not(.ui-state-disabled):hover {
-    border-color: $input-border-hover-color;
+  .ui-dropdown {
+    &:not(.ui-state-disabled).ui-state-focus {
+      border-color: $input-border-focus-color;
+      box-shadow: 0 0 2px 2px $input-border-focus-shadow-color;
+      outline: none;
+    }
+
+    &:not(.ui-state-disabled):hover {
+      border-color: $input-border-hover-color;
+    }
   }
 
   .ui-inputtext {
@@ -118,7 +135,7 @@ body {
       outline: none;
       position: absolute;
       transform: scale(0.5);
-      transform-origin: 0% 100%;
+      transform-origin: 0 100%;
       width: 34px !important;
 
       &.ui-state-active {

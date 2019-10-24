@@ -24,7 +24,7 @@ import { AfterViewInit, Component, ElementRef, ViewChild } from '@angular/core';
 import { EARTH, MARS, MOON, NEPTUNE, NMode, PLUTO, REFRACTION, SATURN, SolarSystem, SUN } from 'ks-astronomy';
 import { abs, cos_deg, floor, log10, max, min, mod, mod2, Point, Point3D, pow, round, sin_deg, SphericalPosition3D, } from 'ks-math';
 import { colorFromRGB, parseColor, replaceAlpha, RGBA } from 'ks-util';
-import { sortBy } from 'lodash';
+import { debounce, sortBy } from 'lodash';
 import { AppService, CurrentTab, UserSetting } from '../../app.service';
 import { ZBuffer } from '../../util/ks-z-buffer';
 import {
@@ -44,6 +44,8 @@ export const    PROPERTY_SHOW_NAMES = 'show_names';
 export const    PROPERTY_ZOOM = 'zoom';
 export const    PROPERTY_ANAGLYPH_3D = 'anaglyph_3d';
 export const    PROPERTY_ANAGLYPH_RC = 'anaglyph_rc';
+export const    PROPERTY_ROTATION_XZ = 'rotation_xz';
+export const    PROPERTY_ROTATION_YZ = 'rotation_yz';
 
 const scales = [
   // Scales in AU needed to display orbits out to a particular planet
@@ -191,6 +193,10 @@ export class SvcOrbitViewComponent extends GenericPlanetaryView implements After
           this.zoom = <number> setting.value;
           this.zoomLastSet = performance.now();
         }
+        else if (setting.property === PROPERTY_ROTATION_XZ)
+          this.rotation_xz = <number> setting.value;
+        else if (setting.property === PROPERTY_ROTATION_YZ)
+          this.rotation_yz = <number> setting.value;
         else if (setting.property === PROPERTY_ANAGLYPH_3D)
           this.anaglyph3d = <boolean> setting.value;
         else if (setting.property === PROPERTY_ANAGLYPH_RC)
@@ -591,6 +597,7 @@ export class SvcOrbitViewComponent extends GenericPlanetaryView implements After
       if (this.rotation_yz === -180.0)
         this.rotation_yz = 180.0;
 
+      this.debouncedRotationUpdate();
       this.draw();
     }
   }
@@ -654,6 +661,7 @@ export class SvcOrbitViewComponent extends GenericPlanetaryView implements After
   resetOrientation(): void {
     this.rotation_xz = 0.0;
     this.rotation_yz = 0.0;
+    this.debouncedRotationUpdate();
     this.draw();
   }
 
@@ -673,8 +681,14 @@ export class SvcOrbitViewComponent extends GenericPlanetaryView implements After
     if (this.rotation_yz === -180)
       this.rotation_yz = 180;
 
+    this.debouncedRotationUpdate();
     this.draw();
   }
+
+  protected debouncedRotationUpdate = debounce(() => {
+    this.appService.updateUserSetting({view: VIEW_ORBITS, property: PROPERTY_ROTATION_XZ, value: this.rotation_xz, source: this});
+    this.appService.updateUserSetting({view: VIEW_ORBITS, property: PROPERTY_ROTATION_YZ, value: this.rotation_yz, source: this});
+  }, 500);
 
   protected static translate(mode: DrawingMode, pt: Point3D, ctr: Point3D, viewingDistance: number,
                              cos_xz: number, sin_xz: number, cos_yz: number, sin_yz: number): Point3D {

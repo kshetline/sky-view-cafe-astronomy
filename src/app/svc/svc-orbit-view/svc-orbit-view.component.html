@@ -1,12 +1,12 @@
 <div class="orbitControls">Select an orientation...
   <button pButton type="button" icon="fas fa-chevron-left"
           (touchstart)="tapChangeOrientation($event, 1, 0)" (click)="changeOrientation(1, 0)"></button>&nbsp;
-  <span [hidden]="rotation_xz < 0">&#x2008;</span>{{rotation_xz | number: '3.1-1'}}&deg;
+  <span class="spacer" [style.display]="rotation_xz < 0 ? 'none' : 'inline'">-</span>{{rotation_xz | number: '3.1-1'}}&deg;&#x2008;&nbsp;
   <button pButton type="button" icon="fas fa-chevron-right"
-          (touchstart)="tapChangeOrientation($event, -1, 0)" (click)="changeOrientation(-1, 0)"></button>&nbsp;&nbsp;
+          (touchstart)="tapChangeOrientation($event, -1, 0)" (click)="changeOrientation(-1, 0)"></button>&nbsp;&#x2008;&nbsp;,&nbsp;&nbsp;
   <button pButton type="button" icon="fas fa-chevron-down"
           (touchstart)="tapChangeOrientation($event, 0, -1)" (click)="changeOrientation(0, -1)"></button>&nbsp;
-  <span [hidden]="rotation_yz < 0">&#x2008;</span>{{rotation_yz | number: '3.1-1'}}&deg;
+  <span class="spacer" [style.display]="rotation_yz < 0 ? 'none' : 'inline'">-</span>{{rotation_yz | number: '3.1-1'}}&deg;&#x2008;&nbsp;
   <button pButton type="button" icon="fas fa-chevron-up"
           (touchstart)="tapChangeOrientation($event, 0, 1)" (click)="changeOrientation(0, 1)"></button>
   ...or drag view below.&nbsp;
