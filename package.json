@@ -32,7 +32,7 @@
     "ks-date-time-zone": "^1.6.6",
     "ks-math": "^1.1.6",
     "ks-util": "^1.6.0",
-    "lodash": "^4.17.15",
+    "lodash": "^4.17.19",
     "ng-busy": "^8.0.0",
     "primeicons": "^2.0.0",
     "primeng": "^8.1.1",
