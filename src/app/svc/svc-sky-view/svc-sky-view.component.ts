@@ -36,12 +36,12 @@ import {
   asteroidColor, cometColor, DrawingContextPlanetary, FAR_AWAY, LabelInfo, MARQUEE_EQUATORIAL, MARQUEE_HORIZONTAL, MARQUEE_ILLUMINATION,
   MARQUEE_MAGNITUDE, MARQUEE_SIZE, NONPLANET, OUTER_LABEL_GAP, planetColors, planetPrintColors,
   SUBJECT
-} from '../generic-planetary-view';
+} from '../generic-planetary-view.directive';
 import {
   eclipticColor, eclipticGridColor, eclipticGridPrintColor, eclipticPrintColor, equatorColor, equatorialGridColor,
-  equatorialGridPrintColor, equatorPrintColor, GenericSkyView, moonPathColor, sunPathColor
-} from '../generic-sky-view';
-import { ADDITIONALS, PROPERTY_ADDITIONALS } from '../generic-view';
+  equatorialGridPrintColor, equatorPrintColor, GenericSkyViewDirective, moonPathColor, sunPathColor
+} from '../generic-sky-view.directive';
+import { ADDITIONALS, PROPERTY_ADDITIONALS } from '../generic-view.directive';
 import { MilkyWay } from '../milky-way';
 import { MoonDrawer } from '../moon-drawer';
 
@@ -112,7 +112,7 @@ const DEFAULT_SKY_RESOLUTION = 5;
   templateUrl: './svc-sky-view.component.html',
   styleUrls: ['./svc-sky-view.component.scss']
 })
-export class SvcSkyViewComponent extends GenericSkyView implements AfterViewInit {
+export class SvcSkyViewComponent extends GenericSkyViewDirective implements AfterViewInit {
   private _facing = 0;
   private refraction = true;
   private _parallelToEcliptic = false;

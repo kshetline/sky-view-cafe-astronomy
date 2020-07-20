@@ -22,10 +22,10 @@
 
 import { AfterViewInit, Component } from '@angular/core';
 import { find } from 'lodash';
-import { MenuItem, SelectItem } from 'primeng/components/common/api';
+import { MenuItem, SelectItem } from 'primeng/api';
 import { AppService, UserSetting } from '../../app.service';
-import { ALL_DEEP_SKY, NO_DEEP_SKY } from '../generic-sky-view';
-import { ADDITIONALS, PROPERTY_ADDITIONALS } from '../generic-view';
+import { ALL_DEEP_SKY, NO_DEEP_SKY } from '../generic-sky-view.directive';
+import { ADDITIONALS, PROPERTY_ADDITIONALS } from '../generic-view.directive';
 import { SvcGenericOptionsComponent } from '../svc-generic-options.component';
 import {
   PROPERTY_BRIGHTEN_STARS, PROPERTY_CELESTIAL_GRID, PROPERTY_ECLIPTIC_GRID, PROPERTY_ENLARGE_SUN_MOON, PROPERTY_LABEL_BRIGHT_STARS,

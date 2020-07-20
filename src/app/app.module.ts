@@ -30,23 +30,24 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { BusyConfig, NgBusyModule } from 'ng-busy';
 
+import { ConfirmationService, SharedModule } from 'primeng/api';
 import { BlockUIModule } from 'primeng/blockui';
 import { ButtonModule } from 'primeng/button';
 import { CheckboxModule } from 'primeng/checkbox';
-import { ConfirmationService } from 'primeng/components/common/api';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { DialogModule } from 'primeng/dialog';
 import { DropdownModule } from 'primeng/dropdown';
-import { GrowlModule } from 'primeng/growl';
 import { InputTextModule } from 'primeng/inputtext';
 import { MenuModule } from 'primeng/menu';
+import { MessageModule } from 'primeng/message';
+import { MessagesModule } from 'primeng/messages';
 import { OverlayPanelModule } from 'primeng/overlaypanel';
 import { PanelModule } from 'primeng/panel';
 import { RadioButtonModule } from 'primeng/radiobutton';
-import { SharedModule } from 'primeng/shared';
 import { SliderModule } from 'primeng/slider';
 import { TableModule } from 'primeng/table';
 import { TabViewModule } from 'primeng/tabview';
+import { ToastModule } from 'primeng/toast';
 import { TooltipModule } from 'primeng/tooltip';
 
 import { AppComponent } from './app.component';
@@ -115,11 +116,12 @@ export function busyConfigFactory(): BusyConfig {
     DropdownModule,
     FlexLayoutModule,
     FormsModule,
-    GrowlModule,
     HttpClientModule,
     HttpClientJsonpModule,
     InputTextModule,
     MenuModule,
+    MessageModule,
+    MessagesModule,
     NgBusyModule,
     OverlayPanelModule,
     PanelModule,
@@ -128,6 +130,7 @@ export function busyConfigFactory(): BusyConfig {
     SliderModule,
     TableModule,
     TabViewModule,
+    ToastModule,
     TooltipModule
   ],
   declarations: [

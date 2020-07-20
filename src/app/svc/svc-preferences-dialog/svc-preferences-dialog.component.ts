@@ -23,7 +23,7 @@
 import { Component, EventEmitter, Input, Output, ViewChild } from '@angular/core';
 import { getISOFormatDate, parseISODate, YMDDate } from 'ks-date-time-zone';
 import { eventToKey } from 'ks-util';
-import { MenuItem } from 'primeng/components/common/api';
+import { MenuItem } from 'primeng/api';
 import {
   AppService, CalendarSetting, CurrentTab, PROPERTY_DEFAULT_TAB, PROPERTY_GREGORIAN_CHANGE_DATE, PROPERTY_INK_SAVER, PROPERTY_NATIVE_DATE_TIME, PROPERTY_NORTH_AZIMUTH,
   PROPERTY_TWILIGHT_BY_DEGREES, PROPERTY_TWILIGHT_DEGREES, PROPERTY_TWILIGHT_MINUTES, VIEW_APP

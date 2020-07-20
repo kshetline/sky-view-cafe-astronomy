@@ -1,5 +1,5 @@
 /*
-  Copyright © 2017-2019 Kerry Shetline, kerry@shetline.com.
+  Copyright © 2017-2020 Kerry Shetline, kerry@shetline.com.
 
   This code is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
   other uses are restricted.
 */
 
-import { AfterViewInit } from '@angular/core';
+import { AfterViewInit, Directive } from '@angular/core';
 import * as C_ from 'ks-astronomy';
 import {
   ABERRATION, EARTH, Ecliptic, KM_PER_AU, MOON, MOON_SHADOW, NEPTUNE, NO_MATCH, NO_SELECTION, NUTATION, PlanetaryMoons, PLUTO,
@@ -32,7 +32,7 @@ import {
 } from 'ks-math';
 import { getTextWidth, toDefaultLocaleFixed } from 'ks-util';
 import { AppService, CurrentTab, PROPERTY_NORTH_AZIMUTH, UserSetting, VIEW_APP } from '../app.service';
-import { DrawingContext, GenericView } from './generic-view';
+import { DrawingContext, GenericViewDirective } from './generic-view.directive';
 
 export interface SortablePlanet {
   planet: number;
@@ -163,7 +163,8 @@ for (let i = 0; i <= 255; ++i) {
   opacitiesOfBlack[i] = 'rgba(0,0,0,' + (i / 255).toFixed(3) + ')';
 }
 
-export abstract class GenericPlanetaryView extends GenericView implements AfterViewInit {
+@Directive()
+export abstract class GenericPlanetaryViewDirective extends GenericViewDirective implements AfterViewInit {
   protected ecliptic = new Ecliptic();
   protected starsReady = false;
   protected asteroidsReady = false;
@@ -404,7 +405,7 @@ export abstract class GenericPlanetaryView extends GenericView implements AfterV
   }
 
   protected drawLabels(dc: DrawingContextPlanetary): void {
-    GenericPlanetaryView.adjustLabelsToAvoidOverlap(dc);
+    GenericPlanetaryViewDirective.adjustLabelsToAvoidOverlap(dc);
     this.drawLabelsAux(dc, false);
     this.drawHiddenLabelNearestMousePoint(dc);
   }
@@ -577,20 +578,20 @@ export abstract class GenericPlanetaryView extends GenericView implements AfterV
   protected static adjustLabelsToAvoidOverlap(dc: DrawingContextPlanetary): void {
     for (const li of dc.labels) {
       if (li.labelClass !== LABEL_CLASS.MINOR) {
-        let delta = GenericPlanetaryView.checkForOverlap(li, -1, false, dc);
+        let delta = GenericPlanetaryViewDirective.checkForOverlap(li, -1, false, dc);
 
         if (delta !== 0) {
           li.labelBounds.y += delta;
           li.textPt.y      += delta;
 
-          if (GenericPlanetaryView.checkForOverlap(li, -1, false, dc) !== 0) {
+          if (GenericPlanetaryViewDirective.checkForOverlap(li, -1, false, dc) !== 0) {
             li.labelBounds.y -= delta;
             li.textPt.y      -= delta;
-            delta = GenericPlanetaryView.checkForOverlap(li, 1, false, dc);
+            delta = GenericPlanetaryViewDirective.checkForOverlap(li, 1, false, dc);
             li.labelBounds.y += delta;
             li.textPt.y      += delta;
 
-            if (GenericPlanetaryView.checkForOverlap(li, 1, true, dc) !== 0) {
+            if (GenericPlanetaryViewDirective.checkForOverlap(li, 1, true, dc) !== 0) {
               li.labelBounds.y -= delta;
               li.textPt.y      -= delta;
             }

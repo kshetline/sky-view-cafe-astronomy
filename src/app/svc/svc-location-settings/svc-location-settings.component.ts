@@ -22,7 +22,7 @@
 
 import { Component, ViewChild } from '@angular/core';
 import { clone, find } from 'lodash';
-import { ConfirmationService } from 'primeng/components/common/api';
+import { ConfirmationService } from 'primeng/api';
 import { AppService, Location, NEW_LOCATION } from '../../app.service';
 import { KsDropdownComponent } from '../../widgets/ks-dropdown/ks-dropdown.component';
 

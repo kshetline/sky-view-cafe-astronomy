@@ -27,7 +27,7 @@ import {
 import { abs, ceil, cos_deg, floor, max, min, mod, mod2, Point, round, sin_deg, SphericalPosition3D } from 'ks-math';
 import { AppEvent, AppService, CurrentTab, UserSetting } from '../../app.service';
 import { KsTimeService, ZoneForLocation } from '../../util/ks-time.service';
-import { DrawingContext, GenericView } from '../generic-view';
+import { DrawingContext, GenericViewDirective } from '../generic-view.directive';
 import { formatLatitude, formatLongitude } from '../svc-util';
 
 export const  VIEW_MAP = 'map';
@@ -67,7 +67,7 @@ const shadowColor = 'rgba(0,0,0,0.6)';
   templateUrl: './svc-map-view.component.html',
   styleUrls: ['./svc-map-view.component.scss']
 })
-export class SvcMapViewComponent extends GenericView implements AfterViewInit {
+export class SvcMapViewComponent extends GenericViewDirective implements AfterViewInit {
   private dayMap: HTMLImageElement;
   private markerEclipse: HTMLImageElement;
   private markerLocation: HTMLImageElement;

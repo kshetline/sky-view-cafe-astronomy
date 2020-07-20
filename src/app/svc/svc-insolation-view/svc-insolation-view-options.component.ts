@@ -21,7 +21,7 @@
 */
 
 import { AfterViewInit, Component } from '@angular/core';
-import { SelectItem } from 'primeng/components/common/api';
+import { SelectItem } from 'primeng/api';
 import { AppService, UserSetting } from '../../app.service';
 import {
   PROPERTY_CENTER_MIDNIGHT, PROPERTY_SHOW_MOONLIGHT,  VIEW_INSOLATION

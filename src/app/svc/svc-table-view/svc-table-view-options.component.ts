@@ -22,7 +22,7 @@
 
 import { AfterViewInit, Component } from '@angular/core';
 import { SUN } from 'ks-astronomy';
-import { SelectItem } from 'primeng/components/common/api';
+import { SelectItem } from 'primeng/api';
 import { AppService, UserSetting } from '../../app.service';
 import {
   PROPERTY_PLANET_CHOICE, PROPERTY_TABLE_TYPE, PROPERTY_TWILIGHT, TableType, VIEW_TABLES

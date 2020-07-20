@@ -21,9 +21,9 @@
 */
 
 import { AfterViewInit, Component } from '@angular/core';
-import { SelectItem } from 'primeng/components/common/api';
+import { SelectItem } from 'primeng/api';
 import { AppService, UserSetting } from '../../app.service';
-import { ADDITIONALS, PROPERTY_ADDITIONALS } from '../generic-view';
+import { ADDITIONALS, PROPERTY_ADDITIONALS } from '../generic-view.directive';
 import { SvcGenericOptionsComponent } from '../svc-generic-options.component';
 import {
   PROPERTY_ANAGLYPH_3D, PROPERTY_ANAGLYPH_RC, PROPERTY_CENTER_EARTH, PROPERTY_EXTENT, PROPERTY_GRAY_ORBITS, PROPERTY_MARQUEE_UNITS,

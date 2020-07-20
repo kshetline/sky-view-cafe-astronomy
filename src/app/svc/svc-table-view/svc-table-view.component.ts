@@ -26,7 +26,7 @@ import {
 } from 'ks-astronomy';
 import { DateAndTime, GregorianChange, KsDateTime, KsTimeZone } from 'ks-date-time-zone';
 import { clone, isEqual, isString, throttle } from 'lodash';
-import { SelectItem } from 'primeng/components/common/api';
+import { SelectItem } from 'primeng/api';
 import { AppService, CurrentTab, Location, UserSetting } from '../../app.service';
 import { AstroDataService } from '../../astronomy/astro-data.service';
 

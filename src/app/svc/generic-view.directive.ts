@@ -20,7 +20,7 @@
   other uses are restricted.
 */
 
-import { AfterViewInit, ElementRef, ViewChild } from '@angular/core';
+import { AfterViewInit, Directive, ElementRef, ViewChild } from '@angular/core';
 import { SafeStyle } from '@angular/platform-browser';
 import {
   ASTEROID_BASE, COMET_BASE, EARTH, FIRST_PLANET, HALF_MINUTE, ISkyObserver, LAST_PLANET, NO_MATCH, SkyObserver, SolarSystem,
@@ -60,12 +60,13 @@ export interface DrawingContext {
   fullDraw: boolean;
 }
 
-export abstract class GenericView implements AfterViewInit {
+@Directive()
+export abstract class GenericViewDirective implements AfterViewInit {
   private static _printing = new BehaviorSubject<boolean>(false);
-  private static printingObserver: Observable<boolean> = GenericView._printing.asObservable();
+  private static printingObserver: Observable<boolean> = GenericViewDirective._printing.asObservable();
 
   static get printing(): boolean {
-    return GenericView._printing.getValue();
+    return GenericViewDirective._printing.getValue();
   }
 
   protected wrapper: HTMLDivElement;
@@ -114,7 +115,7 @@ export abstract class GenericView implements AfterViewInit {
   protected readonly mediumLabelFont = '11px Arial, Helvetica, sans-serif';
   protected readonly smallLabelFont  = '10px Arial, Helvetica, sans-serif';
 
-  @ViewChild(KsMarqueeComponent, { read: ElementRef, static: false }) protected marqueeRef: ElementRef;
+  @ViewChild(KsMarqueeComponent, { read: ElementRef }) protected marqueeRef: ElementRef;
 
   marqueeText = '';
   cursor: SafeStyle;
@@ -122,11 +123,11 @@ export abstract class GenericView implements AfterViewInit {
   static initialize(): void {
     const mql = window.matchMedia('print');
 
-    GenericView._printing.next(mql.matches);
+    GenericViewDirective._printing.next(mql.matches);
 
     const printChange = () => {
       console.log(mql.matches);
-      GenericView._printing.next(mql.matches);
+      GenericViewDirective._printing.next(mql.matches);
     };
 
     if (mql.addEventListener)
@@ -138,7 +139,7 @@ export abstract class GenericView implements AfterViewInit {
   }
 
   static getPrintingUpdate(callback: (printing: boolean) => void): Subscription {
-    return GenericView.printingObserver.subscribe(callback);
+    return GenericViewDirective.printingObserver.subscribe(callback);
   }
 
   protected constructor(protected appService: AppService, protected tabId: CurrentTab) {
@@ -198,7 +199,7 @@ export abstract class GenericView implements AfterViewInit {
       this.touchGuard.addEventListener('touchstart', (event: TouchEvent) => this.onTouchStartForTouchGuard(event));
     }
 
-    GenericView.getPrintingUpdate(printing => {
+    GenericViewDirective.getPrintingUpdate(printing => {
       this.doResize(printing);
     });
 
@@ -439,7 +440,7 @@ export abstract class GenericView implements AfterViewInit {
     if (startTime > this.lastSlowFrameTime + SLOW_FRAME_COUNT_RESET_TIME)
       this.slowFrameCount = 0;
 
-    dc.fullDraw = (forceFullDraw || GenericView.printing || this.slowFrameCount < MAX_SLOW_FRAMES);
+    dc.fullDraw = (forceFullDraw || GenericViewDirective.printing || this.slowFrameCount < MAX_SLOW_FRAMES);
 
     if (this.lastWidth !== dc.w || this.lastHeight !== dc.h) {
       this.canvas.width = ceil(dc.w * this.canvasScaling);
@@ -459,7 +460,7 @@ export abstract class GenericView implements AfterViewInit {
     // Bias time half a minute ahead of the clock time for rounding to the middle of the selected minute.
     dc.jdu = KsDateTime.julianDay(this.time) + HALF_MINUTE;
     dc.jde = UT_to_TDB(dc.jdu);
-    dc.inkSaver = GenericView.printing && this.appService.inkSaver;
+    dc.inkSaver = GenericViewDirective.printing && this.appService.inkSaver;
 
     this.additionalDrawingSetup(dc);
     this.drawView(dc);
@@ -562,4 +563,4 @@ export abstract class GenericView implements AfterViewInit {
   }
 }
 
-GenericView.initialize();
+GenericViewDirective.initialize();

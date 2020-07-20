@@ -31,7 +31,7 @@ import { extendDelimited, fillEllipse, getFontMetrics, padLeft, strokeEllipse } 
 import { find } from 'lodash';
 import { AppService, CurrentTab, UserSetting } from '../../app.service';
 import { AstroDataService } from '../../astronomy/astro-data.service';
-import { DrawingContextPlanetary, GenericPlanetaryView, LABEL_TYPE, SELECTION_TYPE, SUBJECT } from '../generic-planetary-view';
+import { DrawingContextPlanetary, GenericPlanetaryViewDirective, LABEL_TYPE, SELECTION_TYPE, SUBJECT } from '../generic-planetary-view.directive';
 import { JupiterDrawer } from '../jupiter-drawer';
 import { PlanetDrawer } from '../planet-drawer';
 import { SaturnDrawer } from '../saturn-drawer';
@@ -78,7 +78,7 @@ const moonOutlineColor       = 'rgba(153, 153, 153, 0.5)';
   templateUrl: './svc-moons-view.component.html',
   styleUrls: ['./svc-moons-view.component.scss']
 })
-export class SvcMoonsViewComponent extends GenericPlanetaryView implements AfterViewInit {
+export class SvcMoonsViewComponent extends GenericPlanetaryViewDirective implements AfterViewInit {
   private jupiterDrawer: JupiterDrawer;
   private jupiterInfo: JupiterInfo;
   private jupiterMoons = new JupitersMoons();

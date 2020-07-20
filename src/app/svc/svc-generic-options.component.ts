@@ -22,9 +22,9 @@
 
 import { SolarSystem } from 'ks-astronomy';
 import { clone } from 'lodash';
-import { SelectItem } from 'primeng/components/common/api';
+import { SelectItem } from 'primeng/api';
 import { AppService } from '../app.service';
-import { ADDITIONALS, PROPERTY_ADDITIONALS } from './generic-view';
+import { ADDITIONALS, PROPERTY_ADDITIONALS } from './generic-view.directive';
 
 export class SvcGenericOptionsComponent {
   private _additional: ADDITIONALS | string = ADDITIONALS.NONE;

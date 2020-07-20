@@ -3,7 +3,7 @@
   <ks-dropdown fxFlex="0 0 auto" [options]="centering" [(ngModel)]="centerEarth"></ks-dropdown>
   <ks-dropdown fxFlex="0 0 auto" [options]="unitsChoices" [(ngModel)]="marqueeUnits"></ks-dropdown>
   <p-dropdown fxFlex="0 0 auto" [options]="additionals" [(ngModel)]="additional"
-    [disabled]="!asteroidsReady"></p-dropdown>
+    [disabled]="!asteroidsReady" class="constrained-dropdown"></p-dropdown>
   <ks-checkbox fxFlex="0 0 auto" [(ngModel)]="showPaths" binary="true" label="Mean orbits"></ks-checkbox>
   <ks-checkbox fxFlex="0 0 auto" [(ngModel)]="showMarkers" binary="true" label="Orbital markers"></ks-checkbox>
   <div fxFlex="0 0 auto" class="flex-container" fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="4px">

@@ -27,7 +27,7 @@ import { KsDateTime, KsTimeZone } from 'ks-date-time-zone';
 import { floor, FMT_DD, FMT_MINS, min, round } from 'ks-math';
 import { strokeLine } from 'ks-util';
 import { AppService, CurrentTab, Location, UserSetting } from '../../app.service';
-import { DrawingContext, GenericView } from '../generic-view';
+import { DrawingContext, GenericViewDirective } from '../generic-view.directive';
 
 export const  VIEW_INSOLATION = 'insolation';
 export const    PROPERTY_CENTER_MIDNIGHT = 'center_midnight';
@@ -55,7 +55,7 @@ const CROSSHAIR_CLEARING = 2;
   templateUrl: './svc-insolation-view.component.html',
   styleUrls: ['./svc-insolation-view.component.scss']
 })
-export class SvcInsolationViewComponent extends GenericView implements AfterViewInit {
+export class SvcInsolationViewComponent extends GenericViewDirective implements AfterViewInit {
   private insolationCanvas: HTMLCanvasElement;
   private refreshImage = false;
   private lastPlotSize: number;

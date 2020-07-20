@@ -28,10 +28,10 @@ import { debounce, sortBy } from 'lodash';
 import { AppService, CurrentTab, UserSetting } from '../../app.service';
 import { ZBuffer } from '../../util/ks-z-buffer';
 import {
-  ASTEROID_COLOR_INDEX, COMET_COLOR_INDEX, DrawingContextPlanetary, GenericPlanetaryView, LABEL_TYPE, LabelInfo, MARQUEE_AU,
+  ASTEROID_COLOR_INDEX, COMET_COLOR_INDEX, DrawingContextPlanetary, GenericPlanetaryViewDirective, LABEL_TYPE, LabelInfo, MARQUEE_AU,
   MARQUEE_DISTANCE, MARQUEE_ECLIPTIC, MARQUEE_HELIOCENTRIC, planetColors, planetPrintColors, SELECTION_TYPE, SUBJECT
-} from '../generic-planetary-view';
-import { ADDITIONALS, GenericView, PROPERTY_ADDITIONALS } from '../generic-view';
+} from '../generic-planetary-view.directive';
+import { ADDITIONALS, GenericViewDirective, PROPERTY_ADDITIONALS } from '../generic-view.directive';
 
 export const  VIEW_ORBITS = 'orbits';
 export const    PROPERTY_EXTENT = 'extent';
@@ -125,7 +125,7 @@ interface ZSortablePlanet {
   templateUrl: './svc-orbit-view.component.html',
   styleUrls: ['./svc-orbit-view.component.scss']
 })
-export class SvcOrbitViewComponent extends GenericPlanetaryView implements AfterViewInit {
+export class SvcOrbitViewComponent extends GenericPlanetaryViewDirective implements AfterViewInit {
   private anaglyph3d = false;
   private anaglyphRC = true;
   private centerEarth = false;
@@ -221,7 +221,7 @@ export class SvcOrbitViewComponent extends GenericPlanetaryView implements After
   }
 
   protected drawView(dc: DrawingContextPlanetary): void {
-    if (this.anaglyph3d && !GenericView.printing) {
+    if (this.anaglyph3d && !GenericViewDirective.printing) {
       this.leftEyeLabels = [];
 
       this.drawViewAux(dc, DrawingMode.LEFT_EYE);

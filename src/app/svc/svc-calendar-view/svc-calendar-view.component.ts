@@ -35,7 +35,7 @@ import { throttle } from 'lodash';
 import {
   AppService, CurrentTab, Location, PROPERTY_GREGORIAN_CHANGE_DATE, SVC_MAX_YEAR, SVC_MIN_YEAR, UserSetting, VIEW_APP
 } from '../../app.service';
-import { GenericView } from '../generic-view';
+import { GenericViewDirective } from '../generic-view.directive';
 import { MoonDrawer } from '../moon-drawer';
 
 export const  VIEW_CALENDAR = 'calendar';
@@ -220,7 +220,7 @@ export class SvcCalendarViewComponent implements AfterViewInit {
 
     setTimeout(() => this.appService.requestViewSettings(VIEW_CALENDAR));
 
-    GenericView.getPrintingUpdate(printing => {
+    GenericViewDirective.getPrintingUpdate(printing => {
       this.doResize();
     });
   }
@@ -248,7 +248,7 @@ export class SvcCalendarViewComponent implements AfterViewInit {
     if (CurrentTab.CALENDAR !== this.appService.currentTab)
       return;
 
-    const printing = GenericView.printing;
+    const printing = GenericViewDirective.printing;
     const inkSaver = printing && this.appService.inkSaver;
     const context = this.canvas.getContext('2d');
     const rowHeight = (this.height - this.dayTop) / this.calendar.length;

@@ -1,3 +1,4 @@
+<!--suppress AngularUndefinedBinding --> <!-- suppression needed because `touchstart` is not recognized -->
 <div class="flex-container" fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="4px">
   <button pButton type="button" icon="fas fa-chevron-left" [disabled]="disabled || !eventFinderReady"
           (touchstart)="onTouchStart($event, true)" (touchend)="onTouchEnd($event)"
@@ -10,4 +11,4 @@
           (touchstart)="onTouchStart($event, false)" (touchend)="onTouchEnd($event)"
           (mousedown)="onMouseDown(false, $event)" (mouseup)="onMouseUp()" (mouseleave)="stopClickTimer()"></button>
 </div>
-<p-growl [value]="messages" [life]="6000"></p-growl>
+<p-toast key="navigator" position="center"></p-toast>

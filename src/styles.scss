@@ -49,3 +49,9 @@ body {
   font-style: italic;
   font-size: 11px;
 }
+
+.constrained-dropdown .ui-dropdown-label {
+  display: inline-block;
+  max-width: 165px;
+  text-overflow: ellipsis;
+}

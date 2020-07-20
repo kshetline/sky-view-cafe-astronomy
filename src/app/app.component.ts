@@ -25,7 +25,7 @@ import { Router } from '@angular/router';
 import { KsDateTime, KsTimeZone, YMDDate } from 'ks-date-time-zone';
 import { toggleFullScreen } from 'ks-util';
 import { debounce } from 'lodash';
-import { MenuItem, Message } from 'primeng/components/common/api';
+import { MenuItem, MessageService } from 'primeng/api';
 import { Subscription, timer } from 'rxjs';
 import { AppService, currentMinuteMillis, CurrentTab, PROPERTY_GREGORIAN_CHANGE_DATE, PROPERTY_NATIVE_DATE_TIME,
   UserSetting, VIEW_APP } from './app.service';
@@ -38,7 +38,7 @@ const MIN_APP_HEIGHT = 640;
   selector: 'svc-app',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
-  providers: [AppService]
+  providers: [AppService, MessageService]
 })
 export class AppComponent implements AfterViewInit, OnDestroy {
   private dateTime = new KsDateTime(null, KsTimeZone.OS_ZONE);
@@ -49,7 +49,6 @@ export class AppComponent implements AfterViewInit, OnDestroy {
   private _trackTime = false;
   private timer: Subscription;
 
-  messages: Message[] = [];
   moreItems: MenuItem[] = [
       { label: 'Preferences', icon: 'fas fa-cog', command: () => this.displayPreferences = true },
       { label: 'Help', icon: 'fas fa-question-circle', command: () => this.openHelp() },
@@ -63,7 +62,8 @@ export class AppComponent implements AfterViewInit, OnDestroy {
   gcDate = '1582-10-15';
   nativeDateTime = false;
 
-  constructor(public app: AppService, private router: Router, atlasService: SvcAtlasService) {
+  constructor(public app: AppService, private router: Router, atlasService: SvcAtlasService,
+              private messageService: MessageService) {
     this.time = app.time;
 
     atlasService.ping();
@@ -168,12 +168,12 @@ export class AppComponent implements AfterViewInit, OnDestroy {
   }
 
   private updateTimeZone(): void {
-    this.messages = [];
     this._timeZone = KsTimeZone.getTimeZone(this.app.location.zone, this.app.location.longitude);
     this.dateTime.timeZone = this._timeZone;
 
     if (this._timeZone.error)
-      this.messages.push({severity: 'error', summary: 'Failed to retrieve time zone', detail: 'Using your OS time zone instead.'});
+      this.messageService.add({key: 'general', severity: 'error', summary: 'Failed to retrieve time zone',
+        detail: 'Using your OS time zone instead.'});
   }
 
   // noinspection JSMethodCanBeStatic

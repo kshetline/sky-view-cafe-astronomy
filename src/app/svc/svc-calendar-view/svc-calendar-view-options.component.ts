@@ -22,7 +22,7 @@
 
 import { AfterViewInit, Component, OnDestroy } from '@angular/core';
 import { DateTimeField, KsDateTime, KsTimeZone } from 'ks-date-time-zone';
-import { SelectItem } from 'primeng/components/common/api';
+import { SelectItem } from 'primeng/api';
 import { Subscription, timer } from 'rxjs';
 import { AppService, SVC_MAX_YEAR, SVC_MIN_YEAR, UserSetting } from '../../app.service';
 import { PROPERTY_DAILY_DAYLIGHT, PROPERTY_DAILY_MOON_PHASE, PROPERTY_EQUISOLSTICE, PROPERTY_EVENT_TYPE, PROPERTY_INCLUDE_TRANSITS,

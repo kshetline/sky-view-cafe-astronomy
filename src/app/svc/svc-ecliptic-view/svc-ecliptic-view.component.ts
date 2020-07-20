@@ -31,12 +31,12 @@ import { AppService, CurrentTab, UserSetting } from '../../app.service';
 import {
   DrawingContextPlanetary, MARQUEE_ECLIPTIC, MARQUEE_EQUATORIAL, MARQUEE_ILLUMINATION, MARQUEE_MAGNITUDE, MARQUEE_SIZE, NONPLANET,
   OUTER_LABEL_GAP, SUBJECT
-} from '../generic-planetary-view';
+} from '../generic-planetary-view.directive';
 import {
-  eclipticColor, eclipticGridColor, eclipticGridPrintColor, eclipticPrintColor, equatorColor, equatorPrintColor, GenericSkyView,
+  eclipticColor, eclipticGridColor, eclipticGridPrintColor, eclipticPrintColor, equatorColor, equatorPrintColor, GenericSkyViewDirective,
   horizonColor, horizonPrintColor
-} from '../generic-sky-view';
-import { ADDITIONALS, PROPERTY_ADDITIONALS } from '../generic-view';
+} from '../generic-sky-view.directive';
+import { ADDITIONALS, PROPERTY_ADDITIONALS } from '../generic-view.directive';
 
 export const  VIEW_ECLIPTIC = 'ecliptic';
 export const    PROPERTY_SPAN_25 = 'span_25';
@@ -68,7 +68,7 @@ interface DrawingContextEcliptic extends DrawingContextPlanetary {
   templateUrl: './svc-ecliptic-view.component.html',
   styleUrls: ['./svc-ecliptic-view.component.scss']
 })
-export class SvcEclipticViewComponent extends GenericSkyView implements AfterViewInit {
+export class SvcEclipticViewComponent extends GenericSkyViewDirective implements AfterViewInit {
   private span25 = false;
   private northOutward = true;
   private showEclipticGrid = true;

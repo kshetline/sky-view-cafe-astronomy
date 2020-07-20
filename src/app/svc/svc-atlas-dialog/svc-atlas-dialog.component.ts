@@ -24,7 +24,7 @@ import { Component, ElementRef, EventEmitter, Input, Output, ViewChild } from '@
 import { } from 'googlemaps';
 import { KsTimeZone } from 'ks-date-time-zone';
 import { eventToKey, isIOS } from 'ks-util';
-import { Message } from 'primeng/components/common/api';
+import { MessageService } from 'primeng/api';
 import { Table } from 'primeng/table';
 import { AppService, Location } from '../../app.service';
 import { AtlasLocation, AtlasResults, SvcAtlasService } from '../svc-atlas.service';
@@ -44,7 +44,8 @@ interface LocationInfo {
 @Component({
   selector: 'svc-atlas-dialog',
   templateUrl: './svc-atlas-dialog.component.html',
-  styleUrls: ['./svc-atlas-dialog.component.scss']
+  styleUrls: ['./svc-atlas-dialog.component.scss'],
+  providers: [MessageService]
 })
 export class SvcAtlasDialogComponent {
   private _extended: boolean;
@@ -63,7 +64,6 @@ export class SvcAtlasDialogComponent {
   becomingVisible = false;
   states = [''];
   maskDisplay = 'visible';
-  messages: Message[] = [];
   busy: Promise<any> = null;
 
   @ViewChild('searchField', { static: true }) private searchField: ElementRef;
@@ -94,7 +94,6 @@ export class SvcAtlasDialogComponent {
         this.locations = [];
         this.obscureMap();
         this.emptyMessage = '';
-        this.messages = [];
         ++this.searchId;
         this.searching = false;
         this.becomingVisible = true; // Hack for Chrome to trigger re-layout of search fields.
@@ -152,7 +151,8 @@ export class SvcAtlasDialogComponent {
     return name;
   }
 
-  constructor(private appService: AppService, private atlasService: SvcAtlasService) {
+  constructor(private appService: AppService, private atlasService: SvcAtlasService,
+              private messageService: MessageService) {
     atlasService.getStates().then((states: string[]) => this.states = states).catch(() => this.states = ['']);
   }
 
@@ -192,7 +192,6 @@ export class SvcAtlasDialogComponent {
     this.locations = [];
     this.emptyMessage = 'Searching...';
     this.searching = true;
-    this.messages = [];
     this.obscureMap();
 
     const searchWithID = (id: number) => {
@@ -205,9 +204,9 @@ export class SvcAtlasDialogComponent {
         this.searching = false;
 
         if (results.error)
-          this.messages.push({severity: 'error', detail: results.error});
+          this.messageService.add({key: 'general', severity: 'error', detail: results.error});
         else if (results.warning)
-          this.messages.push({severity: 'warn', detail: results.warning});
+          this.messageService.add({key: 'general', severity: 'warn', detail: results.warning});
 
         this.locations = results.matches.map((location: AtlasLocation): LocationInfo => {
           return {
@@ -229,7 +228,7 @@ export class SvcAtlasDialogComponent {
           return;
 
         this.emptyMessage = '';
-        this.messages.push({severity: 'error', detail: 'Search failed. Please try again later.'});
+        this.messageService.add({key: 'general', severity: 'error', detail: 'Search failed. Please try again later.'});
         this.searching = false;
       });
     };

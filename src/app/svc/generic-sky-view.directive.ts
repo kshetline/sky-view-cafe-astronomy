@@ -1,5 +1,5 @@
 /*
-  Copyright © 2017-2019 Kerry Shetline, kerry@shetline.com.
+  Copyright © 2017-2020 Kerry Shetline, kerry@shetline.com.
 
   This code is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -20,16 +20,16 @@
   other uses are restricted.
 */
 
-import { AfterViewInit } from '@angular/core';
+import { AfterViewInit, Directive } from '@angular/core';
 import { LABEL_ANCHOR, LINE_BREAK, NO_MATCH, REFRACTION } from 'ks-astronomy';
 import { max, min, Point, pow, round, SphericalPosition, SphericalPosition3D } from 'ks-math';
 import { strokeEllipse } from 'ks-util';
 import { reverse, sortBy } from 'lodash';
 import { AppService, CurrentTab } from '../app.service';
 import {
-  DrawingContextPlanetary, FAR_AWAY, GenericPlanetaryView, highlightedStarColor, LABEL_TYPE, NONPLANET, SELECTION_TYPE,
+  DrawingContextPlanetary, FAR_AWAY, GenericPlanetaryViewDirective, highlightedStarColor, LABEL_TYPE, NONPLANET, SELECTION_TYPE,
   SortablePlanet, SUBJECT
-} from './generic-planetary-view';
+} from './generic-planetary-view.directive';
 
 export const eclipticColor               = '#666699';
 export const eclipticGridColor           = 'rgba(102,102,153,0.4)';
@@ -70,7 +70,8 @@ for (let i = 0; i <= 255; ++i)
 
 const QUICK_DRAW_STAR_COUNT = 500;
 
-export abstract class GenericSkyView extends GenericPlanetaryView implements AfterViewInit {
+@Directive()
+export abstract class GenericSkyViewDirective extends GenericPlanetaryViewDirective implements AfterViewInit {
   protected deepSkyLabelMagnitude = NO_DEEP_SKY;
   protected labelBrightStars = false;
   protected labelConstellations = false;

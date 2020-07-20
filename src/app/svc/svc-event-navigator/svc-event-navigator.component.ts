@@ -30,7 +30,7 @@ import {
 } from 'ks-astronomy';
 import { KsDateTime, KsTimeZone } from 'ks-date-time-zone';
 import { isString } from 'lodash';
-import { Message, SelectItem } from 'primeng/components/common/api';
+import { MessageService, SelectItem } from 'primeng/api';
 import { Subscription, timer } from 'rxjs';
 import { AppService, UserSetting } from '../../app.service';
 import { AstroDataService } from '../../astronomy/astro-data.service';
@@ -41,6 +41,7 @@ const CLICK_REPEAT_RATE  = 100;
 
 @Component({
   selector: 'svc-event-navigator',
+  providers: [MessageService],
   templateUrl: './svc-event-navigator.component.html'
 })
 export class SvcEventNavigatorComponent implements AfterViewInit, OnDestroy {
@@ -106,9 +107,8 @@ export class SvcEventNavigatorComponent implements AfterViewInit, OnDestroy {
   noPlanets = false;
   eventFinderReady = false;
   planets: SelectItem[] = this.planetChoices;
-  messages: Message[] = [];
 
-  constructor(private app: AppService, dataService: AstroDataService) {
+  constructor(private app: AppService, dataService: AstroDataService, private messageService: MessageService) {
     this.updatePlanets(this._selectedEvent);
 
     JupiterInfo.getJupiterInfo(dataService).then((jupiterInfo: JupiterInfo) => {
@@ -260,7 +260,6 @@ export class SvcEventNavigatorComponent implements AfterViewInit, OnDestroy {
       return;
 
     this.waitingForEvent = true;
-    this.messages = [];
 
     const observer = new SkyObserver(this.app.location.longitude, this.app.location.latitude);
     let altMins: number;
@@ -301,15 +300,7 @@ export class SvcEventNavigatorComponent implements AfterViewInit, OnDestroy {
       }
 
       if (message)
-        this.messages.push({severity: 'info', summary: '', detail: message});
+        this.messageService.add({key: 'navigator', severity: 'info', summary: '', detail: message, life: 6000});
     }
-  }
-
-  nextEvent(): void {
-    this.getEvent(false);
-  }
-
-  previousEvent(): void {
-    this.getEvent(true);
   }
 }

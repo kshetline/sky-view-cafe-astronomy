@@ -21,7 +21,7 @@
 */
 
 import { AfterViewInit, Component } from '@angular/core';
-import { SelectItem } from 'primeng/components/common/api';
+import { SelectItem } from 'primeng/api';
 import { AppEvent, AppService, UserSetting } from '../../app.service';
 import {
   EVENT_MAP_ACTIVE_ECLIPSE, EVENT_MAP_ACTIVE_ECLIPSE_REQUEST, EVENT_MAP_GO_TO_ECLIPSE_CENTER, EVENT_MAP_GO_TO_SUBSOLAR_POINT, MapType,

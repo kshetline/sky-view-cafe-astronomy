@@ -1,6 +1,5 @@
 <p-dialog header="Find Latitude, Longitude, and Time Zone" [modal]="true" [(visible)]="visible" ksSizer="797"
           (keyup)="onKey($event)">
-  <p-growl [value]="messages" sticky="true"></p-growl>
   <div style="position: relative">
     <div class="search-controls" [ngBusy]="busy">
       <div class="top-caption-row">
@@ -64,4 +63,5 @@
       <button type="button" pButton icon="fas fa-check" (click)="setLocation()" label="OK" [disabled]="searching || !selection"></button>
     </div>
   </p-footer>
+  <p-toast key="general" position="top-right"></p-toast>
 </p-dialog>
