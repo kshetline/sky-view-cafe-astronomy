@@ -1,3 +1,4 @@
+<!--suppress AngularUndefinedBinding --> <!-- suppression needed because `touchstart` is not recognized -->
 <div class="orbitControls">Select an orientation...
   <button pButton type="button" icon="fas fa-chevron-left"
           (touchstart)="tapChangeOrientation($event, 1, 0)" (click)="changeOrientation(1, 0)"></button>&nbsp;

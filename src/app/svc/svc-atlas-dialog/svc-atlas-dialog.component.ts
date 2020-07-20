@@ -1,5 +1,5 @@
 /*
-  Copyright © 2017-2019 Kerry Shetline, kerry@shetline.com.
+  Copyright © 2017-2020 Kerry Shetline, kerry@shetline.com.
 
   This code is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -21,7 +21,8 @@
 */
 
 import { Component, ElementRef, EventEmitter, Input, Output, ViewChild } from '@angular/core';
-import { } from 'googlemaps';
+// noinspection ES6UnusedImports
+import { } from 'googlemaps'; // Produces "unused import" warning, but is actually needed, and `import 'googlemaps'` won't do.
 import { KsTimeZone } from 'ks-date-time-zone';
 import { eventToKey, isIOS } from 'ks-util';
 import { MessageService } from 'primeng/api';

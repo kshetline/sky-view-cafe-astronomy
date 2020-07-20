@@ -1,5 +1,5 @@
 /*
-  Copyright © 2017-2019 Kerry Shetline, kerry@shetline.com.
+  Copyright © 2017-2020 Kerry Shetline, kerry@shetline.com.
 
   This code is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -299,8 +299,10 @@ export class SvcEventNavigatorComponent implements AfterViewInit, OnDestroy {
         message += ' eclipse of the ' + (event.eventType === LUNAR_ECLIPSE ? 'Moon' : 'Sun');
       }
 
-      if (message)
+      if (message) {
+        this.messageService.clear('navigator');
         this.messageService.add({key: 'navigator', severity: 'info', summary: '', detail: message, life: 6000});
+      }
     }
   }
 }
