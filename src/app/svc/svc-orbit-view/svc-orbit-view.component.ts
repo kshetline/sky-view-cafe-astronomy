@@ -308,7 +308,7 @@ export class SvcOrbitViewComponent extends GenericPlanetaryViewDirective impleme
         // referred to the perihelion to be plotted.
         const ascNode_p = mod(oe.OMEGA - oe.pi, 360.0);
         const desNode_p = mod(ascNode_p + 180.0, 360.0);
-        let x2: number, y2: number;
+        let x2: number = null, y2: number = null;
 
         for (let v = 0.0; v <= 360.0; v += orbitStep) {
           const r = oe.a * (1.0 - oe.e * oe.e) / (1.0 + oe.e * cos_deg(v));
@@ -397,7 +397,7 @@ export class SvcOrbitViewComponent extends GenericPlanetaryViewDirective impleme
         // Alternate orbit drawing method for highly eccentric (e > 0.98) objects
         let colorIndex = (SolarSystem.isAsteroid(planet) ? ASTEROID_COLOR_INDEX : COMET_COLOR_INDEX);
         colorIndex = this.get3DColorIndex(mode, colorIndex);
-        let x2: number, y2: number;
+        let x2: number = null, y2: number = null;
 
         for (let delta = -1; delta <= 1; delta += 2) {
           let t = dc.jde;

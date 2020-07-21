@@ -688,6 +688,7 @@ export class KsSequenceEditorComponent implements AfterViewInit, OnInit, OnDestr
     // With Android many on-screen keyboard key events carry no useful information about the key that was
     // pressed. They instead match the following test and we have to grab a character out of the hidden
     // input field to find out what was actually typed in.
+    // noinspection JSDeprecatedSymbols (for `keyCode`)
     if (this.hiddenInput && key === 'Unidentified' && event.keyCode === 229) {
       this.getCharFromInputEvent = true;
       KsSequenceEditorComponent.lastKeyTimestamp = event.timeStamp;

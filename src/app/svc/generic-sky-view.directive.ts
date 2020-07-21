@@ -80,7 +80,7 @@ export abstract class GenericSkyViewDirective extends GenericPlanetaryViewDirect
   protected showConstellations = false;
   protected showDimStars = false;
 
-  constructor(appService: AppService, tabId: CurrentTab) {
+  protected constructor(appService: AppService, tabId: CurrentTab) {
     super(appService, tabId);
   }
 
@@ -139,7 +139,7 @@ export abstract class GenericSkyViewDirective extends GenericPlanetaryViewDirect
         if (!pt)
           break;
 
-        if (!breakLine)
+        if (!breakLine) // noinspection JSUnusedAssignment
           outOfView = outOfView || !this.drawSkyPlotLine(pt, lastPt, dc, NONPLANET.CONSTELLATIONS);
 
         if (nextIsAnchor) {

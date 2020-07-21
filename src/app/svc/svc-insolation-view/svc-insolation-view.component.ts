@@ -76,7 +76,7 @@ export class SvcInsolationViewComponent extends GenericViewDirective implements 
   private centerMidnight = true;
   private showMoonlight = false;
 
-  private sanitizedOpenCrosshair: SafeStyle;
+  private readonly sanitizedOpenCrosshair: SafeStyle;
 
   @ViewChild('canvasWrapper', { static: true }) private wrapperRef: ElementRef;
   @ViewChild('insolationCanvas', { static: true }) private canvasRef: ElementRef;

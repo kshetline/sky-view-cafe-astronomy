@@ -179,7 +179,7 @@ export abstract class GenericPlanetaryViewDirective extends GenericViewDirective
   protected topocentricMoon = false;
   protected northAzimuth = false;
 
-  constructor(protected appService: AppService, protected tabId: CurrentTab) {
+  protected constructor(protected appService: AppService, protected tabId: CurrentTab) {
     super(appService, tabId);
 
     this.brightenStars(false);

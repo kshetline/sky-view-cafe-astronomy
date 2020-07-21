@@ -1040,8 +1040,8 @@ export class SvcSkyViewComponent extends GenericSkyViewDirective implements Afte
     const sin_lat = dc.skyObserver.latitude.sin;
     const cos_lat = dc.skyObserver.latitude.cos;
     let gridColor = (dc.inkSaver ? equatorialGridPrintColor : equatorialGridColor);
-    let pt2: Point;
-    let alt2: number;
+    let pt2: Point = null;
+    let alt2: number = null;
 
     if (dc.minStarBrightness > 0) {
       if (this.skyColor === SKY_COLOR.BASIC)
@@ -1132,11 +1132,9 @@ export class SvcSkyViewComponent extends GenericSkyViewDirective implements Afte
   protected drawEclipticGrid(dc: DrawingContextSky): void {
     const latitude = dc.skyObserver.latitude.radians;
     const localHourAngle = dc.skyObserver.getLocalHourAngle(dc.jdu, false).radians;
-    const sin_lat = dc.skyObserver.latitude.sin;
-    const cos_lat = dc.skyObserver.latitude.cos;
     let gridColor = (dc.inkSaver ? eclipticGridPrintColor : eclipticGridColor);
-    let pt2: Point;
-    let alt2: number;
+    let pt2: Point = null;
+    let alt2: number = null;
 
     if (dc.minStarBrightness > 0) {
       if (this.skyColor === SKY_COLOR.BASIC)
@@ -1237,8 +1235,8 @@ export class SvcSkyViewComponent extends GenericSkyViewDirective implements Afte
       const flags = QUICK_SUN | LOW_PRECISION | (this.checkRefraction() ? REFRACTION : 0) |
                           (i === 0 ? 0 : TOPOCENTRIC);
       let haveLastPoint = false;
-      let pt2: Point;
-      let alt2: number;
+      let pt2: Point = null;
+      let alt2: number = null;
 
       dc.context.strokeStyle = pathColor;
 
@@ -1294,7 +1292,7 @@ export class SvcSkyViewComponent extends GenericSkyViewDirective implements Afte
     let cornersUsed = 0;
     const pts: Point[] = [];
     let pos: SphericalPosition;
-    let lastPt: Point;
+    let lastPt: Point = null;
     let midPt: Point;
     let inSky;
     let lastInSky = false;
@@ -1317,6 +1315,7 @@ export class SvcSkyViewComponent extends GenericSkyViewDirective implements Afte
 
       if (lastPt != null && inSky !== lastInSky) {
         midPt = <Point> {};
+        // noinspection JSSuspiciousNameCombination
         midPt.x = this.scaledRound(interpolate(alt, -REFRACTION_AT_HORIZON, lastAlt, pt.x, lastPt.x));
         midPt.y = this.scaledRound(interpolate(alt, -REFRACTION_AT_HORIZON, lastAlt, pt.y, lastPt.y));
         pts.push(midPt);

@@ -141,7 +141,7 @@ export class SvcZoneSelectorComponent implements ControlValueAccessor, OnInit {
       }
       else {
         this.setRegion(g1);
-        this.subzone = g2.replace(/_/g, ' ');
+        this.subzone = g2?.replace(/_/g, ' ');
       }
     }
     else {

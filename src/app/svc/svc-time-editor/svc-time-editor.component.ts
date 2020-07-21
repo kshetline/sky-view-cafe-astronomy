@@ -55,7 +55,7 @@ export class SvcTimeEditorComponent extends KsSequenceEditorComponent implements
   private _gregorianChangeDate = '1582-10-15';
   private onTouchedCallback: () => void = noop;
   private onChangeCallback: (_: any) => void = noop;
-  private originalMinYear: number;
+  private readonly originalMinYear: number;
   private _minYear: number;
   private _maxYear: number;
   private _localTimeValue: string;

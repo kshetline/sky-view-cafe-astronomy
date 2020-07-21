@@ -1,3 +1,4 @@
+<!--suppress AngularUndefinedBinding -->
 <p-checkbox #checkbox [(ngModel)]="ngValue" [disabled]="disabled" [value]="value"
   (onFocus)="onDropdownFocus($event)" (onBlur)="onDropdownBlur($event)" [binary]="binary"></p-checkbox>
 <span (click)="onClick($event)" [ngClass]="{'faded': disabled}">{{label}}</span>

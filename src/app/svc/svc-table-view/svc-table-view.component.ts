@@ -44,7 +44,7 @@ export const    PROPERTY_TWILIGHT = 'twilight';
 })
 export class SvcTableViewComponent implements AfterViewInit {
   private dateTime: KsDateTime;
-  private throttledResize: () => void;
+  private readonly throttledResize: () => void;
   private eventFinder: EventFinder;
   private eventFinderReady = false;
   private height: number;

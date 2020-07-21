@@ -315,7 +315,7 @@ export class SvcMapViewComponent extends GenericViewDirective implements AfterVi
     const ctx = dc.context;
     let ymMin = Number.MAX_VALUE;
     let ymMax = -Number.MAX_VALUE;
-    let ymLast;
+    let ymLast = null;
 
     dc.context.fillStyle = shadowColor;
 
@@ -380,10 +380,12 @@ export class SvcMapViewComponent extends GenericViewDirective implements AfterVi
   }
 
   protected longitude_to_x(lon: number): number {
+    // noinspection JSSuspiciousNameCombination
     return mod(this.mapWidth / 2 + lon / 360 * this.mapWidth, this.mapWidth);
   }
 
   protected longitude_to_ix(lon: number): number {
+    // noinspection JSSuspiciousNameCombination
     return mod(round(this.mapWidth / 2 + lon / 360 * this.mapWidth), this.mapWidth);
   }
 
@@ -448,6 +450,7 @@ export class SvcMapViewComponent extends GenericViewDirective implements AfterVi
           flipped = true;
         }
 
+        // noinspection JSSuspiciousNameCombination
         const nx = mod(x + ffdx[i] + (flipped ? floor(this.mapWidth / 2) : 0), this.mapWidth);
 
         if (this.getMoonShadowPt(nx, ny) === UNCHECKED) {

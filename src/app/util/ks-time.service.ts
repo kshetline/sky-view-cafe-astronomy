@@ -25,6 +25,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { timeout } from 'rxjs/operators';
 
+// noinspection JSUnusedGlobalSymbols
 export interface RegionAndSubzones {
   region: string;
   subzones: string[];
@@ -41,8 +42,8 @@ export interface ZoneForLocation {
 
 @Injectable()
 export class KsTimeService {
-  private hostname: string;
-  private port: number;
+  private readonly hostname: string;
+  private readonly port: number;
 
   constructor(private httpClient: HttpClient) {
     this.hostname = document.location.hostname;

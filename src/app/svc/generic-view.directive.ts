@@ -368,7 +368,7 @@ export abstract class GenericViewDirective implements AfterViewInit {
   }
 
   onMouseMove(event: MouseEvent): void {
-    if (this.goodDragStart || !this.dragging)
+    if (this.goodDragStart || !this.dragging) // noinspection JSDeprecatedSymbols (for `which`)
       this.handleMouseMove(event.offsetX, event.offsetY, !!((event.buttons & 0x01) || (this.isSafari && (event.which & 0x01))));
   }
 

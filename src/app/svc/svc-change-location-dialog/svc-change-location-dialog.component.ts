@@ -105,6 +105,7 @@ export class SvcChangeLocationDialogComponent {
   }
 
   onKey(event: KeyboardEvent): void {
+    // noinspection JSDeprecatedSymbols (for `keyCode`)
     if (event.keyCode === 13)
       this.goToLocation();
   }

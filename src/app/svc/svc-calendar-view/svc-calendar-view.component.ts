@@ -108,7 +108,7 @@ export class SvcCalendarViewComponent implements AfterViewInit {
   private equisolstice = true;
   private dailyMoonPhase = true;
   private dailyDaylight = true;
-  private throttledResize: () => void;
+  private readonly throttledResize: () => void;
   private eventFinder = new EventFinder();
   private moonDrawer: MoonDrawer;
 

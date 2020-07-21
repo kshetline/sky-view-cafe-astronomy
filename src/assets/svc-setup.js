@@ -1,6 +1,7 @@
 var mapsInitialized = false;
 var mapsCallback = null;
 
+// noinspection JSUnusedGlobalSymbols
 function initGoogleMaps(callback) {
   if (callback)
     mapsCallback = callback;
@@ -55,11 +56,13 @@ function initGoogleMaps(callback) {
   var base = (realWorld ? '' : protocol + '://' + host);
   var oldAppendChild = document.head.appendChild;
 
+  // noinspection JSValidateTypes
   document.head.appendChild = function(node) {
     if (node.localName === 'script' && ($ = /^https:\/\/maps.googleapis.com(.*)$/.exec(node.src))) {
       node.src = base + '/maps/proxy' + $[1];
 
-      if (window.svcModKey)
+      // noinspection JSUnresolvedVariable (for `svcModKey`)
+      if (window.svcModKey) // noinspection JSUnresolvedVariable (for `svcOrigKey`)
         node.src = node.src.replace(new RegExp(window.svcModKey, 'g'), window.svcOrigKey);
     }
 

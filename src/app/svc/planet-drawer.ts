@@ -39,7 +39,7 @@ export abstract class PlanetDrawer {
   protected w2: number;
   protected h2: number;
 
-  constructor(protected baseImage: HTMLImageElement, protected flattening: number, protected defaultColor: string) {
+  protected constructor(protected baseImage: HTMLImageElement, protected flattening: number, protected defaultColor: string) {
     if (baseImage) {
       this.scaledCylinderCanvas = <HTMLCanvasElement> <any> document.createElement('canvas');
       this.scaledCylinderCanvas.width = 1;
@@ -55,10 +55,12 @@ export abstract class PlanetDrawer {
     return 0.0;
   }
 
+  // noinspection JSUnusedGlobalSymbols
   hasImage(): boolean {
     return !!this.baseImage;
   }
 
+  // noinspection JSUnusedGlobalSymbols
   resetCachedTime(): void {
     this.lastTime = Number.MAX_VALUE;
   }

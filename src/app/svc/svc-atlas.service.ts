@@ -70,9 +70,9 @@ export class SvcAtlasService {
   private static states: string[];
   private static statesPromise: Promise<string[]>;
 
-  private hostname: string;
-  private port: number;
-  private localTesting: boolean;
+  private readonly hostname: string;
+  private readonly port: number;
+  private readonly localTesting: boolean;
   private lastPing = -Number.MAX_SAFE_INTEGER;
 
   constructor(private httpClient: HttpClient) {

@@ -355,6 +355,7 @@ export class SvcMoonsViewComponent extends GenericPlanetaryViewDirective impleme
 
       if (drawMoon) {
         ctx.fillStyle = colorOfMoon;
+        // noinspection JSObjectNullOrUndefined
         pt.x = xctr + xsign * round(pos.X * radius);
         pt.y = yctr - ysign * round(pos.Y * radius);
 

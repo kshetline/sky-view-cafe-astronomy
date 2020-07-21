@@ -310,8 +310,8 @@ export class SvcEclipticViewComponent extends GenericSkyViewDirective implements
   protected drawCelestialEquator(dc: DrawingContextEcliptic): void {
     dc.context.strokeStyle = (dc.inkSaver ? equatorPrintColor : equatorColor);
 
-    let pt2;
-    let B2;
+    let pt2 = null;
+    let B2 = null;
 
     for (let ra = 0; ra <= 360; ++ra) {
       const rightAscension = new Angle(ra, Unit.DEGREES);
@@ -361,8 +361,8 @@ export class SvcEclipticViewComponent extends GenericSkyViewDirective implements
     const localHourAngle = dc.skyObserver.getLocalHourAngle(dc.jdu, false);
     const sin_lat = dc.skyObserver.latitude.sin;
     const cos_lat = dc.skyObserver.latitude.cos;
-    let hadj1: number, hadj2: number, step: number, B2: number;
-    let pt2: Point;
+    let hadj1: number, hadj2: number, step: number, B2: number = null;
+    let pt2: Point = null;
 
     dc.context.fillStyle = (dc.inkSaver ? horizonPrintColor : horizonColor);
     dc.context.strokeStyle = (dc.inkSaver ? horizonPrintColor : horizonColor);

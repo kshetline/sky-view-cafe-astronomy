@@ -119,9 +119,9 @@ export class AppService {
   private defaultLocation: Location = new Location('(Greenwich Observatory)', 51.47, 0, 'UT');
   private _location = new BehaviorSubject<Location>(this.defaultLocation);
   private locationObserver: Observable<Location> = this._location.asObservable();
-  private _locations: Location[] = [];
+  private readonly _locations: Location[] = [];
   private _solarSystem = new SolarSystem();
-  private _starCatalog: StarCatalog;
+  private readonly _starCatalog: StarCatalog;
   private _starsReady = new BehaviorSubject<boolean>(false);
   private starsReadyObserver: Observable<boolean> = this._starsReady.asObservable();
   private _asteroidsReady = new BehaviorSubject<boolean>(false);
@@ -130,8 +130,8 @@ export class AppService {
   private currentTabObserver: Observable<CurrentTab> = this._currentTab.asObservable();
   private settingsSource = new Subject<UserSetting>();
   private settingsObserver: Observable<UserSetting> = this.settingsSource.asObservable();
-  private allSettings: {[view: string]: {[setting: string]: boolean | number | string}} = {};
-  private debouncedSaveSettings: () => void;
+  private readonly allSettings: {[view: string]: {[setting: string]: boolean | number | string}} = {};
+  private readonly debouncedSaveSettings: () => void;
   private knownIanaTimezones: Set<string>;
   private _northAzimuth = false;
   private _defaultTab = CurrentTab.SKY;
@@ -143,9 +143,9 @@ export class AppService {
   private _nativeDateTime = false;
   private _showNativeInputDialog = false;
   private _warningNativeDateTime = false;
-  private hostname: string;
-  private port: number;
-  private localTesting: boolean;
+  private readonly hostname: string;
+  private readonly port: number;
+  private readonly localTesting: boolean;
 
   constructor(astroDataService: AstroDataService, private httpClient: HttpClient, private _sanitizer: DomSanitizer,
               private router: Router) {
@@ -314,6 +314,7 @@ export class AppService {
   set currentTab(newTab: CurrentTab) {
     if (this._currentTab.getValue() !== newTab) {
       this._currentTab.next(newTab);
+      // noinspection JSIgnoredPromiseFromCall
       this.router.navigate(['/' + tabNames[this._currentTab.getValue()]]);
     }
   }
