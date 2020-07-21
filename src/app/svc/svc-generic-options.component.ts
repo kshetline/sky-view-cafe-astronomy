@@ -54,7 +54,7 @@ export class SvcGenericOptionsComponent {
   }
 
   private updateAdditionals(): void {
-    const names = SolarSystem.getAsteroidAndCometNames(true);
+    const names = SolarSystem.getAsteroidAndCometNames(true, false);
 
     names.forEach(name => {
       let value = name;
