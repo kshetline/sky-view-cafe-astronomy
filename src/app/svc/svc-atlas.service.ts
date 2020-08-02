@@ -85,6 +85,7 @@ export class SvcAtlasService {
     const params = urlEncodeParams({
       client: 'web',
       notrace: this.localTesting ? 'true' : null,
+      pt: 'false',
       q,
       remote: extend ? 'extend' : null
     });
