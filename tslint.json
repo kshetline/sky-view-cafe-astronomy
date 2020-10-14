@@ -16,6 +16,9 @@
       "spaces"
     ],
     "interface-name": false,
+    "deprecation": {
+      "severity": "warning"
+    },
     "max-classes-per-file": false,
     "max-line-length": [
       true,
