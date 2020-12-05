@@ -4,7 +4,7 @@
   width: 12em;
 
   ::ng-deep {
-    .ui-dialog-content {
+    .p-dialog-content {
       overflow: hidden;
     }
   }
@@ -41,7 +41,7 @@ svc-zone-selector,
 ks-dropdown {
   width: 100%;
 
-  ::ng-deep .ui-dropdown {
+  ::ng-deep .p-dropdown {
     width: 100%;
   }
 }

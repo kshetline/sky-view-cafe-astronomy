@@ -21,8 +21,8 @@
     </div>
   </div>
   <p-checkbox [(ngModel)]="extended" binary="true" label="Extended search (slower, possibly more matches)"></p-checkbox>
-  <p-table #locationTable [value]="locations" selectionMode="single" [scrollable]="true" scrollHeight="275px"
-           sortMode="none" [(selection)]="selection" metaKeySelection="true" class="results-table">
+  <p-table #locationTable [value]="locations" selectionMode="single" [scrollable]="locations?.length > 11"
+           scrollHeight="275px" sortMode="none" [(selection)]="selection" metaKeySelection="true" class="results-table">
     <ng-template pTemplate="colgroup">
       <colgroup>
         <col style="width: 40px">
@@ -59,7 +59,7 @@
     <div class="map-mask" [ngStyle]="{visibility: maskDisplay}"></div>
   </div>
   <p-footer>
-    <div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix">
+    <div class="p-dialog-buttonpane p-widget-content p-clearfix">
       <button type="button" pButton icon="far fa-window-close" (click)="visible=false" label="Cancel"></button>
       <button type="button" pButton icon="fas fa-check" (click)="setLocation()" label="OK" [disabled]="searching || !selection"></button>
     </div>

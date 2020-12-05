@@ -6,128 +6,169 @@ $input-border-focus-color: #5E9ED6;
 $input-border-focus-shadow-color: #8DCDFF;
 
 body {
-
   *:focus {
-    border-color: $input-border-focus-color;
-    box-shadow: 0 0 2px 2px $input-border-focus-shadow-color;
+    border-color: $input-border-focus-color !important;
+    box-shadow: 0 0 2px 2px $input-border-focus-shadow-color !important;
     outline: none;
   }
 
   font: $theme-font;
 
-  .pi {
+  .pi, .p-component {
     font-size: 1em;
   }
 
-  .ui-button {
+  .p-button {
     font-size: 12px;
+    padding: 0.125rem 0.6875rem 0.1875rem 0.6875rem;
 
-    &.ui-button-icon-only {
-      min-width: 2em;
+    &.p-button-icon-only {
+      min-width: 1.5rem;
+      padding: 0.125rem 0 0.1875rem 0;
     }
 
-    &.ui-button-text-icon-left .ui-button-text {
-      padding: 0.25em 1em 0.25em 2.1em;
+    &.p-button-text-icon-left .p-button-text {
+      padding: 0.25rem 1rem 0.25rem 2.1rem;
     }
 
-    &.ui-button-text-icon-right .ui-button-text {
-      padding: 0.25em 2.1em 0.25em 1em
+    &.p-button-text-icon-right .p-button-text {
+      padding: 0.25rem 2.1rem 0.25rem 1rem
     }
 
-    &.ui-button-text-only .ui-button-text {
-      padding: 0.25em 1em;
+    &.p-button-text-only .p-button-text {
+      padding: 0.25rem 1rem;
     }
   }
 
-  .ui-button.ui-button-icon-only {
+  .p-button.p-button-icon-only {
     width: auto;
 
-    .ui-button-text {
-      padding: 0.25em;
+    .p-button-text {
+      padding: 0.25rem;
     }
   }
 
-  .ui-chkbox {
+  .p-checkbox {
     height: auto;
     width: auto;
 
-    .ui-chkbox-box {
+    .p-checkbox-box {
       border-radius: 2px;
-      height: 1.125em;
-      line-height: 1.25em;
-      width: 1.125em;
+      height: 0.875rem;
+      line-height: 1rem;
+      width: 0.875rem;
 
-      .ui-chkbox-icon {
-        font-size: 12px;
+      .p-checkbox-icon {
+        font-size: 10px;
       }
     }
   }
 
-  .ui-confirmdialog.ui-dialog .ui-dialog-content {
+  .p-confirmdialog.p-dialog .p-dialog-content {
     display: grid;
     grid-template-columns: auto 1fr;
   }
 
-  .ui-dialog {
-    .ui-dialog-titlebar {
-      font-size: 1.25em;
+  .p-datatable {
+    .p-datatable-thead > tr > th {
+      padding: 0.25em;
+      text-align: center;
+    }
+
+    .p-datatable-tbody > tr > td {
+      padding: 0.25em;
     }
   }
 
-  .ui-dropdown {
-    &:not(.ui-state-disabled).ui-state-focus {
+  .p-dialog {
+    .p-dialog-header {
+      font-size: 1rem;
+      padding: 0.5rem 0.75rem;
+    }
+
+    .p-dialog-content {
+      padding: 0.571rem 1rem;
+      position: relative;
+    }
+
+    .p-dialog-footer {
+      border-top: none;
+    }
+  }
+
+  .p-dropdown {
+    min-width: 12.5em;
+
+    &:not(.p-disabled).p-focus, &:not(.p-disabled):focus {
       border-color: $input-border-focus-color;
       box-shadow: 0 0 2px 2px $input-border-focus-shadow-color;
       outline: none;
     }
 
-    &:not(.ui-state-disabled):hover {
-      border-color: $input-border-hover-color;
+    .p-dropdown-trigger {
+      width: 1.25rem;
+
+      .p-dropdown-trigger-icon {
+        font-size: 0.667rem;
+      }
+    }
+
+    input {
+      box-shadow: none !important;
     }
   }
 
-  .ui-inputtext {
+  .p-dropdown-panel .p-dropdown-items .p-dropdown-item {
+    padding: 0.25rem 0.5rem;
+  }
+
+  .p-inputtext {
+    font: $theme-font;
     font-size: 12px;
-    padding: 0.25em 2.5em 0.25em 0.25em;
+    padding: 0.1875rem 0.25rem;
 
-    &:enabled:hover:not(.ui-state-error) {
+    &.p-dropdown-label {
+      padding-right: 0;
+      user-select: none;
+    }
+
+    &:enabled:hover:not(.p-error) {
       border-color: $input-border-hover-color;
     }
   }
 
-  .ui-menu {
+  .p-menu {
     background: linear-gradient(to bottom, #F6F7F9 0, #EBEDF0 100%);
-    padding: 0.25em;
+    padding: 0.25rem;
 
-    .ui-menuitem {
-      margin: 0.125em 0;
+    .p-menuitem {
+      margin: 0.125rem 0;
     }
 
-    .ui-menuitem-link {
-      padding: 0.25em;
+    .p-menuitem-link {
+      padding: 0.25rem;
     }
   }
 
-  .ui-radiobutton {
+  .p-radiobutton {
     height: 14px;
-    padding-right: 0.25em;
-    width: 13.5px;
+    width: 14px;
 
-    .ui-radiobutton-box {
+    .p-radiobutton-box {
       margin: -3px;
       transform: scale(0.7);
     }
   }
 
-  .ui-slider {
+  .p-slider {
     background: #838688;
     border: none;
     -moz-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.6) inset;
     -webkit-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.6) inset;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.6) inset;
-    margin: 0 0.6em;
+    margin: 0 0.6rem;
 
-    .ui-slider-handle {
+    .p-slider-handle {
       background: transparent url("assets/theme/images/slider_handles@2x.png") 0 0 no-repeat !important;
       border: none !important;
       border-radius: 0;
@@ -138,26 +179,26 @@ body {
       transform-origin: 0 100%;
       width: 34px !important;
 
-      &.ui-state-active {
+      &.p-active {
         background-position: -34px 0 !important;
       }
     }
 
-    &.ui-slider-horizontal {
-      height: 0.8em !important;
+    &.p-slider-horizontal {
+      height: 0.8rem !important;
 
-      .ui-slider-handle {
-        margin-left: -0.7em;
+      .p-slider-handle {
+        margin-left: -0.7rem;
         top: -17px !important;
       }
 
-      .ui-slider-range {
+      .p-slider-range {
         top: 0;
         height: 100%;
       }
     }
 
-    .ui-slider-range {
+    .p-slider-range {
       border: 0;
       border-radius: 3px;
       -moz-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.6) inset;
@@ -166,36 +207,36 @@ body {
       z-index: 1;
     }
 
-    &.ui-slider-vertical {
+    &.p-slider-vertical {
       height: 100px;
-      width: 0.8em !important;
-      margin: 0.75em 0.5em;
+      width: 0.8rem !important;
+      margin: 0.75rem 0.5rem;
 
-      .ui-slider-handle {
-        left: -0.27em !important;
-        margin-bottom: -0.6em;
+      .p-slider-handle {
+        left: -0.27rem !important;
+        margin-bottom: -0.6rem;
         margin-left: 0;
         transform: scale(0.5) translateY(12px);
       }
     }
   }
 
-  .ui-state-default {
+  .p-default {
     border-color: $input-border-default-color;
   }
 
-  .ui-table {
-    .ui-table-tbody>tr>td,
-    .ui-table-thead>tr>th{
-      padding: 0.25em 0.5em;
+  .p-table {
+    .p-table-tbody>tr>td,
+    .p-table-thead>tr>th{
+      padding: 0.25rem 0.5rem;
     }
   }
 
-  .ui-table-scrollable-view {
+  .p-table-scrollable-view {
     border-bottom: solid 1px $table-cell-border-color;
   }
 
-  .ui-widget {
+  .p-widget {
     font: $theme-font;
   }
 }

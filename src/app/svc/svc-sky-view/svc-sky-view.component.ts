@@ -544,7 +544,7 @@ export class SvcSkyViewComponent extends GenericSkyViewDirective implements Afte
           // adjusted by the angle between the ecliptic at the location of the Moon
           // and the celestial equator, as the orientation of the Moon's shadow is
           // predominantly oriented along the ecliptic.
-          const obliquity = this.ecliptic.getNutation(dc.jde).obliquity;
+          const obliquity = this.ecliptic.getNutation(dc.jde).ε;
 
           dc.parallacticAngle = dc.parallacticAngle.add(obliquity.multiply(dc.trackingPos.longitude.cos));
         }
@@ -738,7 +738,7 @@ export class SvcSkyViewComponent extends GenericSkyViewDirective implements Afte
       dt += 1.0E-5;
 
     const eclipticPos = dc.ss.getEclipticPosition(MOON, dc.jde + dt, dc.skyObserver);
-    const obliquity = this.ecliptic.getNutation(dc.jde + dt).obliquity;
+    const obliquity = this.ecliptic.getNutation(dc.jde + dt).ε;
     const horizontalPos = this.getSphericalPosition(MOON, dc);
 
     moonPara = moonPara.add(obliquity.multiply(eclipticPos.longitude.cos));

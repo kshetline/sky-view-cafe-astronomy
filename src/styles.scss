@@ -17,8 +17,9 @@
 
 .small-caption {
   color: #00C;
-  font-size: 75%;
   cursor: default;
+  font-size: 75%;
+  padding-bottom: 1px;
   @include selectable(none);
 }
 
@@ -50,7 +51,7 @@ body {
   font-size: 11px;
 }
 
-.constrained-dropdown .ui-dropdown-label {
+.constrained-dropdown .p-dropdown-label {
   display: inline-block;
   max-width: 165px;
   text-overflow: ellipsis;

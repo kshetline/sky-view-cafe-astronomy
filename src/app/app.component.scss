@@ -11,11 +11,11 @@
     border: 1px #D8D8D8 solid;
   }
 
-  ::ng-deep .ui-tabview .ui-tabview-panel {
+  ::ng-deep .p-tabview .p-tabview-panel {
     padding: 0;
   }
 
-  ::ng-deep .calendar-popup .ui-overlaypanel-content {
+  ::ng-deep .calendar-popup .p-overlaypanel-content {
     padding: 2px;
   }
 }
@@ -58,8 +58,14 @@ div.about-dialog {
   text-align: center;
 }
 
-p-dialog.about-dialog ::ng-deep .ui-dialog.ui-widget .ui-dialog-titlebar {
+p-dialog.about-dialog ::ng-deep .p-dialog-header {
+  flex-direction: row-reverse;
   padding: 2px;
+
+  .p-dialog-header-icon {
+    height: 1.25rem;
+    width: 1.25rem;
+  }
 }
 
 .banner-backdrop {

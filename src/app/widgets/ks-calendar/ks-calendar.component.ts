@@ -226,17 +226,17 @@ export class KsCalendarComponent implements ControlValueAccessor, OnDestroy {
 
   onTouchStart(event: TouchEvent, delta: number): void {
     event.preventDefault();
-    this.onMouseDown(null, delta);
+    this.onMouseDown(null, delta, true);
   }
 
-  onMouseDown(event: MouseEvent, delta: number): void {
+  onMouseDown(event: MouseEvent, delta: number, fromTouch = false): void {
     if (!this.timerSubscription && (!event || event.button === 0)) {
       this.pendingEvent = event;
-      this.pendingDelta = delta;
+      this.pendingDelta = fromTouch ? delta : 0;
 
       this.timerSubscription = timer(CLICK_REPEAT_DELAY, CLICK_REPEAT_RATE).subscribe(() => {
         this.pendingEvent = null;
-        this.pendingDelta = 0;
+        this.pendingDelta = fromTouch ? 0 : delta;
         this.onClick(event, delta);
       });
     }
@@ -245,9 +245,9 @@ export class KsCalendarComponent implements ControlValueAccessor, OnDestroy {
   onClick(event: MouseEvent, delta: number): void {
     const date: YMDDate = clone(this.ymd);
 
-    if (event && event.altKey)
+    if (event?.altKey)
       date.y += delta * 10;
-    else if (event && event.shiftKey)
+    else if (event?.shiftKey)
       date.y += delta;
     else
       date.m += delta;

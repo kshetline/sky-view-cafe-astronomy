@@ -1,4 +1,6 @@
 table {
+  margin-left: auto !important;
+  margin-right: auto !important;
   padding-top: 3em;
 }
 
@@ -8,9 +10,4 @@ th, td {
 
 td.value {
   font-family: "Andale Mono", "Courier New", monospace;
-}
-
-::ng-deep .table-view {
-  margin-left: auto !important;
-  margin-right: auto !important;
 }

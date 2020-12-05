@@ -118,7 +118,6 @@ export class KsSequenceEditorComponent implements AfterViewInit, OnInit, OnDestr
   protected hiddenInput: HTMLInputElement;
   protected canvas: HTMLCanvasElement;
   protected signDigit = -1;
-  protected disabled = false;
   protected width = 180;
   protected height = 17;
   protected metrics: FontMetrics;
@@ -135,6 +134,7 @@ export class KsSequenceEditorComponent implements AfterViewInit, OnInit, OnDestr
   protected selectionHidden = false;
   protected lastTabTime = 0;
 
+  disabled = false;
   displayState = 'normal';
   useAlternateTouchHandling = false;
 

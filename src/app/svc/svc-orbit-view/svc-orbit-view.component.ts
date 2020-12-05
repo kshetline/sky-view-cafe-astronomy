@@ -300,19 +300,19 @@ export class SvcOrbitViewComponent extends GenericPlanetaryViewDirective impleme
 
         const cos_i = cos_deg(oe.i);
         const sin_i = sin_deg(oe.i);
-        const cos_o = cos_deg(oe.OMEGA);
-        const sin_o = sin_deg(oe.OMEGA);
+        const cos_o = cos_deg(oe.Ω);
+        const sin_o = sin_deg(oe.Ω);
 
         // We'll use a full circle of imaginary true anomalies, offset from the
         // perihelion, to plot each orbit. The ascending and descending nodes must be
         // referred to the perihelion to be plotted.
-        const ascNode_p = mod(oe.OMEGA - oe.pi, 360.0);
+        const ascNode_p = mod(oe.Ω - oe.pi, 360.0);
         const desNode_p = mod(ascNode_p + 180.0, 360.0);
         let x2: number = null, y2: number = null;
 
         for (let v = 0.0; v <= 360.0; v += orbitStep) {
           const r = oe.a * (1.0 - oe.e * oe.e) / (1.0 + oe.e * cos_deg(v));
-          const vpo = v + oe.pi - oe.OMEGA;
+          const vpo = v + oe.pi - oe.Ω;
           const cos_vpo = cos_deg(vpo);
           const sin_vpo = sin_deg(vpo);
 

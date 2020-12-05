@@ -27,7 +27,7 @@
       <br><br><p-checkbox [(ngModel)]="makeDefault" binary="true" label="Make this the default location"></p-checkbox>
     </div>
     <p-footer>
-      <div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix">
+      <div class="p-dialog-buttonpane p-widget-content p-helper-clearfix">
         <button type="button" pButton icon="far fa-window-close" (click)="showSaveDialog=false" label="Cancel"></button>
         <button type="button" pButton icon="fas fa-check" (click)="doSave()" label="OK" [disabled]="!selectedName.trim()"></button>
       </div>
@@ -42,7 +42,7 @@
       </div>
     </div>
     <p-footer>
-      <div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix">
+      <div class="p-dialog-buttonpane p-widget-content p-helper-clearfix">
         <button type="button" pButton icon="far fa-window-close" (click)="showDeleteDialog=false" label="Cancel"></button>
         <button type="button" pButton icon="fas fa-check" (click)="doDelete()" label="OK"></button>
       </div>

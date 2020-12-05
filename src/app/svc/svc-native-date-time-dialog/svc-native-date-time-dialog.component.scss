@@ -1,3 +1,7 @@
+:host ::ng-deep .p-dialog .p-dialog-content {
+  max-width: 50em;
+}
+
 p-radioButton {
   display: block;
 }
@@ -6,6 +10,6 @@ p-radioButton {
   padding: 1em 1em 2em 4em;
 }
 
-.ui-widget-content {
+.p-widget-content {
   border: none;
 }

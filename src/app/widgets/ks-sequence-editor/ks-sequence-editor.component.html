@@ -1,5 +1,5 @@
 <!--suppress AngularUndefinedBinding, HtmlUnknownAttribute -->
-<div><canvas #canvas tabindex="0" contenteditable="true"
+<div><canvas #canvas [tabindex]="disabled ? -1 : 0" contenteditable="true"
   autocomplete="off" autocapitalize="off" autocorrect="off"
   (mousedown)="onMouseDown($event)" (mouseup)="onMouseUp() " (click)="onClick($event)"
   (mouseleave)="onMouseLeave()"
