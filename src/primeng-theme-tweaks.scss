@@ -14,7 +14,7 @@ body {
 
   font: $theme-font;
 
-  .pi, .p-component {
+  .pi {
     font-size: 1em;
   }
 
@@ -64,6 +64,10 @@ body {
     }
   }
 
+  .p-component {
+    font: $theme-font;
+  }
+
   .p-confirmdialog.p-dialog .p-dialog-content {
     display: grid;
     grid-template-columns: auto 1fr;
@@ -87,7 +91,7 @@ body {
     }
 
     .p-dialog-content {
-      padding: 0.571rem 1rem;
+      padding: 0.5625rem 1rem;
       position: relative;
     }
 
@@ -119,6 +123,7 @@ body {
   }
 
   .p-dropdown-panel .p-dropdown-items .p-dropdown-item {
+    font: $theme-font;
     padding: 0.25rem 0.5rem;
   }
 

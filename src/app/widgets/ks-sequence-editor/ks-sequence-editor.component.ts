@@ -1,5 +1,5 @@
 /*
-  Copyright © 2017-2019 Kerry Shetline, kerry@shetline.com
+  Copyright © 2017-2020 Kerry Shetline, kerry@shetline.com
 
   MIT license: https://opensource.org/licenses/MIT
 
@@ -657,10 +657,10 @@ export class KsSequenceEditorComponent implements AfterViewInit, OnInit, OnDestr
         this.lostFocus();
     }
 
-    if (this.hiddenInput)
+    if (this.hiddenInput && !this.disabled)
       this.canvas.style.outline = getCssValue(this.hiddenInput, 'outline');
     else if (KsSequenceEditorComponent.addFocusOutline)
-      this.canvas.style.outline = (newFocus ? 'rgb(59, 153, 252) solid 1px' : 'black none 0px');
+      this.canvas.style.outline = (newFocus && !this.disabled ? 'rgb(59, 153, 252) solid 1px' : 'black none 0px');
   }
 
   protected gainedFocus(): void {}
