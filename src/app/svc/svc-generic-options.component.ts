@@ -20,8 +20,8 @@
   other uses are restricted.
 */
 
-import { SolarSystem } from 'ks-astronomy';
-import { clone } from 'lodash';
+import { SolarSystem } from '@tubular/astronomy';
+import { clone } from 'lodash-es';
 import { SelectItem } from 'primeng/api';
 import { AppService } from '../app.service';
 import { ADDITIONALS, PROPERTY_ADDITIONALS } from './generic-view.directive';

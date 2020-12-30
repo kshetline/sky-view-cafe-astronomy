@@ -17,7 +17,7 @@
   OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-import { Point } from 'ks-math';
+import { Point } from '@tubular/math';
 
 export function getXYForTouchEvent(event: TouchEvent, index = 0): Point {
   const touches = event.touches;

@@ -23,8 +23,8 @@
 import { Component, ElementRef, EventEmitter, Input, Output, ViewChild } from '@angular/core';
 // noinspection ES6UnusedImports
 import { } from 'googlemaps'; // Produces "unused import" warning, but is actually needed, and `import 'googlemaps'` won't do.
-import { KsTimeZone } from 'ks-date-time-zone';
-import { eventToKey, isIOS } from 'ks-util';
+import { Timezone } from '@tubular/time';
+import { eventToKey, isIOS } from '@tubular/util';
 import { MessageService } from 'primeng/api';
 import { Table } from 'primeng/table';
 import { AppService, Location } from '../../app.service';
@@ -217,8 +217,8 @@ export class SvcAtlasDialogComponent {
             lat: formatLatitude(location.latitude),
             lon: formatLongitude(location.longitude),
             zone: location.zone,
-            zoneInfo: 'UT' + KsTimeZone.formatUtcOffset(location.zoneOffset * 60) +
-                      KsTimeZone.getDstSymbol(location.zoneDst * 60),
+            zoneInfo: 'UT' + Timezone.formatUtcOffset(location.zoneOffset * 60) +
+                      Timezone.getDstSymbol(location.zoneDst * 60),
             atlasLocation: location
           };
         });

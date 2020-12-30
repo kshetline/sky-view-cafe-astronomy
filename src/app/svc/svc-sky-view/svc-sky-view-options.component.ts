@@ -21,7 +21,7 @@
 */
 
 import { AfterViewInit, Component } from '@angular/core';
-import { find } from 'lodash';
+import { find } from 'lodash-es';
 import { MenuItem, SelectItem } from 'primeng/api';
 import { AppService, UserSetting } from '../../app.service';
 import { ALL_DEEP_SKY, NO_DEEP_SKY } from '../generic-sky-view.directive';

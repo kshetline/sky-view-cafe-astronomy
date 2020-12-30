@@ -25,10 +25,10 @@ import { AfterViewInit, Component, ElementRef, ViewChild } from '@angular/core';
 import {
   AS_SEEN_FROM_SUN, AVG_SUN_MOON_RADIUS, DataQuality, JUPITER, JUPITER_FLATTENING, JupiterInfo, JupitersMoons, MOON_SHADOW, MoonInfo,
   NAUTICAL_TWILIGHT, PlanetaryMoons, REFRACTION_AT_HORIZON, SATURN, SATURN_FLATTENING, SaturnMoons, SUN
-} from 'ks-astronomy';
-import { floor, log10, max, min, PI, Point, pow, round, sin_deg, sqrt } from 'ks-math';
-import { extendDelimited, fillEllipse, getFontMetrics, padLeft, strokeEllipse } from 'ks-util';
-import { find } from 'lodash';
+} from '@tubular/astronomy';
+import { floor, log10, max, min, PI, Point, pow, round, sin_deg, sqrt } from '@tubular/math';
+import { extendDelimited, fillEllipse, getFontMetrics, padLeft, strokeEllipse } from '@tubular/util';
+import { find } from 'lodash-es';
 import { AppService, CurrentTab, UserSetting } from '../../app.service';
 import { AstroDataService } from '../../astronomy/astro-data.service';
 import { DrawingContextPlanetary, GenericPlanetaryViewDirective, LABEL_TYPE, SELECTION_TYPE, SUBJECT } from '../generic-planetary-view.directive';

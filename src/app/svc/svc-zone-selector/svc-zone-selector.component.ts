@@ -19,8 +19,7 @@
 
 import { Component, EventEmitter, forwardRef, OnInit, Output } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { KsTimeZone, RegionAndSubzones } from 'ks-date-time-zone';
-import { isNil, isUndefined } from 'lodash';
+import { Timezone, RegionAndSubzones } from '@tubular/time';
 import { timer } from 'rxjs';
 import { AppService } from '../../app.service';
 
@@ -76,7 +75,7 @@ export class SvcZoneSelectorComponent implements ControlValueAccessor, OnInit {
   }
 
   get value(): string | null {
-    if (!this._region || isNil(this._subzone)) {
+    if (!this._region || this._subzone == null) {
       return null;
     }
     else if (this._region === MISC_OPTION || this._region === UT_OPTION) {
@@ -121,7 +120,7 @@ export class SvcZoneSelectorComponent implements ControlValueAccessor, OnInit {
         g1 = groups[1].slice(0, -1);
       }
 
-      if (isUndefined(g2)) {
+      if (g2 === undefined) {
         if (g1.startsWith(UT)) {
           this.setRegion(UT_OPTION);
           this.subzone = g1;
@@ -207,7 +206,7 @@ export class SvcZoneSelectorComponent implements ControlValueAccessor, OnInit {
   }
 
   ngOnInit(): void {
-    this.supplementAndProcessZones(KsTimeZone.getRegionsAndSubzones());
+    this.supplementAndProcessZones(Timezone.getRegionsAndSubzones());
   }
 
   private supplementAndProcessZones(data: RegionAndSubzones[]): void {

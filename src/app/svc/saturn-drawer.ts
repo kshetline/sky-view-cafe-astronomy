@@ -20,8 +20,8 @@
   other uses are restricted.
 */
 
-import { SATURN_FLATTENING } from 'ks-astronomy';
-import { mod } from 'ks-math';
+import { SATURN_FLATTENING } from '@tubular/astronomy';
+import { mod } from '@tubular/math';
 import { PlanetDrawer } from './planet-drawer';
 
 export class SaturnDrawer extends PlanetDrawer {

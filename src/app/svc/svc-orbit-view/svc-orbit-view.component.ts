@@ -21,10 +21,10 @@
 */
 
 import { AfterViewInit, Component, ElementRef, ViewChild } from '@angular/core';
-import { EARTH, MARS, MOON, NEPTUNE, NMode, PLUTO, REFRACTION, SATURN, SolarSystem, SUN } from 'ks-astronomy';
-import { abs, cos_deg, floor, log10, max, min, mod, mod2, Point, Point3D, pow, round, sin_deg, SphericalPosition3D, } from 'ks-math';
-import { colorFromRGB, parseColor, replaceAlpha, RGBA } from 'ks-util';
-import { debounce, sortBy } from 'lodash';
+import { EARTH, MARS, MOON, NEPTUNE, NMode, PLUTO, REFRACTION, SATURN, SolarSystem, SUN } from '@tubular/astronomy';
+import { abs, cos_deg, floor, log10, max, min, mod, mod2, Point, Point3D, pow, round, sin_deg, SphericalPosition3D, } from '@tubular/math';
+import { colorFromRGB, parseColor, replaceAlpha, RGBA } from '@tubular/util';
+import { debounce, sortBy } from 'lodash-es';
 import { AppService, CurrentTab, UserSetting } from '../../app.service';
 import { ZBuffer } from '../../util/ks-z-buffer';
 import {

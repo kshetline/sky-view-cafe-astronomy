@@ -27,9 +27,9 @@ import {
   OPPOSITION, PERIHELION, PLUTO, QUADRATURE, RISE_EVENT, RISE_SET_EVENT_BASE, SATURN, SET_EVENT, SET_EVENT_MINUS_1_MIN, SkyObserver,
   SOLAR_ECLIPSE, SPRING_EQUINOX, SUMMER_SOLSTICE, SUN, SUPERIOR_CONJUNCTION, TRANSIT_EVENT, TWILIGHT_BEGINS, TWILIGHT_ENDS, URANUS,
   VENUS, WINTER_SOLSTICE
-} from 'ks-astronomy';
-import { KsDateTime, KsTimeZone } from 'ks-date-time-zone';
-import { isString } from 'lodash';
+} from '@tubular/astronomy';
+import { DateTime, Timezone } from '@tubular/time';
+import { isString } from 'lodash-es';
 import { MessageService, SelectItem } from 'primeng/api';
 import { Subscription, timer } from 'rxjs';
 import { AppService, UserSetting } from '../../app.service';
@@ -271,9 +271,9 @@ export class SvcEventNavigatorComponent implements AfterViewInit, OnDestroy {
         altMins = this.app.twilightMinutes;
     }
 
-    const timeZone = KsTimeZone.getTimeZone(this.app.location.zone, this.app.location.longitude);
-    const event = this.eventFinder.findEvent(this._selectedPlanet, this._selectedEvent, KsDateTime.julianDay(this.app.time),
-                    observer, timeZone, this.app.gregorianChangeDate, goBack, altMins);
+    const timezone = Timezone.getTimezone(this.app.location.zone, this.app.location.longitude);
+    const event = this.eventFinder.findEvent(this._selectedPlanet, this._selectedEvent, DateTime.julianDay(this.app.time),
+                    observer, timezone, this.app.gregorianChangeDate, goBack, altMins);
 
     this.waitingForEvent = false;
 

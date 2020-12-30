@@ -24,13 +24,13 @@ import { AfterViewInit, Component, ElementRef, ViewChild } from '@angular/core';
 import {
   AVG_SUN_MOON_RADIUS, equatorialToGalactic, getSkyColor, LOW_PRECISION, MOON, NO_SELECTION, QUICK_SUN, refractedAltitude,
   REFRACTION, REFRACTION_AT_HORIZON, SolarSystem, SUN, TOPOCENTRIC
-} from 'ks-astronomy';
-import { DAY_MINUTES } from 'ks-date-time-zone';
+} from '@tubular/astronomy';
+import { DAY_MINUTES } from '@tubular/time';
 import {
   abs, Angle, asin_deg, atan2_deg, ceil, cos, cos_deg, floor, interpolate, limitNeg1to1, max, min, mod, mod2, PI, Point, round, sin,
   sin_deg, SphericalPosition, SphericalPosition3D, sqrt, tan, tan_deg, TWO_PI, Unit
-} from 'ks-math';
-import { colorFromRGB, drawOutlinedText, padLeft, parseColor, replaceAlpha, strokeLine } from 'ks-util';
+} from '@tubular/math';
+import { colorFromRGB, drawOutlinedText, padLeft, parseColor, replaceAlpha, strokeLine } from '@tubular/util';
 import { AppService, CurrentTab, PROPERTY_NORTH_AZIMUTH, UserSetting, VIEW_APP } from '../../app.service';
 import {
   asteroidColor, cometColor, DrawingContextPlanetary, FAR_AWAY, LabelInfo, MARQUEE_EQUATORIAL, MARQUEE_HORIZONTAL, MARQUEE_ILLUMINATION,

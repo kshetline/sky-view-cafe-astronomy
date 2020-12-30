@@ -19,7 +19,7 @@
 
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { AsteroidCometInfo, IAstroDataService } from 'ks-astronomy';
+import { AsteroidCometInfo, IAstroDataService } from '@tubular/astronomy';
 
 @Injectable()
 export class AstroDataService implements IAstroDataService {

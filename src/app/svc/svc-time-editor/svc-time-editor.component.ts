@@ -19,10 +19,9 @@
 
 import { ChangeDetectorRef, Component, ElementRef, forwardRef, Input, OnInit, ViewChild } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { DateAndTime, DateTimeField, KsDateTime, KsTimeZone } from 'ks-date-time-zone';
-import { abs, div_tt0, max, min } from 'ks-math';
-import { getCssValue, isAndroid, isChrome, isIOS, padLeft } from 'ks-util';
-import { isNil } from 'lodash';
+import { DateAndTime, DateTimeField, DateTime, Timezone } from '@tubular/time';
+import { abs, div_tt0, max, min } from '@tubular/math';
+import { getCssValue, isAndroid, isChrome, isIOS, padLeft } from '@tubular/util';
 import { timer } from 'rxjs';
 import { AppService, currentMinuteMillis, SVC_MAX_YEAR, SVC_MIN_YEAR } from '../../app.service';
 import { BACKGROUND_ANIMATIONS, FORWARD_TAB_DELAY, KsSequenceEditorComponent, SequenceItemInfo } from '../../widgets/ks-sequence-editor/ks-sequence-editor.component';
@@ -51,7 +50,7 @@ type TimeFormat = 'date' | 'time' | 'datetime-local';
 export class SvcTimeEditorComponent extends KsSequenceEditorComponent implements ControlValueAccessor, OnInit {
   static get supportsNativeDateTime(): boolean { return platformNativeDateTime; }
 
-  private dateTime = new KsDateTime();
+  private dateTime = new DateTime();
   private _gregorianChangeDate = '1582-10-15';
   private onTouchedCallback: () => void = noop;
   private onChangeCallback: (_: any) => void = noop;
@@ -102,17 +101,17 @@ export class SvcTimeEditorComponent extends KsSequenceEditorComponent implements
         if (($ = /(\d\d\d\d)-(\d\d)-(\d\d)(?:T(\d\d):(\d\d))?/.exec(newValue))) {
           const d = $.slice(1).map(n => Number(n));
 
-          if (isNil($[4])) {
+          if ($[4] == null) {
             d[3] = w.hrs;
             d[4] = w.min;
           }
 
-          newTime = new KsDateTime({ y: d[0], m: d[1], d: d[2], hrs: d[3], min: d[4], sec: 0 }, this.timeZone, this._gregorianChangeDate).utcTimeMillis;
+          newTime = new DateTime({ y: d[0], m: d[1], d: d[2], hrs: d[3], min: d[4], sec: 0 }, this.timezone, this._gregorianChangeDate).utcTimeMillis;
         }
         else if (($ = /(\d\d):(\d\d)/.exec(newValue))) {
           const t = $.slice(1).map(n => Number(n));
 
-          newTime = new KsDateTime({ y: w.y, m: w.m, d: w.d, hrs: t[0], min: t[1], sec: 0 }, this.timeZone, this._gregorianChangeDate).utcTimeMillis;
+          newTime = new DateTime({ y: w.y, m: w.m, d: w.d, hrs: t[0], min: t[1], sec: 0 }, this.timezone, this._gregorianChangeDate).utcTimeMillis;
         }
       }
       else
@@ -269,10 +268,10 @@ export class SvcTimeEditorComponent extends KsSequenceEditorComponent implements
       this.localTimeMax = padLeft(this._maxYear, 4, '0') + '-12-31' + (this.localTimeFormat === 'date' ? '' : 'T23:59');
   }
 
-  get timeZone(): KsTimeZone { return this.dateTime.timeZone; }
-  @Input() set timeZone(newZone: KsTimeZone) {
-    if (this.dateTime.timeZone !== newZone) {
-      this.dateTime.timeZone = newZone;
+  get timezone(): Timezone { return this.dateTime.timezone; }
+  @Input() set timezone(newZone: Timezone) {
+    if (this.dateTime.timezone !== newZone) {
+      this.dateTime.timezone = newZone;
       this.updateDigits();
     }
   }
@@ -419,12 +418,12 @@ export class SvcTimeEditorComponent extends KsSequenceEditorComponent implements
 
     [i[15].value, i[16].value] = [m2, m1];
     i[17].hidden = (wallTime.occurrence !== 2);
-    i[18].value = this.dateTime.timeZone.getFormattedOffset(this.dateTime.utcTimeMillis);
+    i[18].value = this.dateTime.timezone.getFormattedOffset(this.dateTime.utcTimeMillis);
 
     if (!wallTime.dstOffset)
       i[19].value = NO_BREAK_SPACE;
     else {
-      i[19].value = KsTimeZone.getDstSymbol(wallTime.dstOffset);
+      i[19].value = Timezone.getDstSymbol(wallTime.dstOffset);
     }
 
     this.updateLocalTime();
@@ -613,7 +612,7 @@ export class SvcTimeEditorComponent extends KsSequenceEditorComponent implements
 
   protected getColorForItem(item?: SequenceItemInfo, index?: number): string {
     // Turn hour offset indicator red for bad time zone
-    if (index === 18 && this.timeZone.error)
+    if (index === 18 && this.timezone.error)
       return '#C00';
     else
       return super.getColorForItem(item, index);

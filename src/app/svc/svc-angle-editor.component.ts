@@ -19,8 +19,7 @@
 
 import { Component, forwardRef, Input } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { abs, div_rd, min, mod, mod2, round } from 'ks-math';
-import { isNil } from 'lodash';
+import { abs, div_rd, min, mod, mod2, round } from '@tubular/math';
 import { BACKGROUND_ANIMATIONS, KsSequenceEditorComponent } from '../widgets/ks-sequence-editor/ks-sequence-editor.component';
 
 export const SVC_ANGLE_EDITOR_VALUE_ACCESSOR: any = {
@@ -204,7 +203,7 @@ export class SvcAngleEditorComponent extends KsSequenceEditorComponent implement
 
   private updateDigits(): void {
     const i = this.items;
-    let angle = (isNil(this.angle) ? 0 : this.angle);
+    let angle = (this.angle == null ? 0 : this.angle);
 
     if (this.signDigit >= 0) {
       if (angle < 0) {

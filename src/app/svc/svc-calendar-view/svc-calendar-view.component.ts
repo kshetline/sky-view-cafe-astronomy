@@ -27,11 +27,11 @@ import {
   MERCURY, MOON, NEPTUNE, NEW_MOON, PHASE_EVENT_BASE, PLUTO, RISE_EVENT, RISE_SET_EVENT_BASE, SATURN, SET_EVENT, SkyObserver,
   SPRING_EQUINOX, SUMMER_SOLSTICE, SUN, TRANSIT_EVENT, TWILIGHT_BEGINS, TWILIGHT_ENDS, UNSEEN_ALL_DAY, URANUS, UT_to_TDB, VENUS,
   VISIBLE_ALL_DAY, WINTER_SOLSTICE
-} from 'ks-astronomy';
-import { DateAndTime, KsDateTime, KsTimeZone, YMDDate } from 'ks-date-time-zone';
-import { ceil, floor, max, min, round } from 'ks-math';
-import { isEdge, isFirefox, isIE } from 'ks-util';
-import { throttle } from 'lodash';
+} from '@tubular/astronomy';
+import { DateAndTime, DateTime, Timezone, YMDDate } from '@tubular/time';
+import { ceil, floor, max, min, round } from '@tubular/math';
+import { isEdge, isFirefox, isIE } from '@tubular/util';
+import { throttle } from 'lodash-es';
 import {
   AppService, CurrentTab, Location, PROPERTY_GREGORIAN_CHANGE_DATE, SVC_MAX_YEAR, SVC_MIN_YEAR, UserSetting, VIEW_APP
 } from '../../app.service';
@@ -93,7 +93,7 @@ export class SvcCalendarViewComponent implements AfterViewInit {
   private height = -1;
   private dayTop = 58;
   private time: number;
-  private dateTime: KsDateTime;
+  private dateTime: DateTime;
   private wallTime: DateAndTime;
   private zone: string;
   private observer: ISkyObserver;
@@ -299,9 +299,9 @@ export class SvcCalendarViewComponent implements AfterViewInit {
     if (this.appService.currentTab !== CurrentTab.CALENDAR)
       return;
 
-    const timeZone = KsTimeZone.getTimeZone(this.zone, this.observer.longitude.degrees);
+    const timezone = Timezone.getTimezone(this.zone, this.observer.longitude.degrees);
 
-    this.dateTime = new KsDateTime(this.time, timeZone, this.appService.gregorianChangeDate);
+    this.dateTime = new DateTime(this.time, timezone, this.appService.gregorianChangeDate);
     this.wallTime = this.dateTime.wallTime;
 
     if (this.year !== this.wallTime.y || this.month !== this.wallTime.m) {
@@ -317,10 +317,10 @@ export class SvcCalendarViewComponent implements AfterViewInit {
         const dayLength = this.dateTime.getMinutesInDay(date.y, date.m, Math.abs(date.d));
         const row = Math.floor(index / 7);
         const col = index % 7;
-        const noon = new KsDateTime({y: date.y, m: date.m, d: Math.abs(date.d), hrs: 12, min: 0, sec: 0}, timeZone, this.appService.gregorianChangeDate);
+        const noon = new DateTime({y: date.y, m: date.m, d: Math.abs(date.d), hrs: 12, min: 0, sec: 0}, timezone, this.appService.gregorianChangeDate);
 
         date.dayLength = dayLength;
-        date.jdeNoon = UT_to_TDB(KsDateTime.julianDay(noon.utcTimeMillis));
+        date.jdeNoon = UT_to_TDB(DateTime.julianDay(noon.utcTimeMillis));
         date.text = String(date.d);
         date.otherMonth = (date.m !== this.month);
         date.highlight = (date.m === this.month && date.d === this.wallTime.d);
@@ -343,7 +343,7 @@ export class SvcCalendarViewComponent implements AfterViewInit {
         }
 
         if (this.dailyDaylight && !date.otherMonth && !date.voidDay) {
-          const daylight = this.eventFinder.getMinutesOfDaylight(date.y, date.m, date.d, this.observer, timeZone, this.appService.gregorianChangeDate);
+          const daylight = this.eventFinder.getMinutesOfDaylight(date.y, date.m, date.d, this.observer, timezone, this.appService.gregorianChangeDate);
           const mins = daylight % 60;
           const hours = (daylight - mins) / 60;
 
@@ -361,7 +361,7 @@ export class SvcCalendarViewComponent implements AfterViewInit {
       const planet = this.eventTypes[this.eventType].planet;
       const altitude = this.eventTypes[this.eventType].altitude;
 
-      this.events = this.eventFinder.getMonthOfEvents(planet, this.year, this.month, this.observer, timeZone, this.appService.gregorianChangeDate,
+      this.events = this.eventFinder.getMonthOfEvents(planet, this.year, this.month, this.observer, timezone, this.appService.gregorianChangeDate,
         altitude || undefined);
       this.updateViewTime();
     }
@@ -393,7 +393,7 @@ export class SvcCalendarViewComponent implements AfterViewInit {
 
         while (eventIndex < this.events.length) {
           const event = this.events[eventIndex];
-          const eventDate = new KsDateTime(event.eventTime.utcTimeMillis, this.dateTime.timeZone, this.appService.gregorianChangeDate);
+          const eventDate = new DateTime(event.eventTime.utcTimeMillis, this.dateTime.timezone, this.appService.gregorianChangeDate);
 
           if (eventDate.wallTime.d === date.d) {
             let eventTime = eventDate.toHoursAndMinutesString(true);
@@ -450,7 +450,7 @@ export class SvcCalendarViewComponent implements AfterViewInit {
     if (month === undefined)
       this.appService.time = yearOrMillis;
     else {
-      const newDate = new KsDateTime({y: yearOrMillis, m: month, d: day, hrs: 12, min: 0, sec: 0}, this.dateTime.timeZone, this.appService.gregorianChangeDate);
+      const newDate = new DateTime({y: yearOrMillis, m: month, d: day, hrs: 12, min: 0, sec: 0}, this.dateTime.timezone, this.appService.gregorianChangeDate);
       this.appService.time = newDate.utcTimeMillis;
     }
   }

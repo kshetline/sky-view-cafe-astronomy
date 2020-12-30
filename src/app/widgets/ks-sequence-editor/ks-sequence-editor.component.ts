@@ -19,11 +19,10 @@
 
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { AfterViewInit, Component, ElementRef, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { abs, ceil, floor, max, min, Point } from 'ks-math';
+import { abs, ceil, floor, max, min, Point } from '@tubular/math';
 import {
   eventToKey, FontMetrics, getCssValue, getFont, getFontMetrics, getTextWidth, isAndroid, isEdge, isIE, isIOS, isWindows
-} from 'ks-util';
-import { isUndefined } from 'lodash';
+} from '@tubular/util';
 import { Subscription, timer } from 'rxjs';
 import { getXYForTouchEvent } from '../../util/ks-touch-events';
 
@@ -231,7 +230,7 @@ export class KsSequenceEditorComponent implements AfterViewInit, OnInit, OnDestr
     const fontParts = /(.*?\b)((?:\d|\.)+)(px\b)(\s*\/\s*\w+\s+)?(.*)/.exec(this.font);
 
     if (fontParts) {
-      if (isUndefined(fontParts[4]))
+      if (fontParts[4] == null)
         fontParts[4] = ' ';
 
       const fontSize = parseFloat(fontParts[2]);

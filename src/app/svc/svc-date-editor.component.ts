@@ -19,10 +19,10 @@
 
 import { Component, forwardRef, Input } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { DateTimeField, KsCalendar, KsDateTime, KsTimeZone, YMDDate } from 'ks-date-time-zone';
-import * as M_ from 'ks-math';
-import { abs, max, min } from 'ks-math';
-import { clone, isMatch } from 'lodash';
+import { DateTimeField, Calendar, DateTime, Timezone, YMDDate } from '@tubular/time';
+import * as M_ from '@tubular/math';
+import { abs, max, min } from '@tubular/math';
+import { clone, isMatch } from 'lodash-es';
 import { timer } from 'rxjs';
 import { SVC_MAX_YEAR, SVC_MIN_YEAR } from '../app.service';
 import { BACKGROUND_ANIMATIONS, KsSequenceEditorComponent } from '../widgets/ks-sequence-editor/ks-sequence-editor.component';
@@ -46,7 +46,7 @@ const NO_BREAK_SPACE = '\u00A0';
 })
 export class SvcDateEditorComponent extends KsSequenceEditorComponent implements ControlValueAccessor {
   private ymd: YMDDate = {y: 1970, m: 1, d: 1};
-  private calendar = new KsCalendar();
+  private calendar = new Calendar();
   private onTouchedCallback: () => void = noop;
   private onChangeCallback: (_: any) => void = noop;
   private _minYear = SVC_MIN_YEAR;
@@ -228,7 +228,7 @@ export class SvcDateEditorComponent extends KsSequenceEditorComponent implements
 
   private roll(sign: number): void {
     let ymd = this.ymd;
-    const rollingDate = new KsDateTime(0, KsTimeZone.UT_ZONE, this.calendar.getGregorianChange());
+    const rollingDate = new DateTime(0, Timezone.UT_ZONE, this.calendar.getGregorianChange());
 
     rollingDate.wallTime = {y: ymd.y, m: ymd.m, d: ymd.d, hrs: 12, min: 0, sec: 0};
 

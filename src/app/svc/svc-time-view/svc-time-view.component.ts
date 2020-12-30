@@ -21,10 +21,10 @@
 */
 
 import { Component } from '@angular/core';
-import { SkyObserver, UT_to_TDB } from 'ks-astronomy';
-import { DAY_MSEC, KsDateTime, KsTimeZone } from 'ks-date-time-zone';
-import { Angle, FMT_MINS, mod2, Mode, round, Unit } from 'ks-math';
-import { padLeft, toDefaultLocaleFixed } from 'ks-util';
+import { SkyObserver, UT_to_TDB } from '@tubular/astronomy';
+import { DAY_MSEC, DateTime, Timezone } from '@tubular/time';
+import { Angle, FMT_MINS, mod2, Mode, round, Unit } from '@tubular/math';
+import { padLeft, toDefaultLocaleFixed } from '@tubular/util';
 import { AppService, CurrentTab, Location } from '../../app.service';
 
 const nbsp = '\u00A0';
@@ -72,30 +72,30 @@ export class SvcTimeViewComponent {
     if (this.appService.currentTab !== CurrentTab.TIME)
       return;
 
-    const jdu = KsDateTime.julianDay(this.time);
-    const timeZone = KsTimeZone.getTimeZone(this.zone, this.longitude);
+    const jdu = DateTime.julianDay(this.time);
+    const timezone = Timezone.getTimezone(this.zone, this.longitude);
 
     // It takes a bit of effort to force locale formatting to be done using a time zone which is
     // not necessarily the browser's local time zone.
-    const dateTime = new KsDateTime(this.time, timeZone);
+    const dateTime = new DateTime(this.time, timezone);
     const wallTime = dateTime.wallTime;
     const jsDate = new Date(Date.UTC(wallTime.y, wallTime.m - 1, wallTime.d, wallTime.hrs, wallTime.min, 0));
 
     this.formattedLocalTime = jsDate.toLocaleString(undefined,
       {timeZone: 'UTC', year: 'numeric', month: 'long', day: 'numeric', weekday: 'long',
-       hour: 'numeric', minute: '2-digit'}) + ' ' + dateTime.getTimeZoneDisplayName();
+       hour: 'numeric', minute: '2-digit'}) + ' ' + dateTime.getTimezoneDisplayName();
 
     this.formattedLst = this.skyObserver.getLocalHourAngle(jdu, true).toTimeString(FMT_MINS);
 
     const longitudeMinutes = round(mod2(this.longitude, 360) * 4);
-    const lmtWallTime = new KsDateTime(this.time, KsTimeZone.getTimeZone('LMT', this.longitude)).wallTime;
+    const lmtWallTime = new DateTime(this.time, Timezone.getTimezone('LMT', this.longitude)).wallTime;
 
     this.formattedLmt = padLeft(lmtWallTime.hrs, 2, '0') + ':' + padLeft(lmtWallTime.min, 2, '0');
     this.lmtLongitude = new Angle(longitudeMinutes, Unit.HOUR_ANGLE_MINUTES).toSuffixedString('E', 'W', FMT_MINS);
 
     this.formattedSolarTime = this.skyObserver.getApparentSolarTime(jdu).toTimeString(FMT_MINS);
 
-    const utWallTime = new KsDateTime(this.time, KsTimeZone.UT_ZONE).wallTime;
+    const utWallTime = new DateTime(this.time, Timezone.UT_ZONE).wallTime;
 
     this.formattedUt = padLeft(utWallTime.hrs, 2, '0') + ':' + padLeft(utWallTime.min, 2, '0');
 

@@ -22,10 +22,10 @@
 
 import { AfterViewInit, Component, ElementRef, ViewChild } from '@angular/core';
 import { SafeStyle } from '@angular/platform-browser';
-import { getInsolationColor, MOON, SUN, UT_to_TDB } from 'ks-astronomy';
-import { KsDateTime, KsTimeZone } from 'ks-date-time-zone';
-import { floor, FMT_DD, FMT_MINS, min, round } from 'ks-math';
-import { strokeLine } from 'ks-util';
+import { getInsolationColor, MOON, SUN, UT_to_TDB } from '@tubular/astronomy';
+import { DateTime, Timezone } from '@tubular/time';
+import { floor, FMT_DD, FMT_MINS, min, round } from '@tubular/math';
+import { strokeLine } from '@tubular/util';
 import { AppService, CurrentTab, Location, UserSetting } from '../../app.service';
 import { DrawingContext, GenericViewDirective } from '../generic-view.directive';
 
@@ -62,7 +62,7 @@ export class SvcInsolationViewComponent extends GenericViewDirective implements 
   private lastPlotY = 0;
   private drawingComplete = false;
   private location: Location;
-  private dateTime: KsDateTime;
+  private dateTime: DateTime;
   private wasWithinGraph = false;
 
   private currentYear = Number.MIN_SAFE_INTEGER;
@@ -131,9 +131,9 @@ export class SvcInsolationViewComponent extends GenericViewDirective implements 
   }
 
   protected updateView(redrawMode: RefreshMode): void {
-    const zone = KsTimeZone.getTimeZone(this.location.zone, this.location.longitude);
+    const zone = Timezone.getTimezone(this.location.zone, this.location.longitude);
 
-    this.dateTime = new KsDateTime(this.time, zone, this.appService.gregorianChangeDate);
+    this.dateTime = new DateTime(this.time, zone, this.appService.gregorianChangeDate);
 
     if (redrawMode === RefreshMode.ALWAYS_REFRESH ||
         (redrawMode === RefreshMode.REFRESH_ON_CHANGED_YEAR && this.dateTime.wallTime.y !== this.currentYear))
@@ -156,7 +156,7 @@ export class SvcInsolationViewComponent extends GenericViewDirective implements 
 
       this.currentYear = this.dateTime.wallTime.y;
       this.dateTime.wallTime = {y: this.currentYear, m: 1, d: 1, hrs: 0, min: 0, sec: 0};
-      this.baseTime = KsDateTime.julianDay(this.dateTime.utcTimeMillis) + this.dateTime.dstOffsetMinutes / MINS_PER_DAY + (this.centerMidnight ? 0.5 : 0);
+      this.baseTime = DateTime.julianDay(this.dateTime.utcTimeMillis) + this.dateTime.dstOffsetMinutes / MINS_PER_DAY + (this.centerMidnight ? 0.5 : 0);
       this.daysInYear = this.dateTime.getDaysInYear(this.currentYear);
 
       if (!this.insolationCanvas)
@@ -341,7 +341,7 @@ export class SvcInsolationViewComponent extends GenericViewDirective implements 
         jdu = this.lastDrawingContext.jdu;
       }
 
-      const time = new KsDateTime(KsDateTime.millisFromJulianDay(jdu), this.dateTime.timeZone, this.dateTime.getGregorianChange());
+      const time = new DateTime(DateTime.millisFromJulianDay(jdu), this.dateTime.timezone, this.dateTime.getGregorianChange());
       const jde = UT_to_TDB(jdu);
 
       this.skyColor = getInsolationColor(dc.skyObserver, dc.ss, jdu, false);

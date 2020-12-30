@@ -19,7 +19,7 @@
 
 import { Component, EventEmitter, forwardRef, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { find, isArray, isEqual, isObject, isString, isUndefined } from 'lodash';
+import { find, isArray, isEqual, isObject, isString } from 'lodash-es';
 import { SelectItem } from 'primeng/api';
 import { Dropdown } from 'primeng/dropdown';
 
@@ -190,10 +190,10 @@ export class KsDropdownComponent implements ControlValueAccessor, OnInit {
   private findMatchingPrimeOption(testValue: any): any {
     let result = find(this.primeOptions, option => isEqual(option, testValue));
 
-    if (isUndefined(result)) {
+    if (result == null) {
       result = find(this.primeOptions, option => option.value === testValue);
 
-      if (!isUndefined(result))
+      if (result != null)
         result = result.value;
     }
 

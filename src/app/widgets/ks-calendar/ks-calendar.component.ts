@@ -20,8 +20,8 @@
 import { DatePipe } from '@angular/common';
 import { Component, EventEmitter, forwardRef, Input, OnDestroy, Output } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { CalendarType, GregorianChange, KsDateTime, KsTimeZone, YMDDate } from 'ks-date-time-zone';
-import { clone, isEqual, isObject, isString } from 'lodash';
+import { CalendarType, GregorianChange, DateTime, Timezone, YMDDate } from '@tubular/time';
+import { clone, isEqual, isObject, isString } from 'lodash-es';
 import { Subscription, timer } from 'rxjs';
 
 const CLICK_REPEAT_DELAY = 500;
@@ -58,7 +58,7 @@ export class KsCalendarComponent implements ControlValueAccessor, OnDestroy {
   private _minYear = 1;
   private _maxYear = 9999;
   private _firstDay = 0;
-  private dateTime: KsDateTime = new KsDateTime();
+  private dateTime: DateTime = new DateTime();
   private onTouchedCallback: () => void = noop;
   private onChangeCallback: (_: any) => void = noop;
   private timerSubscription: Subscription;
@@ -103,10 +103,10 @@ export class KsCalendarComponent implements ControlValueAccessor, OnDestroy {
     this.onTouchedCallback = fn;
   }
 
-  get timeZone(): KsTimeZone { return this.dateTime.timeZone; }
-  @Input() set timeZone(newZone: KsTimeZone) {
-    if (this.dateTime.timeZone !== newZone) {
-      this.dateTime.timeZone = newZone;
+  get timezone(): Timezone { return this.dateTime.timezone; }
+  @Input() set timezone(newZone: Timezone) {
+    if (this.dateTime.timezone !== newZone) {
+      this.dateTime.timezone = newZone;
       this.updateCalendar();
     }
   }

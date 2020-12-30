@@ -21,12 +21,12 @@
 */
 
 import { AfterViewInit, Component, ElementRef, ViewChild } from '@angular/core';
-import { MOON, TOPOCENTRIC } from 'ks-astronomy';
+import { MOON, TOPOCENTRIC } from '@tubular/astronomy';
 import {
   abs, Angle, ceil, cos, cos_deg, floor, limitNeg1to1, max, min, Point, round, sin, sin_deg, SphericalPosition, squared, tan_deg,
   TWO_PI, Unit
-} from 'ks-math';
-import { strokeCircle, strokeLine } from 'ks-util';
+} from '@tubular/math';
+import { strokeCircle, strokeLine } from '@tubular/util';
 import { AppService, CurrentTab, UserSetting } from '../../app.service';
 import {
   DrawingContextPlanetary, MARQUEE_ECLIPTIC, MARQUEE_EQUATORIAL, MARQUEE_ILLUMINATION, MARQUEE_MAGNITUDE, MARQUEE_SIZE, NONPLANET,

@@ -17,8 +17,8 @@
   OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-import { strokeCircle, strokeLine } from 'ks-util';
-import { sortBy } from 'lodash';
+import { strokeCircle, strokeLine } from '@tubular/util';
+import { sortBy } from 'lodash-es';
 
 enum DrawAction {FILLED_RECT, LINE, CIRCLE, RECT}
 

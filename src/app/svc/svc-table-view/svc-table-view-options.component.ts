@@ -21,7 +21,7 @@
 */
 
 import { AfterViewInit, Component } from '@angular/core';
-import { SUN } from 'ks-astronomy';
+import { SUN } from '@tubular/astronomy';
 import { SelectItem } from 'primeng/api';
 import { AppService, UserSetting } from '../../app.service';
 import {

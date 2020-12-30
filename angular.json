@@ -22,7 +22,7 @@
               "src/favicon.ico",
               {
                 "glob": "**/*",
-                "input": "node_modules/ks-astronomy/dist/resources",
+                "input": "node_modules/@tubular/astronomy/dist/resources",
                 "output": "/assets/resources"
               }
             ],
@@ -101,7 +101,7 @@
               "src/favicon.ico",
               {
                 "glob": "**/*",
-                "input": "node_modules/ks-astronomy/dist/resources",
+                "input": "node_modules/@tubular/astronomy/dist/resources",
                 "output": "/assets/resources"
               }
             ]

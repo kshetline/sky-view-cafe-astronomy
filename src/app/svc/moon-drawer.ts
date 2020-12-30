@@ -20,9 +20,9 @@
   other uses are restricted.
 */
 
-import { ISkyObserver, MOON, SolarSystem } from 'ks-astronomy';
-import { abs, Angle, ceil, floor, interpolate, max, round, sqrt, TWO_PI, Unit } from 'ks-math';
-import { getPixel, setPixel } from 'ks-util';
+import { ISkyObserver, MOON, SolarSystem } from '@tubular/astronomy';
+import { abs, Angle, ceil, floor, interpolate, max, round, sqrt, TWO_PI, Unit } from '@tubular/math';
+import { getPixel, setPixel } from '@tubular/util';
 
 export class MoonDrawer {
   private moonPixels: ImageData;

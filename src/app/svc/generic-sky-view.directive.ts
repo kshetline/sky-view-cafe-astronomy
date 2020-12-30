@@ -21,10 +21,10 @@
 */
 
 import { AfterViewInit, Directive } from '@angular/core';
-import { LABEL_ANCHOR, LINE_BREAK, NO_MATCH, REFRACTION } from 'ks-astronomy';
-import { max, min, Point, pow, round, SphericalPosition, SphericalPosition3D } from 'ks-math';
-import { strokeEllipse } from 'ks-util';
-import { reverse, sortBy } from 'lodash';
+import { LABEL_ANCHOR, LINE_BREAK, NO_MATCH, REFRACTION } from '@tubular/astronomy';
+import { max, min, Point, pow, round, SphericalPosition, SphericalPosition3D } from '@tubular/math';
+import { strokeEllipse } from '@tubular/util';
+import { reverse, sortBy } from 'lodash-es';
 import { AppService, CurrentTab } from '../app.service';
 import {
   DrawingContextPlanetary, FAR_AWAY, GenericPlanetaryViewDirective, highlightedStarColor, LABEL_TYPE, NONPLANET, SELECTION_TYPE,

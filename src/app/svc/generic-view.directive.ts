@@ -25,11 +25,11 @@ import { SafeStyle } from '@angular/platform-browser';
 import {
   ASTEROID_BASE, COMET_BASE, EARTH, FIRST_PLANET, HALF_MINUTE, ISkyObserver, LAST_PLANET, NO_MATCH, SkyObserver, SolarSystem,
   StarCatalog, UT_to_TDB
-} from 'ks-astronomy';
-import { KsDateTime } from 'ks-date-time-zone';
-import { ceil, max, round, sqrt } from 'ks-math';
-import { FontMetrics, getFontMetrics, isSafari, padLeft } from 'ks-util';
-import { clone, debounce, isString, throttle } from 'lodash';
+} from '@tubular/astronomy';
+import { DateTime } from '@tubular/time';
+import { ceil, max, round, sqrt } from '@tubular/math';
+import { FontMetrics, getFontMetrics, isSafari, padLeft } from '@tubular/util';
+import { clone, debounce, isString, throttle } from 'lodash-es';
 import { BehaviorSubject, Observable, Subscription } from 'rxjs';
 import { AppService, CurrentTab } from '../app.service';
 import { getXYForTouchEvent } from '../util/ks-touch-events';
@@ -458,7 +458,7 @@ export abstract class GenericViewDirective implements AfterViewInit {
     dc.ss = this.appService.solarSystem;
     dc.skyObserver = new SkyObserver(this.appService.longitude, this.appService.latitude);
     // Bias time half a minute ahead of the clock time for rounding to the middle of the selected minute.
-    dc.jdu = KsDateTime.julianDay(this.time) + HALF_MINUTE;
+    dc.jdu = DateTime.julianDay(this.time) + HALF_MINUTE;
     dc.jde = UT_to_TDB(dc.jdu);
     dc.inkSaver = GenericViewDirective.printing && this.appService.inkSaver;
 

@@ -19,8 +19,8 @@
 
 import { AfterViewInit, Component, ElementRef, Input, OnDestroy, ViewChild } from '@angular/core';
 import { addResizeListener, removeResizeListener } from 'detect-resize';
-import { min } from 'ks-math';
-import { getTextWidth } from 'ks-util';
+import { min } from '@tubular/math';
+import { getTextWidth } from '@tubular/util';
 
 const HOLD_TIME = 1500;
 const MARQUEE_SPEED = 100; // pixels per second.

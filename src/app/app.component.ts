@@ -22,9 +22,9 @@
 
 import { AfterViewInit, Component, HostListener, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
-import { KsDateTime, KsTimeZone, YMDDate } from 'ks-date-time-zone';
-import { toggleFullScreen } from 'ks-util';
-import { debounce } from 'lodash';
+import { DateTime, Timezone, YMDDate } from '@tubular/time';
+import { toggleFullScreen } from '@tubular/util';
+import { debounce } from 'lodash-es';
 import { MenuItem, MessageService } from 'primeng/api';
 import { Subscription, timer } from 'rxjs';
 import { AppService, currentMinuteMillis, CurrentTab, PROPERTY_GREGORIAN_CHANGE_DATE, PROPERTY_NATIVE_DATE_TIME,
@@ -41,10 +41,10 @@ const MIN_APP_HEIGHT = 640;
   providers: [AppService, MessageService]
 })
 export class AppComponent implements AfterViewInit, OnDestroy {
-  private dateTime = new KsDateTime(null, KsTimeZone.OS_ZONE);
+  private dateTime = new DateTime(null, Timezone.OS_ZONE);
   private _date = <YMDDate> {};
   private debouncedResize: () => void;
-  private _timeZone: KsTimeZone = KsTimeZone.OS_ZONE;
+  private _timeZone: Timezone = Timezone.OS_ZONE;
   private _time: number = this.dateTime.utcTimeMillis;
   private _trackTime = false;
   private timer: Subscription;
@@ -125,7 +125,7 @@ export class AppComponent implements AfterViewInit, OnDestroy {
     }
   }
 
-  get timeZone(): KsTimeZone { return this._timeZone; }
+  get timezone(): Timezone { return this._timeZone; }
 
   get date(): YMDDate {
     const wt = this.dateTime.wallTime;
@@ -168,8 +168,8 @@ export class AppComponent implements AfterViewInit, OnDestroy {
   }
 
   private updateTimeZone(): void {
-    this._timeZone = KsTimeZone.getTimeZone(this.app.location.zone, this.app.location.longitude);
-    this.dateTime.timeZone = this._timeZone;
+    this._timeZone = Timezone.getTimezone(this.app.location.zone, this.app.location.longitude);
+    this.dateTime.timezone = this._timeZone;
 
     if (this._timeZone.error)
       this.messageService.add({key: 'general', severity: 'error', summary: 'Failed to retrieve time zone',

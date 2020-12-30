@@ -21,7 +21,7 @@
 */
 
 import { AfterViewInit, Component, OnDestroy } from '@angular/core';
-import { DateTimeField, KsDateTime, KsTimeZone } from 'ks-date-time-zone';
+import { DateTimeField, DateTime, Timezone } from '@tubular/time';
 import { SelectItem } from 'primeng/api';
 import { Subscription, timer } from 'rxjs';
 import { AppService, SVC_MAX_YEAR, SVC_MIN_YEAR, UserSetting } from '../../app.service';
@@ -157,8 +157,8 @@ export class SvcCalendarViewOptionsComponent implements AfterViewInit, OnDestroy
   }
 
   changeMonth(delta: number): void {
-    const zone = KsTimeZone.getTimeZone(this.appService.timeZone, this.appService.longitude);
-    const currentTime = new KsDateTime(this.appService.time, zone);
+    const zone = Timezone.getTimezone(this.appService.timezone, this.appService.longitude);
+    const currentTime = new DateTime(this.appService.time, zone);
 
     currentTime.add(DateTimeField.MONTHS, delta);
 

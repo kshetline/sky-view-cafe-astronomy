@@ -19,8 +19,8 @@
   negotiated by contacting the author, Kerry Shetline, otherwise all
   other uses are restricted.
 */
-import { floor, mod, SphericalPosition } from 'ks-math';
-import { isNumber } from 'lodash';
+import { floor, mod, SphericalPosition } from '@tubular/math';
+import { isNumber } from 'lodash-es';
 
 export class MilkyWay {
   private static milkyWayPixels: ImageData;

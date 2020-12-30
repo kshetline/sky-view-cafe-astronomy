@@ -24,9 +24,9 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 import { NavigationEnd, Router } from '@angular/router';
-import { SolarSystem, StarCatalog } from 'ks-astronomy';
-import { KsCalendar } from 'ks-date-time-zone';
-import { clone, compact, debounce, forEach, isEqual, isString, sortedIndexBy } from 'lodash';
+import { SolarSystem, StarCatalog } from '@tubular/astronomy';
+import { Calendar } from '@tubular/time';
+import { clone, compact, debounce, forEach, isEqual, isString, sortedIndexBy } from 'lodash-es';
 import { BehaviorSubject, Observable, Subject, Subscription } from 'rxjs';
 import { AstroDataService } from './astronomy/astro-data.service';
 
@@ -211,7 +211,7 @@ export class AppService {
   }
   sendAppEvent(appEventOrName: AppEvent | string, value?: any): void {
     if (isString(appEventOrName))
-      this._appEvent.next({name: appEventOrName, value: value});
+      this._appEvent.next({ name: appEventOrName, value: value });
     else
       this._appEvent.next(appEventOrName);
   }
@@ -256,8 +256,8 @@ export class AppService {
     }
   }
 
-  get timeZone(): string { return this._location.getValue().zone; }
-  set timeZone(newZone: string) {
+  get timezone(): string { return this._location.getValue().zone; }
+  set timezone(newZone: string) {
     if (this._location.getValue().zone !== newZone) {
       const newLocation = clone(this._location.getValue());
 
@@ -395,7 +395,7 @@ export class AppService {
       return CalendarSetting.CUSTOM_GCD;
   }
 
-  applyCalendarType(dateTime: KsCalendar): void {
+  applyCalendarType(dateTime: Calendar): void {
     if (dateTime)
       dateTime.setGregorianChange(this._gcDate);
   }

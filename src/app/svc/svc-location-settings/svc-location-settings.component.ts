@@ -21,7 +21,7 @@
 */
 
 import { Component, ViewChild } from '@angular/core';
-import { clone, find } from 'lodash';
+import { clone, find } from 'lodash-es';
 import { ConfirmationService } from 'primeng/api';
 import { AppService, Location, NEW_LOCATION } from '../../app.service';
 import { KsDropdownComponent } from '../../widgets/ks-dropdown/ks-dropdown.component';
@@ -71,10 +71,10 @@ export class SvcLocationSettingsComponent {
       this.app.longitude = newLongitude;
   }
 
-  get zone(): string { return this.app.timeZone; }
+  get zone(): string { return this.app.timezone; }
   set zone(newZone: string) {
-    if (this.app.timeZone !== newZone) {
-      this.app.timeZone = newZone;
+    if (this.app.timezone !== newZone) {
+      this.app.timezone = newZone;
     }
   }
 
@@ -144,7 +144,7 @@ export class SvcLocationSettingsComponent {
 
   private completeSave(): void {
     this.showSaveDialog = false;
-    this.app.addLocation(new Location(this.selectedName.trim(), this.app.latitude, this.app.longitude, this.app.timeZone,
+    this.app.addLocation(new Location(this.selectedName.trim(), this.app.latitude, this.app.longitude, this.app.timezone,
                                       this.makeDefault));
     this.locationName = this.selectedName;
     this.buildLocationMenu();

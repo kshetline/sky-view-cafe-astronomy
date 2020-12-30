@@ -21,7 +21,7 @@
 */
 
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { floor, mod } from 'ks-math';
+import { floor, mod } from '@tubular/math';
 import { AppService, Location } from '../../app.service';
 import { formatLatitude, formatLongitude } from '../svc-util';
 
@@ -93,7 +93,7 @@ export class SvcChangeLocationDialogComponent {
       this.updateZoneChoice();
     });
 
-    this.currentZone = appService.timeZone;
+    this.currentZone = appService.timezone;
     this.updateZoneChoice();
   }
 

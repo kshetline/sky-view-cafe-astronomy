@@ -21,8 +21,8 @@
 */
 
 import { HttpClient } from '@angular/common/http';
-import { JUPITER_FLATTENING, JupiterInfo } from 'ks-astronomy';
-import { mod } from 'ks-math';
+import { JUPITER_FLATTENING, JupiterInfo } from '@tubular/astronomy';
+import { mod } from '@tubular/math';
 import { AstroDataService } from '../astronomy/astro-data.service';
 import { JpegCommentReader } from '../util/ks-read-jpeg-comment';
 import { PlanetDrawer } from './planet-drawer';

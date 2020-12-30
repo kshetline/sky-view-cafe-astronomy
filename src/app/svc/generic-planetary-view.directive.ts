@@ -21,16 +21,16 @@
 */
 
 import { AfterViewInit, Directive } from '@angular/core';
-import * as C_ from 'ks-astronomy';
+import * as C_ from '@tubular/astronomy';
 import {
   ABERRATION, EARTH, Ecliptic, KM_PER_AU, MOON, MOON_SHADOW, NEPTUNE, NO_MATCH, NO_SELECTION, NUTATION, PlanetaryMoons, PLUTO,
   SolarSystem, SUN, TOPOCENTRIC, UNKNOWN_MAGNITUDE, URANUS
-} from 'ks-astronomy';
+} from '@tubular/astronomy';
 import {
   abs, Angle, cos_deg, floor, FMT_MINS, FMT_SECS, intersects, max, min, mod2, Point, Rectangle, round, sin_deg, SphericalPosition,
   SphericalPosition3D, sqrt, TWO_PI, union
-} from 'ks-math';
-import { getTextWidth, toDefaultLocaleFixed } from 'ks-util';
+} from '@tubular/math';
+import { getTextWidth, toDefaultLocaleFixed } from '@tubular/util';
 import { AppService, CurrentTab, PROPERTY_NORTH_AZIMUTH, UserSetting, VIEW_APP } from '../app.service';
 import { DrawingContext, GenericViewDirective } from './generic-view.directive';
 

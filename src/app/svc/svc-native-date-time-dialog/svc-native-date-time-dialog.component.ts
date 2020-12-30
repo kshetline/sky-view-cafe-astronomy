@@ -21,7 +21,7 @@
 */
 
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { eventToKey, isIOS } from 'ks-util';
+import { eventToKey, isIOS } from '@tubular/util';
 import { AppService, PROPERTY_NATIVE_DATE_TIME, PROPERTY_WARNING_NATIVE_DATE_TIME, VIEW_APP } from '../../app.service';
 
 @Component({
