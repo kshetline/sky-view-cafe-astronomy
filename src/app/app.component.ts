@@ -172,8 +172,8 @@ export class AppComponent implements AfterViewInit, OnDestroy {
     this.dateTime.timezone = this._timeZone;
 
     if (this._timeZone.error)
-      this.messageService.add({key: 'general', severity: 'error', summary: 'Failed to retrieve time zone',
-        detail: 'Using your OS time zone instead.'});
+      this.messageService.add({key: 'general', severity: 'error', summary: 'Failed to retrieve timezone',
+        detail: 'Using your OS timezone instead.'});
   }
 
   // noinspection JSMethodCanBeStatic

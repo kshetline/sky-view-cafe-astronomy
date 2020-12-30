@@ -4,14 +4,14 @@
                  (blur)="onDropdownBlur($event)" scrollHeight="420px"></ks-dropdown><br>
   </div>
   <div class="zone-selector-row">
-    <span class="caption">time zone region/category &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><br>
+    <span class="caption">timezone region/category &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><br>
   </div>
   <div class="zone-selector-row">
     <ks-dropdown [options]="subzones" [(ngModel)]="subzone" [disabled]="disabled" (focus)="onDropdownFocus($event)"
                  (blur)="onDropdownBlur($event)" scrollHeight="300px"></ks-dropdown><br>
   </div>
   <div class="zone-selector-row">
-    <span class="caption">specific time zone &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+    <span class="caption">specific timezone &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
   </div>
   <p [hidden]="!error" class="error">{{error}}</p>
 </div>

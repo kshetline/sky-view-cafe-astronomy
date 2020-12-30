@@ -75,8 +75,8 @@ export class SvcTimeViewComponent {
     const jdu = DateTime.julianDay(this.time);
     const timezone = Timezone.getTimezone(this.zone, this.longitude);
 
-    // It takes a bit of effort to force locale formatting to be done using a time zone which is
-    // not necessarily the browser's local time zone.
+    // It takes a bit of effort to force locale formatting to be done using a timezone which is
+    // not necessarily the browser's local timezone.
     const dateTime = new DateTime(this.time, timezone);
     const wallTime = dateTime.wallTime;
     const jsDate = new Date(Date.UTC(wallTime.y, wallTime.m - 1, wallTime.d, wallTime.hrs, wallTime.min, 0));

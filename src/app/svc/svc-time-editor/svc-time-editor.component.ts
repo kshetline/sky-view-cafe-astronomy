@@ -611,7 +611,7 @@ export class SvcTimeEditorComponent extends KsSequenceEditorComponent implements
   }
 
   protected getColorForItem(item?: SequenceItemInfo, index?: number): string {
-    // Turn hour offset indicator red for bad time zone
+    // Turn hour offset indicator red for bad timezone
     if (index === 18 && this.timezone.error)
       return '#C00';
     else

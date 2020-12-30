@@ -4,7 +4,7 @@
     Change location to {{formattedLatitude}}, {{formattedLongitude}} and:<br>
     <br>
     <div>
-      <p-radioButton name="group1" value="0" label="Keep current time zone ({{currentZone}})" [(ngModel)]="zoneChoice"></p-radioButton>
+      <p-radioButton name="group1" value="0" label="Keep current timezone ({{currentZone}})" [(ngModel)]="zoneChoice"></p-radioButton>
     </div>
     <div [hidden]="!timezone || timezone === currentZone">
       <p-radioButton name="group1" value="1" label="Switch to {{timezone}}" [(ngModel)]="zoneChoice"></p-radioButton>

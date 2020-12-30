@@ -33,7 +33,7 @@ const noop = () => {};
 
 const MISC_OPTION = '- Miscellaneous -';
 const UT_OPTION   = '- UTC hour offsets -';
-const OS_OPTION   = '- Your OS time zone -';
+const OS_OPTION   = '- Your OS timezone -';
 const LMT_OPTION  = '- Local Mean Time -';
 
 const MISC = 'MISC';

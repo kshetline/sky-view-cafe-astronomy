@@ -1,5 +1,5 @@
 <!--suppress HtmlFormInputWithoutLabel, HtmlUnknownAttribute, TypeScriptValidateJSTypes, TypeScriptUnresolvedVariable -->
-<p-dialog header="Find Latitude, Longitude, and Time Zone" [modal]="true" [(visible)]="visible" [style]="{width: '797px'}"
+<p-dialog header="Find Latitude, Longitude, and Timezone" [modal]="true" [(visible)]="visible" [style]="{width: '797px'}"
           (keyup)="onKey($event)">
   <div style="position: relative">
     <div class="search-controls" [ngBusy]="busy">
@@ -38,7 +38,7 @@
         <th>Name</th>
         <th>Lat.</th>
         <th>Long.</th>
-        <th>Time Zone</th>
+        <th>Timezone</th>
       </tr>
     </ng-template>
     <ng-template pTemplate="body" let-loc>
