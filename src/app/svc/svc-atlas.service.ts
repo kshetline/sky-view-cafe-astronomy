@@ -64,12 +64,12 @@ export class SvcAtlasService {
       remote: extend ? 'extend' : null
     });
 
-    if (this.localTesting) {
+    if (this.hostname === '127.0.0.1')
+      return this.httpClient.jsonp<AtlasResults>('https://localhost:8088/atlas/?' + params, 'callback').toPromise();
+    else if (this.localTesting)
       return this.httpClient.jsonp<AtlasResults>('https://test.skyviewcafe.com/atlas/?' + params, 'callback').toPromise();
-    }
-    else {
+    else
       return this.httpClient.get<AtlasResults>('/atlas/?' + params).toPromise();
-    }
   }
 
   getStates(): Promise<string[]> {
@@ -79,8 +79,9 @@ export class SvcAtlasService {
       return SvcAtlasService.statesPromise;
 
     if (this.localTesting) {
-      SvcAtlasService.statesPromise = this.httpClient.jsonp<string[]>
-        ('https://test.skyviewcafe.com/states/', 'callback').toPromise().then(data => {
+      const apiHost = (this.hostname === '127.0.0.1' ? 'http://localhost:8088/states/' : 'https://test.skyviewcafe.com/states/');
+
+      SvcAtlasService.statesPromise = this.httpClient.jsonp<string[]>(apiHost, 'callback').toPromise().then(data => {
           SvcAtlasService.states = data;
 
           return data;

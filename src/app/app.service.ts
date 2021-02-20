@@ -478,7 +478,7 @@ export class AppService {
 
   private getLocationFromGeoLocation(): void {
     if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition((position: Position) => {
+      navigator.geolocation.getCurrentPosition((position: GeolocationPosition) => {
         this.location = new Location('(unnamed)', position.coords.latitude, position.coords.longitude, 'OS');
       },
       () => {
