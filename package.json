@@ -25,7 +25,7 @@
     "@angular/platform-browser-dynamic": "^10.2.4",
     "@angular/router": "^10.2.4",
     "@fortawesome/fontawesome-free": "^5.15.2",
-    "@tubular/astronomy": "^2.0.5",
+    "@tubular/astronomy": "^2.1.1",
     "@tubular/math": "^2.2.0",
     "@tubular/time": "^2.4.0",
     "@tubular/util": "^3.3.0",
