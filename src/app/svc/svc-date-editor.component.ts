@@ -3,7 +3,8 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { DateTimeField, Calendar, DateTime, Timezone, YMDDate } from '@tubular/time';
 import * as M_ from '@tubular/math';
 import { abs, max, min } from '@tubular/math';
-import { clone, isMatch } from 'lodash-es';
+import { clone, noop } from '@tubular/util';
+import isMatch from 'lodash-es/isMatch';
 import { timer } from 'rxjs';
 import { SVC_MAX_YEAR, SVC_MIN_YEAR } from '../app.service';
 import { BACKGROUND_ANIMATIONS, KsSequenceEditorComponent } from '../widgets/ks-sequence-editor/ks-sequence-editor.component';
@@ -13,8 +14,6 @@ export const SVC_DATE_EDITOR_VALUE_ACCESSOR: any = {
   useExisting: forwardRef(() => SvcDateEditorComponent),
   multi: true
 };
-
-const noop = (): void => {};
 
 const NO_BREAK_SPACE = '\u00A0';
 

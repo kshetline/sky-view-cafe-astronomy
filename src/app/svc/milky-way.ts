@@ -1,5 +1,5 @@
 import { floor, mod, SphericalPosition } from '@tubular/math';
-import { isNumber } from 'lodash-es';
+import { isNumber } from '@tubular/util';
 
 export class MilkyWay {
   private static milkyWayPixels: ImageData;

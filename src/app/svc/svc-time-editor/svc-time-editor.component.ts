@@ -2,7 +2,7 @@ import { ChangeDetectorRef, Component, ElementRef, forwardRef, Input, OnInit, Vi
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { DateAndTime, DateTimeField, DateTime, Timezone } from '@tubular/time';
 import { abs, div_tt0, max, min } from '@tubular/math';
-import { getCssValue, isAndroid, isChrome, isIOS, padLeft } from '@tubular/util';
+import { getCssValue, isAndroid, isChrome, isIOS, noop, padLeft } from '@tubular/util';
 import { timer } from 'rxjs';
 import { AppService, currentMinuteMillis, SVC_MAX_YEAR, SVC_MIN_YEAR } from '../../app.service';
 import { BACKGROUND_ANIMATIONS, FORWARD_TAB_DELAY, KsSequenceEditorComponent, SequenceItemInfo } from '../../widgets/ks-sequence-editor/ks-sequence-editor.component';
@@ -13,7 +13,6 @@ export const SVC_TIME_EDITOR_VALUE_ACCESSOR: any = {
   multi: true
 };
 
-const noop = (): void => {};
 const platformNativeDateTime = (isIOS() || isAndroid() && isChrome());
 
 const NO_BREAK_SPACE = '\u00A0';

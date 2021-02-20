@@ -3,7 +3,8 @@ import {
   EARTH, EventFinder, ISkyObserver, JUPITER, JupiterInfo, MARS, MERCURY, MOON, NEPTUNE, PLUTO, SATURN, SkyObserver, SUN, URANUS, VENUS
 } from '@tubular/astronomy';
 import { DateAndTime, GregorianChange, DateTime, Timezone } from '@tubular/time';
-import { clone, isEqual, isString, throttle } from 'lodash-es';
+import { clone, isEqual, isString } from '@tubular/util';
+import throttle from 'lodash-es/throttle';
 import { SelectItem } from 'primeng/api';
 import { AppService, CurrentTab, Location, UserSetting } from '../../app.service';
 import { AstroDataService } from '../../astronomy/astro-data.service';

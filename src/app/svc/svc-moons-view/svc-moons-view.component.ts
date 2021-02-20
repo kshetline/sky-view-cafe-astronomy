@@ -6,7 +6,6 @@ import {
 } from '@tubular/astronomy';
 import { floor, log10, max, min, PI, Point, pow, round, sin_deg, sqrt } from '@tubular/math';
 import { extendDelimited, fillEllipse, getFontMetrics, padLeft, strokeEllipse } from '@tubular/util';
-import { find } from 'lodash-es';
 import { AppService, CurrentTab, UserSetting } from '../../app.service';
 import { AstroDataService } from '../../astronomy/astro-data.service';
 import { DrawingContextPlanetary, GenericPlanetaryViewDirective, LABEL_TYPE, SELECTION_TYPE, SUBJECT } from '../generic-planetary-view.directive';
@@ -237,7 +236,7 @@ export class SvcMoonsViewComponent extends GenericPlanetaryViewDirective impleme
         hidden = false;
 
         if (doShadows)
-          sunPos = find(smoons, smoon => smoon.moonIndex === pos.moonIndex);
+          sunPos = smoons.find(smoon => smoon.moonIndex === pos.moonIndex);
 
         if (pos.behindDisc) {
           occultedNames = extendDelimited(occultedNames, longName);

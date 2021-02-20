@@ -6,8 +6,8 @@ import {
 } from '@tubular/astronomy';
 import { DateTime } from '@tubular/time';
 import { ceil, max, round, sqrt } from '@tubular/math';
-import { FontMetrics, getFontMetrics, isSafari, padLeft } from '@tubular/util';
-import { clone, debounce, isString, throttle } from 'lodash-es';
+import { clone, FontMetrics, getFontMetrics, isSafari, isString, padLeft } from '@tubular/util';
+import { debounce, throttle } from 'lodash-es';
 import { BehaviorSubject, Observable, Subscription } from 'rxjs';
 import { AppService, CurrentTab } from '../app.service';
 import { getXYForTouchEvent } from '../util/ks-touch-events';

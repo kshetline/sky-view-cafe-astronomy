@@ -1,6 +1,7 @@
 import { Component, forwardRef, Input } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { abs, div_rd, min, mod, mod2, round } from '@tubular/math';
+import { noop } from '@tubular/util';
 import { BACKGROUND_ANIMATIONS, KsSequenceEditorComponent } from '../widgets/ks-sequence-editor/ks-sequence-editor.component';
 
 export const SVC_ANGLE_EDITOR_VALUE_ACCESSOR: any = {
@@ -13,8 +14,6 @@ export const DD_MM_NS  = 'DD_MM_NS';
 export const DDD_MM_EW = 'DDD_MM_EW';
 export const HH_MM     = 'HH_MM';
 export const PN_DDD_D  = 'PN_DDD_D';
-
-const noop = (): void => {};
 
 const NO_BREAK_SPACE = '\u00A0';
 

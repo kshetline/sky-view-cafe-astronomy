@@ -1,5 +1,5 @@
 import { strokeCircle, strokeLine } from '@tubular/util';
-import { sortBy } from 'lodash-es';
+import sortBy from 'lodash-es/sortBy';
 
 enum DrawAction {FILLED_RECT, LINE, CIRCLE, RECT}
 

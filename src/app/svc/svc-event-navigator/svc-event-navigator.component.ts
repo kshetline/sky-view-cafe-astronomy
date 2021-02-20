@@ -7,7 +7,7 @@ import {
   VENUS, WINTER_SOLSTICE
 } from '@tubular/astronomy';
 import { DateTime, Timezone } from '@tubular/time';
-import { isString } from 'lodash-es';
+import { isString } from '@tubular/util';
 import { MessageService, SelectItem } from 'primeng/api';
 import { Subscription, timer } from 'rxjs';
 import { AppService, UserSetting } from '../../app.service';

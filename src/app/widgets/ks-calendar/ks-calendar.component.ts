@@ -2,7 +2,7 @@ import { DatePipe } from '@angular/common';
 import { Component, EventEmitter, forwardRef, Input, OnDestroy, Output } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { CalendarType, GregorianChange, DateTime, Timezone, YMDDate } from '@tubular/time';
-import { clone, isEqual, isObject, isString } from 'lodash-es';
+import { clone, isEqual, isObject, isString, noop } from '@tubular/util';
 import { Subscription, timer } from 'rxjs';
 
 const CLICK_REPEAT_DELAY = 500;
@@ -14,8 +14,6 @@ export const KS_CALENDAR_VALUE_ACCESSOR: any = {
   multi: true
 };
 
-const noop = (): void => {};
-
 interface DateInfo extends YMDDate {
   text: string;
   dayLength: number;
@@ -26,7 +24,7 @@ interface DateInfo extends YMDDate {
   voidDay?: boolean;
 }
 
-enum SelectMode { DAY, MONTH, YEAR, DECADE, CENTURY, MILLENNIUM, MODE_COUNT };
+enum SelectMode { DAY, MONTH, YEAR, DECADE, CENTURY, MILLENNIUM, MODE_COUNT }
 
 @Component({
   selector: 'ks-calendar',

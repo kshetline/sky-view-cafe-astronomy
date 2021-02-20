@@ -1,5 +1,5 @@
 import { SolarSystem } from '@tubular/astronomy';
-import { clone } from 'lodash-es';
+import { clone } from '@tubular/util';
 import { SelectItem } from 'primeng/api';
 import { AppService } from '../app.service';
 import { ADDITIONALS, PROPERTY_ADDITIONALS } from './generic-view.directive';

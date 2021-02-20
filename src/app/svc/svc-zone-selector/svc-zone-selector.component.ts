@@ -1,5 +1,6 @@
 import { Component, EventEmitter, forwardRef, OnInit, Output } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { noop } from '@tubular/util';
 import { Timezone, RegionAndSubzones } from '@tubular/time';
 import { timer } from 'rxjs';
 import { AppService } from '../../app.service';
@@ -9,8 +10,6 @@ export const SVC_ZONE_SELECTOR_VALUE_ACCESSOR: any = {
   useExisting: forwardRef(() => SvcZoneSelectorComponent),
   multi: true,
 };
-
-const noop = (): void => {};
 
 const MISC_OPTION = '- Miscellaneous -';
 const UT_OPTION   = '- UTC hour offsets -';

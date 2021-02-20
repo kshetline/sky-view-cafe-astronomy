@@ -1,5 +1,4 @@
 import { AfterViewInit, Component } from '@angular/core';
-import { find } from 'lodash-es';
 import { MenuItem, SelectItem } from 'primeng/api';
 import { AppService, UserSetting } from '../../app.service';
 import { ALL_DEEP_SKY, NO_DEEP_SKY } from '../generic-sky-view.directive';
@@ -209,7 +208,7 @@ export class SvcSkyViewOptionsComponent extends SvcGenericOptionsComponent imple
   set showConstellations(value: boolean) {
     if (this._showConstellations !== value) {
       this._showConstellations = value;
-      find(this.namesCategories, { property: PROPERTY_LABEL_CONSTELLATIONS }).disabled = !value;
+      this.namesCategories.find(cat => cat.property === PROPERTY_LABEL_CONSTELLATIONS).disabled = !value;
       this.appService.updateUserSetting({ view: VIEW_SKY, property: PROPERTY_SHOW_CONSTELLATIONS, value: value, source: this });
     }
   }

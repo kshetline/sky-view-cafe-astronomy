@@ -1,14 +1,12 @@
 import { Component, ElementRef, EventEmitter, forwardRef, Input, Output, ViewChild } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { isEqual } from 'lodash-es';
+import { isEqual, noop } from '@tubular/util';
 
 const CHECKBOX_VALUE_ACCESSOR: any = {
   provide: NG_VALUE_ACCESSOR,
   useExisting: forwardRef(() => KsCheckboxComponent),
   multi: true
 };
-
-const noop = (): void => {};
 
 @Component({
   selector: 'ks-checkbox',

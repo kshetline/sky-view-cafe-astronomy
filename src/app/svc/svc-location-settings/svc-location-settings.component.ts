@@ -1,5 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
-import { clone, find } from 'lodash-es';
+import { clone } from '@tubular/util';
 import { ConfirmationService } from 'primeng/api';
 import { AppService, Location, NEW_LOCATION } from '../../app.service';
 import { KsDropdownComponent } from '../../widgets/ks-dropdown/ks-dropdown.component';
@@ -58,7 +58,7 @@ export class SvcLocationSettingsComponent {
 
   get locationName(): string { return this.app.location.name; }
   set locationName(newName: string) {
-    const newLocation = find(this.app.locations, { name: newName });
+    const newLocation = this.app.locations.find(loc => loc.name === newName);
 
     if (newLocation)
       this.app.location = newLocation;
@@ -101,7 +101,7 @@ export class SvcLocationSettingsComponent {
     if (matches)
       this.selectedName = matches[1];
 
-    if (find(this.app.locations, { name: this.selectedName })) {
+    if (this.app.locations.find(loc => loc.name === this.selectedName)) {
       this.confirmationService.confirm({
         key: 'save-confirm',
         message: `Are you sure you want to replace the existing "${this.selectedName}"?`,

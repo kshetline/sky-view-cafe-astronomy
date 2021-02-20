@@ -4,7 +4,8 @@ import { DomSanitizer } from '@angular/platform-browser';
 import { NavigationEnd, Router } from '@angular/router';
 import { SolarSystem, StarCatalog } from '@tubular/astronomy';
 import { Calendar } from '@tubular/time';
-import { clone, compact, debounce, forEach, isEqual, isString, sortedIndexBy } from 'lodash-es';
+import { clone, forEach, isEqual, isString } from '@tubular/util';
+import { compact, debounce, sortedIndexBy } from 'lodash-es';
 import { BehaviorSubject, Observable, Subject, Subscription } from 'rxjs';
 import { AstroDataService } from './astronomy/astro-data.service';
 
@@ -327,7 +328,7 @@ export class AppService {
     const viewSettings = this.allSettings[view];
 
     if (viewSettings) {
-      forEach(viewSettings, (value, property) => {
+      forEach(viewSettings, (value, property: string) => {
         const userSetting = { view: view, property: property, value: value, source: this };
         this.settingsSource.next(userSetting);
       });
