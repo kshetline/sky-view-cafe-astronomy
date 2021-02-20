@@ -1,25 +1,36 @@
-<!--suppress AngularUndefinedBinding -->
-<table>
-  <tr>
-    <th class="arrow" (touchstart)="onTouchStart($event, -1)" (touchend)="stopTimer()"
-      (mousedown)="onMouseDown($event, -1)" (mouseup)="stopTimer()" (mouseleave)="stopTimer()"
-      (click)="onClick($event, -1)"><i class="fas fa-chevron-left"  aria-hidden="true"></i></th>
-    <th colspan="5">{{title}}</th>
-    <th class="arrow" (touchstart)="onTouchStart($event, 1)" (touchend)="stopTimer()"
-      (mousedown)="onMouseDown($event,  1)" (mouseup)="stopTimer()" (mouseleave)="stopTimer()"
-      (click)="onClick($event,  1)"><i class="fas fa-chevron-right" aria-hidden="true"></i></th>
-  </tr>
-  <tr>
-    <th *ngFor="let d of daysOfWeek" class="day-header">{{d}}</th>
-  </tr>
-  <tr *ngFor="let week of calendar">
-    <td *ngFor="let day of week" [ngClass]="{
-        'highlight':   day.highlight,
-        'short-day':   day.shortDay,
-        'long-day':    day.longDay,
-        'other-month': day.otherMonth,
-        'void-day':    day.voidDay
-      }"
-      (click)="onDayClick(day)">{{day.text}}</td>
-  </tr>
-</table>
+<div class="header">
+  <div class="arrow" (touchstart)="onTouchStart($event, -1)" (touchend)="stopTimer()"
+    (mousedown)="onMouseDown($event, -1)" (mouseup)="stopTimer()" (mouseleave)="stopTimer()"
+    (click)="onClick($event, -1)"><i class="fas fa-chevron-left"  aria-hidden="true"></i></div>
+  <div class="title" (click)="onTitleClick()">&nbsp;
+    <div [class.inactive]="titlePhase === 1">{{title[0]}}</div>
+    <div [class.inactive]="titlePhase === 0">{{title[1]}}</div>
+  </div>
+  <div class="arrow" (touchstart)="onTouchStart($event, 1)" (touchend)="stopTimer()"
+    (mousedown)="onMouseDown($event,  1)" (mouseup)="stopTimer()" (mouseleave)="stopTimer()"
+    (click)="onClick($event,  1)"><i class="fas fa-chevron-right" aria-hidden="true"></i></div>
+</div>
+<div class="table-wrapper">
+  <table [class.inactive]="selectMode !== 0">
+    <tr>
+      <th *ngFor="let d of daysOfWeek" class="day-header">{{d}}</th>
+    </tr>
+    <tr *ngFor="let week of calendar">
+      <td *ngFor="let day of week" [ngClass]="{
+          'highlight':   day.highlight,
+          'short-day':   day.shortDay,
+          'long-day':    day.longDay,
+          'other-month': day.otherMonth,
+          'void-day':    day.voidDay
+        }"
+        (click)="onDayClick(day)">{{day.text}}</td>
+    </tr>
+  </table>
+  <ng-template #altTable>
+    <table class="alt-table" [class.inactive]="selectMode !== 1">
+      <tr *ngFor="let row of counter(rows)">
+        <td *ngFor="let col of counter(cols)">{{getTableValue(row, col)}}</td>
+      </tr>
+    </table>
+  </ng-template>
+</div>

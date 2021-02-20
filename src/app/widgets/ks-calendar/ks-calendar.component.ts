@@ -45,6 +45,8 @@ interface DateInfo extends YMDDate {
   voidDay?: boolean;
 }
 
+enum SelectMode { DAY, MONTH, YEAR, DECADE, CENTURY, MILLENNIUM, MODE_COUNT };
+
 @Component({
   selector: 'ks-calendar',
   templateUrl: './ks-calendar.component.html',
@@ -65,9 +67,13 @@ export class KsCalendarComponent implements ControlValueAccessor, OnDestroy {
   private pendingDelta = 0;
   private pendingEvent: MouseEvent = null;
 
-  title: string;
-  daysOfWeek: string[] = [];
   calendar: DateInfo[][] = [];
+  cols = 4;
+  daysOfWeek: string[] = [];
+  rows = 3;
+  selectMode = SelectMode.DAY;
+  title = ['', ''];
+  titlePhase = 0;
 
   @Output() dayClick = new EventEmitter();
 
@@ -208,7 +214,7 @@ export class KsCalendarComponent implements ControlValueAccessor, OnDestroy {
       this.calendar[row][col] = date;
     });
 
-    this.title = this.datePipe.transform(new Date(4000, month - 1, 1, 12, 0), 'MMM ') + year;
+    this.title[this.titlePhase] = this.datePipe.transform(new Date(4000, month - 1, 1, 12, 0), 'MMM ') + year;
   }
 
   stopTimer(): void {
@@ -271,5 +277,18 @@ export class KsCalendarComponent implements ControlValueAccessor, OnDestroy {
       this.value = {y: dateInfo.y, m: dateInfo.m, d: dateInfo.d};
       this.dayClick.emit(dateInfo.d);
     }
+  }
+
+  onTitleClick(): void {
+    this.selectMode = (this.selectMode + 1) % 2;
+    this.titlePhase = (this.titlePhase + 1) % 2;
+  }
+
+  counter(length: number): number[] {
+    return [...Array(length)].map((a, i) => i);
+  }
+
+  getTableValue(row: number, col: number): string {
+    return this.datePipe.transform(new Date(4000, row * 4 + col, 1, 12, 0), 'MMM');
   }
 }

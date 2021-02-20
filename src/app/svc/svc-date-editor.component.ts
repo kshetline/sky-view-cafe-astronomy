@@ -233,7 +233,7 @@ export class SvcDateEditorComponent extends KsSequenceEditorComponent implements
     rollingDate.wallTime = {y: ymd.y, m: ymd.m, d: ymd.d, hrs: 12, min: 0, sec: 0};
 
     let change = 0;
-    let field = DateTimeField.YEARS;
+    let field = DateTimeField.YEAR;
     const sel = this.selection;
     const wasNegative = (this.items[this.signDigit].value === '-');
 
@@ -246,15 +246,15 @@ export class SvcDateEditorComponent extends KsSequenceEditorComponent implements
       sign = -1;
     }
     else if (sel === 10 || sel === 9) {
-      field = DateTimeField.DAYS;
+      field = DateTimeField.DAY;
       change = (sel === 9 ? 10 : 1);
     }
     else if (sel === 7 || sel === 6) {
-      field = DateTimeField.MONTHS;
+      field = DateTimeField.MONTH;
       change = (sel === 6 ? 10 : 1);
     }
     else if (sel === 4 || sel === 3 || sel === 2 || sel === 1) {
-      field = DateTimeField.YEARS;
+      field = DateTimeField.YEAR;
       change = (sel === 1 ? 1000 : sel === 2 ? 100 : sel === 3 ? 10 : 1);
     }
 

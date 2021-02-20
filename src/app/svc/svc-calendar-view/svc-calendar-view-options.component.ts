@@ -160,7 +160,7 @@ export class SvcCalendarViewOptionsComponent implements AfterViewInit, OnDestroy
     const zone = Timezone.getTimezone(this.appService.timezone, this.appService.longitude);
     const currentTime = new DateTime(this.appService.time, zone);
 
-    currentTime.add(DateTimeField.MONTHS, delta);
+    currentTime.add(DateTimeField.MONTH, delta);
 
     if (SVC_MIN_YEAR <= currentTime.wallTime.y && currentTime.wallTime.y <= SVC_MAX_YEAR)
       this.appService.time = currentTime.utcTimeMillis;

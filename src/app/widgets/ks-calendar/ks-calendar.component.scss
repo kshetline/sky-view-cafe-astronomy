@@ -1,7 +1,28 @@
+.table-wrapper {
+  position: relative;
+}
+
 table {
   border: 1px solid #D8D8D8;
   border-collapse: collapse;
   border-spacing: 0;
+  opacity: 1;
+  transition: opacity 0.5s ease-in-out;
+}
+
+.alt-table {
+  border: none;
+  height: 100%;
+  left: 0;
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: 100%
+}
+
+.inactive {
+  opacity: 0 !important;
+  pointer-events: none;
 }
 
 td, th {
@@ -23,11 +44,32 @@ td, th {
 
 td {
   cursor: pointer;
+  user-select: none;
 }
 
-.arrow {
+.arrow, .title {
   background: white;
+  display: inline-block;
   cursor: pointer;
+  text-align: center;
+  user-select: none;
+  width: 14.28%
+}
+
+.title {
+  position: relative;
+  width: 71.43%;
+
+  & > div {
+    bottom: 0;
+    left: 0;
+    opacity: 1;
+    position: absolute;
+    right: 0;
+    top: 0;
+    text-align: center;
+    transition: opacity 0.5s ease-in-out;
+  }
 }
 
 .day-header {
