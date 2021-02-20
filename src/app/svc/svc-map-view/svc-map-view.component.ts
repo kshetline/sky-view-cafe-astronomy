@@ -35,7 +35,7 @@ const MARKER_SIZE = 13;
 const HALF_MARKER = floor(MARKER_SIZE / 2);
 
 // relative neighbor coordinates for eclipse shadow flood fill
-const ffdx = [ 0,  1,  1,  1,  0, -1, -1, -1];
+const ffdx = [0,  1,  1,  1,  0, -1, -1, -1];
 const ffdy = [-1, -1,  0,  1,  1,  1,  0, -1];
 
 const shadowColor = 'rgba(0,0,0,0.6)';
@@ -85,11 +85,11 @@ export class SvcMapViewComponent extends GenericViewDirective implements AfterVi
     return new Promise<HTMLImageElement>((resolve, reject) => {
       const image = new Image();
 
-      image.onload = () => {
+      image.onload = (): void => {
         resolve(image);
       };
-      image.onerror = () => {
-        reject(image.src + ' failed to load.');
+      image.onerror = (): void => {
+        reject(new Error(image.src + ' failed to load.'));
       };
 
       image.src = path;
@@ -143,27 +143,27 @@ export class SvcMapViewComponent extends GenericViewDirective implements AfterVi
 
     Promise.all([dayImagePromise, nightImagePromise, politicalImagePromise, markerEclipsePromise, markerLocationPromise, markerSubsolarPromise]).then(
         ([dayMap, nightMap, politicalMap, markerEclipse, markerLocation, markerSubsolar]:
-         [HTMLImageElement, HTMLImageElement, HTMLImageElement, HTMLImageElement, HTMLImageElement, HTMLImageElement]) => {
-      this.dayMap = dayMap;
-      this.nightMap = nightMap;
-      this.politicalMap = politicalMap;
-      this.markerEclipse = markerEclipse;
-      this.markerLocation = markerLocation;
-      this.markerSubsolar = markerSubsolar;
+        [HTMLImageElement, HTMLImageElement, HTMLImageElement, HTMLImageElement, HTMLImageElement, HTMLImageElement]) => {
+          this.dayMap = dayMap;
+          this.nightMap = nightMap;
+          this.politicalMap = politicalMap;
+          this.markerEclipse = markerEclipse;
+          this.markerLocation = markerLocation;
+          this.markerSubsolar = markerSubsolar;
 
-      this.politicalNightMap = <HTMLCanvasElement> <any> document.createElement('canvas');
-      this.politicalNightMap.width = this.politicalMap.width;
-      this.politicalNightMap.height = this.politicalMap.height;
+          this.politicalNightMap = <HTMLCanvasElement> <any> document.createElement('canvas');
+          this.politicalNightMap.width = this.politicalMap.width;
+          this.politicalNightMap.height = this.politicalMap.height;
 
-      const context = this.politicalNightMap.getContext('2d');
+          const context = this.politicalNightMap.getContext('2d');
 
-      context.drawImage(this.politicalMap, 0, 0);
-      context.fillStyle = shadowColor;
-      context.fillRect(0, 0, this.politicalMap.width, this.politicalMap.height);
+          context.drawImage(this.politicalMap, 0, 0);
+          context.fillStyle = shadowColor;
+          context.fillRect(0, 0, this.politicalMap.width, this.politicalMap.height);
 
-      this.throttledRedraw();
-    }).catch((reason: any) => {
-      return Promise.reject('Failed to load all images: ' + reason);
+          this.throttledRedraw();
+        }).catch((reason: any) => {
+      return Promise.reject(new Error('Failed to load all images: ' + reason));
     });
 
     super.ngAfterViewInit();
@@ -406,10 +406,10 @@ export class SvcMapViewComponent extends GenericViewDirective implements AfterVi
     const stack: Point[] = [];
 
     this.moonShadowPts = [];
-    stack.push({x: x, y: y});
+    stack.push({ x: x, y: y });
 
     while (stack.length > 0) {
-      ({x, y} = stack.pop());
+      ({ x, y } = stack.pop());
 
       this.setMoonShadowPt(x, y, MAX_SHADOWED);
       dc.context.fillStyle = shadowColor;
@@ -436,7 +436,7 @@ export class SvcMapViewComponent extends GenericViewDirective implements AfterVi
           const mag = this.getEclipseMagnitude(dc, nx, ny);
 
           if (mag > MIN_SEARCH_MAGNITUDE)
-            stack.push({x: nx, y: ny});
+            stack.push({ x: nx, y: ny });
           else if (mag >= MIN_ECLIPSE_MAGNITUDE) {
             this.setMoonShadowPt(nx, ny,
               floor((MIN_SHADOWED + (MAX_SHADOWED - MIN_SHADOWED) *
@@ -479,7 +479,7 @@ export class SvcMapViewComponent extends GenericViewDirective implements AfterVi
     return this.withinPlot(this.lastMoveX, this.lastMoveY, this.lastDrawingContext);
   }
 
-  protected withinPlot(x: number, y: number, dc?: DrawingContext): boolean {
+  protected withinPlot(x: number, y: number, _dc?: DrawingContext): boolean {
     return (this.xOffset <= x && x < this.xOffset + this.mapWidth &&
             this.mapYOffset <= y && y < this.mapYOffset + this.mapHeight);
   }

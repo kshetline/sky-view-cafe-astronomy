@@ -35,7 +35,7 @@ export class KsMarqueeComponent implements AfterViewInit, OnDestroy {
   ngAfterViewInit(): void {
     this.wrapper = this.wrapperRef.nativeElement;
     this.marquee = this.marqueeRef.nativeElement;
-    this.resizeFunction = () => this.onResize();
+    this.resizeFunction = (): void => this.onResize();
     addResizeListener(this.wrapper, this.resizeFunction);
     this.onResize();
   }

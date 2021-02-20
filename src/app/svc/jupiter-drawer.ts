@@ -17,7 +17,7 @@ export class JupiterDrawer extends PlanetDrawer {
 
     if (JupiterDrawer.jupiterImage) {
       jupiterInfoPromise.then((jupiterInfo: JupiterInfo) => new JupiterDrawer(jupiterInfo))
-        .catch((reason: any) => Promise.reject('Failed to create JupiterDrawer: ' + reason));
+        .catch((reason: any) => Promise.reject(new Error('Failed to create JupiterDrawer: ' + reason)));
     }
 
     const commentReader = new JpegCommentReader(httpClient);
@@ -25,11 +25,11 @@ export class JupiterDrawer extends PlanetDrawer {
     const imagePromise = new Promise<HTMLImageElement>((resolve, reject) => {
       const image = new Image();
 
-      image.onload = () => {
+      image.onload = (): void => {
         resolve(image);
       };
-      image.onerror = () => {
-        reject('Jupiter image failed to load from: ' + image.src);
+      image.onerror = (): void => {
+        reject(new Error('Jupiter image failed to load from: ' + image.src));
       };
 
       image.src = 'assets/resources/jupiter_cyl.jpg';
@@ -47,7 +47,7 @@ export class JupiterDrawer extends PlanetDrawer {
 
       return new JupiterDrawer(jupiterInfo);
     }).catch((reason: any) => {
-      return Promise.reject('Failed to create JupiterDrawer: ' + reason);
+      return Promise.reject(new Error('Failed to create JupiterDrawer: ' + reason));
     });
   }
 

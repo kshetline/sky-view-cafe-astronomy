@@ -28,11 +28,11 @@ export class AppComponent implements AfterViewInit, OnDestroy {
   private timer: Subscription;
 
   moreItems: MenuItem[] = [
-      { label: 'Preferences', icon: 'fas fa-cog', command: () => this.displayPreferences = true },
-      { label: 'Help', icon: 'fas fa-question-circle', command: () => this.openHelp() },
-      { label: 'Toggle full screen', icon: 'fas fa-arrows-alt', command: () => this.toggleFullScreen() },
-      { label: 'About Sky View Café', icon: 'fas fa-info-circle', command: () => this.displayAbout = true }
-    ];
+    { label: 'Preferences', icon: 'fas fa-cog', command: (): any => this.displayPreferences = true },
+    { label: 'Help', icon: 'fas fa-question-circle', command: (): void => this.openHelp() },
+    { label: 'Toggle full screen', icon: 'fas fa-arrows-alt', command: (): void => this.toggleFullScreen() },
+    { label: 'About Sky View Café', icon: 'fas fa-info-circle', command: (): any => this.displayAbout = true }
+  ];
 
   displayAbout = false;
   displayPreferences = false;
@@ -109,15 +109,16 @@ export class AppComponent implements AfterViewInit, OnDestroy {
     const wt = this.dateTime.wallTime;
 
     if (wt.y !== this._date.y || wt.m !== this._date.m || wt.d !== this._date.d)
-      this._date = {y: wt.y, m: wt.m, d: wt.d};
+      this._date = { y: wt.y, m: wt.m, d: wt.d };
 
     return this._date;
   }
+
   set date(newDate: YMDDate) {
     const wt = this.dateTime.wallTime;
 
     if (wt.y !== newDate.y || wt.m !== newDate.m || wt.d !== newDate.d) {
-      this.dateTime.wallTime = {y: newDate.y, m: newDate.m, d: newDate.d, hrs: wt.hrs, min: wt.min, sec: wt.sec};
+      this.dateTime.wallTime = { y: newDate.y, m: newDate.m, d: newDate.d, hrs: wt.hrs, min: wt.min, sec: wt.sec };
       this._time = this.app.time = this.dateTime.utcTimeMillis;
     }
   }
@@ -150,8 +151,8 @@ export class AppComponent implements AfterViewInit, OnDestroy {
     this.dateTime.timezone = this._timeZone;
 
     if (this._timeZone.error)
-      this.messageService.add({key: 'general', severity: 'error', summary: 'Failed to retrieve timezone',
-        detail: 'Using your OS timezone instead.'});
+      this.messageService.add({ key: 'general', severity: 'error', summary: 'Failed to retrieve timezone',
+                                detail: 'Using your OS timezone instead.' });
   }
 
   // noinspection JSMethodCanBeStatic

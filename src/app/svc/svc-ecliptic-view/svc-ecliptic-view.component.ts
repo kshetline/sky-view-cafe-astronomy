@@ -266,8 +266,8 @@ export class SvcEclipticViewComponent extends GenericSkyViewDirective implements
 
     const r = B * dc.orientation / dc.spanDegrees * dc.span + (dc.size - dc.span) / 2.0;
 
-    const pt = {x: (dc.xctr + cos(-L * dc.orientation) * r),
-                y: (dc.yctr + sin(-L * dc.orientation) * r)};
+    const pt = { x: (dc.xctr + cos(-L * dc.orientation) * r),
+                 y: (dc.yctr + sin(-L * dc.orientation) * r) };
 
     return pt;
   }
@@ -279,7 +279,7 @@ export class SvcEclipticViewComponent extends GenericSkyViewDirective implements
     return angle;
   }
 
-  protected drawSkyPlotLine(pt1: Point, pt2: Point, dc: DrawingContextPlanetary, subject: SUBJECT): boolean {
+  protected drawSkyPlotLine(pt1: Point, pt2: Point, dc: DrawingContextPlanetary, _subject: SUBJECT): boolean {
     strokeLine(dc.context, pt1.x, pt1.y, pt2.x, pt2.y);
 
     return true;

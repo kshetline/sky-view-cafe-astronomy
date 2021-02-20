@@ -4,17 +4,6 @@ import { urlEncodeParams } from '@tubular/util';
 
 const PING_INTERVAL = 1800000; // half hour
 
-export interface AtlasResults {
-  originalSearch: string;
-  normalizedSearch: string;
-  time: number;
-  error: string;
-  warning: string;
-  info: string;
-  limitReached: boolean;
-  matches: AtlasLocation[];
-}
-
 export interface AtlasLocation {
   displayName: string;
   city: string;
@@ -37,6 +26,17 @@ export interface AtlasLocation {
   source: number;
   matchedByAlternateName: boolean;
   matchedBySound: boolean;
+}
+
+export interface AtlasResults {
+  originalSearch: string;
+  normalizedSearch: string;
+  time: number;
+  error: string;
+  warning: string;
+  info: string;
+  limitReached: boolean;
+  matches: AtlasLocation[];
 }
 
 @Injectable()
@@ -82,10 +82,10 @@ export class SvcAtlasService {
       const apiHost = (this.hostname === '127.0.0.1' ? 'http://localhost:8088/states/' : 'https://test.skyviewcafe.com/states/');
 
       SvcAtlasService.statesPromise = this.httpClient.jsonp<string[]>(apiHost, 'callback').toPromise().then(data => {
-          SvcAtlasService.states = data;
+        SvcAtlasService.states = data;
 
-          return data;
-        }, reason => { console.log(reason); return []; });
+        return data;
+      }, reason => { console.log(reason); return []; });
     }
     else {
       SvcAtlasService.statesPromise = this.httpClient.get<string[]>('/states/').toPromise().then(data => {

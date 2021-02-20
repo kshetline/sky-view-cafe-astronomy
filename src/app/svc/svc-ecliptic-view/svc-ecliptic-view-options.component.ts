@@ -5,9 +5,9 @@ import { AppService, UserSetting } from '../../app.service';
 import { ALL_DEEP_SKY, NO_DEEP_SKY } from '../generic-sky-view.directive';
 import { SvcGenericOptionsComponent } from '../svc-generic-options.component';
 import { PROPERTY_BRIGHTEN_STARS, PROPERTY_CELESTIAL_EQUATOR, PROPERTY_ECLIPTIC_GRID, PROPERTY_ENLARGE_SUN_MOON, PROPERTY_LABEL_BRIGHT_STARS,
-         PROPERTY_LABEL_CONSTELLATIONS, PROPERTY_LABEL_DSOS, PROPERTY_LABEL_PLANETS, PROPERTY_LABEL_STARS,
-         PROPERTY_LOCAL_HORIZON, PROPERTY_ORIENTATION, PROPERTY_SHOW_CONSTELLATIONS, PROPERTY_SHOW_STARS,
-         PROPERTY_SPAN_25, PROPERTY_TOPOCENTRIC_MOON, VIEW_ECLIPTIC } from './svc-ecliptic-view.component';
+  PROPERTY_LABEL_CONSTELLATIONS, PROPERTY_LABEL_DSOS, PROPERTY_LABEL_PLANETS, PROPERTY_LABEL_STARS,
+  PROPERTY_LOCAL_HORIZON, PROPERTY_ORIENTATION, PROPERTY_SHOW_CONSTELLATIONS, PROPERTY_SHOW_STARS,
+  PROPERTY_SPAN_25, PROPERTY_TOPOCENTRIC_MOON, VIEW_ECLIPTIC } from './svc-ecliptic-view.component';
 
 const CHECKED = 'far fa-check-square';
 const UNCHECKED = 'far fa-square';
@@ -42,38 +42,38 @@ export class SvcEclipticViewOptionsComponent extends SvcGenericOptionsComponent 
   private deepSkyLabelMagnitude = NO_DEEP_SKY;
 
   spans: SelectItem[] = [
-    {label: 'Ecliptic ±15°', value: false},
-    {label: 'Ecliptic ±25°', value: true},
+    { label: 'Ecliptic ±15°', value: false },
+    { label: 'Ecliptic ±25°', value: true },
   ];
 
   orientations: SelectItem[] = [
-    {label: 'North outward', value: true},
-    {label: 'South outward', value: false},
+    { label: 'North outward', value: true },
+    { label: 'South outward', value: false },
   ];
 
   namesCategories: MenuItemPlus[] = [
-    {label: 'None',                  icon: UNCHECKED, property: null,
-      command: (event) => { this.toggleLabels(event); }},
-    {label: EM_DASH, icon: 'fas fa-fw'},
-    {label: 'Planets',               icon: CHECKED,   property: PROPERTY_LABEL_PLANETS,
-      command: (event) => { this.toggleLabels(event); }},
-    {label: 'Bright Stars',          icon: UNCHECKED, property: PROPERTY_LABEL_BRIGHT_STARS,
-      command: (event) => { this.toggleLabels(event); }},
-    {label: 'Stars',                 icon: UNCHECKED, property: PROPERTY_LABEL_STARS,
-      command: (event) => { this.toggleLabels(event); }},
-    {label: 'Constellations',        icon: UNCHECKED, property: PROPERTY_LABEL_CONSTELLATIONS,
-      command: (event) => { this.toggleLabels(event); }, disabled: true},
-    {label: EM_DASH, icon: 'fas fa-fw'},
-    {label: 'No Deep Sky Objects',   icon: CHECKED,   property: PROPERTY_LABEL_DSOS,
-      command: (event) => { this.toggleLabels(event); }, value: NO_DEEP_SKY},
-    {label: 'DSOs 4.0 and Brighter', icon: UNCHECKED, property: PROPERTY_LABEL_DSOS,
-      command: (event) => { this.toggleLabels(event); }, value: 4},
-    {label: 'DSOs 5.0 and Brighter', icon: UNCHECKED, property: PROPERTY_LABEL_DSOS,
-      command: (event) => { this.toggleLabels(event); }, value: 5},
-    {label: 'DSOs 6.0 and Brighter', icon: UNCHECKED, property: PROPERTY_LABEL_DSOS,
-      command: (event) => { this.toggleLabels(event); }, value: 6},
-    {label: 'All Deep Sky Objects',  icon: UNCHECKED, property: PROPERTY_LABEL_DSOS,
-      command: (event) => { this.toggleLabels(event); }, value: ALL_DEEP_SKY}
+    { label: 'None',                  icon: UNCHECKED, property: null,
+      command: (event): void => { this.toggleLabels(event); } },
+    { label: EM_DASH, icon: 'fas fa-fw' },
+    { label: 'Planets',               icon: CHECKED,   property: PROPERTY_LABEL_PLANETS,
+      command: (event): void => { this.toggleLabels(event); } },
+    { label: 'Bright Stars',          icon: UNCHECKED, property: PROPERTY_LABEL_BRIGHT_STARS,
+      command: (event): void => { this.toggleLabels(event); } },
+    { label: 'Stars',                 icon: UNCHECKED, property: PROPERTY_LABEL_STARS,
+      command: (event): void => { this.toggleLabels(event); } },
+    { label: 'Constellations',        icon: UNCHECKED, property: PROPERTY_LABEL_CONSTELLATIONS,
+      command: (event): void => { this.toggleLabels(event); }, disabled: true },
+    { label: EM_DASH, icon: 'fas fa-fw' },
+    { label: 'No Deep Sky Objects',   icon: CHECKED,   property: PROPERTY_LABEL_DSOS,
+      command: (event): void => { this.toggleLabels(event); }, value: NO_DEEP_SKY },
+    { label: 'DSOs 4.0 and Brighter', icon: UNCHECKED, property: PROPERTY_LABEL_DSOS,
+      command: (event): void => { this.toggleLabels(event); }, value: 4 },
+    { label: 'DSOs 5.0 and Brighter', icon: UNCHECKED, property: PROPERTY_LABEL_DSOS,
+      command: (event): void => { this.toggleLabels(event); }, value: 5 },
+    { label: 'DSOs 6.0 and Brighter', icon: UNCHECKED, property: PROPERTY_LABEL_DSOS,
+      command: (event): void => { this.toggleLabels(event); }, value: 6 },
+    { label: 'All Deep Sky Objects',  icon: UNCHECKED, property: PROPERTY_LABEL_DSOS,
+      command: (event): void => { this.toggleLabels(event); }, value: ALL_DEEP_SKY }
   ];
 
   constructor(appService: AppService) {
@@ -112,7 +112,7 @@ export class SvcEclipticViewOptionsComponent extends SvcGenericOptionsComponent 
   set span25(value: boolean) {
     if (this._span25 !== value) {
       this._span25 = value;
-      this.appService.updateUserSetting({view: VIEW_ECLIPTIC, property: PROPERTY_SPAN_25, value: value, source: this});
+      this.appService.updateUserSetting({ view: VIEW_ECLIPTIC, property: PROPERTY_SPAN_25, value: value, source: this });
     }
   }
 
@@ -120,7 +120,7 @@ export class SvcEclipticViewOptionsComponent extends SvcGenericOptionsComponent 
   set northOutward(value: boolean) {
     if (this._northOutward !== value) {
       this._northOutward = value;
-      this.appService.updateUserSetting({view: VIEW_ECLIPTIC, property: PROPERTY_ORIENTATION, value: value, source: this});
+      this.appService.updateUserSetting({ view: VIEW_ECLIPTIC, property: PROPERTY_ORIENTATION, value: value, source: this });
     }
   }
 
@@ -128,7 +128,7 @@ export class SvcEclipticViewOptionsComponent extends SvcGenericOptionsComponent 
   set ecliptic(value: boolean) {
     if (this._ecliptic !== value) {
       this._ecliptic = value;
-      this.appService.updateUserSetting({view: VIEW_ECLIPTIC, property: PROPERTY_ECLIPTIC_GRID, value: value, source: this});
+      this.appService.updateUserSetting({ view: VIEW_ECLIPTIC, property: PROPERTY_ECLIPTIC_GRID, value: value, source: this });
     }
   }
 
@@ -136,7 +136,7 @@ export class SvcEclipticViewOptionsComponent extends SvcGenericOptionsComponent 
   set celestial(value: boolean) {
     if (this._celestial !== value) {
       this._celestial = value;
-      this.appService.updateUserSetting({view: VIEW_ECLIPTIC, property: PROPERTY_CELESTIAL_EQUATOR, value: value, source: this});
+      this.appService.updateUserSetting({ view: VIEW_ECLIPTIC, property: PROPERTY_CELESTIAL_EQUATOR, value: value, source: this });
     }
   }
 
@@ -144,8 +144,8 @@ export class SvcEclipticViewOptionsComponent extends SvcGenericOptionsComponent 
   set showConstellations(value: boolean) {
     if (this._showConstellations !== value) {
       this._showConstellations = value;
-      find(this.namesCategories, {property: PROPERTY_LABEL_CONSTELLATIONS}).disabled = !value;
-      this.appService.updateUserSetting({view: VIEW_ECLIPTIC, property: PROPERTY_SHOW_CONSTELLATIONS, value: value, source: this});
+      find(this.namesCategories, { property: PROPERTY_LABEL_CONSTELLATIONS }).disabled = !value;
+      this.appService.updateUserSetting({ view: VIEW_ECLIPTIC, property: PROPERTY_SHOW_CONSTELLATIONS, value: value, source: this });
     }
   }
 
@@ -153,7 +153,7 @@ export class SvcEclipticViewOptionsComponent extends SvcGenericOptionsComponent 
   set localHorizon(value: boolean) {
     if (this._localHorizon !== value) {
       this._localHorizon = value;
-      this.appService.updateUserSetting({view: VIEW_ECLIPTIC, property: PROPERTY_LOCAL_HORIZON, value: value, source: this});
+      this.appService.updateUserSetting({ view: VIEW_ECLIPTIC, property: PROPERTY_LOCAL_HORIZON, value: value, source: this });
     }
   }
 
@@ -161,7 +161,7 @@ export class SvcEclipticViewOptionsComponent extends SvcGenericOptionsComponent 
   set showStars(value: boolean) {
     if (this._showStars !== value) {
       this._showStars = value;
-      this.appService.updateUserSetting({view: VIEW_ECLIPTIC, property: PROPERTY_SHOW_STARS , value: value, source: this});
+      this.appService.updateUserSetting({ view: VIEW_ECLIPTIC, property: PROPERTY_SHOW_STARS, value: value, source: this });
     }
   }
 
@@ -169,7 +169,7 @@ export class SvcEclipticViewOptionsComponent extends SvcGenericOptionsComponent 
   set brightenStars(value: boolean) {
     if (this._brightenStars !== value) {
       this._brightenStars = value;
-      this.appService.updateUserSetting({view: VIEW_ECLIPTIC, property: PROPERTY_BRIGHTEN_STARS , value: value, source: this});
+      this.appService.updateUserSetting({ view: VIEW_ECLIPTIC, property: PROPERTY_BRIGHTEN_STARS, value: value, source: this });
     }
   }
 
@@ -177,7 +177,7 @@ export class SvcEclipticViewOptionsComponent extends SvcGenericOptionsComponent 
   set topocentricMoon(value: boolean) {
     if (this._topocentricMoon !== value) {
       this._topocentricMoon = value;
-      this.appService.updateUserSetting({view: VIEW_ECLIPTIC, property: PROPERTY_TOPOCENTRIC_MOON, value: value, source: this});
+      this.appService.updateUserSetting({ view: VIEW_ECLIPTIC, property: PROPERTY_TOPOCENTRIC_MOON, value: value, source: this });
     }
   }
 
@@ -185,7 +185,7 @@ export class SvcEclipticViewOptionsComponent extends SvcGenericOptionsComponent 
   set enlargeSunMoon(value: boolean) {
     if (this._enlargeSunMoon !== value) {
       this._enlargeSunMoon = value;
-      this.appService.updateUserSetting({view: VIEW_ECLIPTIC, property: PROPERTY_ENLARGE_SUN_MOON, value: value, source: this});
+      this.appService.updateUserSetting({ view: VIEW_ECLIPTIC, property: PROPERTY_ENLARGE_SUN_MOON, value: value, source: this });
     }
   }
 
@@ -231,13 +231,13 @@ export class SvcEclipticViewOptionsComponent extends SvcGenericOptionsComponent 
       }
 
       if (value !== undefined) {
-        this.appService.updateUserSetting({view: VIEW_ECLIPTIC, property: item.property, value: value, source: this});
+        this.appService.updateUserSetting({ view: VIEW_ECLIPTIC, property: item.property, value: value, source: this });
 
         if (property === PROPERTY_LABEL_STARS && value)
-          this.appService.updateUserSetting({view: VIEW_ECLIPTIC, property: PROPERTY_LABEL_BRIGHT_STARS, value: false, source: this});
+          this.appService.updateUserSetting({ view: VIEW_ECLIPTIC, property: PROPERTY_LABEL_BRIGHT_STARS, value: false, source: this });
 
         if (property === PROPERTY_LABEL_BRIGHT_STARS && value)
-          this.appService.updateUserSetting({view: VIEW_ECLIPTIC, property: PROPERTY_LABEL_STARS, value: false, source: this});
+          this.appService.updateUserSetting({ view: VIEW_ECLIPTIC, property: PROPERTY_LABEL_STARS, value: false, source: this });
       }
     }
 

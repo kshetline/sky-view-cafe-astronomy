@@ -54,20 +54,20 @@ export const asteroidColor           = '#EEBB88';
 export const cometColor              = '#88FFFF';
 
 export const planetColors = [
-    'yellow',  '#C0C0C0', '#EEEEFF', // Sun, Mercury, Venus
-    '#00CCCC', 'red',     'orange',  // Earth, Mars, Jupiter
-    'yellow',  '#00DD00', '#6666FF', // Saturn, Uranus, Neptune
-    '#9999FF', '#EEEEFF',            // Pluto, Moon
-    asteroidColor, cometColor
-  ];
+  'yellow',  '#C0C0C0', '#EEEEFF', // Sun, Mercury, Venus
+  '#00CCCC', 'red',     'orange',  // Earth, Mars, Jupiter
+  'yellow',  '#00DD00', '#6666FF', // Saturn, Uranus, Neptune
+  '#9999FF', '#EEEEFF',            // Pluto, Moon
+  asteroidColor, cometColor
+];
 
 export const planetPrintColors = [
-    '#CCCC00', 'gray',    'black',   // Sun, Mercury, Venus
-    '#00CCCC', 'red',     'orange',  // Earth, Mars, Jupiter
-    '#CCCC00', '#00DD00', '#3333FF', // Saturn, Uranus, Neptune
-    '#9999FF', '#99CCFF',            // Pluto, Moon
-    asteroidColor, cometColor
-  ];
+  '#CCCC00', 'gray',    'black',   // Sun, Mercury, Venus
+  '#00CCCC', 'red',     'orange',  // Earth, Mars, Jupiter
+  '#CCCC00', '#00DD00', '#3333FF', // Saturn, Uranus, Neptune
+  '#9999FF', '#99CCFF',            // Pluto, Moon
+  asteroidColor, cometColor
+];
 
 export const ASTEROID_COLOR_INDEX = 11;
 export const COMET_COLOR_INDEX = 12;
@@ -130,7 +130,6 @@ const PLANET_EXTRA_SPAN     = 2;
 const STAR_REDUCED_SPAN     = 2;
 export const FAR_AWAY = 999999;
 
-// tslint:disable-next-line:variable-name
 const DIMMEST_AT_SCALE_1x1_STAR_IMAGE_INDEX = 100;
 
 const opacitiesOfWhite: string[] = [];
@@ -252,7 +251,7 @@ export abstract class GenericPlanetaryViewDirective extends GenericViewDirective
   }
 
   protected drawStar(pt: Point, vmag: number, dc: DrawingContextPlanetary, colorForPlanetDrawnAsStar?: string): void {
-    const {x, y} = pt;
+    const { x, y } = pt;
 
     const maxRange = (colorForPlanetDrawnAsStar ? 2000 - dc.starDimmestLevel - 1 : dc.starLevelRange);
     const brightness = min(max(dc.starLevelRange - round((vmag + 1.0 + this.starBrightnessAdj) / 7.0 *
@@ -274,7 +273,7 @@ export abstract class GenericPlanetaryViewDirective extends GenericViewDirective
   }
 
   protected drawPlanet(planet: number, pt: Point, dc: DrawingContextPlanetary, colorOverride?: string): void {
-    const {x, y} = pt;
+    const { x, y } = pt;
     let size = 3;
     let color: string;
 
@@ -378,7 +377,7 @@ export abstract class GenericPlanetaryViewDirective extends GenericViewDirective
     }
   }
 
-  protected getMoonShadingOrientation(dc: DrawingContextPlanetary): number {
+  protected getMoonShadingOrientation(_dc: DrawingContextPlanetary): number {
     return 0.0;
   }
 
@@ -541,8 +540,8 @@ export abstract class GenericPlanetaryViewDirective extends GenericViewDirective
       const ascent = dc.mediumLabelFm.ascent;
       const labelH = ascent + dc.mediumLabelFm.descent - 1;
 
-      li.symbolBounds = {x: li.pt.x - 2, y: li.pt.y - 2,          w: 5,         h: 5};
-      li.labelBounds  = {x: li.textPt.x, y: li.textPt.y - ascent, w: textWidth, h: labelH};
+      li.symbolBounds = { x: li.pt.x - 2, y: li.pt.y - 2,          w: 5,         h: 5 };
+      li.labelBounds  = { x: li.textPt.x, y: li.textPt.y - ascent, w: textWidth, h: labelH };
     }
 
     if (li.labelType !== LABEL_TYPE.CONSTELLATION && this.withinHideZone(li.textPt, textWidth)) {
@@ -613,7 +612,7 @@ export abstract class GenericPlanetaryViewDirective extends GenericViewDirective
     return 0;
   }
 
-  protected withinHideZone(textPt: Point, textWidth: number): boolean {
+  protected withinHideZone(textPt: Point, _textWidth: number): boolean {
     if (this.specialLabelIndex !== NO_MATCH)
       return false;
 
@@ -757,21 +756,20 @@ export abstract class GenericPlanetaryViewDirective extends GenericViewDirective
     let vmag = UNKNOWN_MAGNITUDE;
     let illum = -1;
     let diam = 0.0;
+    let starIndex;
     const format = (SolarSystem.isAsteroidOrComet(dc.selectionIndex) ? FMT_MINS : FMT_SECS);
     const separator = ' • ';
 
     switch (dc.selectionType) {
       case SELECTION_TYPE.STAR:
       case SELECTION_TYPE.DSO:
-        const starIndex = -dc.selectionIndex - 1;
-
+        starIndex = -dc.selectionIndex - 1;
         name = dc.sc.getExpandedName(starIndex);
 
         if (!name)
           name = dc.sc.getCodedName(starIndex);
 
-        if (!dc.selectionLabeled && dc.selectionOnscreen && this.withinPlot(dc.selectionPoint.x, dc.selectionPoint.y, dc))
-        {
+        if (!dc.selectionLabeled && dc.selectionOnscreen && this.withinPlot(dc.selectionPoint.x, dc.selectionPoint.y, dc)) {
           dc.context.fillStyle = highlightedStarColor;
           dc.context.fillRect(dc.selectionPoint.x, dc.selectionPoint.y, 2, 2);
         }

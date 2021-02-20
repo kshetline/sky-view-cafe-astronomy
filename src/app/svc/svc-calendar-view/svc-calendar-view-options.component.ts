@@ -4,7 +4,7 @@ import { SelectItem } from 'primeng/api';
 import { Subscription, timer } from 'rxjs';
 import { AppService, SVC_MAX_YEAR, SVC_MIN_YEAR, UserSetting } from '../../app.service';
 import { PROPERTY_DAILY_DAYLIGHT, PROPERTY_DAILY_MOON_PHASE, PROPERTY_EQUISOLSTICE, PROPERTY_EVENT_TYPE, PROPERTY_INCLUDE_TRANSITS,
-         PROPERTY_KEY_MOON_PHASES, VIEW_CALENDAR
+  PROPERTY_KEY_MOON_PHASES, VIEW_CALENDAR
 } from './svc-calendar-view.component';
 
 const CLICK_REPEAT_DELAY = 500;
@@ -26,19 +26,19 @@ export class SvcCalendarViewOptionsComponent implements AfterViewInit, OnDestroy
   private pendingDelta = 0;
 
   eventTypes: SelectItem[] = [
-    {label: 'Rise/Set Sun',     value: 0},
-    {label: 'Rise/Set Moon',    value: 1},
-    {label: 'Rise/Set Mercury', value: 2},
-    {label: 'Rise/Set Venus',   value: 3},
-    {label: 'Rise/Set Mars',    value: 4},
-    {label: 'Rise/Set Jupiter', value: 5},
-    {label: 'Rise/Set Saturn',  value: 6},
-    {label: 'Rise/Set Uranus',  value: 7},
-    {label: 'Rise/Set Neptune', value: 8},
-    {label: 'Rise/Set Pluto',   value: 9},
-    {label: 'Civil Twilight',   value: 10},
-    {label: 'Naut. Twilight',   value: 11},
-    {label: 'Astro. Twilight',  value: 12}
+    { label: 'Rise/Set Sun',     value: 0 },
+    { label: 'Rise/Set Moon',    value: 1 },
+    { label: 'Rise/Set Mercury', value: 2 },
+    { label: 'Rise/Set Venus',   value: 3 },
+    { label: 'Rise/Set Mars',    value: 4 },
+    { label: 'Rise/Set Jupiter', value: 5 },
+    { label: 'Rise/Set Saturn',  value: 6 },
+    { label: 'Rise/Set Uranus',  value: 7 },
+    { label: 'Rise/Set Neptune', value: 8 },
+    { label: 'Rise/Set Pluto',   value: 9 },
+    { label: 'Civil Twilight',   value: 10 },
+    { label: 'Naut. Twilight',   value: 11 },
+    { label: 'Astro. Twilight',  value: 12 }
   ];
 
   constructor(private appService: AppService) {
@@ -64,7 +64,7 @@ export class SvcCalendarViewOptionsComponent implements AfterViewInit, OnDestroy
   set eventType(value: number) {
     if (this._eventType !== value) {
       this._eventType = value;
-      this.appService.updateUserSetting({view: VIEW_CALENDAR, property: PROPERTY_EVENT_TYPE, value: value, source: this});
+      this.appService.updateUserSetting({ view: VIEW_CALENDAR, property: PROPERTY_EVENT_TYPE, value: value, source: this });
     }
   }
 
@@ -72,7 +72,7 @@ export class SvcCalendarViewOptionsComponent implements AfterViewInit, OnDestroy
   set keyMoonPhases(value: boolean) {
     if (this._keyMoonPhases !== value) {
       this._keyMoonPhases = value;
-      this.appService.updateUserSetting({view: VIEW_CALENDAR, property: PROPERTY_KEY_MOON_PHASES, value: value, source: this});
+      this.appService.updateUserSetting({ view: VIEW_CALENDAR, property: PROPERTY_KEY_MOON_PHASES, value: value, source: this });
     }
   }
 
@@ -80,7 +80,7 @@ export class SvcCalendarViewOptionsComponent implements AfterViewInit, OnDestroy
   set equisolstice(value: boolean) {
     if (this._equisolstice !== value) {
       this._equisolstice = value;
-      this.appService.updateUserSetting({view: VIEW_CALENDAR, property: PROPERTY_EQUISOLSTICE, value: value, source: this});
+      this.appService.updateUserSetting({ view: VIEW_CALENDAR, property: PROPERTY_EQUISOLSTICE, value: value, source: this });
     }
   }
 
@@ -88,7 +88,7 @@ export class SvcCalendarViewOptionsComponent implements AfterViewInit, OnDestroy
   set dailyDaylight(value: boolean) {
     if (this._dailyDaylight !== value) {
       this._dailyDaylight = value;
-      this.appService.updateUserSetting({view: VIEW_CALENDAR, property: PROPERTY_DAILY_DAYLIGHT, value: value, source: this});
+      this.appService.updateUserSetting({ view: VIEW_CALENDAR, property: PROPERTY_DAILY_DAYLIGHT, value: value, source: this });
     }
   }
 
@@ -96,7 +96,7 @@ export class SvcCalendarViewOptionsComponent implements AfterViewInit, OnDestroy
   set dailyMoonPhase(value: boolean) {
     if (this._dailyMoonPhase !== value) {
       this._dailyMoonPhase = value;
-      this.appService.updateUserSetting({view: VIEW_CALENDAR, property: PROPERTY_DAILY_MOON_PHASE, value: value, source: this});
+      this.appService.updateUserSetting({ view: VIEW_CALENDAR, property: PROPERTY_DAILY_MOON_PHASE, value: value, source: this });
     }
   }
 
@@ -104,7 +104,7 @@ export class SvcCalendarViewOptionsComponent implements AfterViewInit, OnDestroy
   set includeTransits(value: boolean) {
     if (this._includeTransits !== value) {
       this._includeTransits = value;
-      this.appService.updateUserSetting({view: VIEW_CALENDAR, property: PROPERTY_INCLUDE_TRANSITS, value: value, source: this});
+      this.appService.updateUserSetting({ view: VIEW_CALENDAR, property: PROPERTY_INCLUDE_TRANSITS, value: value, source: this });
     }
   }
 

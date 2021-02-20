@@ -9,12 +9,12 @@ export class SaturnDrawer extends PlanetDrawer {
     return new Promise<SaturnDrawer>((resolve, reject) => {
       const image = new Image();
 
-      image.onload = () => {
+      image.onload = (): void => {
         this.saturnImage = image;
         resolve(new SaturnDrawer());
       };
-      image.onerror = () => {
-        reject('Saturn image failed to load from: ' + image.src);
+      image.onerror = (): void => {
+        reject(new Error('Saturn image failed to load from: ' + image.src));
       };
 
       image.src = 'assets/resources/saturn_cyl.jpg';

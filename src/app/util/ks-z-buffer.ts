@@ -80,7 +80,7 @@ export class ZBuffer {
 
   draw(context: CanvasRenderingContext2D, maxZ = Number.MAX_VALUE): void {
     if (!this.sorted) {
-      this.items = sortBy(this.items, [(item: ZBufferItem) => item.z]);
+      this.items = sortBy(this.items, [(item: ZBufferItem): number => item.z]);
       this.sorted = true;
     }
 

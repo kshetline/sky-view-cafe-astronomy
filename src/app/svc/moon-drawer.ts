@@ -11,11 +11,11 @@ export class MoonDrawer {
     return new Promise<MoonDrawer>((resolve, reject) => {
       const image = new Image();
 
-      image.onload = () => {
+      image.onload = (): void => {
         resolve(new MoonDrawer(image));
       };
-      image.onerror = () => {
-        reject('Moon image failed to load from: ' + image.src);
+      image.onerror = (): void => {
+        reject(new Error('Moon image failed to load from: ' + image.src));
       };
 
       image.src = 'assets/resources/full_moon.jpg';
@@ -137,7 +137,7 @@ export class MoonDrawer {
         eclipsed = true;
 
         const dLon = ei.shadowPos.longitude.subtract(ei.pos.longitude).getAngle(Unit.ARC_SECONDS);
-        const dLat = ei.shadowPos.latitude .subtract(ei.pos.latitude ).getAngle(Unit.ARC_SECONDS);
+        const dLat = ei.shadowPos.latitude.subtract(ei.pos.latitude).getAngle(Unit.ARC_SECONDS);
 
         sx = round((dLon * cos_pa - dLat * sin_pa) * -pixelsPerArcSec);
         sy = round((dLon * sin_pa + dLat * cos_pa) * -pixelsPerArcSec);
@@ -199,7 +199,7 @@ export class MoonDrawer {
 
             // A shading of the moon image, leaning toward orange and brown.
             pixel = (pixel & 0xFF000000) |
-                    (      igray        << 16) |
+                    (igray        << 16) |
                     (round(igray * 0.8) << 8) |
                      round(igray * 0.5);
           }

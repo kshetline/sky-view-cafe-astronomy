@@ -47,52 +47,52 @@ export class SvcSkyViewOptionsComponent extends SvcGenericOptionsComponent imple
   private deepSkyLabelMagnitude = NO_DEEP_SKY;
 
   viewTypes: SelectItem[] = [
-    {label: 'Full Sky - Flat',     value: VIEW_TYPE.FULL_SKY_FLAT},
-    {label: 'Full Sky - Dome',     value: VIEW_TYPE.FULL_SKY_DOME},
-    {label: 'Horizon - 45° Span',  value: VIEW_TYPE.HORIZON_45},
-    {label: 'Horizon - 90° Span',  value: VIEW_TYPE.HORIZON_90},
-    {label: 'Horizon - 120° Span', value: VIEW_TYPE.HORIZON_120},
-    {label: 'Horizon to Zenith',   value: VIEW_TYPE.HORIZON_TO_ZENITH},
-    {label: 'Zenith - 100° Span',  value: VIEW_TYPE.ZENITH_100},
-    {label: 'Moon - 1° Span',      value: VIEW_TYPE.MOON_CLOSEUP_1},
-    {label: 'Moon - 4° Span',      value: VIEW_TYPE.MOON_CLOSEUP_4},
-    {label: 'Moon - 8° Span',      value: VIEW_TYPE.MOON_CLOSEUP_8},
-    {label: 'Moon - 16° Span',     value: VIEW_TYPE.MOON_CLOSEUP_16},
-    {label: 'Sun - 1° Span',       value: VIEW_TYPE.SUN_CLOSEUP_1},
-    {label: 'Sun - 4° Span',       value: VIEW_TYPE.SUN_CLOSEUP_4},
-    {label: 'Sun - 8° Span',       value: VIEW_TYPE.SUN_CLOSEUP_8},
-    {label: 'Sun - 16° Span',      value: VIEW_TYPE.SUN_CLOSEUP_16},
+    { label: 'Full Sky - Flat',     value: VIEW_TYPE.FULL_SKY_FLAT },
+    { label: 'Full Sky - Dome',     value: VIEW_TYPE.FULL_SKY_DOME },
+    { label: 'Horizon - 45° Span',  value: VIEW_TYPE.HORIZON_45 },
+    { label: 'Horizon - 90° Span',  value: VIEW_TYPE.HORIZON_90 },
+    { label: 'Horizon - 120° Span', value: VIEW_TYPE.HORIZON_120 },
+    { label: 'Horizon to Zenith',   value: VIEW_TYPE.HORIZON_TO_ZENITH },
+    { label: 'Zenith - 100° Span',  value: VIEW_TYPE.ZENITH_100 },
+    { label: 'Moon - 1° Span',      value: VIEW_TYPE.MOON_CLOSEUP_1 },
+    { label: 'Moon - 4° Span',      value: VIEW_TYPE.MOON_CLOSEUP_4 },
+    { label: 'Moon - 8° Span',      value: VIEW_TYPE.MOON_CLOSEUP_8 },
+    { label: 'Moon - 16° Span',     value: VIEW_TYPE.MOON_CLOSEUP_16 },
+    { label: 'Sun - 1° Span',       value: VIEW_TYPE.SUN_CLOSEUP_1 },
+    { label: 'Sun - 4° Span',       value: VIEW_TYPE.SUN_CLOSEUP_4 },
+    { label: 'Sun - 8° Span',       value: VIEW_TYPE.SUN_CLOSEUP_8 },
+    { label: 'Sun - 16° Span',      value: VIEW_TYPE.SUN_CLOSEUP_16 },
   ];
 
   skyColors: SelectItem[] = [
-    {label: 'Sky Color: Basic',      value: SKY_COLOR.BASIC},
-    {label: 'Sky Color: Black',      value: SKY_COLOR.BLACK},
-    {label: 'Sky Color: Multicolor', value: SKY_COLOR.MULTI}
+    { label: 'Sky Color: Basic',      value: SKY_COLOR.BASIC },
+    { label: 'Sky Color: Black',      value: SKY_COLOR.BLACK },
+    { label: 'Sky Color: Multicolor', value: SKY_COLOR.MULTI }
   ];
 
   namesCategories: MenuItemPlus[] = [
-    {label: 'None',                  icon: UNCHECKED, property: null,
-      command: (event) => { this.toggleLabels(event); }},
-    {label: EM_DASH, icon: 'fas fa-fw'},
-    {label: 'Planets',               icon: CHECKED,   property: PROPERTY_LABEL_PLANETS,
-      command: (event) => { this.toggleLabels(event); }},
-    {label: 'Bright Stars',          icon: UNCHECKED, property: PROPERTY_LABEL_BRIGHT_STARS,
-      command: (event) => { this.toggleLabels(event); }},
-    {label: 'Stars',                 icon: UNCHECKED, property: PROPERTY_LABEL_STARS,
-      command: (event) => { this.toggleLabels(event); }},
-    {label: 'Constellations',        icon: UNCHECKED, property: PROPERTY_LABEL_CONSTELLATIONS,
-      command: (event) => { this.toggleLabels(event); }, disabled: true},
-    {label: EM_DASH, icon: 'fas fa-fw'},
-    {label: 'No Deep Sky Objects',   icon: CHECKED,   property: PROPERTY_LABEL_DSOS,
-      command: (event) => { this.toggleLabels(event); }, value: NO_DEEP_SKY},
-    {label: 'DSOs 4.0 and Brighter', icon: UNCHECKED, property: PROPERTY_LABEL_DSOS,
-      command: (event) => { this.toggleLabels(event); }, value: 4},
-    {label: 'DSOs 5.0 and Brighter', icon: UNCHECKED, property: PROPERTY_LABEL_DSOS,
-      command: (event) => { this.toggleLabels(event); }, value: 5},
-    {label: 'DSOs 6.0 and Brighter', icon: UNCHECKED, property: PROPERTY_LABEL_DSOS,
-      command: (event) => { this.toggleLabels(event); }, value: 6},
-    {label: 'All Deep Sky Objects',  icon: UNCHECKED, property: PROPERTY_LABEL_DSOS,
-      command: (event) => { this.toggleLabels(event); }, value: ALL_DEEP_SKY}
+    { label: 'None',                  icon: UNCHECKED, property: null,
+      command: (event): void => { this.toggleLabels(event); } },
+    { label: EM_DASH, icon: 'fas fa-fw' },
+    { label: 'Planets',               icon: CHECKED,   property: PROPERTY_LABEL_PLANETS,
+      command: (event): void => { this.toggleLabels(event); } },
+    { label: 'Bright Stars',          icon: UNCHECKED, property: PROPERTY_LABEL_BRIGHT_STARS,
+      command: (event): void => { this.toggleLabels(event); } },
+    { label: 'Stars',                 icon: UNCHECKED, property: PROPERTY_LABEL_STARS,
+      command: (event): void => { this.toggleLabels(event); } },
+    { label: 'Constellations',        icon: UNCHECKED, property: PROPERTY_LABEL_CONSTELLATIONS,
+      command: (event): void => { this.toggleLabels(event); }, disabled: true },
+    { label: EM_DASH, icon: 'fas fa-fw' },
+    { label: 'No Deep Sky Objects',   icon: CHECKED,   property: PROPERTY_LABEL_DSOS,
+      command: (event): void => { this.toggleLabels(event); }, value: NO_DEEP_SKY },
+    { label: 'DSOs 4.0 and Brighter', icon: UNCHECKED, property: PROPERTY_LABEL_DSOS,
+      command: (event): void => { this.toggleLabels(event); }, value: 4 },
+    { label: 'DSOs 5.0 and Brighter', icon: UNCHECKED, property: PROPERTY_LABEL_DSOS,
+      command: (event): void => { this.toggleLabels(event); }, value: 5 },
+    { label: 'DSOs 6.0 and Brighter', icon: UNCHECKED, property: PROPERTY_LABEL_DSOS,
+      command: (event): void => { this.toggleLabels(event); }, value: 6 },
+    { label: 'All Deep Sky Objects',  icon: UNCHECKED, property: PROPERTY_LABEL_DSOS,
+      command: (event): void => { this.toggleLabels(event); }, value: ALL_DEEP_SKY }
   ];
 
   constructor(appService: AppService) {
@@ -145,7 +145,7 @@ export class SvcSkyViewOptionsComponent extends SvcGenericOptionsComponent imple
   set viewType(value: VIEW_TYPE) {
     if (this._viewType !== value) {
       this._viewType = value;
-      this.appService.updateUserSetting({view: VIEW_SKY, property: PROPERTY_VIEW_TYPE, value: value, source: this});
+      this.appService.updateUserSetting({ view: VIEW_SKY, property: PROPERTY_VIEW_TYPE, value: value, source: this });
     }
   }
 
@@ -153,7 +153,7 @@ export class SvcSkyViewOptionsComponent extends SvcGenericOptionsComponent imple
   set skyColor(value: SKY_COLOR) {
     if (this._skyColor !== value) {
       this._skyColor = value;
-      this.appService.updateUserSetting({view: VIEW_SKY, property: PROPERTY_SKY_COLOR, value: value, source: this});
+      this.appService.updateUserSetting({ view: VIEW_SKY, property: PROPERTY_SKY_COLOR, value: value, source: this });
     }
   }
 
@@ -161,7 +161,7 @@ export class SvcSkyViewOptionsComponent extends SvcGenericOptionsComponent imple
   set refraction(value: boolean) {
     if (this._refraction !== value) {
       this._refraction = value;
-      this.appService.updateUserSetting({view: VIEW_SKY, property: PROPERTY_REFRACTION, value: value, source: this});
+      this.appService.updateUserSetting({ view: VIEW_SKY, property: PROPERTY_REFRACTION, value: value, source: this });
     }
   }
 
@@ -169,7 +169,7 @@ export class SvcSkyViewOptionsComponent extends SvcGenericOptionsComponent imple
   set celestial(value: boolean) {
     if (this._celestial !== value) {
       this._celestial = value;
-      this.appService.updateUserSetting({view: VIEW_SKY, property: PROPERTY_CELESTIAL_GRID, value: value, source: this});
+      this.appService.updateUserSetting({ view: VIEW_SKY, property: PROPERTY_CELESTIAL_GRID, value: value, source: this });
     }
   }
 
@@ -177,7 +177,7 @@ export class SvcSkyViewOptionsComponent extends SvcGenericOptionsComponent imple
   set ecliptic(value: boolean) {
     if (this._ecliptic !== value) {
       this._ecliptic = value;
-      this.appService.updateUserSetting({view: VIEW_SKY, property: PROPERTY_ECLIPTIC_GRID, value: value, source: this});
+      this.appService.updateUserSetting({ view: VIEW_SKY, property: PROPERTY_ECLIPTIC_GRID, value: value, source: this });
     }
   }
 
@@ -185,7 +185,7 @@ export class SvcSkyViewOptionsComponent extends SvcGenericOptionsComponent imple
   set pathOfSun(value: boolean) {
     if (this._pathOfSun !== value) {
       this._pathOfSun = value;
-      this.appService.updateUserSetting({view: VIEW_SKY, property: PROPERTY_PATH_OF_SUN, value: value, source: this});
+      this.appService.updateUserSetting({ view: VIEW_SKY, property: PROPERTY_PATH_OF_SUN, value: value, source: this });
     }
   }
 
@@ -193,7 +193,7 @@ export class SvcSkyViewOptionsComponent extends SvcGenericOptionsComponent imple
   set pathOfMoon(value: boolean) {
     if (this._pathOfMoon !== value) {
       this._pathOfMoon = value;
-      this.appService.updateUserSetting({view: VIEW_SKY, property: PROPERTY_PATH_OF_MOON, value: value, source: this});
+      this.appService.updateUserSetting({ view: VIEW_SKY, property: PROPERTY_PATH_OF_MOON, value: value, source: this });
     }
   }
 
@@ -201,7 +201,7 @@ export class SvcSkyViewOptionsComponent extends SvcGenericOptionsComponent imple
   set brightenStars(value: boolean) {
     if (this._brightenStars !== value) {
       this._brightenStars = value;
-      this.appService.updateUserSetting({view: VIEW_SKY, property: PROPERTY_BRIGHTEN_STARS , value: value, source: this});
+      this.appService.updateUserSetting({ view: VIEW_SKY, property: PROPERTY_BRIGHTEN_STARS, value: value, source: this });
     }
   }
 
@@ -209,8 +209,8 @@ export class SvcSkyViewOptionsComponent extends SvcGenericOptionsComponent imple
   set showConstellations(value: boolean) {
     if (this._showConstellations !== value) {
       this._showConstellations = value;
-      find(this.namesCategories, {property: PROPERTY_LABEL_CONSTELLATIONS}).disabled = !value;
-      this.appService.updateUserSetting({view: VIEW_SKY, property: PROPERTY_SHOW_CONSTELLATIONS, value: value, source: this});
+      find(this.namesCategories, { property: PROPERTY_LABEL_CONSTELLATIONS }).disabled = !value;
+      this.appService.updateUserSetting({ view: VIEW_SKY, property: PROPERTY_SHOW_CONSTELLATIONS, value: value, source: this });
     }
   }
 
@@ -218,7 +218,7 @@ export class SvcSkyViewOptionsComponent extends SvcGenericOptionsComponent imple
   set enlargeSunMoon(value: boolean) {
     if (this._enlargeSunMoon !== value) {
       this._enlargeSunMoon = value;
-      this.appService.updateUserSetting({view: VIEW_SKY, property: PROPERTY_ENLARGE_SUN_MOON, value: value, source: this});
+      this.appService.updateUserSetting({ view: VIEW_SKY, property: PROPERTY_ENLARGE_SUN_MOON, value: value, source: this });
     }
   }
 
@@ -226,7 +226,7 @@ export class SvcSkyViewOptionsComponent extends SvcGenericOptionsComponent imple
   set showMilkyWay(value: boolean) {
     if (this._showMilkyWay !== value) {
       this._showMilkyWay = value;
-      this.appService.updateUserSetting({view: VIEW_SKY, property: PROPERTY_SHOW_MILKY_WAY, value: value, source: this});
+      this.appService.updateUserSetting({ view: VIEW_SKY, property: PROPERTY_SHOW_MILKY_WAY, value: value, source: this });
     }
   }
 
@@ -272,13 +272,13 @@ export class SvcSkyViewOptionsComponent extends SvcGenericOptionsComponent imple
       }
 
       if (value !== undefined) {
-        this.appService.updateUserSetting({view: VIEW_SKY, property: item.property, value: value, source: this});
+        this.appService.updateUserSetting({ view: VIEW_SKY, property: item.property, value: value, source: this });
 
         if (property === PROPERTY_LABEL_STARS && value)
-          this.appService.updateUserSetting({view: VIEW_SKY, property: PROPERTY_LABEL_BRIGHT_STARS, value: false, source: this});
+          this.appService.updateUserSetting({ view: VIEW_SKY, property: PROPERTY_LABEL_BRIGHT_STARS, value: false, source: this });
 
         if (property === PROPERTY_LABEL_BRIGHT_STARS && value)
-          this.appService.updateUserSetting({view: VIEW_SKY, property: PROPERTY_LABEL_STARS, value: false, source: this});
+          this.appService.updateUserSetting({ view: VIEW_SKY, property: PROPERTY_LABEL_STARS, value: false, source: this });
       }
     }
 

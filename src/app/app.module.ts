@@ -159,7 +159,7 @@ export function busyConfigFactory(): BusyConfig {
     JpegCommentReader,
     KsTimeService,
     SvcAtlasService,
-    {provide: BusyConfig, useFactory: busyConfigFactory}
+    { provide: BusyConfig, useFactory: busyConfigFactory }
   ],
   bootstrap: [AppComponent],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]

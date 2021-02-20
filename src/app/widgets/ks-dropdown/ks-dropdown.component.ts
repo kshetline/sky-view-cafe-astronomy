@@ -10,7 +10,7 @@ const DROPDOWN_VALUE_ACCESSOR: any = {
   multi: true
 };
 
-const noop = () => {};
+const noop = (): void => {};
 
 @Component({
   selector: 'ks-dropdown',
@@ -135,7 +135,7 @@ export class KsDropdownComponent implements ControlValueAccessor, OnInit {
         let item: SelectItem;
 
         if (isString(option)) {
-          item = {label: option, value: option};
+          item = { label: option, value: option };
         }
         else {
           item = option;

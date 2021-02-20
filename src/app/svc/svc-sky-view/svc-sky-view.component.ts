@@ -25,7 +25,7 @@ import { MoonDrawer } from '../moon-drawer';
 
 export const  VIEW_SKY = 'sky';
 export const    PROPERTY_VIEW_TYPE = 'view_type';
-export enum       VIEW_TYPE {FULL_SKY_FLAT , FULL_SKY_DOME,
+export enum       VIEW_TYPE {FULL_SKY_FLAT, FULL_SKY_DOME,
                              HORIZON_45, HORIZON_90, HORIZON_120, HORIZON_TO_ZENITH,
                              ZENITH_100,
                              MOON_CLOSEUP_1, MOON_CLOSEUP_4, MOON_CLOSEUP_8, MOON_CLOSEUP_16,
@@ -155,7 +155,7 @@ export class SvcSkyViewComponent extends GenericSkyViewDirective implements Afte
       this.formatFacing();
 
       if (!this._trackSun)
-        this.appService.updateUserSetting({view: VIEW_SKY, property: PROPERTY_FACING, value: newFacing, source: this});
+        this.appService.updateUserSetting({ view: VIEW_SKY, property: PROPERTY_FACING, value: newFacing, source: this });
 
       if (redraw)
         this.draw();
@@ -189,7 +189,7 @@ export class SvcSkyViewComponent extends GenericSkyViewDirective implements Afte
       this.draw();
     },
     (reason) => console.error(reason))
-    .catch((reason) => console.error(reason));
+      .catch((reason) => console.error(reason));
 
     MilkyWay.getMilkyWay().then((milkyWay: MilkyWay) => {
       this.milkyWay = milkyWay;
@@ -198,7 +198,7 @@ export class SvcSkyViewComponent extends GenericSkyViewDirective implements Afte
         this.draw();
     },
     (reason) => console.error(reason))
-    .catch((reason) => console.error(reason));
+      .catch((reason) => console.error(reason));
 
     appService.getUserSettingUpdates((setting: UserSetting) => {
       if (setting.view === VIEW_SKY && setting.source !== this) {
@@ -391,7 +391,7 @@ export class SvcSkyViewComponent extends GenericSkyViewDirective implements Afte
 
       this.onResize();
       this.draw();
-      this.appService.updateUserSetting({view: VIEW_SKY, property: PROPERTY_VIEW_TYPE, value: value, source: this});
+      this.appService.updateUserSetting({ view: VIEW_SKY, property: PROPERTY_VIEW_TYPE, value: value, source: this });
     }
   }
 
@@ -405,7 +405,7 @@ export class SvcSkyViewComponent extends GenericSkyViewDirective implements Afte
   set trackSun(value: boolean) {
     if (this._trackSun !== value) {
       this._trackSun = value;
-      this.appService.updateUserSetting({view: VIEW_SKY, property: PROPERTY_TRACK_SUN, value: value, source: this});
+      this.appService.updateUserSetting({ view: VIEW_SKY, property: PROPERTY_TRACK_SUN, value: value, source: this });
       this.draw();
     }
   }
@@ -414,7 +414,7 @@ export class SvcSkyViewComponent extends GenericSkyViewDirective implements Afte
   set parallelToEcliptic(value: boolean) {
     if (this._parallelToEcliptic !== value) {
       this._parallelToEcliptic = value;
-      this.appService.updateUserSetting({view: VIEW_SKY, property: PROPERTY_PARALLEL_TO_ECLIPTIC, value: value, source: this});
+      this.appService.updateUserSetting({ view: VIEW_SKY, property: PROPERTY_PARALLEL_TO_ECLIPTIC, value: value, source: this });
       this.draw();
     }
   }
@@ -663,7 +663,7 @@ export class SvcSkyViewComponent extends GenericSkyViewDirective implements Afte
       return this.drawScaledPlanet(planet, pt, dc, colorOverride);
   }
 
-  protected drawScaledPlanet(planet: number, pt: Point, dc: DrawingContextSky, colorOverride?: string): void {
+  protected drawScaledPlanet(planet: number, pt: Point, dc: DrawingContextSky, _colorOverride?: string): void {
     const cx = pt.x;
     const cy = pt.y;
     let pSize = this.scaledRound(dc.ss.getAngularDiameter(planet, dc.jde, dc.skyObserver) * dc.pixelsPerArcSec);
@@ -754,8 +754,7 @@ export class SvcSkyViewComponent extends GenericSkyViewDirective implements Afte
 
     if (this.trackingPlanet !== NO_SELECTION &&
        dc.ss.getHorizontalPosition(this.trackingPlanet, dc.jdu, dc.skyObserver).altitude.degrees <
-        -REFRACTION_AT_HORIZON - AVG_SUN_MOON_RADIUS)
-    {
+        -REFRACTION_AT_HORIZON - AVG_SUN_MOON_RADIUS) {
       const ascent = dc.largeLabelFm.ascent;
       const message = '(' + dc.ss.getPlanetName(this.trackingPlanet) + ' is below the horizon)';
 
@@ -928,8 +927,8 @@ export class SvcSkyViewComponent extends GenericSkyViewDirective implements Afte
 
   protected sphericalToScreenXY(pos: SphericalPosition, dc: DrawingContextSky, subject: SUBJECT): Point {
     if (this.trackingPlanet !== NO_SELECTION) {
-      return {x: dc.xctr - pos.longitude.arcSeconds * dc.pixelsPerArcSec,
-              y: dc.yctr - pos.latitude.arcSeconds * dc.pixelsPerArcSec};
+      return { x: dc.xctr - pos.longitude.arcSeconds * dc.pixelsPerArcSec,
+               y: dc.yctr - pos.latitude.arcSeconds * dc.pixelsPerArcSec };
     }
     else
       return this.horizontalToScreenXY(pos.altitude.degrees, pos.azimuth.degrees, dc, subject);
@@ -1000,7 +999,7 @@ export class SvcSkyViewComponent extends GenericSkyViewDirective implements Afte
     return pt;
   }
 
-  protected drawSkyPlotLine(pt1: Point, pt2: Point, dc: DrawingContextPlanetary, subject: SUBJECT): boolean {
+  protected drawSkyPlotLine(pt1: Point, pt2: Point, dc: DrawingContextPlanetary, _subject: SUBJECT): boolean {
     if (this.viewMode === VIEW_MODE.HORIZON || this.trackingPlanet !== NO_SELECTION) {
       const deg_45 = ceil(dc.pixelsPerArcSec * 45.0 * 3600.0);
 
@@ -1053,8 +1052,7 @@ export class SvcSkyViewComponent extends GenericSkyViewDirective implements Afte
 
         if (ha > 0 && (alt1 >= this.minAlt - 0.1 || alt2 >= this.minAlt - 0.1) &&
             (this.viewMode === VIEW_MODE.HORIZON || this.trackingPlanet !== NO_SELECTION ||
-             (abs(pt2.x - pt1.x) < dc.radius && abs(pt2.y - pt1.y) < dc.radius)))
-        {
+             (abs(pt2.x - pt1.x) < dc.radius && abs(pt2.y - pt1.y) < dc.radius))) {
           this.drawSkyPlotLine(pt1, pt2, dc, NONPLANET.DEFAULT);
         }
 
@@ -1088,8 +1086,7 @@ export class SvcSkyViewComponent extends GenericSkyViewDirective implements Afte
 
         if (dec > -90 && (alt1 >= this.minAlt - 0.1 || alt2 >= this.minAlt - 0.1) &&
             (this.viewMode === VIEW_MODE.HORIZON || this.trackingPlanet !== NO_SELECTION ||
-             (abs(pt2.x - pt1.x) < dc.radius && abs(pt2.y - pt1.y) < dc.radius)))
-        {
+             (abs(pt2.x - pt1.x) < dc.radius && abs(pt2.y - pt1.y) < dc.radius))) {
           this.drawSkyPlotLine(pt1, pt2, dc, NONPLANET.DEFAULT);
 
           // Skip drawing 0h and 12h markers if ecliptic will be drawn...
@@ -1097,7 +1094,7 @@ export class SvcSkyViewComponent extends GenericSkyViewDirective implements Afte
           if (dec === 0 && ha % 30 === 0 && ((ha !== 0 && ha !== 180) || !this.showEclipticGrid)) {
             const pos = new SphericalPosition(az, alt1, Unit.DEGREES, Unit.DEGREES);
             const spotColor = (dc.skyColor ? dc.skyColor : getSkyColor(dc.sunPos, pos, dc.totality));
-            dc.gridLabels.push({pt: pt1, text: (ha / 15) + 'h', color: equatorColor, background: spotColor});
+            dc.gridLabels.push({ pt: pt1, text: (ha / 15) + 'h', color: equatorColor, background: spotColor });
           }
         }
 
@@ -1146,8 +1143,7 @@ export class SvcSkyViewComponent extends GenericSkyViewDirective implements Afte
 
         if (eLong > 0 && (alt1 >= this.minAlt - 0.1 || alt2 >= this.minAlt - 0.1) &&
             (this.viewMode === VIEW_MODE.HORIZON || this.trackingPlanet !== NO_SELECTION ||
-             (abs(pt2.x - pt1.x) < dc.radius && abs(pt2.y - pt1.y) < dc.radius)))
-        {
+             (abs(pt2.x - pt1.x) < dc.radius && abs(pt2.y - pt1.y) < dc.radius))) {
           this.drawSkyPlotLine(pt1, pt2, dc, NONPLANET.DEFAULT);
         }
 
@@ -1181,8 +1177,7 @@ export class SvcSkyViewComponent extends GenericSkyViewDirective implements Afte
 
         if (eLat > -90 && (alt1 >= this.minAlt - 0.1 || alt2 >= this.minAlt - 0.1) &&
             (this.viewMode === VIEW_MODE.HORIZON || this.trackingPlanet !== NO_SELECTION ||
-             (abs(pt2.x - pt1.x) < dc.radius && abs(pt2.y - pt1.y) < dc.radius)))
-        {
+             (abs(pt2.x - pt1.x) < dc.radius && abs(pt2.y - pt1.y) < dc.radius))) {
           this.drawSkyPlotLine(pt1, pt2, dc, NONPLANET.DEFAULT);
 
           // Skip drawing 0h and 12h markers if ecliptic will be drawn...
@@ -1190,7 +1185,7 @@ export class SvcSkyViewComponent extends GenericSkyViewDirective implements Afte
           if (eLat === 0 && eLong % 30 === 0) {
             const pos = new SphericalPosition(az, alt1, Unit.DEGREES, Unit.DEGREES);
             const spotColor = (dc.skyColor ? dc.skyColor : getSkyColor(dc.sunPos, pos, dc.totality));
-            dc.gridLabels.push({pt: pt1, text: eLong + '°', color: eclipticColor, background: spotColor});
+            dc.gridLabels.push({ pt: pt1, text: eLong + '°', color: eclipticColor, background: spotColor });
           }
         }
 
@@ -1225,8 +1220,7 @@ export class SvcSkyViewComponent extends GenericSkyViewDirective implements Afte
 
         if (haveLastPoint && (alt1 >= this.minAlt - 0.1 || alt2 >= this.minAlt - 0.1) &&
            (this.viewMode === VIEW_MODE.HORIZON ||
-            (abs(pt2.x - pt1.x) < dc.radius && abs(pt2.y - pt1.y) < dc.radius)))
-        {
+            (abs(pt2.x - pt1.x) < dc.radius && abs(pt2.y - pt1.y) < dc.radius))) {
           this.drawSkyPlotLine(pt1, pt2, dc, NONPLANET.DEFAULT);
         }
 

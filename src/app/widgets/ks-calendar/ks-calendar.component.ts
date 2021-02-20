@@ -14,7 +14,7 @@ export const KS_CALENDAR_VALUE_ACCESSOR: any = {
   multi: true
 };
 
-const noop = () => {};
+const noop = (): void => {};
 
 interface DateInfo extends YMDDate {
   text: string;
@@ -35,7 +35,7 @@ enum SelectMode { DAY, MONTH, YEAR, DECADE, CENTURY, MILLENNIUM, MODE_COUNT };
   providers: [KS_CALENDAR_VALUE_ACCESSOR]
 })
 export class KsCalendarComponent implements ControlValueAccessor, OnDestroy {
-  private ymd: YMDDate = {y: 2017, m: 1, d: 1};
+  private ymd: YMDDate = { y: 2017, m: 1, d: 1 };
   private _gregorianChange: GregorianChange;
   private _showDst = false;
   private _minYear = 1;
@@ -255,7 +255,7 @@ export class KsCalendarComponent implements ControlValueAccessor, OnDestroy {
 
   onDayClick(dateInfo: DateInfo): void {
     if (dateInfo.d > 0) {
-      this.value = {y: dateInfo.y, m: dateInfo.m, d: dateInfo.d};
+      this.value = { y: dateInfo.y, m: dateInfo.m, d: dateInfo.d };
       this.dayClick.emit(dateInfo.d);
     }
   }

@@ -13,7 +13,7 @@ export const SVC_TIME_EDITOR_VALUE_ACCESSOR: any = {
   multi: true
 };
 
-const noop = () => {};
+const noop = (): void => {};
 const platformNativeDateTime = (isIOS() || isAndroid() && isChrome());
 
 const NO_BREAK_SPACE = '\u00A0';
@@ -176,7 +176,7 @@ export class SvcTimeEditorComponent extends KsSequenceEditorComponent implements
     if (isIOS()) {
       const selection = this.getSelectionForTouchEvent(event);
 
-      format = (0 <= selection && selection < 11 ? 'date' : 'time');
+      format = (selection >= 0 && selection < 11 ? 'date' : 'time');
     }
 
     if (this.localTimeFormat !== format) {
@@ -257,6 +257,7 @@ export class SvcTimeEditorComponent extends KsSequenceEditorComponent implements
     }
   }
 
+  // eslint-disable-next-line accessor-pairs
   @Input() set gregorianChangeDate(value: string) {
     if (this._gregorianChangeDate !== value) {
       this._gregorianChangeDate = value;
@@ -310,27 +311,27 @@ export class SvcTimeEditorComponent extends KsSequenceEditorComponent implements
   }
 
   protected createDigits(): void {
-    this.items.push({value: NO_BREAK_SPACE, editable: true, selected:  false, fixedWidth: true }); //  0 - Year sign
-    this.items.push({value: 0,   editable: true,  selected: false }); //  1 - Year thousands
-    this.items.push({value: 0,   editable: true,  selected: false }); //  2 - Year hundreds
-    this.items.push({value: 0,   editable: true,  selected: false }); //  3 - Year tens
-    this.items.push({value: 0,   editable: true,  selected: false }); //  4 - Year units
-    this.items.push({value: '-', editable: false, selected: false });
-    this.items.push({value: 0,   editable: true,  selected: false }); //  6 - Month tens
-    this.items.push({value: 0,   editable: true,  selected: false }); //  7 - Month units
-    this.items.push({value: '-', editable: false, selected: false });
-    this.items.push({value: 0,   editable: true,  selected: false }); //  9 - Day tens
-    this.items.push({value: 0,   editable: true,  selected: false }); // 10 - Day units
-    this.items.push({value: ' ', editable: false, selected: false, fixedWidth: true });
-    this.items.push({value: 0,   editable: true,  selected: false }); // 12 - Hour tens
-    this.items.push({value: 0,   editable: true,  selected: false }); // 13 - Hour units
-    this.items.push({value: ':', editable: false, selected: false });
-    this.items.push({value: 0,   editable: true,  selected: false }); // 15 - Minute tens
-    this.items.push({value: 0,   editable: true,  selected: true  }); // 16 - Minute units
-    this.items.push({value: '\u2082\u200A', editable: false, selected: false, hidden: true }); // 17 - 2nd occurrence indicator (Subscript 2, hair space)
-    this.items.push({value: '+00:00', editable: false, selected: false, fixedWidth: true, indicator: true }); // 18 - UTC offset
-    this.items.push({value: NO_BREAK_SPACE, editable: false, selected: false, fixedWidth: true, indicator: true }); // 19 - DST indicator
-    this.items.push({value: THREE_PER_EM_SPACE, editable: false, selected: false});
+    this.items.push({ value: NO_BREAK_SPACE, editable: true, selected:  false, fixedWidth: true }); //  0 - Year sign
+    this.items.push({ value: 0,   editable: true,  selected: false }); //  1 - Year thousands
+    this.items.push({ value: 0,   editable: true,  selected: false }); //  2 - Year hundreds
+    this.items.push({ value: 0,   editable: true,  selected: false }); //  3 - Year tens
+    this.items.push({ value: 0,   editable: true,  selected: false }); //  4 - Year units
+    this.items.push({ value: '-', editable: false, selected: false });
+    this.items.push({ value: 0,   editable: true,  selected: false }); //  6 - Month tens
+    this.items.push({ value: 0,   editable: true,  selected: false }); //  7 - Month units
+    this.items.push({ value: '-', editable: false, selected: false });
+    this.items.push({ value: 0,   editable: true,  selected: false }); //  9 - Day tens
+    this.items.push({ value: 0,   editable: true,  selected: false }); // 10 - Day units
+    this.items.push({ value: ' ', editable: false, selected: false, fixedWidth: true });
+    this.items.push({ value: 0,   editable: true,  selected: false }); // 12 - Hour tens
+    this.items.push({ value: 0,   editable: true,  selected: false }); // 13 - Hour units
+    this.items.push({ value: ':', editable: false, selected: false });
+    this.items.push({ value: 0,   editable: true,  selected: false }); // 15 - Minute tens
+    this.items.push({ value: 0,   editable: true,  selected: true  }); // 16 - Minute units
+    this.items.push({ value: '\u2082\u200A', editable: false, selected: false, hidden: true }); // 17 - 2nd occurrence indicator (Subscript 2, hair space)
+    this.items.push({ value: '+00:00', editable: false, selected: false, fixedWidth: true, indicator: true }); // 18 - UTC offset
+    this.items.push({ value: NO_BREAK_SPACE, editable: false, selected: false, fixedWidth: true, indicator: true }); // 19 - DST indicator
+    this.items.push({ value: THREE_PER_EM_SPACE, editable: false, selected: false });
     this.selection = 16;
 
     this.updateDigits();
@@ -432,8 +433,8 @@ export class SvcTimeEditorComponent extends KsSequenceEditorComponent implements
     if (i[0].value === '-')
       year *= -1;
 
-    const month  = <number> i[ 6].value * 10 + <number> i[ 7].value;
-    const date   = <number> i[ 9].value * 10 + <number> i[10].value;
+    const month  = <number> i[6].value * 10 + <number> i[7].value;
+    const date   = <number> i[9].value * 10 + <number> i[10].value;
     const hour   = <number> i[12].value * 10 + <number> i[13].value;
     const minute = <number> i[15].value * 10 + <number> i[16].value;
 

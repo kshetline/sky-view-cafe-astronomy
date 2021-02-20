@@ -103,7 +103,7 @@ export abstract class GenericViewDirective implements AfterViewInit {
 
     GenericViewDirective._printing.next(mql.matches);
 
-    const printChange = () => {
+    const printChange = (): void => {
       console.log(mql.matches);
       GenericViewDirective._printing.next(mql.matches);
     };
@@ -342,7 +342,7 @@ export abstract class GenericViewDirective implements AfterViewInit {
   protected startTouchZoom(): void {
   }
 
-  protected touchZoom(zoomRatio: number): void {
+  protected touchZoom(_zoomRatio: number): void {
   }
 
   onMouseMove(event: MouseEvent): void {
@@ -478,10 +478,10 @@ export abstract class GenericViewDirective implements AfterViewInit {
     this.lastDrawStart = startTime;
   }
 
-  protected additionalDrawingSetup(dc: DrawingContext): void {
+  protected additionalDrawingSetup(_dc: DrawingContext): void {
   }
 
-  protected additionalDrawingSteps(dc: DrawingContext): void {
+  protected additionalDrawingSteps(_dc: DrawingContext): void {
   }
 
   protected abstract drawView(dc: DrawingContext): void;
@@ -499,7 +499,7 @@ export abstract class GenericViewDirective implements AfterViewInit {
   }
 
   // noinspection JSMethodCanBeStatic
-  protected withinPlot(x: number, y: number, dc?: DrawingContext): boolean {
+  protected withinPlot(_x: number, _y: number, _dc?: DrawingContext): boolean {
     return false;
   }
 

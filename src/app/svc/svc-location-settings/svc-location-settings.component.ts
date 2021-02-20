@@ -58,7 +58,7 @@ export class SvcLocationSettingsComponent {
 
   get locationName(): string { return this.app.location.name; }
   set locationName(newName: string) {
-    const newLocation = find(this.app.locations, {name: newName});
+    const newLocation = find(this.app.locations, { name: newName });
 
     if (newLocation)
       this.app.location = newLocation;
@@ -101,7 +101,7 @@ export class SvcLocationSettingsComponent {
     if (matches)
       this.selectedName = matches[1];
 
-    if (find(this.app.locations, {name: this.selectedName })) {
+    if (find(this.app.locations, { name: this.selectedName })) {
       this.confirmationService.confirm({
         key: 'save-confirm',
         message: `Are you sure you want to replace the existing "${this.selectedName}"?`,

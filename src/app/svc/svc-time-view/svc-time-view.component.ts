@@ -60,8 +60,8 @@ export class SvcTimeViewComponent {
     const jsDate = new Date(Date.UTC(wallTime.y, wallTime.m - 1, wallTime.d, wallTime.hrs, wallTime.min, 0));
 
     this.formattedLocalTime = jsDate.toLocaleString(undefined,
-      {timeZone: 'UTC', year: 'numeric', month: 'long', day: 'numeric', weekday: 'long',
-       hour: 'numeric', minute: '2-digit'}) + ' ' + dateTime.getTimezoneDisplayName();
+      { timeZone: 'UTC', year: 'numeric', month: 'long', day: 'numeric', weekday: 'long',
+        hour: 'numeric', minute: '2-digit' }) + ' ' + dateTime.getTimezoneDisplayName();
 
     this.formattedLst = this.skyObserver.getLocalHourAngle(jdu, true).toTimeString(FMT_MINS);
 

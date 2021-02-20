@@ -22,7 +22,7 @@ export class JpegCommentReader {
   }
 
   readComment(imageSrc: string): Promise<string> {
-    return this.httpClient.get(imageSrc, {responseType: 'arraybuffer'}).toPromise().then(data => {
+    return this.httpClient.get(imageSrc, { responseType: 'arraybuffer' }).toPromise().then(data => {
       const imageBytes = new Uint8ClampedArray(data);
 
       if (imageBytes.length < 10 ||

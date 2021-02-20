@@ -31,14 +31,10 @@ export const BRIGHT_STAR_LIMIT = 1.5;
   // stars anyway because of its importance for orientation.
 export const POLARIS_FK5_NUM = 907;
 
-// tslint:disable-next-line:variable-name
 const SCALE_WHERE_BRIGHTEST_STAR_IS_3x3 = 0.0026;
-// tslint:disable-next-line:variable-name
 const DIMMEST_ALLOWED_1x1_STAR_IMAGE_INDEX  = 33;
 // const DIMMEST_AT_SCALE_1x1_STAR_IMAGE_INDEX = 100;
-// tslint:disable-next-line:variable-name
 const BRIGHTEST_1x1_STAR_IMAGE_INDEX        = 500;
-// tslint:disable-next-line:variable-name
 const BRIGHTEST_3x3_STAR_IMAGE_INDEX        = 1500;
 
 const opacitiesOfWhite: string[] = [];
@@ -139,11 +135,11 @@ export abstract class GenericSkyViewDirective extends GenericPlanetaryViewDirect
       }
 
       if (!outOfView && starCount > 0 && this.labelConstellations) {
-        const pt = {x: this.scaledRound((minX + maxX) / 2), y: this.scaledRound((minY + maxY) / 2)};
+        const pt = { x: this.scaledRound((minX + maxX) / 2), y: this.scaledRound((minY + maxY) / 2) };
 
         if (this.withinPlot(pt.x, pt.y, dc)) {
           const name = dc.sc.getConstellationName(i).toUpperCase();
-          const li = {name: name, pt: pt, labelType: LABEL_TYPE.CONSTELLATION, bodyIndex: NO_MATCH};
+          const li = { name: name, pt: pt, labelType: LABEL_TYPE.CONSTELLATION, bodyIndex: NO_MATCH };
 
           if (this.lastMoveX < 0 || this.lastMoveY < 0)
             this.addLabel(li, dc);
@@ -204,8 +200,7 @@ export abstract class GenericSkyViewDirective extends GenericPlanetaryViewDirect
            (isDeepSky && vmag <= this.deepSkyLabelMagnitude) ||
            (!isDeepSky && this.labelStars) ||
            (!isDeepSky && this.labelBrightStars &&
-            (vmag <= BRIGHT_STAR_LIMIT || dc.sc.getFK5Number(i) === POLARIS_FK5_NUM))))
-      {
+            (vmag <= BRIGHT_STAR_LIMIT || dc.sc.getFK5Number(i) === POLARIS_FK5_NUM)))) {
         const fullName = dc.sc.getName(i);
         let name;
 
@@ -215,8 +210,8 @@ export abstract class GenericSkyViewDirective extends GenericPlanetaryViewDirect
           name = fullName;
 
         if (name)
-          this.addLabel({name: name, pt: pt, bodyIndex: bodyIndex,
-                         labelType: isDeepSky ? LABEL_TYPE.DSO : LABEL_TYPE.STAR}, dc);
+          this.addLabel({ name: name, pt: pt, bodyIndex: bodyIndex,
+                          labelType: isDeepSky ? LABEL_TYPE.DSO : LABEL_TYPE.STAR }, dc);
       }
     }
   }
@@ -225,10 +220,10 @@ export abstract class GenericSkyViewDirective extends GenericPlanetaryViewDirect
     let planets: SortablePlanet[] = [];
 
     this.planetsToDraw.forEach(p => {
-      planets.push({planet: p, pos: this.getSphericalPosition(p, dc)});
+      planets.push({ planet: p, pos: this.getSphericalPosition(p, dc) });
     });
 
-    planets = reverse(sortBy(planets, [(p: SortablePlanet) => (<SphericalPosition3D> p.pos).radius]));
+    planets = reverse(sortBy(planets, [(p: SortablePlanet): any => (<SphericalPosition3D> p.pos).radius]));
 
     for (const planet of planets) {
       const p = planet.planet;
@@ -241,8 +236,8 @@ export abstract class GenericSkyViewDirective extends GenericPlanetaryViewDirect
         this.qualifyBodyForSelection(pt, SELECTION_TYPE.PLANET, p, Boolean(pt), dc);
 
       if (pt && this.labelPlanets && this.withinToleranceOfPlot(pt.x, pt.y, 2, dc)) {
-          this.addLabel({name: dc.ss.getPlanetName(p), pt: pt, bodyIndex: p,
-                         labelType: LABEL_TYPE.PLANET}, dc);
+        this.addLabel({ name: dc.ss.getPlanetName(p), pt: pt, bodyIndex: p,
+                        labelType: LABEL_TYPE.PLANET }, dc);
       }
     }
   }

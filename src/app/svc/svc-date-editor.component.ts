@@ -14,7 +14,7 @@ export const SVC_DATE_EDITOR_VALUE_ACCESSOR: any = {
   multi: true
 };
 
-const noop = () => {};
+const noop = (): void => {};
 
 const NO_BREAK_SPACE = '\u00A0';
 
@@ -26,7 +26,7 @@ const NO_BREAK_SPACE = '\u00A0';
   providers: [SVC_DATE_EDITOR_VALUE_ACCESSOR]
 })
 export class SvcDateEditorComponent extends KsSequenceEditorComponent implements ControlValueAccessor {
-  private ymd: YMDDate = {y: 1970, m: 1, d: 1};
+  private ymd: YMDDate = { y: 1970, m: 1, d: 1 };
   private calendar = new Calendar();
   private onTouchedCallback: () => void = noop;
   private onChangeCallback: (_: any) => void = noop;
@@ -114,18 +114,18 @@ export class SvcDateEditorComponent extends KsSequenceEditorComponent implements
   }
 
   protected createDigits(): void {
-    this.items.push({value: NO_BREAK_SPACE, editable: true, selected:  false, fixedWidth: true }); //  0 - Year sign
-    this.items.push({value: 0,   editable: true,  selected: false }); //  1 - Year thousands
-    this.items.push({value: 0,   editable: true,  selected: false }); //  2 - Year hundreds
-    this.items.push({value: 0,   editable: true,  selected: false }); //  3 - Year tens
-    this.items.push({value: 0,   editable: true,  selected: false }); //  4 - Year units
-    this.items.push({value: '-', editable: false, selected: false });
-    this.items.push({value: 0,   editable: true,  selected: false }); //  6 - Month tens
-    this.items.push({value: 0,   editable: true,  selected: false }); //  7 - Month units
-    this.items.push({value: '-', editable: false, selected: false });
-    this.items.push({value: 0,   editable: true,  selected: false }); //  9 - Day tens
-    this.items.push({value: 0,   editable: true,  selected: false }); // 10 - Day units
-    this.items.push({value: NO_BREAK_SPACE, editable: false, selected: false, fixedWidth: true, indicator: true }); // 11 - blank
+    this.items.push({ value: NO_BREAK_SPACE, editable: true, selected:  false, fixedWidth: true }); //  0 - Year sign
+    this.items.push({ value: 0,   editable: true,  selected: false }); //  1 - Year thousands
+    this.items.push({ value: 0,   editable: true,  selected: false }); //  2 - Year hundreds
+    this.items.push({ value: 0,   editable: true,  selected: false }); //  3 - Year tens
+    this.items.push({ value: 0,   editable: true,  selected: false }); //  4 - Year units
+    this.items.push({ value: '-', editable: false, selected: false });
+    this.items.push({ value: 0,   editable: true,  selected: false }); //  6 - Month tens
+    this.items.push({ value: 0,   editable: true,  selected: false }); //  7 - Month units
+    this.items.push({ value: '-', editable: false, selected: false });
+    this.items.push({ value: 0,   editable: true,  selected: false }); //  9 - Day tens
+    this.items.push({ value: 0,   editable: true,  selected: false }); // 10 - Day units
+    this.items.push({ value: NO_BREAK_SPACE, editable: false, selected: false, fixedWidth: true, indicator: true }); // 11 - blank
     this.selection = 10;
 
     this.updateDigits();
@@ -141,11 +141,11 @@ export class SvcDateEditorComponent extends KsSequenceEditorComponent implements
     let reUpdate = false;
 
     if (ymd.y < this.minYear) {
-      ymd = {y: this.minYear, m: 1, d: 1};
+      ymd = { y: this.minYear, m: 1, d: 1 };
       reUpdate = true;
     }
     else if (ymd.y > this.maxYear) {
-      ymd = {y: this.maxYear, m: 12, d: 31};
+      ymd = { y: this.maxYear, m: 12, d: 31 };
       reUpdate = true;
     }
 
@@ -193,10 +193,10 @@ export class SvcDateEditorComponent extends KsSequenceEditorComponent implements
     if (i[0].value === '-')
       year *= -1;
 
-    const month  = <number> i[ 6].value * 10 + <number> i[ 7].value;
-    const date   = <number> i[ 9].value * 10 + <number> i[10].value;
+    const month  = <number> i[6].value * 10 + <number> i[7].value;
+    const date   = <number> i[9].value * 10 + <number> i[10].value;
 
-    return {y: year, m: month, d: date};
+    return { y: year, m: month, d: date };
   }
 
   protected increment(): void {
@@ -211,7 +211,7 @@ export class SvcDateEditorComponent extends KsSequenceEditorComponent implements
     let ymd = this.ymd;
     const rollingDate = new DateTime(0, Timezone.UT_ZONE, this.calendar.getGregorianChange());
 
-    rollingDate.wallTime = {y: ymd.y, m: ymd.m, d: ymd.d, hrs: 12, min: 0, sec: 0};
+    rollingDate.wallTime = { y: ymd.y, m: ymd.m, d: ymd.d, hrs: 12, min: 0, sec: 0 };
 
     let change = 0;
     let field = DateTimeField.YEAR;

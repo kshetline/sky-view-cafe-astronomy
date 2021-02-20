@@ -28,6 +28,7 @@ export class SvcChangeLocationDialogComponent {
       this.visibleChange.emit(isVisible);
     }
   }
+
   @Output() visibleChange: EventEmitter<any> = new EventEmitter();
 
   @Input() get latitude(): number { return this._latitude; }
@@ -37,6 +38,7 @@ export class SvcChangeLocationDialogComponent {
       this.formattedLatitude = formatLatitude(value);
     }
   }
+
   @Output() latitudeChange: EventEmitter<any> = new EventEmitter();
 
   @Input() get longitude(): number { return this._longitude; }
@@ -54,6 +56,7 @@ export class SvcChangeLocationDialogComponent {
         this.formattedHourOffset += '+' + (h >  9 ? '' : '0') +   h  + ':00';
     }
   }
+
   @Output() longitudeChange: EventEmitter<any> = new EventEmitter();
 
   @Input() get timezone(): string { return this._timezone; }
@@ -63,6 +66,7 @@ export class SvcChangeLocationDialogComponent {
       this.updateZoneChoice();
     }
   }
+
   @Output() timezoneChange: EventEmitter<any> = new EventEmitter();
 
   constructor(private appService: AppService) {

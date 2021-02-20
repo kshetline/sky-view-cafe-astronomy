@@ -29,42 +29,42 @@ export class SvcPreferencesDialogComponent {
 
 // SKY, ECLIPTIC, ORBITS, MOONS_GRS, INSOLATION, MAP, CALENDAR, TIME, TABLES
   tabs: MenuItemPlus[] = [
-    {label: 'Sky',        value: CurrentTab.SKY},
-    {label: 'Ecliptic',   value: CurrentTab.ECLIPTIC},
-    {label: 'Orbits',     value: CurrentTab.ORBITS},
-    {label: 'Moons/GRS',  value: CurrentTab.MOONS_GRS},
-    {label: 'Insolation', value: CurrentTab.INSOLATION},
-    {label: 'Map',        value: CurrentTab.MAP},
-    {label: 'Calendar',   value: CurrentTab.CALENDAR},
-    {label: 'Time',       value: CurrentTab.TIME},
-    {label: 'Tables',     value: CurrentTab.TABLES}
+    { label: 'Sky',        value: CurrentTab.SKY },
+    { label: 'Ecliptic',   value: CurrentTab.ECLIPTIC },
+    { label: 'Orbits',     value: CurrentTab.ORBITS },
+    { label: 'Moons/GRS',  value: CurrentTab.MOONS_GRS },
+    { label: 'Insolation', value: CurrentTab.INSOLATION },
+    { label: 'Map',        value: CurrentTab.MAP },
+    { label: 'Calendar',   value: CurrentTab.CALENDAR },
+    { label: 'Time',       value: CurrentTab.TIME },
+    { label: 'Tables',     value: CurrentTab.TABLES }
   ];
 
   azimuths: MenuItemPlus[] = [
-    {label: 'Due south is 0°, azimuth increases westward', value: false},
-    {label: 'Due north is 0°, azimuth increases eastward', value: true}
+    { label: 'Due south is 0°, azimuth increases westward', value: false },
+    { label: 'Due north is 0°, azimuth increases eastward', value: true }
   ];
 
   twilightOptions: MenuItemPlus[] = [
-    {label: 'Sun, degrees below horizon (1-18):', value: true},
-    {label: 'Minutes before sunrise/after sunset (4-160):', value: false}
+    { label: 'Sun, degrees below horizon (1-18):', value: true },
+    { label: 'Minutes before sunrise/after sunset (4-160):', value: false }
   ];
 
   calendarOptions: MenuItemPlus[] = [
-    {label: 'Gregorian calendar starting 1582-10-15', value: CalendarSetting.STANDARD},
-    {label: 'Pure Gregorian calendar', value: CalendarSetting.PURE_GREGORIAN},
-    {label: 'Pure Julian calendar', value: CalendarSetting.PURE_JULIAN},
-    {label: 'Gregorian calendar starting (YYYY-MM-DD):', value: CalendarSetting.CUSTOM_GCD}
+    { label: 'Gregorian calendar starting 1582-10-15', value: CalendarSetting.STANDARD },
+    { label: 'Pure Gregorian calendar', value: CalendarSetting.PURE_GREGORIAN },
+    { label: 'Pure Julian calendar', value: CalendarSetting.PURE_JULIAN },
+    { label: 'Gregorian calendar starting (YYYY-MM-DD):', value: CalendarSetting.CUSTOM_GCD }
   ];
 
   inkSaverOptions: MenuItemPlus[] = [
-    {label: 'Print black stars on white background, etc.', value: true},
-    {label: 'Print using on-screen colors', value: false}
+    { label: 'Print black stars on white background, etc.', value: true },
+    { label: 'Print using on-screen colors', value: false }
   ];
 
   dateTimeOptions: MenuItemPlus[] = [
-    {label: 'Use web browser\'s own date/time input method (no years BCE)', value: true},
-    {label: 'Use Sky View Café date/time input method', value: false}
+    { label: 'Use web browser\'s own date/time input method (no years BCE)', value: true },
+    { label: 'Use Sky View Café date/time input method', value: false }
   ];
 
   locations: string[] = [''];
@@ -74,7 +74,7 @@ export class SvcPreferencesDialogComponent {
   twilightValue = this.twilightDegrees;
   gcdVisible = true;
   gcdDisabled = true;
-  gcdValue: YMDDate = {y: 1582, m: 10, d: 15};
+  gcdValue: YMDDate = { y: 1582, m: 10, d: 15 };
   formValid = true;
   invalidMessage = '';
   inkSaver = true;
@@ -122,6 +122,7 @@ export class SvcPreferencesDialogComponent {
       }
     }
   }
+
   @Output() visibleChange: EventEmitter<any> = new EventEmitter();
 
   get twilightByDegrees(): boolean { return this._twilightByDegrees; }
@@ -143,7 +144,7 @@ export class SvcPreferencesDialogComponent {
         case CalendarSetting.STANDARD:
           this.gcdVisible = true;
           this.gcdDisabled = true;
-          this.gcdValue = {y: 1582, m: 10, d: 15};
+          this.gcdValue = { y: 1582, m: 10, d: 15 };
           break;
 
         case CalendarSetting.PURE_GREGORIAN:
@@ -163,6 +164,7 @@ export class SvcPreferencesDialogComponent {
       }
     }
   }
+
   @Output() calendarOptionChange = new EventEmitter();
 
   constructor(private appService: AppService) {
@@ -181,16 +183,16 @@ export class SvcPreferencesDialogComponent {
     if (!this.formValid)
       return;
 
-    this.appService.updateUserSetting({view: VIEW_APP, property: PROPERTY_NORTH_AZIMUTH, value: this.northAzimuth, source: this});
-    this.appService.updateUserSetting({view: VIEW_APP, property: PROPERTY_INK_SAVER, value: this.inkSaver, source: this});
-    this.appService.updateUserSetting({view: VIEW_APP, property: PROPERTY_NATIVE_DATE_TIME, value: this.nativeDateTime, source: this});
-    this.appService.updateUserSetting({view: VIEW_APP, property: PROPERTY_DEFAULT_TAB, value: this.defaultTab, source: this});
-    this.appService.updateUserSetting({view: VIEW_APP, property: PROPERTY_TWILIGHT_BY_DEGREES, value: this.twilightByDegrees, source: this});
+    this.appService.updateUserSetting({ view: VIEW_APP, property: PROPERTY_NORTH_AZIMUTH, value: this.northAzimuth, source: this });
+    this.appService.updateUserSetting({ view: VIEW_APP, property: PROPERTY_INK_SAVER, value: this.inkSaver, source: this });
+    this.appService.updateUserSetting({ view: VIEW_APP, property: PROPERTY_NATIVE_DATE_TIME, value: this.nativeDateTime, source: this });
+    this.appService.updateUserSetting({ view: VIEW_APP, property: PROPERTY_DEFAULT_TAB, value: this.defaultTab, source: this });
+    this.appService.updateUserSetting({ view: VIEW_APP, property: PROPERTY_TWILIGHT_BY_DEGREES, value: this.twilightByDegrees, source: this });
 
     if (this.twilightByDegrees)
-      this.appService.updateUserSetting({view: VIEW_APP, property: PROPERTY_TWILIGHT_DEGREES, value: this.twilightDegrees, source: this});
+      this.appService.updateUserSetting({ view: VIEW_APP, property: PROPERTY_TWILIGHT_DEGREES, value: this.twilightDegrees, source: this });
     else
-      this.appService.updateUserSetting({view: VIEW_APP, property: PROPERTY_TWILIGHT_MINUTES, value: this.twilightMinutes, source: this});
+      this.appService.updateUserSetting({ view: VIEW_APP, property: PROPERTY_TWILIGHT_MINUTES, value: this.twilightMinutes, source: this });
 
     let gcd = getISOFormatDate(this.gcdValue);
 
@@ -199,7 +201,7 @@ export class SvcPreferencesDialogComponent {
     else if (this.calendarOption === CalendarSetting.PURE_JULIAN)
       gcd = 'J';
 
-    this.appService.updateUserSetting({view: VIEW_APP, property: PROPERTY_GREGORIAN_CHANGE_DATE, value: gcd, source: this});
+    this.appService.updateUserSetting({ view: VIEW_APP, property: PROPERTY_GREGORIAN_CHANGE_DATE, value: gcd, source: this });
 
     if (this.defaultLocation)
       this.appService.setDefaultLocationByName(this.defaultLocation);
@@ -225,8 +227,8 @@ export class SvcPreferencesDialogComponent {
 
     const val = Number(value);
 
-    this.formValid = ((this.twilightByDegrees && 1 <= val && val <= 18) ||
-                      (!this.twilightByDegrees && 4 <= val && val <= 160));
+    this.formValid = ((this.twilightByDegrees && val >= 1 && val <= 18) ||
+                      (!this.twilightByDegrees && val >= 4 && val <= 160));
 
     if (!this.formValid) {
       if (value.length === 0)

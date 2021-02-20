@@ -10,10 +10,10 @@ export class SvcGenericOptionsComponent {
   asteroidsReady = false;
 
   additionals: SelectItem[] = [
-    {label: 'No asteroids or comets', value: ADDITIONALS.NONE},
-    {label: 'All asteroids', value: ADDITIONALS.ALL_ASTEROIDS},
-    {label: 'All comets', value: ADDITIONALS.ALL_COMETS},
-    {label: 'All asteroids and comets', value: ADDITIONALS.ALL}
+    { label: 'No asteroids or comets', value: ADDITIONALS.NONE },
+    { label: 'All asteroids', value: ADDITIONALS.ALL_ASTEROIDS },
+    { label: 'All comets', value: ADDITIONALS.ALL_COMETS },
+    { label: 'All asteroids and comets', value: ADDITIONALS.ALL }
   ];
 
   constructor(protected appService: AppService, protected viewName: string) {
@@ -41,7 +41,7 @@ export class SvcGenericOptionsComponent {
       if (matches)
         value = matches[1];
 
-      this.additionals.push({label: name, value: value});
+      this.additionals.push({ label: name, value: value });
     });
 
     // Force menu update.
@@ -52,7 +52,7 @@ export class SvcGenericOptionsComponent {
   set additional(value: ADDITIONALS | string) {
     if (this._additional !== value) {
       this._additional = value;
-      this.appService.updateUserSetting({view: this.viewName, property: PROPERTY_ADDITIONALS, value: value, source: this});
+      this.appService.updateUserSetting({ view: this.viewName, property: PROPERTY_ADDITIONALS, value: value, source: this });
     }
   }
 }

@@ -26,21 +26,21 @@ export class SvcOrbitViewOptionsComponent extends SvcGenericOptionsComponent imp
   private _anaglyphRC = true;
 
   extents: SelectItem[] = [
-    {label: 'Full solar system', value: 0},
-    {label: 'Out to Neptune', value: 1},
-    {label: 'Out to Saturn', value: 2},
-    {label: 'Out to Mars', value: 3}
+    { label: 'Full solar system', value: 0 },
+    { label: 'Out to Neptune', value: 1 },
+    { label: 'Out to Saturn', value: 2 },
+    { label: 'Out to Mars', value: 3 }
   ];
 
   centering: SelectItem[] = [
-    {label: 'Center on Sun', value: false},
-    {label: 'Center on Earth', value: true}
+    { label: 'Center on Sun', value: false },
+    { label: 'Center on Earth', value: true }
   ];
 
   unitsChoices: SelectItem[] = [
-    {label: 'Distance in AU', value: 0},
-    {label: 'Distance in km', value: 1},
-    {label: 'Distance in miles', value: 2}
+    { label: 'Distance in AU', value: 0 },
+    { label: 'Distance in km', value: 1 },
+    { label: 'Distance in miles', value: 2 }
   ];
 
   constructor(appService: AppService) {
@@ -82,7 +82,7 @@ export class SvcOrbitViewOptionsComponent extends SvcGenericOptionsComponent imp
   set extent(value: number) {
     if (this._extent !== value) {
       this._extent = value;
-      this.appService.updateUserSetting({view: VIEW_ORBITS, property: PROPERTY_EXTENT, value: value, source: this});
+      this.appService.updateUserSetting({ view: VIEW_ORBITS, property: PROPERTY_EXTENT, value: value, source: this });
     }
   }
 
@@ -90,7 +90,7 @@ export class SvcOrbitViewOptionsComponent extends SvcGenericOptionsComponent imp
   set centerEarth(value: boolean) {
     if (this._centerEarth !== value) {
       this._centerEarth = value;
-      this.appService.updateUserSetting({view: VIEW_ORBITS, property: PROPERTY_CENTER_EARTH, value: value, source: this});
+      this.appService.updateUserSetting({ view: VIEW_ORBITS, property: PROPERTY_CENTER_EARTH, value: value, source: this });
     }
   }
 
@@ -98,7 +98,7 @@ export class SvcOrbitViewOptionsComponent extends SvcGenericOptionsComponent imp
   set marqueeUnits(value: number) {
     if (this._marqueeUnits !== value) {
       this._marqueeUnits = value;
-      this.appService.updateUserSetting({view: VIEW_ORBITS, property: PROPERTY_MARQUEE_UNITS, value: value, source: this});
+      this.appService.updateUserSetting({ view: VIEW_ORBITS, property: PROPERTY_MARQUEE_UNITS, value: value, source: this });
     }
   }
 
@@ -106,7 +106,7 @@ export class SvcOrbitViewOptionsComponent extends SvcGenericOptionsComponent imp
   set showPaths(value: boolean) {
     if (this._showPaths !== value) {
       this._showPaths = value;
-      this.appService.updateUserSetting({view: VIEW_ORBITS, property: PROPERTY_SHOW_PATHS, value: value, source: this});
+      this.appService.updateUserSetting({ view: VIEW_ORBITS, property: PROPERTY_SHOW_PATHS, value: value, source: this });
     }
   }
 
@@ -114,7 +114,7 @@ export class SvcOrbitViewOptionsComponent extends SvcGenericOptionsComponent imp
   set showMarkers(value: boolean) {
     if (this._showMarkers !== value) {
       this._showMarkers = value;
-      this.appService.updateUserSetting({view: VIEW_ORBITS, property: PROPERTY_SHOW_MARKERS, value: value, source: this});
+      this.appService.updateUserSetting({ view: VIEW_ORBITS, property: PROPERTY_SHOW_MARKERS, value: value, source: this });
     }
   }
 
@@ -122,7 +122,7 @@ export class SvcOrbitViewOptionsComponent extends SvcGenericOptionsComponent imp
   set grayOrbits(value: boolean) {
     if (this._grayOrbits !== value) {
       this._grayOrbits = value;
-      this.appService.updateUserSetting({view: VIEW_ORBITS, property: PROPERTY_GRAY_ORBITS, value: value, source: this});
+      this.appService.updateUserSetting({ view: VIEW_ORBITS, property: PROPERTY_GRAY_ORBITS, value: value, source: this });
     }
   }
 
@@ -130,7 +130,7 @@ export class SvcOrbitViewOptionsComponent extends SvcGenericOptionsComponent imp
   set showNames(value: boolean) {
     if (this._showNames !== value) {
       this._showNames = value;
-      this.appService.updateUserSetting({view: VIEW_ORBITS, property: PROPERTY_SHOW_NAMES, value: value, source: this});
+      this.appService.updateUserSetting({ view: VIEW_ORBITS, property: PROPERTY_SHOW_NAMES, value: value, source: this });
     }
   }
 
@@ -138,7 +138,7 @@ export class SvcOrbitViewOptionsComponent extends SvcGenericOptionsComponent imp
   set reverseZoom(value: number) {
     if (this._reverseZoom !== value) {
       this._reverseZoom = value;
-      this.appService.updateUserSetting({view: VIEW_ORBITS, property: PROPERTY_ZOOM, value: ZOOM_STEPS - value, source: this});
+      this.appService.updateUserSetting({ view: VIEW_ORBITS, property: PROPERTY_ZOOM, value: ZOOM_STEPS - value, source: this });
     }
   }
 
@@ -146,7 +146,7 @@ export class SvcOrbitViewOptionsComponent extends SvcGenericOptionsComponent imp
   set anaglyph3d(value: boolean) {
     if (this._anaglyph3d !== value) {
       this._anaglyph3d = value;
-      this.appService.updateUserSetting({view: VIEW_ORBITS, property: PROPERTY_ANAGLYPH_3D, value: value, source: this});
+      this.appService.updateUserSetting({ view: VIEW_ORBITS, property: PROPERTY_ANAGLYPH_3D, value: value, source: this });
     }
   }
 
@@ -154,7 +154,7 @@ export class SvcOrbitViewOptionsComponent extends SvcGenericOptionsComponent imp
   set anaglyphRC(value: boolean) {
     if (this._anaglyphRC !== value) {
       this._anaglyphRC = value;
-      this.appService.updateUserSetting({view: VIEW_ORBITS, property: PROPERTY_ANAGLYPH_RC, value: value, source: this});
+      this.appService.updateUserSetting({ view: VIEW_ORBITS, property: PROPERTY_ANAGLYPH_RC, value: value, source: this });
     }
   }
 

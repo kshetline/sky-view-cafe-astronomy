@@ -10,7 +10,7 @@ export const SVC_ZONE_SELECTOR_VALUE_ACCESSOR: any = {
   multi: true,
 };
 
-const noop = () => {};
+const noop = (): void => {};
 
 const MISC_OPTION = '- Miscellaneous -';
 const UT_OPTION   = '- UTC hour offsets -';
@@ -71,6 +71,7 @@ export class SvcZoneSelectorComponent implements ControlValueAccessor, OnInit {
 
     return (this._region + '/' + this._subzone).replace(/ /g, '_');
   }
+
   set value(newZone: string) {
     if (this._value !== newZone) {
       this._value = newZone;
@@ -208,20 +209,18 @@ export class SvcZoneSelectorComponent implements ControlValueAccessor, OnInit {
       hourOffsets.push('UT' + (h === 0 ? '' : (h > 0 ? '+' : '-') + (habs < 10 ? '0' : '') + habs + ':00'));
     }
 
-    data.push({region: UT_OPTION,  subzones: hourOffsets});
-    data.push({region: OS_OPTION,  subzones: []});
-    data.push({region: LMT_OPTION, subzones: []});
+    data.push({ region: UT_OPTION,  subzones: hourOffsets });
+    data.push({ region: OS_OPTION,  subzones: [] });
+    data.push({ region: LMT_OPTION, subzones: [] });
 
     data.forEach((region: RegionAndSubzones) => {
-      if (region.region === MISC) {
+      if (region.region === MISC)
         region.region = MISC_OPTION;
-      }
 
       this.subzonesByRegion[region.region] = region.subzones;
 
-      if (region.region === this._region) {
+      if (region.region === this._region)
         this.subzones = region.subzones;
-      }
     });
 
     this.regions = data.map((region: RegionAndSubzones) => region.region);

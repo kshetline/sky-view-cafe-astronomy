@@ -8,7 +8,7 @@ const CHECKBOX_VALUE_ACCESSOR: any = {
   multi: true
 };
 
-const noop = () => {};
+const noop = (): void => {};
 
 @Component({
   selector: 'ks-checkbox',

@@ -91,19 +91,19 @@ export class SvcCalendarViewComponent implements AfterViewInit {
   private moonDrawer: MoonDrawer;
 
   private eventTypes: EventType[] = [
-    {planet: SUN, altitude: 0},
-    {planet: MOON,    altitude: 0},
-    {planet: MERCURY, altitude: 0},
-    {planet: VENUS,   altitude: 0},
-    {planet: MARS,    altitude: 0},
-    {planet: JUPITER, altitude: 0},
-    {planet: SATURN,  altitude: 0},
-    {planet: URANUS,  altitude: 0},
-    {planet: NEPTUNE, altitude: 0},
-    {planet: PLUTO,   altitude: 0},
-    {planet: SUN,     altitude: -6},
-    {planet: SUN,     altitude: -12},
-    {planet: SUN,     altitude: -18}
+    { planet: SUN, altitude: 0 },
+    { planet: MOON,    altitude: 0 },
+    { planet: MERCURY, altitude: 0 },
+    { planet: VENUS,   altitude: 0 },
+    { planet: MARS,    altitude: 0 },
+    { planet: JUPITER, altitude: 0 },
+    { planet: SATURN,  altitude: 0 },
+    { planet: URANUS,  altitude: 0 },
+    { planet: NEPTUNE, altitude: 0 },
+    { planet: PLUTO,   altitude: 0 },
+    { planet: SUN,     altitude: -6 },
+    { planet: SUN,     altitude: -12 },
+    { planet: SUN,     altitude: -18 }
   ];
 
   @ViewChild('wrapper', { static: true }) private wrapperRef: ElementRef;
@@ -198,7 +198,7 @@ export class SvcCalendarViewComponent implements AfterViewInit {
 
     setTimeout(() => this.appService.requestViewSettings(VIEW_CALENDAR));
 
-    GenericViewDirective.getPrintingUpdate(printing => {
+    GenericViewDirective.getPrintingUpdate(_printing => {
       this.doResize();
     });
   }
@@ -295,7 +295,7 @@ export class SvcCalendarViewComponent implements AfterViewInit {
         const dayLength = this.dateTime.getMinutesInDay(date.y, date.m, Math.abs(date.d));
         const row = Math.floor(index / 7);
         const col = index % 7;
-        const noon = new DateTime({y: date.y, m: date.m, d: Math.abs(date.d), hrs: 12, min: 0, sec: 0}, timezone, this.appService.gregorianChangeDate);
+        const noon = new DateTime({ y: date.y, m: date.m, d: Math.abs(date.d), hrs: 12, min: 0, sec: 0 }, timezone, this.appService.gregorianChangeDate);
 
         date.dayLength = dayLength;
         date.jdeNoon = UT_to_TDB(DateTime.julianDay(noon.utcTimeMillis));
@@ -389,7 +389,7 @@ export class SvcCalendarViewComponent implements AfterViewInit {
                 case WINTER_SOLSTICE: eventTime = 'WS ' + eventTime; break;
               }
 
-              date.equiSolstice = {text: eventTime, time: event.eventTime.utcTimeMillis};
+              date.equiSolstice = { text: eventTime, time: event.eventTime.utcTimeMillis };
             }
             else if (eventClass === RISE_SET_EVENT_BASE && (this.includeTransits || eventType !== TRANSIT_EVENT)) {
               switch (eventType) {
@@ -402,10 +402,10 @@ export class SvcCalendarViewComponent implements AfterViewInit {
                 case UNSEEN_ALL_DAY:  eventTime = 'set'; break;
               }
 
-              date.riseSetTimes.push({text: eventTime, time: event.eventTime.utcTimeMillis});
+              date.riseSetTimes.push({ text: eventTime, time: event.eventTime.utcTimeMillis });
             }
             else if (eventClass === PHASE_EVENT_BASE && this.keyMoonPhases) {
-              date.phaseTime = {text: eventTime, time: event.eventTime.utcTimeMillis};
+              date.phaseTime = { text: eventTime, time: event.eventTime.utcTimeMillis };
 
               switch (eventType) {
                 case NEW_MOON:      date.phaseImage = '/assets/resources/new_moon.svg'; break;
@@ -428,7 +428,7 @@ export class SvcCalendarViewComponent implements AfterViewInit {
     if (month === undefined)
       this.appService.time = yearOrMillis;
     else {
-      const newDate = new DateTime({y: yearOrMillis, m: month, d: day, hrs: 12, min: 0, sec: 0}, this.dateTime.timezone, this.appService.gregorianChangeDate);
+      const newDate = new DateTime({ y: yearOrMillis, m: month, d: day, hrs: 12, min: 0, sec: 0 }, this.dateTime.timezone, this.appService.gregorianChangeDate);
       this.appService.time = newDate.utcTimeMillis;
     }
   }

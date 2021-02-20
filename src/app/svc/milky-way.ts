@@ -11,7 +11,7 @@ export class MilkyWay {
       else {
         const image = new Image();
 
-        image.onload = () => {
+        image.onload = (): void => {
           const canvas = <HTMLCanvasElement> document.createElement('canvas');
 
           canvas.width = image.width;
@@ -24,8 +24,8 @@ export class MilkyWay {
 
           resolve(new MilkyWay());
         };
-        image.onerror = () => {
-          reject('Milky Way image failed to load from: ' + image.src);
+        image.onerror = (): void => {
+          reject(new Error('Milky Way image failed to load from: ' + image.src));
         };
 
         image.src = 'assets/resources/milky_way.jpg';

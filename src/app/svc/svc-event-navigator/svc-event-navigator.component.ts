@@ -34,51 +34,52 @@ export class SvcEventNavigatorComponent implements AfterViewInit, OnDestroy {
   private lastGrsLongitude = JupiterInfo.DEFAULT_GRS_LONG.degrees;
 
   events: SelectItem[] = [
-    {label: 'Rising',                  value: RISE_EVENT},
-    {label: 'Transit',                 value: TRANSIT_EVENT},
-    {label: 'Setting - 1 min.',        value: SET_EVENT_MINUS_1_MIN},
-    {label: 'Setting',                 value: SET_EVENT},
-    {label: '-', value: -1},
-    {label: 'Morning twilight begins', value: TWILIGHT_BEGINS},
-    {label: 'Evening twilight ends',   value: TWILIGHT_ENDS},
-    {label: '-', value: -1},
-    {label: 'New moon',                value: NEW_MOON},
-    {label: 'First quarter',           value: FIRST_QUARTER},
-    {label: 'Full moon',               value: FULL_MOON},
-    {label: 'Last quarter',            value: LAST_QUARTER},
-    {label: '-', value: -1},
-    {label: 'Spring equinox',          value: SPRING_EQUINOX},
-    {label: 'Summer solstice',         value: SUMMER_SOLSTICE},
-    {label: 'Fall equinox',            value: FALL_EQUINOX},
-    {label: 'Winter solstice',         value: WINTER_SOLSTICE},
-    {label: '-', value: -1},
-    {label: 'Lunar eclipse',           value: LUNAR_ECLIPSE},
-    {label: 'Solar eclipse',           value: SOLAR_ECLIPSE},
-    {label: '-', value: -1},
-    {label: 'Opposition',              value: OPPOSITION},
-    {label: 'Superior conjunction',    value: SUPERIOR_CONJUNCTION},
-    {label: 'Inferior conjunction',    value: INFERIOR_CONJUNCTION},
-    {label: 'Greatest elongation',     value: GREATEST_ELONGATION},
-    {label: '-', value: -1},
-    {label: 'Perihelion',              value: PERIHELION},
-    {label: 'Aphelion',                value: APHELION},
-    {label: 'Quadrature',              value: QUADRATURE},
-    {label: '-', value: -1},
-    {label: 'Galilean moon',           value: GALILEAN_MOON_EVENT},
-    {label: 'GRS transit',             value: GRS_TRANSIT_EVENT}
+    { label: 'Rising',                  value: RISE_EVENT },
+    { label: 'Transit',                 value: TRANSIT_EVENT },
+    { label: 'Setting - 1 min.',        value: SET_EVENT_MINUS_1_MIN },
+    { label: 'Setting',                 value: SET_EVENT },
+    { label: '-', value: -1 },
+    { label: 'Morning twilight begins', value: TWILIGHT_BEGINS },
+    { label: 'Evening twilight ends',   value: TWILIGHT_ENDS },
+    { label: '-', value: -1 },
+    { label: 'New moon',                value: NEW_MOON },
+    { label: 'First quarter',           value: FIRST_QUARTER },
+    { label: 'Full moon',               value: FULL_MOON },
+    { label: 'Last quarter',            value: LAST_QUARTER },
+    { label: '-', value: -1 },
+    { label: 'Spring equinox',          value: SPRING_EQUINOX },
+    { label: 'Summer solstice',         value: SUMMER_SOLSTICE },
+    { label: 'Fall equinox',            value: FALL_EQUINOX },
+    { label: 'Winter solstice',         value: WINTER_SOLSTICE },
+    { label: '-', value: -1 },
+    { label: 'Lunar eclipse',           value: LUNAR_ECLIPSE },
+    { label: 'Solar eclipse',           value: SOLAR_ECLIPSE },
+    { label: '-', value: -1 },
+    { label: 'Opposition',              value: OPPOSITION },
+    { label: 'Superior conjunction',    value: SUPERIOR_CONJUNCTION },
+    { label: 'Inferior conjunction',    value: INFERIOR_CONJUNCTION },
+    { label: 'Greatest elongation',     value: GREATEST_ELONGATION },
+    { label: '-', value: -1 },
+    { label: 'Perihelion',              value: PERIHELION },
+    { label: 'Aphelion',                value: APHELION },
+    { label: 'Quadrature',              value: QUADRATURE },
+    { label: '-', value: -1 },
+    { label: 'Galilean moon',           value: GALILEAN_MOON_EVENT },
+    { label: 'GRS transit',             value: GRS_TRANSIT_EVENT }
   ];
+
   planetChoices: SelectItem[] = [
-    {label: 'of Sun',     value: SUN},
-    {label: 'of Moon',    value: MOON},
-    {label: 'of Mercury', value: MERCURY},
-    {label: 'of Venus',   value: VENUS},
-    {label: 'of Earth',   value: EARTH},
-    {label: 'of Mars',    value: MARS},
-    {label: 'of Jupiter', value: JUPITER},
-    {label: 'of Saturn',  value: SATURN},
-    {label: 'of Uranus',  value: URANUS},
-    {label: 'of Neptune', value: NEPTUNE},
-    {label: 'of Pluto',   value: PLUTO}
+    { label: 'of Sun',     value: SUN },
+    { label: 'of Moon',    value: MOON },
+    { label: 'of Mercury', value: MERCURY },
+    { label: 'of Venus',   value: VENUS },
+    { label: 'of Earth',   value: EARTH },
+    { label: 'of Mars',    value: MARS },
+    { label: 'of Jupiter', value: JUPITER },
+    { label: 'of Saturn',  value: SATURN },
+    { label: 'of Uranus',  value: URANUS },
+    { label: 'of Neptune', value: NEPTUNE },
+    { label: 'of Pluto',   value: PLUTO }
   ];
 
   @Input() disabled = false;
@@ -224,7 +225,7 @@ export class SvcEventNavigatorComponent implements AfterViewInit, OnDestroy {
           firstIncluded = planet.value;
       }
       else
-        this.planets.push({label: '\u00A0', value: badValue--});
+        this.planets.push({ label: '\u00A0', value: badValue-- });
     }
 
     if (firstIncluded >= 0 && this.planets[this._selectedPlanet].value < 0)
@@ -279,7 +280,7 @@ export class SvcEventNavigatorComponent implements AfterViewInit, OnDestroy {
 
       if (message) {
         this.messageService.clear('navigator');
-        this.messageService.add({key: 'navigator', severity: 'info', summary: '', detail: message, life: 6000});
+        this.messageService.add({ key: 'navigator', severity: 'info', summary: '', detail: message, life: 6000 });
       }
     }
   }

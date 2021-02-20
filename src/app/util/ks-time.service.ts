@@ -37,12 +37,12 @@ export class KsTimeService {
       timeoutValue = 60000;
 
     if (this.hostname === 'localhost' || this.port === 3000) {
-      return this.httpClient.jsonp<ZoneForLocation>
-        ('https://test.skyviewcafe.com/zoneloc/?' + params, 'callback').pipe(timeout(timeoutValue)).toPromise();
+      return this.httpClient.jsonp<ZoneForLocation>(
+        'https://test.skyviewcafe.com/zoneloc/?' + params, 'callback').pipe(timeout(timeoutValue)).toPromise();
     }
     else if (this.hostname === '127.0.0.1') {
-      return this.httpClient.jsonp<ZoneForLocation>
-        ('http://localhost:8088/zoneloc/?' + params, 'callback').pipe(timeout(timeoutValue)).toPromise();
+      return this.httpClient.jsonp<ZoneForLocation>(
+        'http://localhost:8088/zoneloc/?' + params, 'callback').pipe(timeout(timeoutValue)).toPromise();
     }
     else {
       return this.httpClient.get<ZoneForLocation>('/zoneloc/?' + params).pipe(timeout(timeoutValue)).toPromise();

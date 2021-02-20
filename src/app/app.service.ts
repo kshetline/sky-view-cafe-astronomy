@@ -90,7 +90,7 @@ interface IpLocation {
 
 @Injectable()
 export class AppService {
-  private _appEvent = new BehaviorSubject<AppEvent>({name: 'non-event'});
+  private _appEvent = new BehaviorSubject<AppEvent>({ name: 'non-event' });
   private appEventObserver: Observable<AppEvent> = this._appEvent.asObservable();
   private _time = new BehaviorSubject<number>(currentMinuteMillis());
   private timeObserver: Observable<number> = this._time.asObservable();
@@ -187,6 +187,7 @@ export class AppService {
   getAppEventUpdates(callback: (appEvent: AppEvent) => void): Subscription {
     return this.appEventObserver.subscribe(callback);
   }
+
   sendAppEvent(appEventOrName: AppEvent | string, value?: any): void {
     if (isString(appEventOrName))
       this._appEvent.next({ name: appEventOrName, value: value });
@@ -199,6 +200,7 @@ export class AppService {
     if (this._time.getValue() !== newTime)
       this._time.next(newTime);
   }
+
   getTimeUpdates(callback: (time: number) => void): Subscription {
     return this.timeObserver.subscribe(callback);
   }
@@ -208,6 +210,7 @@ export class AppService {
     if (!isEqual(this._location.getValue(), newObserver))
       this._location.next(newObserver);
   }
+
   getLocationUpdates(callback: (observer: Location) => void): Subscription {
     return this.locationObserver.subscribe(callback);
   }
@@ -296,6 +299,7 @@ export class AppService {
       this.router.navigate(['/' + tabNames[this._currentTab.getValue()]]);
     }
   }
+
   getCurrentTabUpdates(callback: (tabIndex: CurrentTab) => void): Subscription {
     return this.currentTabObserver.subscribe(callback);
   }
@@ -303,6 +307,7 @@ export class AppService {
   getUserSettingUpdates(callback: (setting: UserSetting) => void): Subscription {
     return this.settingsObserver.subscribe(callback);
   }
+
   updateUserSetting(setting: UserSetting): void {
     let viewSettings = this.allSettings[setting.view];
 
@@ -317,12 +322,13 @@ export class AppService {
 
     this.settingsSource.next(setting);
   }
+
   requestViewSettings(view: string): void {
     const viewSettings = this.allSettings[view];
 
     if (viewSettings) {
       forEach(viewSettings, (value, property) => {
-        const userSetting = {view: view, property: property, value: value, source: this};
+        const userSetting = { view: view, property: property, value: value, source: this };
         this.settingsSource.next(userSetting);
       });
     }
@@ -363,11 +369,11 @@ export class AppService {
   get gregorianChangeDate(): string { return this._gcDate; }
 
   get calendarType(): CalendarSetting {
-    if ('1582-10-15' === this._gcDate)
+    if (this._gcDate === '1582-10-15')
       return CalendarSetting.STANDARD;
-    else if ('g' === this._gcDate || 'G' === this._gcDate)
+    else if (this._gcDate === 'g' || this._gcDate === 'G')
       return CalendarSetting.PURE_GREGORIAN;
-    else if ('j' === this._gcDate || 'J' === this._gcDate)
+    else if (this._gcDate === 'j' || this._gcDate === 'J')
       return CalendarSetting.PURE_JULIAN;
     else
       return CalendarSetting.CUSTOM_GCD;

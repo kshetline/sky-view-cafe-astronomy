@@ -56,6 +56,7 @@ export class SvcAtlasDialogComponent {
       this.extendedChange.emit(isExtended);
     }
   }
+
   @Output() extendedChange: EventEmitter<any> = new EventEmitter();
 
   @Input() get visible(): boolean { return this._visible; }
@@ -86,6 +87,7 @@ export class SvcAtlasDialogComponent {
       }
     }
   }
+
   @Output() visibleChange: EventEmitter<any> = new EventEmitter();
 
   @Input() get selection(): LocationInfo { return this._selection; }
@@ -96,6 +98,7 @@ export class SvcAtlasDialogComponent {
       this.showMap();
     }
   }
+
   @Output() selectionChange: EventEmitter<any> = new EventEmitter();
 
   @Input() get state(): string { return this._state; }
@@ -105,11 +108,12 @@ export class SvcAtlasDialogComponent {
       this.stateChange.emit(this._state);
     }
   }
+
   @Output() stateChange: EventEmitter<any> = new EventEmitter();
 
   private static stripNameQualifiers(name: string): string {
     while (true) {
-      let left, right: number;
+      let left: number;
 
       left = name.indexOf(' (');
 
@@ -119,7 +123,7 @@ export class SvcAtlasDialogComponent {
       if (left < 0)
         break;
 
-      right = name.indexOf(')', left + 1);
+      const right = name.indexOf(')', left + 1);
 
       if (right > 0)
         name = name.substring(0, left) + name.substring(right + 1);
@@ -173,7 +177,7 @@ export class SvcAtlasDialogComponent {
     this.searching = true;
     this.obscureMap();
 
-    const searchWithID = (id: number) => {
+    const searchWithID = (id: number): void => {
       this.busy = this.atlasService.search(query, this._extended).then((results: AtlasResults) => {
         if (this.searchId !== id) // Bail out if this is an old, abandoned search.
           return;
@@ -183,9 +187,9 @@ export class SvcAtlasDialogComponent {
         this.searching = false;
 
         if (results.error)
-          this.messageService.add({key: 'general', severity: 'error', detail: results.error});
+          this.messageService.add({ key: 'general', severity: 'error', detail: results.error });
         else if (results.warning)
-          this.messageService.add({key: 'general', severity: 'warn', detail: results.warning});
+          this.messageService.add({ key: 'general', severity: 'warn', detail: results.warning });
 
         this.locations = results.matches.map((location: AtlasLocation): LocationInfo => {
           return {
@@ -207,7 +211,7 @@ export class SvcAtlasDialogComponent {
           return;
 
         this.emptyMessage = '';
-        this.messageService.add({key: 'general', severity: 'error', detail: 'Search failed. Please try again later.'});
+        this.messageService.add({ key: 'general', severity: 'error', detail: 'Search failed. Please try again later.' });
         this.searching = false;
       });
     };

@@ -15,8 +15,8 @@ export class SvcInsolationViewOptionsComponent implements AfterViewInit {
   private _showMoonlight = false;
 
   centerOptions: SelectItem[] = [
-    {label: 'Center on midnight', value: true},
-    {label: 'Center on noon', value: false}
+    { label: 'Center on midnight', value: true },
+    { label: 'Center on noon', value: false }
   ];
 
   constructor(private appService: AppService) {
@@ -38,7 +38,7 @@ export class SvcInsolationViewOptionsComponent implements AfterViewInit {
   set centerMidnight(value: boolean) {
     if (this._centerMidnight !== value) {
       this._centerMidnight = value;
-      this.appService.updateUserSetting({view: VIEW_INSOLATION, property: PROPERTY_CENTER_MIDNIGHT, value: value, source: this});
+      this.appService.updateUserSetting({ view: VIEW_INSOLATION, property: PROPERTY_CENTER_MIDNIGHT, value: value, source: this });
     }
   }
 
@@ -46,7 +46,7 @@ export class SvcInsolationViewOptionsComponent implements AfterViewInit {
   set showMoonlight(value: boolean) {
     if (this._showMoonlight !== value) {
       this._showMoonlight = value;
-      this.appService.updateUserSetting({view: VIEW_INSOLATION, property: PROPERTY_SHOW_MOONLIGHT, value: value, source: this});
+      this.appService.updateUserSetting({ view: VIEW_INSOLATION, property: PROPERTY_SHOW_MOONLIGHT, value: value, source: this });
     }
   }
 }

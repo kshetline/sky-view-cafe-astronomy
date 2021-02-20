@@ -22,7 +22,7 @@ export class AstroDataService implements IAstroDataService {
     else if (AstroDataService.starDataPromise)
       return AstroDataService.starDataPromise;
 
-    AstroDataService.starDataPromise = this.httpClient.get('/assets/resources/stars.dat', {responseType: 'arraybuffer'}).toPromise().then(data => {
+    AstroDataService.starDataPromise = this.httpClient.get('/assets/resources/stars.dat', { responseType: 'arraybuffer' }).toPromise().then(data => {
       AstroDataService.starData = data;
 
       return AstroDataService.starData;
@@ -37,7 +37,7 @@ export class AstroDataService implements IAstroDataService {
     else if (AstroDataService.grsDataPromise)
       return AstroDataService.grsDataPromise;
 
-    AstroDataService.grsDataPromise = this.httpClient.get('/assets/resources/grs_longitude.txt', {responseType: 'arraybuffer'}).toPromise().then(data => {
+    AstroDataService.grsDataPromise = this.httpClient.get('/assets/resources/grs_longitude.txt', { responseType: 'arraybuffer' }).toPromise().then(data => {
       AstroDataService.grsData = data;
 
       return AstroDataService.grsData;

@@ -29,7 +29,7 @@ export abstract class PlanetDrawer {
     }
   }
 
-  protected convertTimeToRotation(time_JDE: number): number {
+  protected convertTimeToRotation(_time_JDE: number): number {
     return 0.0;
   }
 

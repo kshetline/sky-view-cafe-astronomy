@@ -17,6 +17,7 @@ export class SvcNativeDateTimeDialogComponent {
       this.visibleChange.emit(isVisible);
     }
   }
+
   @Output() visibleChange: EventEmitter<any> = new EventEmitter();
 
   nativeDateTime = this.app.nativeDateTime;
@@ -35,8 +36,8 @@ export class SvcNativeDateTimeDialogComponent {
   }
 
   setPreferences(): void {
-    this.app.updateUserSetting({view: VIEW_APP, property: PROPERTY_WARNING_NATIVE_DATE_TIME, value: true, source: this});
-    this.app.updateUserSetting({view: VIEW_APP, property: PROPERTY_NATIVE_DATE_TIME, value: this.nativeDateTime, source: this});
+    this.app.updateUserSetting({ view: VIEW_APP, property: PROPERTY_WARNING_NATIVE_DATE_TIME, value: true, source: this });
+    this.app.updateUserSetting({ view: VIEW_APP, property: PROPERTY_NATIVE_DATE_TIME, value: this.nativeDateTime, source: this });
     this.visible = false;
   }
 }

@@ -14,7 +14,7 @@ export const DDD_MM_EW = 'DDD_MM_EW';
 export const HH_MM     = 'HH_MM';
 export const PN_DDD_D  = 'PN_DDD_D';
 
-const noop = () => {};
+const noop = (): void => {};
 
 const NO_BREAK_SPACE = '\u00A0';
 
@@ -49,6 +49,7 @@ export class SvcAngleEditorComponent extends KsSequenceEditorComponent implement
     else
       return this.angle;
   }
+
   set value(newAngle: number) {
     if (this.angle !== newAngle) {
       this.angle = newAngle;
@@ -96,7 +97,7 @@ export class SvcAngleEditorComponent extends KsSequenceEditorComponent implement
 
     this.items = [];
 
-    this.items.push({value: NO_BREAK_SPACE, editable: false, selected: false }); // Padding.
+    this.items.push({ value: NO_BREAK_SPACE, editable: false, selected: false }); // Padding.
 
     switch (this._format) {
       case DD_MM_NS:
@@ -126,7 +127,7 @@ export class SvcAngleEditorComponent extends KsSequenceEditorComponent implement
         this.maxNormalMagnitude = 180;
         this.wrapAtMax = true;
 
-        this.items.push({value: 0, editable: true, selected: true }); // Hundreds of degrees.
+        this.items.push({ value: 0, editable: true, selected: true }); // Hundreds of degrees.
         selectionPending = false;
         break;
 
@@ -157,26 +158,26 @@ export class SvcAngleEditorComponent extends KsSequenceEditorComponent implement
         this.maxNormalMagnitude = 180;
         this.wrapAtMax = true;
 
-        this.items.push({value: '+', editable: true, selected: true, fixedWidth: true }); // sign
-        this.items.push({value: 0, editable: true, selected: false }); // Hundreds of degrees.
+        this.items.push({ value: '+', editable: true, selected: true, fixedWidth: true }); // sign
+        this.items.push({ value: 0, editable: true, selected: false }); // Hundreds of degrees.
         selectionPending = false;
         break;
     }
 
-    this.items.push({value: 0, editable: true, selected: selectionPending }); // Tens of degrees/hours.
-    this.items.push({value: 0, editable: true, selected: false }); // Units of degrees/hours.
-    this.items.push({value: firstDelim, editable: false, selected: false }); // First delimiter.
-    this.items.push({value: 0, editable: true, selected: false }); // Tens of minutes, or tenths of a degree.
+    this.items.push({ value: 0, editable: true, selected: selectionPending }); // Tens of degrees/hours.
+    this.items.push({ value: 0, editable: true, selected: false }); // Units of degrees/hours.
+    this.items.push({ value: firstDelim, editable: false, selected: false }); // First delimiter.
+    this.items.push({ value: 0, editable: true, selected: false }); // Tens of minutes, or tenths of a degree.
 
     if (this._format !== PN_DDD_D)
-      this.items.push({value: 0, editable: true, selected: false }); // Units of minutes.
+      this.items.push({ value: 0, editable: true, selected: false }); // Units of minutes.
 
-    this.items.push({value: secondDelim, editable: false, selected: false }); // Second delimiter.
+    this.items.push({ value: secondDelim, editable: false, selected: false }); // Second delimiter.
 
     if (this._format !== PN_DDD_D && this.directions !== null)
-        this.items.push({value: this.directions.substr(0, 1), editable: true, selected: false, fixedWidth: true }); // Sign.
+      this.items.push({ value: this.directions.substr(0, 1), editable: true, selected: false, fixedWidth: true }); // Sign.
 
-    this.items.push({value: ' ', editable: false, selected: false }); // Padding.
+    this.items.push({ value: ' ', editable: false, selected: false }); // Padding.
 
     this.selection = 1;
     this.updateDigits();
@@ -318,7 +319,7 @@ export class SvcAngleEditorComponent extends KsSequenceEditorComponent implement
 
       return;
     }
-    else if (48 > charCode || charCode >= 58) {
+    else if (charCode < 48 || charCode >= 58) {
       this.errorFlash();
       return;
     }

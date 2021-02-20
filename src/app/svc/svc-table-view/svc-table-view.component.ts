@@ -29,7 +29,7 @@ export class SvcTableViewComponent implements AfterViewInit {
   private jupiterInfo: JupiterInfo;
   private lastGregorianChange: GregorianChange = null;
   private lastObserver: ISkyObserver = null;
-  private lastTableTime: DateAndTime = {y: Number.MIN_SAFE_INTEGER, m: 0, d: 0, hrs: -1, min: -1, sec: -1, occurrence: 0};
+  private lastTableTime: DateAndTime = { y: Number.MIN_SAFE_INTEGER, m: 0, d: 0, hrs: -1, min: -1, sec: -1, occurrence: 0 };
   private lastTableType = TableType.NONE;
   private lastZone: string = null;
   private observer: ISkyObserver;
@@ -51,12 +51,12 @@ export class SvcTableViewComponent implements AfterViewInit {
   planetChoices: SelectItem[] = [];
 
   tableTypes: SelectItem[] = [
-    {label: 'Ephemeris', value: TableType.EPHEMERIS},
-    {label: 'Ephemeris - TBD', value: TableType.EPHEMERIS_TBD},
-    {label: 'Rise/Set Times', value: TableType.RISE_SET_TIMES},
-    {label: 'Lunar Phases', value: TableType.LUNAR_PHASES},
-    {label: 'Equinox/Solstice', value: TableType.EQUINOX_SOLSTICE},
-    {label: 'Galilean Moons/GRS', value: TableType.GALILEAN_MOONS}
+    { label: 'Ephemeris', value: TableType.EPHEMERIS },
+    { label: 'Ephemeris - TBD', value: TableType.EPHEMERIS_TBD },
+    { label: 'Rise/Set Times', value: TableType.RISE_SET_TIMES },
+    { label: 'Lunar Phases', value: TableType.LUNAR_PHASES },
+    { label: 'Equinox/Solstice', value: TableType.EQUINOX_SOLSTICE },
+    { label: 'Galilean Moons/GRS', value: TableType.GALILEAN_MOONS }
   ];
 
   tableHtml = '&nbsp;';
@@ -135,7 +135,7 @@ export class SvcTableViewComponent implements AfterViewInit {
   set tableType(value: TableType) {
     if (this._tableType !== value) {
       this._tableType = value;
-      this.appService.updateUserSetting({view: VIEW_TABLES, property: PROPERTY_TABLE_TYPE, value: value, source: this});
+      this.appService.updateUserSetting({ view: VIEW_TABLES, property: PROPERTY_TABLE_TYPE, value: value, source: this });
       this.updatePlanetChoices();
       this.updateView();
     }
@@ -145,7 +145,7 @@ export class SvcTableViewComponent implements AfterViewInit {
   set planetChoice(value: number) {
     if (this._planetChoice !== value) {
       this._planetChoice = value;
-      this.appService.updateUserSetting({view: VIEW_TABLES, property: PROPERTY_PLANET_CHOICE, value: value, source: this});
+      this.appService.updateUserSetting({ view: VIEW_TABLES, property: PROPERTY_PLANET_CHOICE, value: value, source: this });
       this.updateView(true);
     }
   }
@@ -201,6 +201,8 @@ export class SvcTableViewComponent implements AfterViewInit {
         checkTimeChanged && (lt.y !== wt.y || lt.m !== wt.m || lt.d !== wt.d || lt.hrs !== wt.hrs || lt.min !== wt.min || lt.occurrence !== wt.occurrence) ||
         checkObserverChanged && !isEqual(this.lastObserver, this.observer)) {
       let newTable: Promise<string> | string;
+      let daysInMonth: number;
+      let jdu: number;
 
       switch (this._tableType) {
         case TableType.EPHEMERIS:
@@ -209,26 +211,25 @@ export class SvcTableViewComponent implements AfterViewInit {
           break;
 
         case TableType.RISE_SET_TIMES:
-          const daysInMonth = this.dateTime.getDaysInMonth(wt.y, wt.m);
-
+          daysInMonth = this.dateTime.getDaysInMonth(wt.y, wt.m);
           newTable = this.eventFinder.getRiseAndSetEventsAsHtml(this._planetChoice, wt.y, wt.m, wt.d, daysInMonth, this.observer, timezone,
-              this.appService.gregorianChangeDate, this.twilight, {tableClass: 'table-view'});
+              this.appService.gregorianChangeDate, this.twilight, { tableClass: 'table-view' });
           break;
 
         case TableType.LUNAR_PHASES:
           newTable = this.eventFinder.getLunarPhasesByYearAsHtml(wt.y, wt.y + 1, timezone, this.appService.gregorianChangeDate,
-              {tableClass: 'table-view'});
+              { tableClass: 'table-view' });
           break;
 
         case TableType.EQUINOX_SOLSTICE:
           newTable = this.eventFinder.getEquinoxesAndSolsticesByYearAsHtml(wt.y, wt.y + 9, timezone, this.appService.gregorianChangeDate,
-              {tableClass: 'table-view'});
+              { tableClass: 'table-view' });
           break;
 
         case TableType.GALILEAN_MOONS:
-          const jdu = DateTime.julianDay(this.time);
+          jdu = DateTime.julianDay(this.time);
           newTable = this.eventFinder.getGalileanMoonEventsAsHtml(jdu, jdu + 3, true, timezone, this.appService.gregorianChangeDate,
-              {tableClass: 'table-view'});
+              { tableClass: 'table-view' });
           break;
       }
 
@@ -249,17 +250,17 @@ export class SvcTableViewComponent implements AfterViewInit {
     this.planetChoiceEnabled = (this._tableType === TableType.RISE_SET_TIMES);
 
     this.planetChoices = [
-      {label: 'Sun',     value: SUN},
-      {label: 'Moon',    value: MOON},
-      {label: 'Mercury', value: MERCURY},
-      {label: 'Venus',   value: VENUS},
-      {label: 'Earth',   value: EARTH},
-      {label: 'Mars',    value: MARS},
-      {label: 'Jupiter', value: JUPITER},
-      {label: 'Saturn',  value: SATURN},
-      {label: 'Uranus',  value: URANUS},
-      {label: 'Neptune', value: NEPTUNE},
-      {label: 'Pluto',   value: PLUTO}
+      { label: 'Sun',     value: SUN },
+      { label: 'Moon',    value: MOON },
+      { label: 'Mercury', value: MERCURY },
+      { label: 'Venus',   value: VENUS },
+      { label: 'Earth',   value: EARTH },
+      { label: 'Mars',    value: MARS },
+      { label: 'Jupiter', value: JUPITER },
+      { label: 'Saturn',  value: SATURN },
+      { label: 'Uranus',  value: URANUS },
+      { label: 'Neptune', value: NEPTUNE },
+      { label: 'Pluto',   value: PLUTO }
     ];
 
     if (this._tableType === TableType.RISE_SET_TIMES)

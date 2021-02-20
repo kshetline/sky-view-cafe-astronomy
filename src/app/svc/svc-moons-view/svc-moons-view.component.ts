@@ -337,7 +337,7 @@ export class SvcMoonsViewComponent extends GenericPlanetaryViewDirective impleme
         pt.x = xctr + xsign * round(pos.X * radius);
         pt.y = yctr - ysign * round(pos.Y * radius);
 
-        const onScreen = (0 < pt.x && pt.x < width - 1 && yOffset < pt.y && pt.y < yOffset + height - 1);
+        const onScreen = (pt.x > 0 && pt.x < width - 1 && yOffset < pt.y && pt.y < yOffset + height - 1);
 
         if (onScreen) {
           ctx.fillRect(pt.x - 1, pt.y - 1, 3, 3);
@@ -353,7 +353,7 @@ export class SvcMoonsViewComponent extends GenericPlanetaryViewDirective impleme
             else if (this.moonNumbers)
               name = num;
 
-            const li = {name: name, pt: pt, labelType: hidden ? LABEL_TYPE.HIDDEN_MOON : LABEL_TYPE.MOON, bodyIndex: pos.moonIndex};
+            const li = { name: name, pt: pt, labelType: hidden ? LABEL_TYPE.HIDDEN_MOON : LABEL_TYPE.MOON, bodyIndex: pos.moonIndex };
             this.addLabel(li, dc);
           }
         }
@@ -424,7 +424,7 @@ export class SvcMoonsViewComponent extends GenericPlanetaryViewDirective impleme
       const sys1Label      = 'Central meridian (Sys I): ';
       const sys2Label      = 'Central meridian (Sys II): ';
       const grsLabel       = (this.jupiterInfo.getFixedGRSLongitude() ?
-                              'Set GRS longitude (Sys II): ' : 'Est. GRS longitude (Sys II): ');
+        'Set GRS longitude (Sys II): ' : 'Est. GRS longitude (Sys II): ');
       const grsOffsetLabel = 'GRS central meridian offset: ';
       let sys1Width       = ctx.measureText(sys1Label).width;
       let sys2Width       = ctx.measureText(sys2Label).width;
@@ -500,7 +500,7 @@ export class SvcMoonsViewComponent extends GenericPlanetaryViewDirective impleme
 
     if (this.zoom !== oldZoom) {
       this.throttledRedraw();
-      this.appService.updateUserSetting({view: VIEW_MOONS, property: PROPERTY_ZOOM, value: this.zoom, source: this});
+      this.appService.updateUserSetting({ view: VIEW_MOONS, property: PROPERTY_ZOOM, value: this.zoom, source: this });
     }
 
     event.preventDefault();
@@ -519,11 +519,11 @@ export class SvcMoonsViewComponent extends GenericPlanetaryViewDirective impleme
 
     if (this.zoom !== oldZoom) {
       this.throttledRedraw();
-      this.appService.updateUserSetting({view: VIEW_MOONS, property: PROPERTY_ZOOM, value: this.zoom, source: this});
+      this.appService.updateUserSetting({ view: VIEW_MOONS, property: PROPERTY_ZOOM, value: this.zoom, source: this });
     }
   }
 
-  protected drawSkyPlotLine(pt1: Point, pt2: Point, dc: DrawingContextPlanetary, subject: SUBJECT): boolean {
+  protected drawSkyPlotLine(_pt1: Point, _pt2: Point, _dc: DrawingContextPlanetary, _subject: SUBJECT): boolean {
     return false;
   }
 
@@ -538,8 +538,8 @@ export class SvcMoonsViewComponent extends GenericPlanetaryViewDirective impleme
     if (!dc)
       return false;
 
-    return (0 <= x && x < this.width &&
-            0 <= y && y < this.height);
+    return (x >= 0 && x < this.width &&
+            y >= 0 && y < this.height);
   }
 
   static zoomToZoomSteps(zoom: number): number {
