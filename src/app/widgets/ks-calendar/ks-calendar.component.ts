@@ -2,7 +2,7 @@ import { Component, EventEmitter, forwardRef, Input, OnDestroy, Output } from '@
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { div_rd, min } from '@tubular/math';
 import { CalendarType, GregorianChange, DateTime, Timezone, YMDDate } from '@tubular/time';
-import { clone, isEqual, isObject, isString, noop } from '@tubular/util';
+import { clone, isEqual, isObject, isString, noop, toNumber } from '@tubular/util';
 import { Subscription, timer } from 'rxjs';
 
 const CLICK_REPEAT_DELAY = 500;
@@ -52,7 +52,9 @@ export class KsCalendarComponent implements ControlValueAccessor, OnDestroy {
   calendar: DateInfo[][] = [];
   cols = 4;
   daysOfWeek: string[] = [];
+  highlightItem = '';
   modeCount = SelectMode.MODE_COUNT;
+  months: string[] = [];
   rows = 3;
   selectMode = SelectMode.DAY;
   title = ['', '', ''];
@@ -157,7 +159,7 @@ export class KsCalendarComponent implements ControlValueAccessor, OnDestroy {
   }
 
   updateCalendar(): void {
-    const year  = this.ymd ? this.ymd.y : 2017;
+    const year  = this.ymd ? this.ymd.y : 2021;
     const month = this.ymd ? this.ymd.m : 1;
     const day   = this.ymd ? this.ymd.d : 1;
     const calendar = this.dateTime.getCalendarMonth(year, month, this._firstDay);
@@ -196,8 +198,13 @@ export class KsCalendarComponent implements ControlValueAccessor, OnDestroy {
       this.calendar[row][col] = date;
     });
 
-    this.title[0] = new DateTime({ y: 4000, m: month }, 'UTC', 'en-us').format('MMM Y');
+    this.title[0] = new DateTime({ y: year, m: month }, 'UTC', 'en-us').format('MMM Y');
     this.updateAltTable();
+  }
+
+  reset(): void {
+    this.selectMode = SelectMode.DAY;
+    this.updateCalendar();
   }
 
   stopTimer(): void {
@@ -235,7 +242,6 @@ export class KsCalendarComponent implements ControlValueAccessor, OnDestroy {
     const date: YMDDate = clone(this.ymd);
 
     if (this.selectMode === SelectMode.DAY) {
-
       if (event?.altKey)
         date.y += delta * 10;
       else if (event?.shiftKey)
@@ -269,6 +275,19 @@ export class KsCalendarComponent implements ControlValueAccessor, OnDestroy {
     }
   }
 
+  onAltCellClick(value: string): void {
+    const date: YMDDate = clone(this.ymd);
+    const month = this.months.indexOf(value);
+
+    if (month > 0)
+      date.m = month;
+    else
+      date.y = toNumber(value);
+
+    this.value = this.dateTime.normalizeDate(date);
+    --this.selectMode;
+  }
+
   onTitleClick(): void {
     this.selectMode = (this.selectMode + 1) % SelectMode.MODE_COUNT;
     this.updateAltTable();
@@ -281,8 +300,11 @@ export class KsCalendarComponent implements ControlValueAccessor, OnDestroy {
   getTableValue(row: number, col: number, mode: number): string {
     if (mode === SelectMode.DAY)
       return '';
-    else if (mode === SelectMode.MONTH)
-      return new DateTime({ y: 4000, m: row * 4 + col + 1, hrs: 12 }).format('MMM');
+    else if (mode === SelectMode.MONTH) {
+      const m = row * 4 + col + 1;
+
+      return (this.months[m] = new DateTime({ y: 4000, m, hrs: 12 }).format('MMM'));
+    }
 
     let index = row * this.cols + col;
 
@@ -307,6 +329,11 @@ export class KsCalendarComponent implements ControlValueAccessor, OnDestroy {
     if (mode !== SelectMode.DAY) {
       this.title[mode] = (div_rd(this.ymd.y, multiplier[mode]) * multiplier[mode]).toString();
       this.baseValue[mode] = div_rd(this.ymd.y, multiplier[mode] * 10) * multiplier[mode] * 10;
+
+      if (mode === SelectMode.MONTH)
+        this.highlightItem = this.months[this.ymd.m];
+      else
+        this.highlightItem = this.title[mode];
     }
   }
 }

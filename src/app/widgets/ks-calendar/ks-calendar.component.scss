@@ -6,6 +6,7 @@ table {
   border: 1px solid #D8D8D8;
   border-collapse: collapse;
   border-spacing: 0;
+  min-height: calc(9.0831em + 2px); // 6.8125 * 1.3333
   opacity: 1;
   transition: opacity 0.5s ease-in-out;
 }
@@ -33,18 +34,18 @@ td, th {
   background: white;
   padding: 1px 3px;
   cursor: default;
-  -webkit-touch-callout: none;
-  -webkit-user-select: none;
-  //noinspection CssUnknownProperty
-  -khtml-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
   user-select: none;
 }
 
 td {
   cursor: pointer;
-  user-select: none;
+}
+
+.alt-cell {
+  align-items: center;
+  display: flex;
+  height: 100%;
+  justify-content: center;
 }
 
 .arrow, .title {

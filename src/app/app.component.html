@@ -33,10 +33,11 @@
           </div>
           <div class="time-panel-item">
             <p-overlayPanel #calendarPopup class="calendar-popup">
-              <ks-calendar [(ngModel)]="date" [timezone]="timezone" [gregorianChangeDate]="gcDate" [showDst]="true" [minYear]="-6000" [maxYear]="9999"
+              <ks-calendar #calendar [(ngModel)]="date" [timezone]="timezone" [gregorianChangeDate]="gcDate" [showDst]="true" [minYear]="-6000" [maxYear]="9999"
                            (dayClick)="calendarPopup.hide()"></ks-calendar>
             </p-overlayPanel>
-            <ks-icon-button [disabled]="trackTime" icon="far fa-calendar-alt" (click)="calendarPopup.toggle($event)"></ks-icon-button>&nbsp;
+            <ks-icon-button [disabled]="trackTime" icon="far fa-calendar-alt"
+                            (click)="calendarPopup.toggle($event); calendar.reset()"></ks-icon-button>&nbsp;
           </div>
           <div class="time-panel-item">
             <p-checkbox [(ngModel)]="trackTime" binary="true" label="Track current time"></p-checkbox>

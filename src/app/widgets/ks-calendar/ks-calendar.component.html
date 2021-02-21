@@ -29,8 +29,15 @@
   <ng-template #altTable let-mode="mode">
     <table class="alt-table" [class.inactive]="selectMode === 0 || mode !== selectMode">
       <tr *ngFor="let row of counter(rows)">
-        <td *ngFor="let col of counter(cols)">{{getTableValue(row, col, mode)}}</td>
+        <td *ngFor="let col of counter(cols)">
+          <ng-container [ngTemplateOutlet]="textItem" [ngTemplateOutletContext]="{ text: getTableValue(row, col, mode) }"></ng-container>
+        </td>
       </tr>
     </table>
+  </ng-template>
+  <ng-template #textItem let-text="text">
+    <div class="alt-cell" [class.highlight]="text === highlightItem" (click)="onAltCellClick(text)">
+      <span>{{text}}</span>
+    </div>
   </ng-template>
 </div>
