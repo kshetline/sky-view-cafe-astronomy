@@ -3,8 +3,7 @@
     (mousedown)="onMouseDown($event, -1)" (mouseup)="stopTimer()" (mouseleave)="stopTimer()"
     (click)="onClick($event, -1)"><i class="fas fa-chevron-left"  aria-hidden="true"></i></div>
   <div class="title" (click)="onTitleClick()">&nbsp;
-    <div [class.inactive]="titlePhase === 1">{{title[0]}}</div>
-    <div [class.inactive]="titlePhase === 0">{{title[1]}}</div>
+    <div *ngFor="let n of counter(modeCount)" [class.inactive]="selectMode !== n">{{title[n]}}</div>
   </div>
   <div class="arrow" (touchstart)="onTouchStart($event, 1)" (touchend)="stopTimer()"
     (mousedown)="onMouseDown($event,  1)" (mouseup)="stopTimer()" (mouseleave)="stopTimer()"
@@ -26,10 +25,11 @@
         (click)="onDayClick(day)">{{day.text}}</td>
     </tr>
   </table>
-  <ng-template #altTable>
-    <table class="alt-table" [class.inactive]="selectMode !== 1">
+  <ng-container *ngFor="let n of counter(modeCount)" [ngTemplateOutlet]="altTable" [ngTemplateOutletContext]="{ mode: n }"></ng-container>
+  <ng-template #altTable let-mode="mode">
+    <table class="alt-table" [class.inactive]="selectMode === 0 || mode !== selectMode">
       <tr *ngFor="let row of counter(rows)">
-        <td *ngFor="let col of counter(cols)">{{getTableValue(row, col)}}</td>
+        <td *ngFor="let col of counter(cols)">{{getTableValue(row, col, mode)}}</td>
       </tr>
     </table>
   </ng-template>

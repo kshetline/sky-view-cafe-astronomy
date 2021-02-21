@@ -1,6 +1,6 @@
-import { DatePipe } from '@angular/common';
 import { Component, EventEmitter, forwardRef, Input, OnDestroy, Output } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { div_rd, min } from '@tubular/math';
 import { CalendarType, GregorianChange, DateTime, Timezone, YMDDate } from '@tubular/time';
 import { clone, isEqual, isObject, isString, noop } from '@tubular/util';
 import { Subscription, timer } from 'rxjs';
@@ -24,7 +24,9 @@ interface DateInfo extends YMDDate {
   voidDay?: boolean;
 }
 
+// noinspection JSUnusedGlobalSymbols
 enum SelectMode { DAY, MONTH, YEAR, DECADE, CENTURY, MILLENNIUM, MODE_COUNT }
+const multiplier = [0, 1, 1, 10, 100, 1000];
 
 @Component({
   selector: 'ks-calendar',
@@ -33,12 +35,13 @@ enum SelectMode { DAY, MONTH, YEAR, DECADE, CENTURY, MILLENNIUM, MODE_COUNT }
   providers: [KS_CALENDAR_VALUE_ACCESSOR]
 })
 export class KsCalendarComponent implements ControlValueAccessor, OnDestroy {
-  private ymd: YMDDate = { y: 2017, m: 1, d: 1 };
+  private ymd: YMDDate = { y: 2021, m: 1, d: 1 };
   private _gregorianChange: GregorianChange;
   private _showDst = false;
   private _minYear = 1;
   private _maxYear = 9999;
   private _firstDay = 0;
+  private baseValue = [0, 0, 0];
   private dateTime: DateTime = new DateTime();
   private onTouchedCallback: () => void = noop;
   private onChangeCallback: (_: any) => void = noop;
@@ -49,14 +52,14 @@ export class KsCalendarComponent implements ControlValueAccessor, OnDestroy {
   calendar: DateInfo[][] = [];
   cols = 4;
   daysOfWeek: string[] = [];
+  modeCount = SelectMode.MODE_COUNT;
   rows = 3;
   selectMode = SelectMode.DAY;
-  title = ['', ''];
-  titlePhase = 0;
+  title = ['', '', ''];
 
   @Output() dayClick = new EventEmitter();
 
-  constructor(private datePipe: DatePipe) {
+  constructor() {
     this.updateDayHeadings();
   }
 
@@ -150,7 +153,7 @@ export class KsCalendarComponent implements ControlValueAccessor, OnDestroy {
     this.daysOfWeek = [];
 
     for (let d = 1; d <= 7; ++d)
-      this.daysOfWeek.push(this.datePipe.transform(new Date(2017, 0, d + this._firstDay, 12, 0), 'E'));
+      this.daysOfWeek.push(new DateTime({ y: 2017, m: 1, d: d + this._firstDay, hrs: 12 }, 'UTC', 'en-us').format('ddd'));
   }
 
   updateCalendar(): void {
@@ -193,7 +196,8 @@ export class KsCalendarComponent implements ControlValueAccessor, OnDestroy {
       this.calendar[row][col] = date;
     });
 
-    this.title[this.titlePhase] = this.datePipe.transform(new Date(4000, month - 1, 1, 12, 0), 'MMM ') + year;
+    this.title[0] = new DateTime({ y: 4000, m: month }, 'UTC', 'en-us').format('MMM Y');
+    this.updateAltTable();
   }
 
   stopTimer(): void {
@@ -230,12 +234,19 @@ export class KsCalendarComponent implements ControlValueAccessor, OnDestroy {
   onClick(event: MouseEvent, delta: number): void {
     const date: YMDDate = clone(this.ymd);
 
-    if (event?.altKey)
-      date.y += delta * 10;
-    else if (event?.shiftKey)
+    if (this.selectMode === SelectMode.DAY) {
+
+      if (event?.altKey)
+        date.y += delta * 10;
+      else if (event?.shiftKey)
+        date.y += delta;
+      else
+        date.m += delta;
+    }
+    else if (this.selectMode === SelectMode.MONTH)
       date.y += delta;
     else
-      date.m += delta;
+      date.y += delta * min(multiplier[this.selectMode] * 10, 1000);
 
     if (date.y < this._minYear || date.y === this._minYear && date.m < 1) {
       date.y = this._minYear;
@@ -259,15 +270,43 @@ export class KsCalendarComponent implements ControlValueAccessor, OnDestroy {
   }
 
   onTitleClick(): void {
-    this.selectMode = (this.selectMode + 1) % 2;
-    this.titlePhase = (this.titlePhase + 1) % 2;
+    this.selectMode = (this.selectMode + 1) % SelectMode.MODE_COUNT;
+    this.updateAltTable();
   }
 
   counter(length: number): number[] {
     return [...Array(length)].map((a, i) => i);
   }
 
-  getTableValue(row: number, col: number): string {
-    return this.datePipe.transform(new Date(4000, row * 4 + col, 1, 12, 0), 'MMM');
+  getTableValue(row: number, col: number, mode: number): string {
+    if (mode === SelectMode.DAY)
+      return '';
+    else if (mode === SelectMode.MONTH)
+      return new DateTime({ y: 4000, m: row * 4 + col + 1, hrs: 12 }).format('MMM');
+
+    let index = row * this.cols + col;
+
+    if (index === 8 || index === 11)
+      return '';
+
+    index -= +(index > 7);
+
+    const value = this.baseValue[mode] + index * multiplier[mode];
+    const min = div_rd(this.minYear, multiplier[mode]) * multiplier[mode];
+    const max = (div_rd(this.maxYear - 1, multiplier[mode]) + 1) * multiplier[mode];
+
+    if ((min <= value && value <= max))
+      return value.toString();
+    else
+      return '';
+  }
+
+  private updateAltTable(): void {
+    const mode = this.selectMode;
+
+    if (mode !== SelectMode.DAY) {
+      this.title[mode] = (div_rd(this.ymd.y, multiplier[mode]) * multiplier[mode]).toString();
+      this.baseValue[mode] = div_rd(this.ymd.y, multiplier[mode] * 10) * multiplier[mode] * 10;
+    }
   }
 }
