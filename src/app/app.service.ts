@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 import { NavigationEnd, Router } from '@angular/router';
 import { SolarSystem, StarCatalog } from '@tubular/astronomy';
-import { Calendar } from '@tubular/time';
+import { addZonesUpdateListener, Calendar, pollForTimezoneUpdates, zonePollerBrowser } from '@tubular/time';
 import { clone, forEach, isEqual, isString } from '@tubular/util';
 import { compact, debounce, sortedIndexBy } from 'lodash-es';
 import { BehaviorSubject, Observable, Subject, Subscription } from 'rxjs';
@@ -24,6 +24,7 @@ export const    PROPERTY_NATIVE_DATE_TIME = 'native_date_time';
 export const    PROPERTY_WARNING_NATIVE_DATE_TIME = 'WARNING_native_date_time';
 
 export const NEW_LOCATION = '(new location)';
+export const IANA_DB_UPDATE = 'iana_db_update';
 
 export function currentMinuteMillis(): number {
   return Math.floor(Date.now() / 60000) * 60000;
@@ -179,6 +180,15 @@ export class AppService {
           this.currentTab = CurrentTab.SKY;
       }
     });
+
+    addZonesUpdateListener(result => {
+      if (result) {
+        this.sendAppEvent(IANA_DB_UPDATE);
+        this._time.next(this._time.getValue());
+      }
+    });
+
+    pollForTimezoneUpdates(zonePollerBrowser, 'large-alt');
   }
 
   static get title(): string { return 'Sky View Café'; }

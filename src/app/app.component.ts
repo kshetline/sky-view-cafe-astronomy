@@ -51,10 +51,7 @@ export class AppComponent implements AfterViewInit, OnDestroy {
     this.gcDate = app.gregorianChangeDate;
     this.nativeDateTime = app.nativeDateTime;
 
-    app.getTimeUpdates((newTime: number) => {
-      this.time = newTime;
-    });
-
+    app.getTimeUpdates((newTime: number) => this.time = newTime);
     app.getLocationUpdates(() => this.updateTimeZone());
 
     app.getUserSettingUpdates((setting: UserSetting) => {
@@ -68,9 +65,7 @@ export class AppComponent implements AfterViewInit, OnDestroy {
       }
     });
 
-    app.getCurrentTabUpdates(tabIndex => {
-      this.selectedTab = tabIndex;
-    });
+    app.getCurrentTabUpdates(tabIndex => this.selectedTab = tabIndex);
   }
 
   ngAfterViewInit(): void {

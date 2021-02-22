@@ -3,7 +3,7 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { noop } from '@tubular/util';
 import { Timezone, RegionAndSubzones } from '@tubular/time';
 import { timer } from 'rxjs';
-import { AppService } from '../../app.service';
+import { AppService, IANA_DB_UPDATE } from '../../app.service';
 
 export const SVC_ZONE_SELECTOR_VALUE_ACCESSOR: any = {
   provide: NG_VALUE_ACCESSOR,
@@ -187,6 +187,15 @@ export class SvcZoneSelectorComponent implements ControlValueAccessor, OnInit {
   }
 
   ngOnInit(): void {
+    this.updateTimezones();
+
+    this.appService.getAppEventUpdates(evt => {
+      if (evt.name === IANA_DB_UPDATE)
+        this.updateTimezones();
+    });
+  }
+
+  private updateTimezones(): void {
     this.supplementAndProcessZones(Timezone.getRegionsAndSubzones());
   }
 
