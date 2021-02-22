@@ -1,6 +1,7 @@
 .settings-grid {
   display: table;
   overflow: hidden;
+  padding-top: 0.25em;
 }
 
 .settings-row {
@@ -19,6 +20,7 @@
 }
 
 .settings-value {
+  padding-right: 0.25em;
   width: 32em;
 }
 

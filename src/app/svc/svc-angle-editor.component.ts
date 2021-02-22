@@ -1,25 +1,7 @@
-/*
-  Copyright © 2017-2019 Kerry Shetline, kerry@shetline.com
-
-  MIT license: https://opensource.org/licenses/MIT
-
-  Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated
-  documentation files (the "Software"), to deal in the Software without restriction, including without limitation the
-  rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit
-  persons to whom the Software is furnished to do so, subject to the following conditions:
-
-  The above copyright notice and this permission notice shall be included in all copies or substantial portions of the
-  Software.
-
-  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE
-  WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
-  COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
-  OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-*/
-
 import { Component, forwardRef, Input } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { abs, div_rd, min, mod, mod2, round } from '@tubular/math';
+import { noop } from '@tubular/util';
 import { BACKGROUND_ANIMATIONS, KsSequenceEditorComponent } from '../widgets/ks-sequence-editor/ks-sequence-editor.component';
 
 export const SVC_ANGLE_EDITOR_VALUE_ACCESSOR: any = {
@@ -32,8 +14,6 @@ export const DD_MM_NS  = 'DD_MM_NS';
 export const DDD_MM_EW = 'DDD_MM_EW';
 export const HH_MM     = 'HH_MM';
 export const PN_DDD_D  = 'PN_DDD_D';
-
-const noop = () => {};
 
 const NO_BREAK_SPACE = '\u00A0';
 
@@ -68,6 +48,7 @@ export class SvcAngleEditorComponent extends KsSequenceEditorComponent implement
     else
       return this.angle;
   }
+
   set value(newAngle: number) {
     if (this.angle !== newAngle) {
       this.angle = newAngle;
@@ -115,7 +96,7 @@ export class SvcAngleEditorComponent extends KsSequenceEditorComponent implement
 
     this.items = [];
 
-    this.items.push({value: NO_BREAK_SPACE, editable: false, selected: false }); // Padding.
+    this.items.push({ value: NO_BREAK_SPACE, editable: false, selected: false }); // Padding.
 
     switch (this._format) {
       case DD_MM_NS:
@@ -145,7 +126,7 @@ export class SvcAngleEditorComponent extends KsSequenceEditorComponent implement
         this.maxNormalMagnitude = 180;
         this.wrapAtMax = true;
 
-        this.items.push({value: 0, editable: true, selected: true }); // Hundreds of degrees.
+        this.items.push({ value: 0, editable: true, selected: true }); // Hundreds of degrees.
         selectionPending = false;
         break;
 
@@ -176,26 +157,26 @@ export class SvcAngleEditorComponent extends KsSequenceEditorComponent implement
         this.maxNormalMagnitude = 180;
         this.wrapAtMax = true;
 
-        this.items.push({value: '+', editable: true, selected: true, fixedWidth: true }); // sign
-        this.items.push({value: 0, editable: true, selected: false }); // Hundreds of degrees.
+        this.items.push({ value: '+', editable: true, selected: true, fixedWidth: true }); // sign
+        this.items.push({ value: 0, editable: true, selected: false }); // Hundreds of degrees.
         selectionPending = false;
         break;
     }
 
-    this.items.push({value: 0, editable: true, selected: selectionPending }); // Tens of degrees/hours.
-    this.items.push({value: 0, editable: true, selected: false }); // Units of degrees/hours.
-    this.items.push({value: firstDelim, editable: false, selected: false }); // First delimiter.
-    this.items.push({value: 0, editable: true, selected: false }); // Tens of minutes, or tenths of a degree.
+    this.items.push({ value: 0, editable: true, selected: selectionPending }); // Tens of degrees/hours.
+    this.items.push({ value: 0, editable: true, selected: false }); // Units of degrees/hours.
+    this.items.push({ value: firstDelim, editable: false, selected: false }); // First delimiter.
+    this.items.push({ value: 0, editable: true, selected: false }); // Tens of minutes, or tenths of a degree.
 
     if (this._format !== PN_DDD_D)
-      this.items.push({value: 0, editable: true, selected: false }); // Units of minutes.
+      this.items.push({ value: 0, editable: true, selected: false }); // Units of minutes.
 
-    this.items.push({value: secondDelim, editable: false, selected: false }); // Second delimiter.
+    this.items.push({ value: secondDelim, editable: false, selected: false }); // Second delimiter.
 
     if (this._format !== PN_DDD_D && this.directions !== null)
-        this.items.push({value: this.directions.substr(0, 1), editable: true, selected: false, fixedWidth: true }); // Sign.
+      this.items.push({ value: this.directions.substr(0, 1), editable: true, selected: false, fixedWidth: true }); // Sign.
 
-    this.items.push({value: ' ', editable: false, selected: false }); // Padding.
+    this.items.push({ value: ' ', editable: false, selected: false }); // Padding.
 
     this.selection = 1;
     this.updateDigits();
@@ -337,7 +318,7 @@ export class SvcAngleEditorComponent extends KsSequenceEditorComponent implement
 
       return;
     }
-    else if (48 > charCode || charCode >= 58) {
+    else if (charCode < 48 || charCode >= 58) {
       this.errorFlash();
       return;
     }

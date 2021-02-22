@@ -1,25 +1,3 @@
-/*
-  Copyright © 2017-2019 Kerry Shetline, kerry@shetline.com.
-
-  This code is free software: you can redistribute it and/or modify
-  it under the terms of the GNU General Public License as published by
-  the Free Software Foundation, either version 3 of the License, or
-  (at your option) any later version.
-
-  This code is distributed in the hope that it will be useful,
-  but WITHOUT ANY WARRANTY; without even the implied warranty of
-  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-  GNU General Public License for more details.
-
-  You should have received a copy of the GNU General Public License
-  along with this code.  If not, see <http://www.gnu.org/licenses/>.
-
-  For commercial, proprietary, or other uses not compatible with
-  GPL-3.0-or-later, terms of licensing for this code may be
-  negotiated by contacting the author, Kerry Shetline, otherwise all
-  other uses are restricted.
-*/
-
 import { AfterViewInit, Component, HostListener, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { DateTime, Timezone, YMDDate } from '@tubular/time';
@@ -50,11 +28,11 @@ export class AppComponent implements AfterViewInit, OnDestroy {
   private timer: Subscription;
 
   moreItems: MenuItem[] = [
-      { label: 'Preferences', icon: 'fas fa-cog', command: () => this.displayPreferences = true },
-      { label: 'Help', icon: 'fas fa-question-circle', command: () => this.openHelp() },
-      { label: 'Toggle full screen', icon: 'fas fa-arrows-alt', command: () => this.toggleFullScreen() },
-      { label: 'About Sky View Café', icon: 'fas fa-info-circle', command: () => this.displayAbout = true }
-    ];
+    { label: 'Preferences', icon: 'fas fa-cog', command: (): any => this.displayPreferences = true },
+    { label: 'Help', icon: 'fas fa-question-circle', command: (): void => this.openHelp() },
+    { label: 'Toggle full screen', icon: 'fas fa-arrows-alt', command: (): void => this.toggleFullScreen() },
+    { label: 'About Sky View Café', icon: 'fas fa-info-circle', command: (): any => this.displayAbout = true }
+  ];
 
   displayAbout = false;
   displayPreferences = false;
@@ -73,10 +51,7 @@ export class AppComponent implements AfterViewInit, OnDestroy {
     this.gcDate = app.gregorianChangeDate;
     this.nativeDateTime = app.nativeDateTime;
 
-    app.getTimeUpdates((newTime: number) => {
-      this.time = newTime;
-    });
-
+    app.getTimeUpdates((newTime: number) => this.time = newTime);
     app.getLocationUpdates(() => this.updateTimeZone());
 
     app.getUserSettingUpdates((setting: UserSetting) => {
@@ -90,9 +65,7 @@ export class AppComponent implements AfterViewInit, OnDestroy {
       }
     });
 
-    app.getCurrentTabUpdates(tabIndex => {
-      this.selectedTab = tabIndex;
-    });
+    app.getCurrentTabUpdates(tabIndex => this.selectedTab = tabIndex);
   }
 
   ngAfterViewInit(): void {
@@ -131,15 +104,16 @@ export class AppComponent implements AfterViewInit, OnDestroy {
     const wt = this.dateTime.wallTime;
 
     if (wt.y !== this._date.y || wt.m !== this._date.m || wt.d !== this._date.d)
-      this._date = {y: wt.y, m: wt.m, d: wt.d};
+      this._date = { y: wt.y, m: wt.m, d: wt.d };
 
     return this._date;
   }
+
   set date(newDate: YMDDate) {
     const wt = this.dateTime.wallTime;
 
     if (wt.y !== newDate.y || wt.m !== newDate.m || wt.d !== newDate.d) {
-      this.dateTime.wallTime = {y: newDate.y, m: newDate.m, d: newDate.d, hrs: wt.hrs, min: wt.min, sec: wt.sec};
+      this.dateTime.wallTime = { y: newDate.y, m: newDate.m, d: newDate.d, hrs: wt.hrs, min: wt.min, sec: wt.sec };
       this._time = this.app.time = this.dateTime.utcTimeMillis;
     }
   }
@@ -172,8 +146,8 @@ export class AppComponent implements AfterViewInit, OnDestroy {
     this.dateTime.timezone = this._timeZone;
 
     if (this._timeZone.error)
-      this.messageService.add({key: 'general', severity: 'error', summary: 'Failed to retrieve timezone',
-        detail: 'Using your OS timezone instead.'});
+      this.messageService.add({ key: 'general', severity: 'error', summary: 'Failed to retrieve timezone',
+                                detail: 'Using your OS timezone instead.' });
   }
 
   // noinspection JSMethodCanBeStatic

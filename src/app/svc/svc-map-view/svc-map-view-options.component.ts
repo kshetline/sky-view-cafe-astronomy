@@ -1,25 +1,3 @@
-/*
-  Copyright © 2017-2019 Kerry Shetline, kerry@shetline.com.
-
-  This code is free software: you can redistribute it and/or modify
-  it under the terms of the GNU General Public License as published by
-  the Free Software Foundation, either version 3 of the License, or
-  (at your option) any later version.
-
-  This code is distributed in the hope that it will be useful,
-  but WITHOUT ANY WARRANTY; without even the implied warranty of
-  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-  GNU General Public License for more details.
-
-  You should have received a copy of the GNU General Public License
-  along with this code.  If not, see <http://www.gnu.org/licenses/>.
-
-  For commercial, proprietary, or other uses not compatible with
-  GPL-3.0-or-later, terms of licensing for this code may be
-  negotiated by contacting the author, Kerry Shetline, otherwise all
-  other uses are restricted.
-*/
-
 import { AfterViewInit, Component } from '@angular/core';
 import { SelectItem } from 'primeng/api';
 import { AppEvent, AppService, UserSetting } from '../../app.service';
@@ -44,8 +22,8 @@ export class SvcMapViewOptionsComponent implements AfterViewInit {
   eclipseActive = false;
 
   mapTypes: SelectItem[] = [
-    {label: 'Terrain map', value: MapType.TERRAIN},
-    {label: 'Political map', value: MapType.POLITICAL}
+    { label: 'Terrain map', value: MapType.TERRAIN },
+    { label: 'Political map', value: MapType.POLITICAL }
   ];
 
   constructor(private appService: AppService) {
@@ -80,7 +58,7 @@ export class SvcMapViewOptionsComponent implements AfterViewInit {
   set mapType(value: MapType) {
     if (this._mapType !== value) {
       this._mapType = value;
-      this.appService.updateUserSetting({view: VIEW_MAP, property: PROPERTY_MAP_TYPE, value: value, source: this});
+      this.appService.updateUserSetting({ view: VIEW_MAP, property: PROPERTY_MAP_TYPE, value: value, source: this });
     }
   }
 
@@ -88,7 +66,7 @@ export class SvcMapViewOptionsComponent implements AfterViewInit {
   set showDayNight(value: boolean) {
     if (this._showDayNight !== value) {
       this._showDayNight = value;
-      this.appService.updateUserSetting({view: VIEW_MAP, property: PROPERTY_SHOW_DAY_NIGHT, value: value, source: this});
+      this.appService.updateUserSetting({ view: VIEW_MAP, property: PROPERTY_SHOW_DAY_NIGHT, value: value, source: this });
     }
   }
 
@@ -96,7 +74,7 @@ export class SvcMapViewOptionsComponent implements AfterViewInit {
   set showEclipseShadows(value: boolean) {
     if (this._showEclipseShadows !== value) {
       this._showEclipseShadows = value;
-      this.appService.updateUserSetting({view: VIEW_MAP, property: PROPERTY_SHOW_ECLIPSE_SHADOWS, value: value, source: this});
+      this.appService.updateUserSetting({ view: VIEW_MAP, property: PROPERTY_SHOW_ECLIPSE_SHADOWS, value: value, source: this });
     }
   }
 
@@ -104,7 +82,7 @@ export class SvcMapViewOptionsComponent implements AfterViewInit {
   set showMarkers(value: boolean) {
     if (this._showMarkers !== value) {
       this._showMarkers = value;
-      this.appService.updateUserSetting({view: VIEW_MAP, property: PROPERTY_SHOW_LOCATION_MARKERS, value: value, source: this});
+      this.appService.updateUserSetting({ view: VIEW_MAP, property: PROPERTY_SHOW_LOCATION_MARKERS, value: value, source: this });
     }
   }
 
@@ -112,7 +90,7 @@ export class SvcMapViewOptionsComponent implements AfterViewInit {
   set blink(value: boolean) {
     if (this._blink !== value) {
       this._blink = value;
-      this.appService.updateUserSetting({view: VIEW_MAP, property: PROPERTY_BLINK_LOCATION_MARKERS, value: value, source: this});
+      this.appService.updateUserSetting({ view: VIEW_MAP, property: PROPERTY_BLINK_LOCATION_MARKERS, value: value, source: this });
     }
   }
 

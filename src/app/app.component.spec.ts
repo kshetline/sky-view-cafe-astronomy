@@ -1,7 +1,7 @@
-import { async, TestBed } from '@angular/core/testing';
+import { TestBed, waitForAsync } from '@angular/core/testing';
 
 describe('AppComponent', () => {
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [
 //        AppComponent
@@ -9,7 +9,7 @@ describe('AppComponent', () => {
     }).compileComponents();
   }));
 
-  it('should succeed', async(() => {
+  it('should succeed', waitForAsync(() => {
     expect('Something, someday').toBeTruthy();
   }));
 });

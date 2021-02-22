@@ -1,25 +1,3 @@
-/*
-  Copyright © 2017-2019 Kerry Shetline, kerry@shetline.com.
-
-  This code is free software: you can redistribute it and/or modify
-  it under the terms of the GNU General Public License as published by
-  the Free Software Foundation, either version 3 of the License, or
-  (at your option) any later version.
-
-  This code is distributed in the hope that it will be useful,
-  but WITHOUT ANY WARRANTY; without even the implied warranty of
-  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-  GNU General Public License for more details.
-
-  You should have received a copy of the GNU General Public License
-  along with this code.  If not, see <http://www.gnu.org/licenses/>.
-
-  For commercial, proprietary, or other uses not compatible with
-  GPL-3.0-or-later, terms of licensing for this code may be
-  negotiated by contacting the author, Kerry Shetline, otherwise all
-  other uses are restricted.
-*/
-
 import { AfterViewInit, Component, ElementRef, ViewChild } from '@angular/core';
 import { SafeStyle } from '@angular/platform-browser';
 import { getInsolationColor, MOON, SUN, UT_to_TDB } from '@tubular/astronomy';
@@ -136,8 +114,7 @@ export class SvcInsolationViewComponent extends GenericViewDirective implements 
     this.dateTime = new DateTime(this.time, zone, this.appService.gregorianChangeDate);
 
     if (redrawMode === RefreshMode.ALWAYS_REFRESH ||
-        (redrawMode === RefreshMode.REFRESH_ON_CHANGED_YEAR && this.dateTime.wallTime.y !== this.currentYear))
-    {
+        (redrawMode === RefreshMode.REFRESH_ON_CHANGED_YEAR && this.dateTime.wallTime.y !== this.currentYear)) {
       this.refreshImage = true;
     }
 
@@ -155,7 +132,7 @@ export class SvcInsolationViewComponent extends GenericViewDirective implements 
       this.refreshImage = false;
 
       this.currentYear = this.dateTime.wallTime.y;
-      this.dateTime.wallTime = {y: this.currentYear, m: 1, d: 1, hrs: 0, min: 0, sec: 0};
+      this.dateTime.wallTime = { y: this.currentYear, m: 1, d: 1, hrs: 0, min: 0, sec: 0 };
       this.baseTime = DateTime.julianDay(this.dateTime.utcTimeMillis) + this.dateTime.dstOffsetMinutes / MINS_PER_DAY + (this.centerMidnight ? 0.5 : 0);
       this.daysInYear = this.dateTime.getDaysInYear(this.currentYear);
 
@@ -301,7 +278,7 @@ export class SvcInsolationViewComponent extends GenericViewDirective implements 
     return this.withinPlot(this.lastMoveX, this.lastMoveY, this.lastDrawingContext);
   }
 
-  protected withinPlot(x: number, y: number, dc?: DrawingContext): boolean {
+  protected withinPlot(x: number, y: number, _dc?: DrawingContext): boolean {
     return (this.hOffset <= x && x < this.hOffset + this.graphWidth &&
             this.vOffset <= y && y < this.vOffset + this.graphHeight);
   }

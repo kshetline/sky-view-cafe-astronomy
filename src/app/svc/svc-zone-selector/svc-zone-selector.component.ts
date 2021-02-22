@@ -1,35 +1,15 @@
-/*
-  Copyright © 2017-2019 Kerry Shetline, kerry@shetline.com.
-
-  MIT license: https://opensource.org/licenses/MIT
-
-  Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated
-  documentation files (the "Software"), to deal in the Software without restriction, including without limitation the
-  rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit
-  persons to whom the Software is furnished to do so, subject to the following conditions:
-
-  The above copyright notice and this permission notice shall be included in all copies or substantial portions of the
-  Software.
-
-  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE
-  WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
-  COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
-  OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-*/
-
 import { Component, EventEmitter, forwardRef, OnInit, Output } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { noop } from '@tubular/util';
 import { Timezone, RegionAndSubzones } from '@tubular/time';
 import { timer } from 'rxjs';
-import { AppService } from '../../app.service';
+import { AppService, IANA_DB_UPDATE } from '../../app.service';
 
 export const SVC_ZONE_SELECTOR_VALUE_ACCESSOR: any = {
   provide: NG_VALUE_ACCESSOR,
   useExisting: forwardRef(() => SvcZoneSelectorComponent),
   multi: true,
 };
-
-const noop = () => {};
 
 const MISC_OPTION = '- Miscellaneous -';
 const UT_OPTION   = '- UTC hour offsets -';
@@ -90,6 +70,7 @@ export class SvcZoneSelectorComponent implements ControlValueAccessor, OnInit {
 
     return (this._region + '/' + this._subzone).replace(/ /g, '_');
   }
+
   set value(newZone: string) {
     if (this._value !== newZone) {
       this._value = newZone;
@@ -206,6 +187,15 @@ export class SvcZoneSelectorComponent implements ControlValueAccessor, OnInit {
   }
 
   ngOnInit(): void {
+    this.updateTimezones();
+
+    this.appService.getAppEventUpdates(evt => {
+      if (evt.name === IANA_DB_UPDATE)
+        this.updateTimezones();
+    });
+  }
+
+  private updateTimezones(): void {
     this.supplementAndProcessZones(Timezone.getRegionsAndSubzones());
   }
 
@@ -227,20 +217,18 @@ export class SvcZoneSelectorComponent implements ControlValueAccessor, OnInit {
       hourOffsets.push('UT' + (h === 0 ? '' : (h > 0 ? '+' : '-') + (habs < 10 ? '0' : '') + habs + ':00'));
     }
 
-    data.push({region: UT_OPTION,  subzones: hourOffsets});
-    data.push({region: OS_OPTION,  subzones: []});
-    data.push({region: LMT_OPTION, subzones: []});
+    data.push({ region: UT_OPTION,  subzones: hourOffsets });
+    data.push({ region: OS_OPTION,  subzones: [] });
+    data.push({ region: LMT_OPTION, subzones: [] });
 
     data.forEach((region: RegionAndSubzones) => {
-      if (region.region === MISC) {
+      if (region.region === MISC)
         region.region = MISC_OPTION;
-      }
 
       this.subzonesByRegion[region.region] = region.subzones;
 
-      if (region.region === this._region) {
+      if (region.region === this._region)
         this.subzones = region.subzones;
-      }
     });
 
     this.regions = data.map((region: RegionAndSubzones) => region.region);

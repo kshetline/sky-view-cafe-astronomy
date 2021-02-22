@@ -1,25 +1,3 @@
-/*
-  Copyright © 2017 Kerry Shetline, kerry@shetline.com.
-
-  This code is free software: you can redistribute it and/or modify
-  it under the terms of the GNU General Public License as published by
-  the Free Software Foundation, either version 3 of the License, or
-  (at your option) any later version.
-
-  This code is distributed in the hope that it will be useful,
-  but WITHOUT ANY WARRANTY; without even the implied warranty of
-  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-  GNU General Public License for more details.
-
-  You should have received a copy of the GNU General Public License
-  along with this code.  If not, see <http://www.gnu.org/licenses/>.
-
-  For commercial, proprietary, or other uses not compatible with
-  GPL-3.0-or-later, terms of licensing for this code may be
-  negotiated by contacting the author, Kerry Shetline, otherwise all
-  other uses are restricted.
-*/
-
 import { HttpClient } from '@angular/common/http';
 import { JUPITER_FLATTENING, JupiterInfo } from '@tubular/astronomy';
 import { mod } from '@tubular/math';
@@ -39,7 +17,7 @@ export class JupiterDrawer extends PlanetDrawer {
 
     if (JupiterDrawer.jupiterImage) {
       jupiterInfoPromise.then((jupiterInfo: JupiterInfo) => new JupiterDrawer(jupiterInfo))
-        .catch((reason: any) => Promise.reject('Failed to create JupiterDrawer: ' + reason));
+        .catch((reason: any) => Promise.reject(new Error('Failed to create JupiterDrawer: ' + reason)));
     }
 
     const commentReader = new JpegCommentReader(httpClient);
@@ -47,11 +25,11 @@ export class JupiterDrawer extends PlanetDrawer {
     const imagePromise = new Promise<HTMLImageElement>((resolve, reject) => {
       const image = new Image();
 
-      image.onload = () => {
+      image.onload = (): void => {
         resolve(image);
       };
-      image.onerror = () => {
-        reject('Jupiter image failed to load from: ' + image.src);
+      image.onerror = (): void => {
+        reject(new Error('Jupiter image failed to load from: ' + image.src));
       };
 
       image.src = 'assets/resources/jupiter_cyl.jpg';
@@ -69,7 +47,7 @@ export class JupiterDrawer extends PlanetDrawer {
 
       return new JupiterDrawer(jupiterInfo);
     }).catch((reason: any) => {
-      return Promise.reject('Failed to create JupiterDrawer: ' + reason);
+      return Promise.reject(new Error('Failed to create JupiterDrawer: ' + reason));
     });
   }
 

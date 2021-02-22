@@ -1,25 +1,3 @@
-/*
-  Copyright © 2017-2019 Kerry Shetline, kerry@shetline.com.
-
-  This code is free software: you can redistribute it and/or modify
-  it under the terms of the GNU General Public License as published by
-  the Free Software Foundation, either version 3 of the License, or
-  (at your option) any later version.
-
-  This code is distributed in the hope that it will be useful,
-  but WITHOUT ANY WARRANTY; without even the implied warranty of
-  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-  GNU General Public License for more details.
-
-  You should have received a copy of the GNU General Public License
-  along with this code.  If not, see <http://www.gnu.org/licenses/>.
-
-  For commercial, proprietary, or other uses not compatible with
-  GPL-3.0-or-later, terms of licensing for this code may be
-  negotiated by contacting the author, Kerry Shetline, otherwise all
-  other uses are restricted.
-*/
-
 import { AfterViewInit, Component, ElementRef, ViewChild } from '@angular/core';
 import { MOON, TOPOCENTRIC } from '@tubular/astronomy';
 import {
@@ -288,8 +266,8 @@ export class SvcEclipticViewComponent extends GenericSkyViewDirective implements
 
     const r = B * dc.orientation / dc.spanDegrees * dc.span + (dc.size - dc.span) / 2.0;
 
-    const pt = {x: (dc.xctr + cos(-L * dc.orientation) * r),
-                y: (dc.yctr + sin(-L * dc.orientation) * r)};
+    const pt = { x: (dc.xctr + cos(-L * dc.orientation) * r),
+                 y: (dc.yctr + sin(-L * dc.orientation) * r) };
 
     return pt;
   }
@@ -301,7 +279,7 @@ export class SvcEclipticViewComponent extends GenericSkyViewDirective implements
     return angle;
   }
 
-  protected drawSkyPlotLine(pt1: Point, pt2: Point, dc: DrawingContextPlanetary, subject: SUBJECT): boolean {
+  protected drawSkyPlotLine(pt1: Point, pt2: Point, dc: DrawingContextPlanetary, _subject: SUBJECT): boolean {
     strokeLine(dc.context, pt1.x, pt1.y, pt2.x, pt2.y);
 
     return true;

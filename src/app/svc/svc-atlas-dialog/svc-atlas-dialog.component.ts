@@ -1,25 +1,3 @@
-/*
-  Copyright © 2017-2020 Kerry Shetline, kerry@shetline.com.
-
-  This code is free software: you can redistribute it and/or modify
-  it under the terms of the GNU General Public License as published by
-  the Free Software Foundation, either version 3 of the License, or
-  (at your option) any later version.
-
-  This code is distributed in the hope that it will be useful,
-  but WITHOUT ANY WARRANTY; without even the implied warranty of
-  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-  GNU General Public License for more details.
-
-  You should have received a copy of the GNU General Public License
-  along with this code.  If not, see <http://www.gnu.org/licenses/>.
-
-  For commercial, proprietary, or other uses not compatible with
-  GPL-3.0-or-later, terms of licensing for this code may be
-  negotiated by contacting the author, Kerry Shetline, otherwise all
-  other uses are restricted.
-*/
-
 import { Component, ElementRef, EventEmitter, Input, Output, ViewChild } from '@angular/core';
 // noinspection ES6UnusedImports
 import { } from 'googlemaps'; // Produces "unused import" warning, but is actually needed, and `import 'googlemaps'` won't do.
@@ -78,6 +56,7 @@ export class SvcAtlasDialogComponent {
       this.extendedChange.emit(isExtended);
     }
   }
+
   @Output() extendedChange: EventEmitter<any> = new EventEmitter();
 
   @Input() get visible(): boolean { return this._visible; }
@@ -108,6 +87,7 @@ export class SvcAtlasDialogComponent {
       }
     }
   }
+
   @Output() visibleChange: EventEmitter<any> = new EventEmitter();
 
   @Input() get selection(): LocationInfo { return this._selection; }
@@ -118,6 +98,7 @@ export class SvcAtlasDialogComponent {
       this.showMap();
     }
   }
+
   @Output() selectionChange: EventEmitter<any> = new EventEmitter();
 
   @Input() get state(): string { return this._state; }
@@ -127,11 +108,12 @@ export class SvcAtlasDialogComponent {
       this.stateChange.emit(this._state);
     }
   }
+
   @Output() stateChange: EventEmitter<any> = new EventEmitter();
 
   private static stripNameQualifiers(name: string): string {
     while (true) {
-      let left, right: number;
+      let left: number;
 
       left = name.indexOf(' (');
 
@@ -141,7 +123,7 @@ export class SvcAtlasDialogComponent {
       if (left < 0)
         break;
 
-      right = name.indexOf(')', left + 1);
+      const right = name.indexOf(')', left + 1);
 
       if (right > 0)
         name = name.substring(0, left) + name.substring(right + 1);
@@ -195,7 +177,7 @@ export class SvcAtlasDialogComponent {
     this.searching = true;
     this.obscureMap();
 
-    const searchWithID = (id: number) => {
+    const searchWithID = (id: number): void => {
       this.busy = this.atlasService.search(query, this._extended).then((results: AtlasResults) => {
         if (this.searchId !== id) // Bail out if this is an old, abandoned search.
           return;
@@ -205,9 +187,9 @@ export class SvcAtlasDialogComponent {
         this.searching = false;
 
         if (results.error)
-          this.messageService.add({key: 'general', severity: 'error', detail: results.error});
+          this.messageService.add({ key: 'general', severity: 'error', detail: results.error });
         else if (results.warning)
-          this.messageService.add({key: 'general', severity: 'warn', detail: results.warning});
+          this.messageService.add({ key: 'general', severity: 'warn', detail: results.warning });
 
         this.locations = results.matches.map((location: AtlasLocation): LocationInfo => {
           return {
@@ -229,7 +211,7 @@ export class SvcAtlasDialogComponent {
           return;
 
         this.emptyMessage = '';
-        this.messageService.add({key: 'general', severity: 'error', detail: 'Search failed. Please try again later.'});
+        this.messageService.add({ key: 'general', severity: 'error', detail: 'Search failed. Please try again later.' });
         this.searching = false;
       });
     };

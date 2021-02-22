@@ -1,25 +1,3 @@
-/*
-  Copyright © 2017-2019 Kerry Shetline, kerry@shetline.com.
-
-  This code is free software: you can redistribute it and/or modify
-  it under the terms of the GNU General Public License as published by
-  the Free Software Foundation, either version 3 of the License, or
-  (at your option) any later version.
-
-  This code is distributed in the hope that it will be useful,
-  but WITHOUT ANY WARRANTY; without even the implied warranty of
-  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-  GNU General Public License for more details.
-
-  You should have received a copy of the GNU General Public License
-  along with this code.  If not, see <http://www.gnu.org/licenses/>.
-
-  For commercial, proprietary, or other uses not compatible with
-  GPL-3.0-or-later, terms of licensing for this code may be
-  negotiated by contacting the author, Kerry Shetline, otherwise all
-  other uses are restricted.
-*/
-
 import { HttpClient } from '@angular/common/http';
 import { AfterViewInit, Component, ElementRef, ViewChild } from '@angular/core';
 import {
@@ -28,7 +6,6 @@ import {
 } from '@tubular/astronomy';
 import { floor, log10, max, min, PI, Point, pow, round, sin_deg, sqrt } from '@tubular/math';
 import { extendDelimited, fillEllipse, getFontMetrics, padLeft, strokeEllipse } from '@tubular/util';
-import { find } from 'lodash-es';
 import { AppService, CurrentTab, UserSetting } from '../../app.service';
 import { AstroDataService } from '../../astronomy/astro-data.service';
 import { DrawingContextPlanetary, GenericPlanetaryViewDirective, LABEL_TYPE, SELECTION_TYPE, SUBJECT } from '../generic-planetary-view.directive';
@@ -259,7 +236,7 @@ export class SvcMoonsViewComponent extends GenericPlanetaryViewDirective impleme
         hidden = false;
 
         if (doShadows)
-          sunPos = find(smoons, smoon => smoon.moonIndex === pos.moonIndex);
+          sunPos = smoons.find(smoon => smoon.moonIndex === pos.moonIndex);
 
         if (pos.behindDisc) {
           occultedNames = extendDelimited(occultedNames, longName);
@@ -359,7 +336,7 @@ export class SvcMoonsViewComponent extends GenericPlanetaryViewDirective impleme
         pt.x = xctr + xsign * round(pos.X * radius);
         pt.y = yctr - ysign * round(pos.Y * radius);
 
-        const onScreen = (0 < pt.x && pt.x < width - 1 && yOffset < pt.y && pt.y < yOffset + height - 1);
+        const onScreen = (pt.x > 0 && pt.x < width - 1 && yOffset < pt.y && pt.y < yOffset + height - 1);
 
         if (onScreen) {
           ctx.fillRect(pt.x - 1, pt.y - 1, 3, 3);
@@ -375,7 +352,7 @@ export class SvcMoonsViewComponent extends GenericPlanetaryViewDirective impleme
             else if (this.moonNumbers)
               name = num;
 
-            const li = {name: name, pt: pt, labelType: hidden ? LABEL_TYPE.HIDDEN_MOON : LABEL_TYPE.MOON, bodyIndex: pos.moonIndex};
+            const li = { name: name, pt: pt, labelType: hidden ? LABEL_TYPE.HIDDEN_MOON : LABEL_TYPE.MOON, bodyIndex: pos.moonIndex };
             this.addLabel(li, dc);
           }
         }
@@ -446,7 +423,7 @@ export class SvcMoonsViewComponent extends GenericPlanetaryViewDirective impleme
       const sys1Label      = 'Central meridian (Sys I): ';
       const sys2Label      = 'Central meridian (Sys II): ';
       const grsLabel       = (this.jupiterInfo.getFixedGRSLongitude() ?
-                              'Set GRS longitude (Sys II): ' : 'Est. GRS longitude (Sys II): ');
+        'Set GRS longitude (Sys II): ' : 'Est. GRS longitude (Sys II): ');
       const grsOffsetLabel = 'GRS central meridian offset: ';
       let sys1Width       = ctx.measureText(sys1Label).width;
       let sys2Width       = ctx.measureText(sys2Label).width;
@@ -522,7 +499,7 @@ export class SvcMoonsViewComponent extends GenericPlanetaryViewDirective impleme
 
     if (this.zoom !== oldZoom) {
       this.throttledRedraw();
-      this.appService.updateUserSetting({view: VIEW_MOONS, property: PROPERTY_ZOOM, value: this.zoom, source: this});
+      this.appService.updateUserSetting({ view: VIEW_MOONS, property: PROPERTY_ZOOM, value: this.zoom, source: this });
     }
 
     event.preventDefault();
@@ -541,11 +518,11 @@ export class SvcMoonsViewComponent extends GenericPlanetaryViewDirective impleme
 
     if (this.zoom !== oldZoom) {
       this.throttledRedraw();
-      this.appService.updateUserSetting({view: VIEW_MOONS, property: PROPERTY_ZOOM, value: this.zoom, source: this});
+      this.appService.updateUserSetting({ view: VIEW_MOONS, property: PROPERTY_ZOOM, value: this.zoom, source: this });
     }
   }
 
-  protected drawSkyPlotLine(pt1: Point, pt2: Point, dc: DrawingContextPlanetary, subject: SUBJECT): boolean {
+  protected drawSkyPlotLine(_pt1: Point, _pt2: Point, _dc: DrawingContextPlanetary, _subject: SUBJECT): boolean {
     return false;
   }
 
@@ -560,8 +537,8 @@ export class SvcMoonsViewComponent extends GenericPlanetaryViewDirective impleme
     if (!dc)
       return false;
 
-    return (0 <= x && x < this.width &&
-            0 <= y && y < this.height);
+    return (x >= 0 && x < this.width &&
+            y >= 0 && y < this.height);
   }
 
   static zoomToZoomSteps(zoom: number): number {

@@ -1,22 +1,3 @@
-/*
-  Copyright © 2017-2020 Kerry Shetline, kerry@shetline.com
-
-  MIT license: https://opensource.org/licenses/MIT
-
-  Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated
-  documentation files (the "Software"), to deal in the Software without restriction, including without limitation the
-  rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit
-  persons to whom the Software is furnished to do so, subject to the following conditions:
-
-  The above copyright notice and this permission notice shall be included in all copies or substantial portions of the
-  Software.
-
-  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE
-  WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
-  COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
-  OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-*/
-
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { AfterViewInit, Component, ElementRef, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { abs, ceil, floor, max, min, Point } from '@tubular/math';
@@ -57,15 +38,15 @@ const VIEW_ONLY_BACKGROUND = 'black';
 const WARNING_BACKGROUND   = '#FC6';
 
 export const BACKGROUND_ANIMATIONS = trigger('displayState', [
-      state('error',    style({backgroundColor: ERROR_BACKGROUND})),
-      state('normal',   style({backgroundColor: NORMAL_BACKGROUND})),
-      state('warning',  style({backgroundColor: WARNING_BACKGROUND})),
-      state('viewOnly', style({backgroundColor: VIEW_ONLY_BACKGROUND})),
-      state('disabled', style({backgroundColor: DISABLED_BACKGROUND})),
-      transition('normal => error',  animate(FLASH_DURATION)),
-      transition('error => normal',  animate(FLASH_DURATION)),
-      transition('warning => error', animate(FLASH_DURATION)),
-      transition('error => warning', animate(FLASH_DURATION))]);
+  state('error',    style({ backgroundColor: ERROR_BACKGROUND })),
+  state('normal',   style({ backgroundColor: NORMAL_BACKGROUND })),
+  state('warning',  style({ backgroundColor: WARNING_BACKGROUND })),
+  state('viewOnly', style({ backgroundColor: VIEW_ONLY_BACKGROUND })),
+  state('disabled', style({ backgroundColor: DISABLED_BACKGROUND })),
+  transition('normal => error',  animate(FLASH_DURATION)),
+  transition('error => normal',  animate(FLASH_DURATION)),
+  transition('warning => error', animate(FLASH_DURATION)),
+  transition('error => warning', animate(FLASH_DURATION))]);
 
 const NORMAL_TEXT          = 'black';
 const DISABLED_ARROW_COLOR = '#060';
@@ -76,7 +57,7 @@ const VIEW_ONLY_TEXT       = '#0F0';
 
 const DEFAULT_BORDER_COLOR = '#D8D8D8';
 
-const touchListener = () => {
+const touchListener = (): void => {
   KsSequenceEditorComponent.touchHasOccurred = true;
   document.removeEventListener('touchstart', touchListener);
 };
@@ -198,7 +179,7 @@ export class KsSequenceEditorComponent implements AfterViewInit, OnInit, OnDestr
   protected createDigits(): void {
     this.selection = 10;
     for (let i = 0; i <= 10; ++i) {
-      this.items.push({value: i === 5 ? ':' : i - (i > 5 ? 1 : 0), editable: i !== 5, selected: i === this.selection});
+      this.items.push({ value: i === 5 ? ':' : i - (i > 5 ? 1 : 0), editable: i !== 5, selected: i === this.selection });
     }
   }
 
@@ -218,7 +199,7 @@ export class KsSequenceEditorComponent implements AfterViewInit, OnInit, OnDestr
         }
       });
 
-      observer.observe(document.body, {childList: true, subtree: true});
+      observer.observe(document.body, { childList: true, subtree: true });
     }
   }
 
@@ -294,7 +275,7 @@ export class KsSequenceEditorComponent implements AfterViewInit, OnInit, OnDestr
       return this.font;
   }
 
-  protected getColorForItem(item?: SequenceItemInfo, index?: number): string {
+  protected getColorForItem(item?: SequenceItemInfo, _index?: number): string {
     if (this.disabled)
       return DISABLED_TEXT;
     else if (item && this._viewOnly)
@@ -533,7 +514,7 @@ export class KsSequenceEditorComponent implements AfterViewInit, OnInit, OnDestr
     this.startSelectionAction(newSelection);
   }
 
-  protected onTouchStartAlternate(event: TouchEvent): void {}
+  protected onTouchStartAlternate(_event: TouchEvent): void {}
 
   protected startSelectionAction(newSelection: number): void {
     if ((newSelection === SPIN_UP || newSelection === SPIN_DOWN) && !this.clickTimer) {
@@ -838,7 +819,7 @@ export class KsSequenceEditorComponent implements AfterViewInit, OnInit, OnDestr
     this.items[this.selection].value = (<number> this.items[this.selection].value + 9) % 10;
   }
 
-  protected digitTyped(charCode: number, key: string): void {
+  protected digitTyped(charCode: number, _key: string): void {
     if (48 <= charCode && charCode < 58) {
       this.items[this.selection].value = charCode - 48;
       this.cursorRight();

@@ -1,25 +1,3 @@
-/*
-  Copyright © 2017-2019 Kerry Shetline, kerry@shetline.com.
-
-  This code is free software: you can redistribute it and/or modify
-  it under the terms of the GNU General Public License as published by
-  the Free Software Foundation, either version 3 of the License, or
-  (at your option) any later version.
-
-  This code is distributed in the hope that it will be useful,
-  but WITHOUT ANY WARRANTY; without even the implied warranty of
-  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-  GNU General Public License for more details.
-
-  You should have received a copy of the GNU General Public License
-  along with this code.  If not, see <http://www.gnu.org/licenses/>.
-
-  For commercial, proprietary, or other uses not compatible with
-  GPL-3.0-or-later, terms of licensing for this code may be
-  negotiated by contacting the author, Kerry Shetline, otherwise all
-  other uses are restricted.
-*/
-
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { floor, mod } from '@tubular/math';
 import { AppService, Location } from '../../app.service';
@@ -50,6 +28,7 @@ export class SvcChangeLocationDialogComponent {
       this.visibleChange.emit(isVisible);
     }
   }
+
   @Output() visibleChange: EventEmitter<any> = new EventEmitter();
 
   @Input() get latitude(): number { return this._latitude; }
@@ -59,6 +38,7 @@ export class SvcChangeLocationDialogComponent {
       this.formattedLatitude = formatLatitude(value);
     }
   }
+
   @Output() latitudeChange: EventEmitter<any> = new EventEmitter();
 
   @Input() get longitude(): number { return this._longitude; }
@@ -76,6 +56,7 @@ export class SvcChangeLocationDialogComponent {
         this.formattedHourOffset += '+' + (h >  9 ? '' : '0') +   h  + ':00';
     }
   }
+
   @Output() longitudeChange: EventEmitter<any> = new EventEmitter();
 
   @Input() get timezone(): string { return this._timezone; }
@@ -85,6 +66,7 @@ export class SvcChangeLocationDialogComponent {
       this.updateZoneChoice();
     }
   }
+
   @Output() timezoneChange: EventEmitter<any> = new EventEmitter();
 
   constructor(private appService: AppService) {

@@ -1,32 +1,11 @@
-/*
-  Copyright © 2017-2019 Kerry Shetline, kerry@shetline.com.
-
-  This code is free software: you can redistribute it and/or modify
-  it under the terms of the GNU General Public License as published by
-  the Free Software Foundation, either version 3 of the License, or
-  (at your option) any later version.
-
-  This code is distributed in the hope that it will be useful,
-  but WITHOUT ANY WARRANTY; without even the implied warranty of
-  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-  GNU General Public License for more details.
-
-  You should have received a copy of the GNU General Public License
-  along with this code.  If not, see <http://www.gnu.org/licenses/>.
-
-  For commercial, proprietary, or other uses not compatible with
-  GPL-3.0-or-later, terms of licensing for this code may be
-  negotiated by contacting the author, Kerry Shetline, otherwise all
-  other uses are restricted.
-*/
-
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 import { NavigationEnd, Router } from '@angular/router';
 import { SolarSystem, StarCatalog } from '@tubular/astronomy';
-import { Calendar } from '@tubular/time';
-import { clone, compact, debounce, forEach, isEqual, isString, sortedIndexBy } from 'lodash-es';
+import { addZonesUpdateListener, Calendar, pollForTimezoneUpdates, zonePollerBrowser } from '@tubular/time';
+import { clone, forEach, isEqual, isString } from '@tubular/util';
+import { compact, debounce, sortedIndexBy } from 'lodash-es';
 import { BehaviorSubject, Observable, Subject, Subscription } from 'rxjs';
 import { AstroDataService } from './astronomy/astro-data.service';
 
@@ -45,6 +24,7 @@ export const    PROPERTY_NATIVE_DATE_TIME = 'native_date_time';
 export const    PROPERTY_WARNING_NATIVE_DATE_TIME = 'WARNING_native_date_time';
 
 export const NEW_LOCATION = '(new location)';
+export const IANA_DB_UPDATE = 'iana_db_update';
 
 export function currentMinuteMillis(): number {
   return Math.floor(Date.now() / 60000) * 60000;
@@ -112,7 +92,7 @@ interface IpLocation {
 
 @Injectable()
 export class AppService {
-  private _appEvent = new BehaviorSubject<AppEvent>({name: 'non-event'});
+  private _appEvent = new BehaviorSubject<AppEvent>({ name: 'non-event' });
   private appEventObserver: Observable<AppEvent> = this._appEvent.asObservable();
   private _time = new BehaviorSubject<number>(currentMinuteMillis());
   private timeObserver: Observable<number> = this._time.asObservable();
@@ -200,6 +180,15 @@ export class AppService {
           this.currentTab = CurrentTab.SKY;
       }
     });
+
+    addZonesUpdateListener(result => {
+      if (result) {
+        this.sendAppEvent(IANA_DB_UPDATE);
+        this._time.next(this._time.getValue());
+      }
+    });
+
+    pollForTimezoneUpdates(zonePollerBrowser, 'large-alt');
   }
 
   static get title(): string { return 'Sky View Café'; }
@@ -209,6 +198,7 @@ export class AppService {
   getAppEventUpdates(callback: (appEvent: AppEvent) => void): Subscription {
     return this.appEventObserver.subscribe(callback);
   }
+
   sendAppEvent(appEventOrName: AppEvent | string, value?: any): void {
     if (isString(appEventOrName))
       this._appEvent.next({ name: appEventOrName, value: value });
@@ -221,6 +211,7 @@ export class AppService {
     if (this._time.getValue() !== newTime)
       this._time.next(newTime);
   }
+
   getTimeUpdates(callback: (time: number) => void): Subscription {
     return this.timeObserver.subscribe(callback);
   }
@@ -230,6 +221,7 @@ export class AppService {
     if (!isEqual(this._location.getValue(), newObserver))
       this._location.next(newObserver);
   }
+
   getLocationUpdates(callback: (observer: Location) => void): Subscription {
     return this.locationObserver.subscribe(callback);
   }
@@ -318,6 +310,7 @@ export class AppService {
       this.router.navigate(['/' + tabNames[this._currentTab.getValue()]]);
     }
   }
+
   getCurrentTabUpdates(callback: (tabIndex: CurrentTab) => void): Subscription {
     return this.currentTabObserver.subscribe(callback);
   }
@@ -325,6 +318,7 @@ export class AppService {
   getUserSettingUpdates(callback: (setting: UserSetting) => void): Subscription {
     return this.settingsObserver.subscribe(callback);
   }
+
   updateUserSetting(setting: UserSetting): void {
     let viewSettings = this.allSettings[setting.view];
 
@@ -339,12 +333,13 @@ export class AppService {
 
     this.settingsSource.next(setting);
   }
+
   requestViewSettings(view: string): void {
     const viewSettings = this.allSettings[view];
 
     if (viewSettings) {
-      forEach(viewSettings, (value, property) => {
-        const userSetting = {view: view, property: property, value: value, source: this};
+      forEach(viewSettings, (value, property: string) => {
+        const userSetting = { view: view, property: property, value: value, source: this };
         this.settingsSource.next(userSetting);
       });
     }
@@ -385,11 +380,11 @@ export class AppService {
   get gregorianChangeDate(): string { return this._gcDate; }
 
   get calendarType(): CalendarSetting {
-    if ('1582-10-15' === this._gcDate)
+    if (this._gcDate === '1582-10-15')
       return CalendarSetting.STANDARD;
-    else if ('g' === this._gcDate || 'G' === this._gcDate)
+    else if (this._gcDate === 'g' || this._gcDate === 'G')
       return CalendarSetting.PURE_GREGORIAN;
-    else if ('j' === this._gcDate || 'J' === this._gcDate)
+    else if (this._gcDate === 'j' || this._gcDate === 'J')
       return CalendarSetting.PURE_JULIAN;
     else
       return CalendarSetting.CUSTOM_GCD;
@@ -500,7 +495,7 @@ export class AppService {
 
   private getLocationFromGeoLocation(): void {
     if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition((position: Position) => {
+      navigator.geolocation.getCurrentPosition((position: GeolocationPosition) => {
         this.location = new Location('(unnamed)', position.coords.latitude, position.coords.longitude, 'OS');
       },
       () => {

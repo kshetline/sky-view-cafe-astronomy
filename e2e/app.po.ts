@@ -1,9 +1,7 @@
-// noinspection ES6UnusedImports
-import { browser, by, element } from 'protractor';
+import { browser, promise } from 'protractor';
 
 export class AppPage {
-  /* tslint:disable */
-  navigateTo() {
+  navigateTo(): promise.Promise<any> {
     return browser.get('/');
   }
 }

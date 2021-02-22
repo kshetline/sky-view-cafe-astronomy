@@ -1,45 +1,8 @@
-/*
-  Copyright © 2017-2019 Kerry Shetline, kerry@shetline.com.
-
-  IMPORTANT NOTE: The license below DOES NOT COVER use of the
-  skyviewcafe.com web site for fulfilling API requests. Users of
-  this code must supply their own server-side support.
-
-  This code is free software: you can redistribute it and/or modify
-  it under the terms of the GNU General Public License as published by
-  the Free Software Foundation, either version 3 of the License, or
-  (at your option) any later version.
-
-  This code is distributed in the hope that it will be useful,
-  but WITHOUT ANY WARRANTY; without even the implied warranty of
-  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-  GNU General Public License for more details.
-
-  You should have received a copy of the GNU General Public License
-  along with this code.  If not, see <http://www.gnu.org/licenses/>.
-
-  For commercial, proprietary, or other uses not compatible with
-  GPL-3.0-or-later, terms of licensing for this code may be
-  negotiated by contacting the author, Kerry Shetline, otherwise all
-  other uses are restricted.
-*/
-
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { urlEncodeParams } from '@tubular/util';
 
 const PING_INTERVAL = 1800000; // half hour
-
-export interface AtlasResults {
-  originalSearch: string;
-  normalizedSearch: string;
-  time: number;
-  error: string;
-  warning: string;
-  info: string;
-  limitReached: boolean;
-  matches: AtlasLocation[];
-}
 
 export interface AtlasLocation {
   displayName: string;
@@ -63,6 +26,17 @@ export interface AtlasLocation {
   source: number;
   matchedByAlternateName: boolean;
   matchedBySound: boolean;
+}
+
+export interface AtlasResults {
+  originalSearch: string;
+  normalizedSearch: string;
+  time: number;
+  error: string;
+  warning: string;
+  info: string;
+  limitReached: boolean;
+  matches: AtlasLocation[];
 }
 
 @Injectable()
@@ -90,12 +64,12 @@ export class SvcAtlasService {
       remote: extend ? 'extend' : null
     });
 
-    if (this.localTesting) {
+    if (this.hostname === '127.0.0.1')
+      return this.httpClient.jsonp<AtlasResults>('https://localhost:8088/atlas/?' + params, 'callback').toPromise();
+    else if (this.localTesting)
       return this.httpClient.jsonp<AtlasResults>('https://test.skyviewcafe.com/atlas/?' + params, 'callback').toPromise();
-    }
-    else {
+    else
       return this.httpClient.get<AtlasResults>('/atlas/?' + params).toPromise();
-    }
   }
 
   getStates(): Promise<string[]> {
@@ -105,12 +79,13 @@ export class SvcAtlasService {
       return SvcAtlasService.statesPromise;
 
     if (this.localTesting) {
-      SvcAtlasService.statesPromise = this.httpClient.jsonp<string[]>
-        ('https://test.skyviewcafe.com/states/', 'callback').toPromise().then(data => {
-          SvcAtlasService.states = data;
+      const apiHost = (this.hostname === '127.0.0.1' ? 'http://localhost:8088/states/' : 'https://test.skyviewcafe.com/states/');
 
-          return data;
-        }, reason => { console.log(reason); return []; });
+      SvcAtlasService.statesPromise = this.httpClient.jsonp<string[]>(apiHost, 'callback').toPromise().then(data => {
+        SvcAtlasService.states = data;
+
+        return data;
+      }, reason => { console.log(reason); return []; });
     }
     else {
       SvcAtlasService.statesPromise = this.httpClient.get<string[]>('/states/').toPromise().then(data => {

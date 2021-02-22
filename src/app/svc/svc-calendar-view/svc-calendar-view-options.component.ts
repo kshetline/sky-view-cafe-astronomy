@@ -1,32 +1,10 @@
-/*
-  Copyright © 2017-2019 Kerry Shetline, kerry@shetline.com.
-
-  This code is free software: you can redistribute it and/or modify
-  it under the terms of the GNU General Public License as published by
-  the Free Software Foundation, either version 3 of the License, or
-  (at your option) any later version.
-
-  This code is distributed in the hope that it will be useful,
-  but WITHOUT ANY WARRANTY; without even the implied warranty of
-  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-  GNU General Public License for more details.
-
-  You should have received a copy of the GNU General Public License
-  along with this code.  If not, see <http://www.gnu.org/licenses/>.
-
-  For commercial, proprietary, or other uses not compatible with
-  GPL-3.0-or-later, terms of licensing for this code may be
-  negotiated by contacting the author, Kerry Shetline, otherwise all
-  other uses are restricted.
-*/
-
 import { AfterViewInit, Component, OnDestroy } from '@angular/core';
 import { DateTimeField, DateTime, Timezone } from '@tubular/time';
 import { SelectItem } from 'primeng/api';
 import { Subscription, timer } from 'rxjs';
 import { AppService, SVC_MAX_YEAR, SVC_MIN_YEAR, UserSetting } from '../../app.service';
 import { PROPERTY_DAILY_DAYLIGHT, PROPERTY_DAILY_MOON_PHASE, PROPERTY_EQUISOLSTICE, PROPERTY_EVENT_TYPE, PROPERTY_INCLUDE_TRANSITS,
-         PROPERTY_KEY_MOON_PHASES, VIEW_CALENDAR
+  PROPERTY_KEY_MOON_PHASES, VIEW_CALENDAR
 } from './svc-calendar-view.component';
 
 const CLICK_REPEAT_DELAY = 500;
@@ -48,19 +26,19 @@ export class SvcCalendarViewOptionsComponent implements AfterViewInit, OnDestroy
   private pendingDelta = 0;
 
   eventTypes: SelectItem[] = [
-    {label: 'Rise/Set Sun',     value: 0},
-    {label: 'Rise/Set Moon',    value: 1},
-    {label: 'Rise/Set Mercury', value: 2},
-    {label: 'Rise/Set Venus',   value: 3},
-    {label: 'Rise/Set Mars',    value: 4},
-    {label: 'Rise/Set Jupiter', value: 5},
-    {label: 'Rise/Set Saturn',  value: 6},
-    {label: 'Rise/Set Uranus',  value: 7},
-    {label: 'Rise/Set Neptune', value: 8},
-    {label: 'Rise/Set Pluto',   value: 9},
-    {label: 'Civil Twilight',   value: 10},
-    {label: 'Naut. Twilight',   value: 11},
-    {label: 'Astro. Twilight',  value: 12}
+    { label: 'Rise/Set Sun',     value: 0 },
+    { label: 'Rise/Set Moon',    value: 1 },
+    { label: 'Rise/Set Mercury', value: 2 },
+    { label: 'Rise/Set Venus',   value: 3 },
+    { label: 'Rise/Set Mars',    value: 4 },
+    { label: 'Rise/Set Jupiter', value: 5 },
+    { label: 'Rise/Set Saturn',  value: 6 },
+    { label: 'Rise/Set Uranus',  value: 7 },
+    { label: 'Rise/Set Neptune', value: 8 },
+    { label: 'Rise/Set Pluto',   value: 9 },
+    { label: 'Civil Twilight',   value: 10 },
+    { label: 'Naut. Twilight',   value: 11 },
+    { label: 'Astro. Twilight',  value: 12 }
   ];
 
   constructor(private appService: AppService) {
@@ -86,7 +64,7 @@ export class SvcCalendarViewOptionsComponent implements AfterViewInit, OnDestroy
   set eventType(value: number) {
     if (this._eventType !== value) {
       this._eventType = value;
-      this.appService.updateUserSetting({view: VIEW_CALENDAR, property: PROPERTY_EVENT_TYPE, value: value, source: this});
+      this.appService.updateUserSetting({ view: VIEW_CALENDAR, property: PROPERTY_EVENT_TYPE, value: value, source: this });
     }
   }
 
@@ -94,7 +72,7 @@ export class SvcCalendarViewOptionsComponent implements AfterViewInit, OnDestroy
   set keyMoonPhases(value: boolean) {
     if (this._keyMoonPhases !== value) {
       this._keyMoonPhases = value;
-      this.appService.updateUserSetting({view: VIEW_CALENDAR, property: PROPERTY_KEY_MOON_PHASES, value: value, source: this});
+      this.appService.updateUserSetting({ view: VIEW_CALENDAR, property: PROPERTY_KEY_MOON_PHASES, value: value, source: this });
     }
   }
 
@@ -102,7 +80,7 @@ export class SvcCalendarViewOptionsComponent implements AfterViewInit, OnDestroy
   set equisolstice(value: boolean) {
     if (this._equisolstice !== value) {
       this._equisolstice = value;
-      this.appService.updateUserSetting({view: VIEW_CALENDAR, property: PROPERTY_EQUISOLSTICE, value: value, source: this});
+      this.appService.updateUserSetting({ view: VIEW_CALENDAR, property: PROPERTY_EQUISOLSTICE, value: value, source: this });
     }
   }
 
@@ -110,7 +88,7 @@ export class SvcCalendarViewOptionsComponent implements AfterViewInit, OnDestroy
   set dailyDaylight(value: boolean) {
     if (this._dailyDaylight !== value) {
       this._dailyDaylight = value;
-      this.appService.updateUserSetting({view: VIEW_CALENDAR, property: PROPERTY_DAILY_DAYLIGHT, value: value, source: this});
+      this.appService.updateUserSetting({ view: VIEW_CALENDAR, property: PROPERTY_DAILY_DAYLIGHT, value: value, source: this });
     }
   }
 
@@ -118,7 +96,7 @@ export class SvcCalendarViewOptionsComponent implements AfterViewInit, OnDestroy
   set dailyMoonPhase(value: boolean) {
     if (this._dailyMoonPhase !== value) {
       this._dailyMoonPhase = value;
-      this.appService.updateUserSetting({view: VIEW_CALENDAR, property: PROPERTY_DAILY_MOON_PHASE, value: value, source: this});
+      this.appService.updateUserSetting({ view: VIEW_CALENDAR, property: PROPERTY_DAILY_MOON_PHASE, value: value, source: this });
     }
   }
 
@@ -126,7 +104,7 @@ export class SvcCalendarViewOptionsComponent implements AfterViewInit, OnDestroy
   set includeTransits(value: boolean) {
     if (this._includeTransits !== value) {
       this._includeTransits = value;
-      this.appService.updateUserSetting({view: VIEW_CALENDAR, property: PROPERTY_INCLUDE_TRANSITS, value: value, source: this});
+      this.appService.updateUserSetting({ view: VIEW_CALENDAR, property: PROPERTY_INCLUDE_TRANSITS, value: value, source: this });
     }
   }
 
@@ -160,7 +138,7 @@ export class SvcCalendarViewOptionsComponent implements AfterViewInit, OnDestroy
     const zone = Timezone.getTimezone(this.appService.timezone, this.appService.longitude);
     const currentTime = new DateTime(this.appService.time, zone);
 
-    currentTime.add(DateTimeField.MONTHS, delta);
+    currentTime.add(DateTimeField.MONTH, delta);
 
     if (SVC_MIN_YEAR <= currentTime.wallTime.y && currentTime.wallTime.y <= SVC_MAX_YEAR)
       this.appService.time = currentTime.utcTimeMillis;

@@ -1,28 +1,6 @@
-/*
-  Copyright © 2017-2019 Kerry Shetline, kerry@shetline.com.
-
-  This code is free software: you can redistribute it and/or modify
-  it under the terms of the GNU General Public License as published by
-  the Free Software Foundation, either version 3 of the License, or
-  (at your option) any later version.
-
-  This code is distributed in the hope that it will be useful,
-  but WITHOUT ANY WARRANTY; without even the implied warranty of
-  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-  GNU General Public License for more details.
-
-  You should have received a copy of the GNU General Public License
-  along with this code.  If not, see <http://www.gnu.org/licenses/>.
-
-  For commercial, proprietary, or other uses not compatible with
-  GPL-3.0-or-later, terms of licensing for this code may be
-  negotiated by contacting the author, Kerry Shetline, otherwise all
-  other uses are restricted.
-*/
-
 import { AfterViewInit, Component, ElementRef, ViewChild } from '@angular/core';
 import { EARTH, MARS, MOON, NEPTUNE, NMode, PLUTO, REFRACTION, SATURN, SolarSystem, SUN } from '@tubular/astronomy';
-import { abs, cos_deg, floor, log10, max, min, mod, mod2, Point, Point3D, pow, round, sin_deg, SphericalPosition3D, } from '@tubular/math';
+import { abs, cos_deg, floor, log10, max, min, mod, mod2, Point, Point3D, pow, round, sin_deg, SphericalPosition3D } from '@tubular/math';
 import { colorFromRGB, parseColor, replaceAlpha, RGBA } from '@tubular/util';
 import { debounce, sortBy } from 'lodash-es';
 import { AppService, CurrentTab, UserSetting } from '../../app.service';
@@ -174,7 +152,7 @@ export class SvcOrbitViewComponent extends GenericPlanetaryViewDirective impleme
             this.zoom = SvcOrbitViewComponent.zoomToZoomSteps(scales[this.extent]);
 
             if (this.zoom !== oldZoom)
-              this.appService.updateUserSetting({view: VIEW_ORBITS, property: PROPERTY_ZOOM, value: this.zoom, source: this});
+              this.appService.updateUserSetting({ view: VIEW_ORBITS, property: PROPERTY_ZOOM, value: this.zoom, source: this });
           }
         }
         else if (setting.property === PROPERTY_CENTER_EARTH)
@@ -247,9 +225,9 @@ export class SvcOrbitViewComponent extends GenericPlanetaryViewDirective impleme
     const scale = pow(10.0, LOG_MIN_ZOOM + ZOOM_LOG_RANGE * this.zoom / ZOOM_STEPS);
     const pixelsPerUnit = dc.radius / scale;
     const viewingDistance = scale * VIEWING_DISTANCE_FACTOR;
-    let ctr: Point3D = {x: 0, y: 0, z: 0};
-    let pt0: Point3D = {x: 0, y: 0, z: 0};
-    const pt1: Point3D = {x: 0, y: 0, z: 0};
+    let ctr: Point3D = { x: 0, y: 0, z: 0 };
+    let pt0: Point3D = { x: 0, y: 0, z: 0 };
+    const pt1: Point3D = { x: 0, y: 0, z: 0 };
     const cos_xz = cos_deg(this.rotation_xz);
     const sin_xz = sin_deg(this.rotation_xz);
     const cos_yz = cos_deg(this.rotation_yz);
@@ -456,13 +434,13 @@ export class SvcOrbitViewComponent extends GenericPlanetaryViewDirective impleme
       pt0 = dc.ss.getHeliocentricPosition(planet, dc.jde).xyz;
       SvcOrbitViewComponent.translate(mode, pt0, ctr, viewingDistance, cos_xz, sin_xz, cos_yz, sin_yz);
 
-      const pt = {x: this.scaledRound(dc.xctr + pt0.x * pixelsPerUnit),
-                  y: this.scaledRound(dc.yctr - pt0.y * pixelsPerUnit)};
+      const pt = { x: this.scaledRound(dc.xctr + pt0.x * pixelsPerUnit),
+                   y: this.scaledRound(dc.yctr - pt0.y * pixelsPerUnit) };
 
-      positions.push({planet: planet, pos: pt0, pt: pt});
+      positions.push({ planet: planet, pos: pt0, pt: pt });
     }
 
-    positions = sortBy(positions, [(position: ZSortablePlanet) => position.pos.z]);
+    positions = sortBy(positions, [(position: ZSortablePlanet): any => position.pos.z]);
 
     const overrideColor = this.get3DColor(mode);
 
@@ -478,7 +456,7 @@ export class SvcOrbitViewComponent extends GenericPlanetaryViewDirective impleme
 
       if (this.showNames) {
         const name = dc.ss.getPlanetName(p);
-        const li: LabelInfo = {name: name, pt: pt, bodyIndex: p, labelType: LABEL_TYPE.PLANET, overrideColor: overrideColor};
+        const li: LabelInfo = { name: name, pt: pt, bodyIndex: p, labelType: LABEL_TYPE.PLANET, overrideColor: overrideColor };
 
         if (mode === DrawingMode.LEFT_EYE)
           this.leftEyeLabels.push(li);
@@ -525,7 +503,7 @@ export class SvcOrbitViewComponent extends GenericPlanetaryViewDirective impleme
     super.drawLabels(dc);
   }
 
-  protected drawSkyPlotLine(pt1: Point, pt2: Point, dc: DrawingContextPlanetary, subject: SUBJECT): boolean {
+  protected drawSkyPlotLine(_pt1: Point, _pt2: Point, _dc: DrawingContextPlanetary, _subject: SUBJECT): boolean {
     return null;
   }
 
@@ -620,7 +598,7 @@ export class SvcOrbitViewComponent extends GenericPlanetaryViewDirective impleme
 
     if (this.zoom !== oldZoom) {
       this.throttledRedraw();
-      this.appService.updateUserSetting({view: VIEW_ORBITS, property: PROPERTY_ZOOM, value: this.zoom, source: this});
+      this.appService.updateUserSetting({ view: VIEW_ORBITS, property: PROPERTY_ZOOM, value: this.zoom, source: this });
     }
 
     event.preventDefault();
@@ -639,7 +617,7 @@ export class SvcOrbitViewComponent extends GenericPlanetaryViewDirective impleme
 
     if (this.zoom !== oldZoom) {
       this.throttledRedraw();
-      this.appService.updateUserSetting({view: VIEW_ORBITS, property: PROPERTY_ZOOM, value: this.zoom, source: this});
+      this.appService.updateUserSetting({ view: VIEW_ORBITS, property: PROPERTY_ZOOM, value: this.zoom, source: this });
     }
   }
 
@@ -654,8 +632,8 @@ export class SvcOrbitViewComponent extends GenericPlanetaryViewDirective impleme
     if (!dc)
       return false;
 
-    return (0 <= x && x < this.width &&
-            0 <= y && y < this.height);
+    return (x >= 0 && x < this.width &&
+            y >= 0 && y < this.height);
   }
 
   resetOrientation(): void {
@@ -686,8 +664,8 @@ export class SvcOrbitViewComponent extends GenericPlanetaryViewDirective impleme
   }
 
   protected debouncedRotationUpdate = debounce(() => {
-    this.appService.updateUserSetting({view: VIEW_ORBITS, property: PROPERTY_ROTATION_XZ, value: this.rotation_xz, source: this});
-    this.appService.updateUserSetting({view: VIEW_ORBITS, property: PROPERTY_ROTATION_YZ, value: this.rotation_yz, source: this});
+    this.appService.updateUserSetting({ view: VIEW_ORBITS, property: PROPERTY_ROTATION_XZ, value: this.rotation_xz, source: this });
+    this.appService.updateUserSetting({ view: VIEW_ORBITS, property: PROPERTY_ROTATION_YZ, value: this.rotation_yz, source: this });
   }, 500);
 
   protected static translate(mode: DrawingMode, pt: Point3D, ctr: Point3D, viewingDistance: number,

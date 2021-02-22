@@ -1,27 +1,5 @@
-/*
-  Copyright © 2017-2019 Kerry Shetline, kerry@shetline.com.
-
-  This code is free software: you can redistribute it and/or modify
-  it under the terms of the GNU General Public License as published by
-  the Free Software Foundation, either version 3 of the License, or
-  (at your option) any later version.
-
-  This code is distributed in the hope that it will be useful,
-  but WITHOUT ANY WARRANTY; without even the implied warranty of
-  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-  GNU General Public License for more details.
-
-  You should have received a copy of the GNU General Public License
-  along with this code.  If not, see <http://www.gnu.org/licenses/>.
-
-  For commercial, proprietary, or other uses not compatible with
-  GPL-3.0-or-later, terms of licensing for this code may be
-  negotiated by contacting the author, Kerry Shetline, otherwise all
-  other uses are restricted.
-*/
-
 import { Component, ViewChild } from '@angular/core';
-import { clone, find } from 'lodash-es';
+import { clone } from '@tubular/util';
 import { ConfirmationService } from 'primeng/api';
 import { AppService, Location, NEW_LOCATION } from '../../app.service';
 import { KsDropdownComponent } from '../../widgets/ks-dropdown/ks-dropdown.component';
@@ -80,7 +58,7 @@ export class SvcLocationSettingsComponent {
 
   get locationName(): string { return this.app.location.name; }
   set locationName(newName: string) {
-    const newLocation = find(this.app.locations, {name: newName});
+    const newLocation = this.app.locations.find(loc => loc.name === newName);
 
     if (newLocation)
       this.app.location = newLocation;
@@ -123,7 +101,7 @@ export class SvcLocationSettingsComponent {
     if (matches)
       this.selectedName = matches[1];
 
-    if (find(this.app.locations, {name: this.selectedName })) {
+    if (this.app.locations.find(loc => loc.name === this.selectedName)) {
       this.confirmationService.confirm({
         key: 'save-confirm',
         message: `Are you sure you want to replace the existing "${this.selectedName}"?`,
