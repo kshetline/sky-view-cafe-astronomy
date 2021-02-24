@@ -198,10 +198,11 @@ export class SvcZoneSelectorComponent implements ControlValueAccessor, OnInit {
     if (offset) {
       this.setOffset(offset);
       this.zone = toDisplayZone(newZone);
+      this.lastZones[offset] = this._zone;
     }
     else {
       this.setOffset('UTC+00:00');
-      this.zone = 'UTC';
+      this._zone = this.zones[0];
       this.selectByOffset = false;
     }
   }

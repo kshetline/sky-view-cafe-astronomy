@@ -3,9 +3,9 @@
   <button pButton type="button" icon="fas fa-chevron-left" [disabled]="disabled || !eventFinderReady"
           (touchstart)="onTouchStart($event, true)" (touchend)="onTouchEnd($event)"
           (mousedown)="onMouseDown(true, $event)" (mouseup)="onMouseUp()" (mouseleave)="stopClickTimer()"></button>
-  <ks-dropdown scrollHeight="400px"
+  <ks-dropdown scrollHeight="396px"
                [options]="events" [(ngModel)]="selectedEvent" [disabled]="disabled || !eventFinderReady"></ks-dropdown>
-  <ks-dropdown scrollHeight="250px"
+  <ks-dropdown scrollHeight="264px"
                [options]="planets" [(ngModel)]="selectedPlanet" [disabled]="disabled || noPlanets || !eventFinderReady"></ks-dropdown>
   <button pButton type="button" icon="fas fa-chevron-right" [disabled]="disabled || !eventFinderReady"
           (touchstart)="onTouchStart($event, false)" (touchend)="onTouchEnd($event)"
