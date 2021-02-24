@@ -21,6 +21,62 @@ const UT   = 'UT';
 const OS   = 'OS';
 const LMT  = 'LMT';
 
+function toCanonicalOffset(offset: string): string { // ([§#~^\u2744])
+  let off = offset;
+  let dst = '';
+  const $ = /([-+]\d+(?::\d+)?)(.+)?/.exec(offset);
+
+  if ($) {
+    off = $[1];
+    dst = ($[2] ?? '').trim();
+
+    if (dst.includes('two'))
+      dst = '#';
+    else if (dst.includes('half'))
+      dst = '^';
+    else if (dst.includes('negative'))
+      dst = '\u2744';
+    else if (dst === 'DST')
+      dst = '§';
+    else if (dst)
+      dst = '~';
+  }
+
+  return off + dst;
+}
+
+function toCanonicalZone(zone: string): string {
+  return zone?.replace(/ /g, '_').replace(/\bKyiv\b/, 'Kiev');
+}
+
+function toDisplayOffset(offset: string): string {
+  let off = offset;
+  let dst = '';
+  const $ = /([-+]\d+(?::\d+)?)([§#~^\u2744])?/.exec(offset);
+
+  if ($) {
+    off = $[1];
+    dst = $[2] ?? '';
+
+    if (dst === '§')
+      dst = ' DST';
+    else if (dst === '#')
+      dst = ' two-hour DST';
+    else if (dst === '^')
+      dst = ' half-hour DST';
+    else if (dst === '\u2744')
+      dst = ' negative DST';
+    else if (dst === '~')
+      dst = ' non-standard DST';
+  }
+
+  return `UTC${off}${dst}`;
+}
+
+function toDisplayZone(zone: string): string {
+  return zone?.replace(/_/g, ' ').replace(/\bKiev\b/, 'Kyiv');
+}
+
 @Component({
   selector: 'svc-zone-selector',
   templateUrl: './svc-zone-selector.component.html',
@@ -30,19 +86,27 @@ const LMT  = 'LMT';
 export class SvcZoneSelectorComponent implements ControlValueAccessor, OnInit {
   regions: string[] = [UT_OPTION];
   subzones: string[] = [UT];
+  offsets: string[] = [];
+  zones: string[] = [];
 
+  private _offset: string;
   private _region: string = this.regions[0];
+  private _selectByOffset = true;
   private _subzone: string = this.subzones[0];
   private _value: string = UT;
-  private lastSubzones: {[region: string]: string} = {};
-  private subzonesByRegion: {[region: string]: string[]} = {};
-  private hasFocus = false;
-  private focusCount = 0;
-  private onTouchedCallback: () => void = noop;
-  private onChangeCallback: (_: any) => void = noop;
-  private knownIanaZones = new Set<string>();
+  private _zone: string;
 
-  // tslint:disable:member-ordering
+  private focusCount = 0;
+  private hasFocus = false;
+  private knownIanaZones = new Set<string>();
+  private lastSubzones: Record<string, string> = {};
+  private lastZones: Record<string, string> = {};
+  private offsetByZone = new Map<string, string>();
+  private onChangeCallback: (_: any) => void = noop;
+  private onTouchedCallback: () => void = noop;
+  private subzonesByRegion: Record<string, string[]> = {};
+  private zonesByOffset = new Map<string, string[]>();
+
   disabled = false;
   error: string;
 
@@ -55,38 +119,35 @@ export class SvcZoneSelectorComponent implements ControlValueAccessor, OnInit {
   }
 
   get value(): string | null {
-    if (!this._region || this._subzone == null) {
+    if (!this._region || this._subzone == null)
       return null;
-    }
-    else if (this._region === MISC_OPTION || this._region === UT_OPTION) {
+    else if (this._region === MISC_OPTION || this._region === UT_OPTION)
       return this._subzone;
-    }
-    else if (this._region === LMT_OPTION) {
+    else if (this._region === LMT_OPTION)
       return LMT;
-    }
-    else if (this._region === OS_OPTION) {
+    else if (this._region === OS_OPTION)
       return OS;
-    }
 
-    return (this._region + '/' + this._subzone).replace(/ /g, '_');
+    return toCanonicalZone(this._region + '/' + this._subzone);
   }
 
-  set value(newZone: string) {
-    if (this._value !== newZone) {
-      this._value = newZone;
-      this.updateValue(newZone);
-      this.onChangeCallback(newZone);
+  set value(newValue: string) {
+    if (this._value !== newValue) {
+      this._value = newValue;
+      this.updateValue(newValue);
+      this.onChangeCallback(newValue);
     }
   }
 
-  updateValue(newZone: string): void {
+  private updateValue(newZone: string): void {
     if (newZone === null) {
       this._region = this._subzone = this._value = null;
+      this._offset = this._zone = null;
 
       return;
     }
 
-    const groups: string[] = /(America\/Argentina\/|America\/Indiana\/|SystemV\/\w+|\w+\/|[-+:0-9A-Za-z]+)(.+)?/.exec(newZone);
+    const groups: string[] = /^(America\/Argentina\/|America\/Indiana\/|SystemV\/\w+|\w+\/|[-+:0-9A-Za-z]+)(.+)?$/.exec(newZone);
 
     if (groups) {
       let g1 = groups[1];
@@ -97,9 +158,8 @@ export class SvcZoneSelectorComponent implements ControlValueAccessor, OnInit {
         g2 = undefined;
       }
 
-      if (g1.endsWith('/')) {
+      if (g1.endsWith('/'))
         g1 = groups[1].slice(0, -1);
-      }
 
       if (g2 === undefined) {
         if (g1.startsWith(UT)) {
@@ -121,21 +181,37 @@ export class SvcZoneSelectorComponent implements ControlValueAccessor, OnInit {
       }
       else {
         this.setRegion(g1);
-        this.subzone = g2?.replace(/_/g, ' ');
+        this.subzone = toDisplayZone(g2);
       }
     }
     else {
       this.setRegion(UT_OPTION);
       this.subzone = UT;
     }
+
+    this.updateOffsetAndZoneForValue(newZone);
+  }
+
+  private updateOffsetAndZoneForValue(newZone: string): void {
+    const offset = toDisplayOffset(this.offsetByZone.get(newZone));
+
+    if (offset) {
+      this.setOffset(offset);
+      this.zone = toDisplayZone(newZone);
+      this.lastZones[offset] = this._zone;
+    }
+    else {
+      this.setOffset('UTC+00:00');
+      this._zone = this.zones[0];
+      this.selectByOffset = false;
+    }
   }
 
   onDropdownFocus(event: any): void {
     this.hasFocus = true;
 
-    if (this.focusCount++ === 0) {
+    if (this.focusCount++ === 0)
       this.focus.emit(event);
-    }
   }
 
   onDropdownBlur(event: any): void {
@@ -153,9 +229,8 @@ export class SvcZoneSelectorComponent implements ControlValueAccessor, OnInit {
   }
 
   writeValue(newZone: any): void {
-    if (this._value !== newZone) {
+    if (this._value !== newZone)
       this.updateValue(newZone);
-    }
   }
 
   registerOnChange(fn: any): void {
@@ -170,6 +245,19 @@ export class SvcZoneSelectorComponent implements ControlValueAccessor, OnInit {
     this.disabled = isDisabled;
   }
 
+  get selectByOffset(): boolean { return this._selectByOffset; };
+  set selectByOffset(newValue: boolean) {
+    if (this._selectByOffset !== newValue) {
+      this._selectByOffset = newValue;
+
+      if (newValue && this._value !== toCanonicalZone(this._zone))
+        this.value = toCanonicalZone(this._zone);
+    }
+  }
+
+  get offset(): string { return this._offset; }
+  set offset(newOffset: string) { this.setOffset(newOffset, true); }
+
   get region(): string { return this._region; }
   set region(newRegion: string) { this.setRegion(newRegion, true); }
 
@@ -182,7 +270,20 @@ export class SvcZoneSelectorComponent implements ControlValueAccessor, OnInit {
       this._subzone = newZone;
       this.lastSubzones[this._region] = newZone;
       this._value = this.value;
+      this.updateOffsetAndZoneForValue(this._value);
       this.onChangeCallback(this._value);
+    }
+  }
+
+  get zone(): string { return this._zone; }
+  set zone(newZone: string) {
+    if (!newZone)
+      return;
+
+    if (this._zone !== newZone) {
+      this._zone = newZone;
+      this.lastZones[this._offset] = newZone;
+      this.value = toCanonicalZone(newZone);
     }
   }
 
@@ -196,16 +297,16 @@ export class SvcZoneSelectorComponent implements ControlValueAccessor, OnInit {
   }
 
   private updateTimezones(): void {
-    this.supplementAndProcessZones(Timezone.getRegionsAndSubzones());
-  }
+    const rAndS = Timezone.getRegionsAndSubzones();
 
-  private supplementAndProcessZones(data: RegionAndSubzones[]): void {
-    data.forEach((region: RegionAndSubzones) => {
+    this.knownIanaZones.clear();
+
+    for (const region of rAndS) {
       region.subzones.forEach((subzone: string) => {
-        const zone = (region.region === MISC ? '' : region.region + '/') + subzone.replace(/ /g, '_');
+        const zone = (region.region === MISC ? '' : region.region + '/') + toCanonicalZone(subzone);
         this.knownIanaZones.add(zone);
       });
-    });
+    }
 
     this.appService.setKnownIanaTimezones(this.knownIanaZones);
 
@@ -217,21 +318,70 @@ export class SvcZoneSelectorComponent implements ControlValueAccessor, OnInit {
       hourOffsets.push('UT' + (h === 0 ? '' : (h > 0 ? '+' : '-') + (habs < 10 ? '0' : '') + habs + ':00'));
     }
 
-    data.push({ region: UT_OPTION,  subzones: hourOffsets });
-    data.push({ region: OS_OPTION,  subzones: [] });
-    data.push({ region: LMT_OPTION, subzones: [] });
+    rAndS.push({ region: UT_OPTION,  subzones: hourOffsets });
+    rAndS.push({ region: OS_OPTION,  subzones: [] });
+    rAndS.push({ region: LMT_OPTION, subzones: [] });
 
-    data.forEach((region: RegionAndSubzones) => {
+    rAndS.forEach((region: RegionAndSubzones) => {
       if (region.region === MISC)
         region.region = MISC_OPTION;
 
-      this.subzonesByRegion[region.region] = region.subzones;
+      const forDisplay = region.subzones.map(zone => toDisplayZone(zone));
+
+      this.subzonesByRegion[region.region] = forDisplay;
 
       if (region.region === this._region)
-        this.subzones = region.subzones;
+        this.subzones = forDisplay;
     });
 
-    this.regions = data.map((region: RegionAndSubzones) => region.region);
+    this.regions = rAndS.map((region: RegionAndSubzones) => region.region);
+    this.offsets = [];
+    this.offsetByZone.clear();
+    this.zonesByOffset.clear();
+
+    const oAndZ = Timezone.getOffsetsAndZones();
+
+    for (const offset of oAndZ) {
+      this.offsets.push(toDisplayOffset(offset.offset));
+      this.zonesByOffset.set(offset.offset, offset.zones.map(zone => toDisplayZone(zone)));
+
+      for (const zone of offset.zones)
+        this.offsetByZone.set(toCanonicalZone(zone), offset.offset);
+    }
+  }
+
+  private setOffset(newOffset: string, doChangeCallback?: boolean): void {
+    if (this._offset !== newOffset) {
+      this._offset = newOffset;
+      this._zone = '';
+
+      const zones = this.zonesByOffset.get(toCanonicalOffset(newOffset));
+
+      if (zones)
+        this.zones = zones;
+      else
+        this.zones = [];
+
+      if (doChangeCallback) {
+        const lastZone = this.lastZones[newOffset];
+
+        if (lastZone)
+          this._zone = lastZone;
+        else if (this.zones.length > 0) {
+          this._zone = this.zones[0];
+          this.lastZones[newOffset] = this._zone;
+        }
+
+        if (this.zones.length > 0 && this.zone) {
+          this._value = toCanonicalZone(this._zone);
+          this.updateValue(this._value);
+        }
+
+        this.onChangeCallback(this._value);
+      }
+      else
+        this._zone = toDisplayZone(this._value);
+    }
   }
 
   private setRegion(newRegion: string, doChangeCallback?: boolean): void {
@@ -241,21 +391,18 @@ export class SvcZoneSelectorComponent implements ControlValueAccessor, OnInit {
 
       const subzones = this.subzonesByRegion[newRegion];
 
-      if (subzones) {
+      if (subzones)
         this.subzones = subzones;
-      }
-      else {
+      else
         this.subzones = [];
-      }
 
       const lastSubzone = this.lastSubzones[newRegion];
 
-      if (lastSubzone) {
+      if (lastSubzone)
         this._subzone = lastSubzone;
-      }
       else if (this.subzones.length > 0) {
         this._subzone = this.subzones[0];
-        this.lastSubzones[this._region] = this._subzone;
+        this.lastSubzones[newRegion] = this._subzone;
       }
 
       if (this.subzones.length > 0 && this.subzone)

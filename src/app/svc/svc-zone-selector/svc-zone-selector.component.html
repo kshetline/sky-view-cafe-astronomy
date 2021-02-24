@@ -1,17 +1,28 @@
+<div class="mode-selector">
+  <p-radioButton [value]="true" [(ngModel)]="selectByOffset" label="By UTC offset"></p-radioButton>
+  &nbsp;&nbsp;
+  <p-radioButton [value]="false" [(ngModel)]="selectByOffset" label="By region"></p-radioButton>
+</div>
+
 <div class="zone-selector">
-  <div class="zone-selector-row">
-    <ks-dropdown [options]="regions"  [(ngModel)]="region"  [disabled]="disabled" (focus)="onDropdownFocus($event)"
-                 (blur)="onDropdownBlur($event)" scrollHeight="420px"></ks-dropdown><br>
-  </div>
-  <div class="zone-selector-row">
-    <span class="caption">timezone region/category &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><br>
-  </div>
-  <div class="zone-selector-row">
+  <div class="by-region" [style.opacity] ="+!selectByOffset" [style.pointer-events]="selectByOffset ? 'none' : 'auto'">
+    <ks-dropdown [options]="regions" [(ngModel)]="region"  [disabled]="disabled" (focus)="onDropdownFocus($event)"
+                  (blur)="onDropdownBlur($event)" scrollHeight="396px"></ks-dropdown>
+    <div class="caption">timezone region/category &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>
+
     <ks-dropdown [options]="subzones" [(ngModel)]="subzone" [disabled]="disabled" (focus)="onDropdownFocus($event)"
-                 (blur)="onDropdownBlur($event)" scrollHeight="300px"></ks-dropdown><br>
+                (blur)="onDropdownBlur($event)" scrollHeight="308px"></ks-dropdown>
+    <div class="caption">specific timezone &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>
   </div>
-  <div class="zone-selector-row">
-    <span class="caption">specific timezone &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+
+  <div class="by-offset" [style.opacity] ="+selectByOffset" [style.pointer-events]="selectByOffset ? 'auto' : 'none'">
+    <ks-dropdown [options]="offsets"  [(ngModel)]="offset"  [disabled]="disabled" (focus)="onDropdownFocus($event)"
+                (blur)="onDropdownBlur($event)" scrollHeight="220px"></ks-dropdown>
+    <div class="caption">utc offset/dst &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>
+
+    <ks-dropdown [options]="zones" [(ngModel)]="zone" [disabled]="disabled" (focus)="onDropdownFocus($event)"
+                (blur)="onDropdownBlur($event)" scrollHeight="308px"></ks-dropdown>
+    <div class="caption">specific timezone &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>
   </div>
   <p [hidden]="!error" class="error">{{error}}</p>
 </div>

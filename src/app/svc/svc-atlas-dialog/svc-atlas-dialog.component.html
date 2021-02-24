@@ -22,7 +22,7 @@
   </div>
   <p-checkbox [(ngModel)]="extended" binary="true" label="Extended search (slower, possibly more matches)"></p-checkbox>
   <p-table #locationTable [value]="locations" selectionMode="single" [scrollable]="locations?.length > 11"
-           scrollHeight="275px" sortMode="none" [(selection)]="selection" metaKeySelection="true" class="results-table">
+           scrollHeight="264px" sortMode="none" [(selection)]="selection" metaKeySelection="true" class="results-table">
     <ng-template pTemplate="colgroup">
       <colgroup>
         <col style="width: 40px">
