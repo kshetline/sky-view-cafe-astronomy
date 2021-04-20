@@ -2,9 +2,9 @@ import { AfterViewInit, Directive, ElementRef, ViewChild } from '@angular/core';
 import { SafeStyle } from '@angular/platform-browser';
 import {
   ASTEROID_BASE, COMET_BASE, EARTH, FIRST_PLANET, HALF_MINUTE, ISkyObserver, LAST_PLANET, NO_MATCH, SkyObserver, SolarSystem,
-  StarCatalog, UT_to_TDB
+  StarCatalog
 } from '@tubular/astronomy';
-import { DateTime } from '@tubular/time';
+import { DateTime, utToTdt } from '@tubular/time';
 import { ceil, max, round, sqrt } from '@tubular/math';
 import { clone, FontMetrics, getFontMetrics, isSafari, isString, padLeft } from '@tubular/util';
 import { debounce, throttle } from 'lodash-es';
@@ -362,7 +362,7 @@ export abstract class GenericViewDirective implements AfterViewInit {
       this.resetCursor();
       this.goodDragStart = false;
     }
-    else if (this.canDrag && button1Down) {
+    else if (this.canDrag && this.goodDragStart && button1Down) {
       this.dragging = true;
       this.cursor = this.sanitizedHandCursor;
     }
@@ -387,6 +387,7 @@ export abstract class GenericViewDirective implements AfterViewInit {
       this.onTouchStart(event);
     else if (event.touches.length === 0) {
       this.dragging = false;
+      this.goodDragStart = false;
       event.preventDefault();
     }
   }
@@ -395,6 +396,7 @@ export abstract class GenericViewDirective implements AfterViewInit {
     this.lastMoveX = event.offsetX;
     this.lastMoveY = event.offsetY;
     this.dragging = false;
+    this.goodDragStart = false;
     this.resetCursor();
   }
 
@@ -437,7 +439,7 @@ export abstract class GenericViewDirective implements AfterViewInit {
     dc.skyObserver = new SkyObserver(this.appService.longitude, this.appService.latitude);
     // Bias time half a minute ahead of the clock time for rounding to the middle of the selected minute.
     dc.jdu = DateTime.julianDay(this.time) + HALF_MINUTE;
-    dc.jde = UT_to_TDB(dc.jdu);
+    dc.jde = utToTdt(dc.jdu);
     dc.inkSaver = GenericViewDirective.printing && this.appService.inkSaver;
 
     this.additionalDrawingSetup(dc);

@@ -3,10 +3,10 @@ import { AfterViewInit, Component, ElementRef, ViewChild } from '@angular/core';
 import {
   AstroEvent, EQ_SOLSTICE_EVENT_BASE, EventFinder, FALL_EQUINOX, FIRST_QUARTER, FULL_MOON, ISkyObserver, JUPITER, LAST_QUARTER, MARS,
   MERCURY, MOON, NEPTUNE, NEW_MOON, PHASE_EVENT_BASE, PLUTO, RISE_EVENT, RISE_SET_EVENT_BASE, SATURN, SET_EVENT, SkyObserver,
-  SPRING_EQUINOX, SUMMER_SOLSTICE, SUN, TRANSIT_EVENT, TWILIGHT_BEGINS, TWILIGHT_ENDS, UNSEEN_ALL_DAY, URANUS, UT_to_TDB, VENUS,
+  SPRING_EQUINOX, SUMMER_SOLSTICE, SUN, TRANSIT_EVENT, TWILIGHT_BEGINS, TWILIGHT_ENDS, UNSEEN_ALL_DAY, URANUS, VENUS,
   VISIBLE_ALL_DAY, WINTER_SOLSTICE
 } from '@tubular/astronomy';
-import { DateAndTime, DateTime, Timezone, YMDDate } from '@tubular/time';
+import { DateAndTime, DateTime, Timezone, utToTdt, YMDDate } from '@tubular/time';
 import { ceil, floor, max, min, round } from '@tubular/math';
 import { isEdge, isFirefox, isIE } from '@tubular/util';
 import { throttle } from 'lodash-es';
@@ -298,7 +298,7 @@ export class SvcCalendarViewComponent implements AfterViewInit {
         const noon = new DateTime({ y: date.y, m: date.m, d: Math.abs(date.d), hrs: 12, min: 0, sec: 0 }, timezone, this.appService.gregorianChangeDate);
 
         date.dayLength = dayLength;
-        date.jdeNoon = UT_to_TDB(DateTime.julianDay(noon.utcTimeMillis));
+        date.jdeNoon = utToTdt(DateTime.julianDay(noon.utcTimeMillis));
         date.text = String(date.d);
         date.otherMonth = (date.m !== this.month);
         date.highlight = (date.m === this.month && date.d === this.wallTime.d);

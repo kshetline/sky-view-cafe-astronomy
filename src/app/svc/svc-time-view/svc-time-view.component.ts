@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
-import { SkyObserver, UT_to_TDB } from '@tubular/astronomy';
-import { DAY_MSEC, DateTime, Timezone } from '@tubular/time';
+import { SkyObserver } from '@tubular/astronomy';
+import { DAY_MSEC, DateTime, Timezone, utToTdt } from '@tubular/time';
 import { Angle, FMT_MINS, mod2, Mode, round, Unit } from '@tubular/math';
 import { padLeft, toDefaultLocaleFixed } from '@tubular/util';
 import { AppService, CurrentTab, Location } from '../../app.service';
@@ -81,7 +81,7 @@ export class SvcTimeViewComponent {
       Unit.DEGREES, Mode.RANGE_LIMIT_NONNEGATIVE).toTimeString(FMT_MINS);
 
     this.formattedJulianDate = padLeft(toDefaultLocaleFixed(jdu, 6, 6), 17, nbsp);
-    this.formattedEphemerisDate = padLeft(toDefaultLocaleFixed(UT_to_TDB(jdu), 6, 6), 17, nbsp);
+    this.formattedEphemerisDate = padLeft(toDefaultLocaleFixed(utToTdt(jdu), 6, 6), 17, nbsp);
     this.formattedDays = padLeft(toDefaultLocaleFixed(this.time / DAY_MSEC, 6, 6), 17, nbsp);
     this.formattedSeconds = padLeft(toDefaultLocaleFixed(this.time / 1000, 0, 0), 17, nbsp);
   }
