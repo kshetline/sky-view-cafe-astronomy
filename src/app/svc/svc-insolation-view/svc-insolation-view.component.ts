@@ -1,7 +1,7 @@
 import { AfterViewInit, Component, ElementRef, ViewChild } from '@angular/core';
 import { SafeStyle } from '@angular/platform-browser';
-import { getInsolationColor, MOON, SUN, UT_to_TDB } from '@tubular/astronomy';
-import { DateTime, Timezone } from '@tubular/time';
+import { getInsolationColor, MOON, SUN } from '@tubular/astronomy';
+import { DateTime, Timezone, utToTdt } from '@tubular/time';
 import { floor, FMT_DD, FMT_MINS, min, round } from '@tubular/math';
 import { strokeLine } from '@tubular/util';
 import { AppService, CurrentTab, Location, UserSetting } from '../../app.service';
@@ -319,7 +319,7 @@ export class SvcInsolationViewComponent extends GenericViewDirective implements 
       }
 
       const time = new DateTime(DateTime.millisFromJulianDay(jdu), this.dateTime.timezone, this.dateTime.getGregorianChange());
-      const jde = UT_to_TDB(jdu);
+      const jde = utToTdt(jdu);
 
       this.skyColor = getInsolationColor(dc.skyObserver, dc.ss, jdu, false);
       this.moonColor = getInsolationColor(dc.skyObserver, dc.ss, jdu, true, false);
