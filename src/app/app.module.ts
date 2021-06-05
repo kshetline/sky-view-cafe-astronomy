@@ -6,8 +6,6 @@ import { FormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
-import { BusyConfig, NgBusyModule } from 'ng-busy';
-
 import { ConfirmationService, SharedModule } from 'primeng/api';
 import { BlockUIModule } from 'primeng/blockui';
 import { ButtonModule } from 'primeng/button';
@@ -74,13 +72,6 @@ import { KsTabComponent } from './widgets/ks-tab/ks-tab.component';
 
 import { AppRoutingModule } from './app-routing.module';
 
-export function busyConfigFactory(): BusyConfig {
-  return new BusyConfig({
-     delay: 500,
-     minDuration: 250
-  });
-}
-
 @NgModule({
   imports: [
     AppRoutingModule,
@@ -100,7 +91,6 @@ export function busyConfigFactory(): BusyConfig {
     MenuModule,
     MessageModule,
     MessagesModule,
-    NgBusyModule,
     OverlayPanelModule,
     PanelModule,
     RadioButtonModule,
@@ -158,8 +148,7 @@ export function busyConfigFactory(): BusyConfig {
     DatePipe,
     JpegCommentReader,
     KsTimeService,
-    SvcAtlasService,
-    { provide: BusyConfig, useFactory: busyConfigFactory }
+    SvcAtlasService
   ],
   bootstrap: [AppComponent],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]

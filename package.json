@@ -33,7 +33,6 @@
     "core-js": "^2.6.12",
     "detect-resize": "^0.1.5",
     "lodash-es": "^4.17.21",
-    "ng-busy": "^11.0.0",
     "primeicons": "^4.1.0",
     "primeng": "^11.4.0",
     "rxjs": "^6.6.7",
