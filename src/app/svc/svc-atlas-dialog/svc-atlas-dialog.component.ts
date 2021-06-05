@@ -2,7 +2,7 @@ import { Component, ElementRef, EventEmitter, Input, Output, ViewChild } from '@
 // noinspection ES6UnusedImports
 import { } from 'googlemaps'; // Produces "unused import" warning, but is actually needed, and `import 'googlemaps'` won't do.
 import { Timezone } from '@tubular/time';
-import { eventToKey, isIOS } from '@tubular/util';
+import { eventToKey, isIOS, processMillis } from '@tubular/util';
 import { MessageService } from 'primeng/api';
 import { Table } from 'primeng/table';
 import { AppService, Location } from '../../app.service';
@@ -43,7 +43,9 @@ export class SvcAtlasDialogComponent {
   becomingVisible = false;
   states = [''];
   maskDisplay = 'visible';
-  busy: Promise<any> = null;
+  busy = false;
+  busyStart = 0;
+  busyTimer: any;
 
   @ViewChild('searchField', { static: true }) private searchField: ElementRef;
   @ViewChild('atlasMap', { static: true }) private atlasMap: ElementRef;
@@ -178,7 +180,13 @@ export class SvcAtlasDialogComponent {
     this.obscureMap();
 
     const searchWithID = (id: number): void => {
-      this.busy = this.atlasService.search(query, this._extended).then((results: AtlasResults) => {
+      this.busyTimer = setTimeout(() => {
+        this.busyTimer = undefined;
+        this.busy = true;
+        this.busyStart = processMillis();
+      }, 500);
+
+      this.atlasService.search(query, this._extended).then((results: AtlasResults) => {
         if (this.searchId !== id) // Bail out if this is an old, abandoned search.
           return;
 
@@ -213,6 +221,18 @@ export class SvcAtlasDialogComponent {
         this.emptyMessage = '';
         this.messageService.add({ key: 'general', severity: 'error', detail: 'Search failed. Please try again later.' });
         this.searching = false;
+      }).finally(() => {
+        if (this.busyTimer) {
+          clearTimeout(this.busyTimer);
+          this.busyTimer = undefined;
+        }
+
+        const now = processMillis();
+
+        if (now > this.busyStart + 250)
+          this.busy = false;
+        else
+          setTimeout(() => this.busy = false, 250 - now + this.busyStart);
       });
     };
 
