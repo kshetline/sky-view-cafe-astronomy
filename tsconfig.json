@@ -20,7 +20,8 @@
     ],
     "baseUrl": ".",
     "paths": {
-      "@angular/core/src/metadata/*": ["../node_modules/@angular/core"]
+      "@angular/core/src/metadata/*": ["../node_modules/@angular/core"],
+      "@tubular/astronomy/*": ["../node_modules/@tubular/astronomy/dist/cjs/*"]
     }
   }
 }
