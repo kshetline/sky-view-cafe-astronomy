@@ -26,17 +26,17 @@ import { TabViewModule } from 'primeng/tabview';
 import { ToastModule } from 'primeng/toast';
 import { TooltipModule } from 'primeng/tooltip';
 
+import { TubularNgWidgetsModule } from '@tubular/ng-widgets';
+
 import { AppComponent } from './app.component';
 import { AppService } from './app.service';
 import { AstroDataService } from './astronomy/astro-data.service';
 import { KsSizerDirective } from './directives/ks-sizer.directive';
-import { SvcAngleEditorComponent } from './svc/svc-angle-editor.component';
 import { SvcAtlasDialogComponent } from './svc/svc-atlas-dialog/svc-atlas-dialog.component';
 import { SvcAtlasService } from './svc/svc-atlas.service';
 import { SvcCalendarViewOptionsComponent } from './svc/svc-calendar-view/svc-calendar-view-options.component';
 import { SvcCalendarViewComponent } from './svc/svc-calendar-view/svc-calendar-view.component';
 import { SvcChangeLocationDialogComponent } from './svc/svc-change-location-dialog/svc-change-location-dialog.component';
-import { SvcDateEditorComponent } from './svc/svc-date-editor.component';
 import { SvcEclipticViewOptionsComponent } from './svc/svc-ecliptic-view/svc-ecliptic-view-options.component';
 import { SvcEclipticViewComponent } from './svc/svc-ecliptic-view/svc-ecliptic-view.component';
 import { SvcEventNavigatorComponent } from './svc/svc-event-navigator/svc-event-navigator.component';
@@ -56,7 +56,6 @@ import { SvcSkyViewOptionsComponent } from './svc/svc-sky-view/svc-sky-view-opti
 import { SvcSkyViewComponent } from './svc/svc-sky-view/svc-sky-view.component';
 import { SvcTableViewOptionsComponent } from './svc/svc-table-view/svc-table-view-options.component';
 import { SvcTableViewComponent } from './svc/svc-table-view/svc-table-view.component';
-import { SvcTimeEditorComponent } from './svc/svc-time-editor/svc-time-editor.component';
 import { SvcTimeViewComponent } from './svc/svc-time-view/svc-time-view.component';
 import { SvcZoneSelectorComponent } from './svc/svc-zone-selector/svc-zone-selector.component';
 import { JpegCommentReader } from './util/ks-read-jpeg-comment';
@@ -66,7 +65,6 @@ import { KsCheckboxComponent } from './widgets/ks-checkbox/ks-checkbox.component
 import { KsDropdownComponent } from './widgets/ks-dropdown/ks-dropdown.component';
 import { KsIconButtonComponent } from './widgets/ks-icon-button/ks-icon-button.component';
 import { KsMarqueeComponent } from './widgets/ks-marquee/ks-marquee.component';
-import { KsSequenceEditorComponent } from './widgets/ks-sequence-editor/ks-sequence-editor.component';
 import { KsTabViewComponent } from './widgets/ks-tab-view/ks-tab-view.component';
 import { KsTabComponent } from './widgets/ks-tab/ks-tab.component';
 
@@ -99,7 +97,8 @@ import { AppRoutingModule } from './app-routing.module';
     TableModule,
     TabViewModule,
     ToastModule,
-    TooltipModule
+    TooltipModule,
+    TubularNgWidgetsModule
   ],
   declarations: [
     AppComponent,
@@ -108,15 +107,12 @@ import { AppRoutingModule } from './app-routing.module';
     KsDropdownComponent,
     KsIconButtonComponent,
     KsMarqueeComponent,
-    KsSequenceEditorComponent,
     KsTabComponent,
     KsTabViewComponent,
-    SvcAngleEditorComponent,
     SvcAtlasDialogComponent,
     SvcCalendarViewComponent,
     SvcCalendarViewOptionsComponent,
     SvcChangeLocationDialogComponent,
-    SvcDateEditorComponent,
     SvcEclipticViewComponent,
     SvcEclipticViewOptionsComponent,
     SvcEventNavigatorComponent,
@@ -136,7 +132,6 @@ import { AppRoutingModule } from './app-routing.module';
     SvcSkyViewOptionsComponent,
     SvcTableViewComponent,
     SvcTableViewOptionsComponent,
-    SvcTimeEditorComponent,
     SvcTimeViewComponent,
     SvcZoneSelectorComponent,
     KsSizerDirective

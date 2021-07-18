@@ -1,12 +1,15 @@
 import { AfterViewInit, Component, HostListener, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
+import { YearStyle } from '@tubular/ng-widgets';
 import { DateTime, Timezone, YMDDate } from '@tubular/time';
 import { toggleFullScreen } from '@tubular/util';
 import { debounce } from 'lodash-es';
 import { MenuItem, MessageService } from 'primeng/api';
 import { Subscription, timer } from 'rxjs';
-import { AppService, currentMinuteMillis, CurrentTab, PROPERTY_GREGORIAN_CHANGE_DATE, PROPERTY_NATIVE_DATE_TIME,
-  UserSetting, VIEW_APP } from './app.service';
+import {
+  AppService, currentMinuteMillis, CurrentTab, PROPERTY_GREGORIAN_CHANGE_DATE, PROPERTY_NATIVE_DATE_TIME,
+  SVC_MAX_YEAR, SVC_MIN_YEAR, UserSetting, VIEW_APP
+} from './app.service';
 import { SvcAtlasService } from './svc/svc-atlas.service';
 
 const MIN_APP_WIDTH = 1040;
@@ -19,6 +22,10 @@ const MIN_APP_HEIGHT = 640;
   providers: [AppService, MessageService]
 })
 export class AppComponent implements AfterViewInit, OnDestroy {
+  SIGNED_YEAR = YearStyle.SIGNED as number;
+  SVC_MIN_YEAR = SVC_MIN_YEAR.toString();
+  SVC_MAX_YEAR = SVC_MAX_YEAR.toString();
+
   private dateTime = new DateTime(null, Timezone.OS_ZONE);
   private _date = <YMDDate> {};
   private debouncedResize: () => void;
@@ -184,5 +191,14 @@ export class AppComponent implements AfterViewInit, OnDestroy {
 
     if (outermost.style.overflow !== origOverflow)
       document.dispatchEvent(new Event('scroll-changed'));
+  }
+
+  promptForNative = (): boolean => {
+    if (this.app.warningNativeDateTime)
+      return false;
+
+    this.app.showNativeInputDialog = true;
+
+    return true;
   }
 }

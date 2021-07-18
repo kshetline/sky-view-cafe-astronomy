@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Input, Output, ViewChild } from '@angular/core';
-import { getISOFormatDate, parseISODate, YMDDate } from '@tubular/time';
+import { TimeEditorComponent } from '@tubular/ng-widgets';
+import ttime, { DateTime, getISOFormatDate, parseISODate, YMDDate } from '@tubular/time';
 import { eventToKey } from '@tubular/util';
 import { MenuItem } from 'primeng/api';
 import {
@@ -7,11 +8,12 @@ import {
   PROPERTY_TWILIGHT_BY_DEGREES, PROPERTY_TWILIGHT_DEGREES, PROPERTY_TWILIGHT_MINUTES, VIEW_APP
 } from '../../app.service';
 import { KsDropdownComponent } from '../../widgets/ks-dropdown/ks-dropdown.component';
-import { SvcTimeEditorComponent } from '../svc-time-editor/svc-time-editor.component';
 
 interface MenuItemPlus extends MenuItem {
   value?: any;
 }
+
+const standardGregorian = new DateTime({ y: 1582, m: 10, d: 15 }, 'UTC').utcTimeMillis;
 
 @Component({
   selector: 'svc-preferences-dialog',
@@ -74,12 +76,12 @@ export class SvcPreferencesDialogComponent {
   twilightValue = this.twilightDegrees;
   gcdVisible = true;
   gcdDisabled = true;
-  gcdValue: YMDDate = { y: 1582, m: 10, d: 15 };
+  gcdValue = standardGregorian;
   formValid = true;
   invalidMessage = '';
   inkSaver = true;
   nativeDateTime = false;
-  showDateTimeOptions = SvcTimeEditorComponent.supportsNativeDateTime;
+  showDateTimeOptions = TimeEditorComponent.supportsNativeDateTime;
   resetWarnings = false;
 
   @Input() get visible(): boolean { return this._visible; }
@@ -104,7 +106,7 @@ export class SvcPreferencesDialogComponent {
         const gcd = this.appService.gregorianChangeDate;
 
         if (!/[gj]/i.test(gcd))
-          this.gcdValue = parseISODate(gcd);
+          this.gcdValue = new DateTime(gcd, 'UTC').utcTimeMillis;
 
         this.locations = [];
 
@@ -144,7 +146,7 @@ export class SvcPreferencesDialogComponent {
         case CalendarSetting.STANDARD:
           this.gcdVisible = true;
           this.gcdDisabled = true;
-          this.gcdValue = { y: 1582, m: 10, d: 15 };
+          this.gcdValue = standardGregorian;
           break;
 
         case CalendarSetting.PURE_GREGORIAN:
@@ -194,7 +196,7 @@ export class SvcPreferencesDialogComponent {
     else
       this.appService.updateUserSetting({ view: VIEW_APP, property: PROPERTY_TWILIGHT_MINUTES, value: this.twilightMinutes, source: this });
 
-    let gcd = getISOFormatDate(this.gcdValue);
+    let gcd = new DateTime(this.gcdValue, 'UTC').toIsoString(10);
 
     if (this.calendarOption === CalendarSetting.PURE_GREGORIAN)
       gcd = 'G';

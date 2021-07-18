@@ -1,6 +1,6 @@
 {
   "name": "svc-ng",
-  "version": "1.13.1",
+  "version": "1.14.0",
   "license": "MIT AND GPL-3.0-or-later",
   "author": "Kerry Shetline <kerry@shetline.com>",
   "scripts": {
@@ -28,6 +28,7 @@
     "@tubular/array-buffer-reader": "^3.0.2",
     "@tubular/astronomy": "^3.0.2",
     "@tubular/math": "^3.0.2",
+    "@tubular/ng-widgets": "file:../npm-packages/tubular_ng-widgets/tubular-ng-widgets-0.0.1-alpha.1.tgz",
     "@tubular/time": "^3.1.0",
     "@tubular/util": "^4.0.3",
     "core-js": "^2.6.12",

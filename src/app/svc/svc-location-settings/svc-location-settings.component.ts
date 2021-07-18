@@ -1,4 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
+import { AngleStyle } from '@tubular/ng-widgets';
 import { clone } from '@tubular/util';
 import { ConfirmationService } from 'primeng/api';
 import { AppService, Location, NEW_LOCATION } from '../../app.service';
@@ -13,6 +14,9 @@ const SELECT_A_LOCATION = 'Select a location';
   providers: [ConfirmationService]
 })
 export class SvcLocationSettingsComponent {
+  DD_MM = AngleStyle.DD_MM;
+  DDD_MM = AngleStyle.DDD_MM;
+
   locationNames: string[] = [];
   savedLocationNames: string[] = [];
   selectedName = '';

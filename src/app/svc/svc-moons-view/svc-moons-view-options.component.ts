@@ -1,4 +1,5 @@
 import { AfterViewInit, Component } from '@angular/core';
+import { AngleStyle } from '@tubular/ng-widgets';
 import { AppService, UserSetting } from '../../app.service';
 import {
   DEFAULT_FIXED_GRS, DEFAULT_ZOOM, PROPERTY_EAST_ON_LEFT, PROPERTY_FIXED_GRS, PROPERTY_GRS_OVERRIDE, PROPERTY_MARK_GRS,
@@ -12,6 +13,8 @@ import {
   styleUrls: ['./svc-moons-view-options.component.scss']
 })
 export class SvcMoonsViewOptionsComponent implements AfterViewInit {
+  DDD = AngleStyle.DDD;
+
   private _northOnTop = true;
   private _eastOnLeft = true;
   private _moonNumbers = true;

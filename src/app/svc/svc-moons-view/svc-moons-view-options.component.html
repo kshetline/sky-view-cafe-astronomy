@@ -7,7 +7,7 @@
   <ks-checkbox fxFlex="0 0 auto" [(ngModel)]="markGrs" binary="true" label="Mark GRS center"></ks-checkbox>
   <div fxFlex="0 0 auto" class="flex-container" fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="4px">
     <ks-checkbox fxFlex="0 0 auto" [(ngModel)]="grsOverride" binary="true" label="Set GRS long.:"></ks-checkbox>
-    <svc-angle-editor fxFlex="0 0 auto" format="PN_DDD_D" [(ngModel)]="fixedGrs" [disabled]="!grsOverride"></svc-angle-editor>
+    <tbw-angle-editor fxFlex="0 0 auto" [options]="{ angleStyle: DDD, decimalPrecision: 1 }" [(ngModel)]="fixedGrs" [disabled]="!grsOverride"></tbw-angle-editor>
   </div>
   <div fxFlex="0 0 auto" class="flex-container" fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="4px">
     <p-slider fxFlex="1 0 auto" [(ngModel)]="reverseZoom" [min]="0" [max]="zoomSteps"></p-slider>

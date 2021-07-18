@@ -46,8 +46,16 @@
       </div>
       <div class="settings-value flex-container" fxLayout="row" fxLayoutAlign="space-between center">
         <ks-dropdown [options]="calendarOptions" [(ngModel)]="calendarOption" ksSizer="23em" fxFlex="0 0 auto"></ks-dropdown>
-        <svc-date-editor [pureGregorian]="true" [minYear]="300" [maxYear]="3900"
-                         fxFlex="0 0 auto" [blank]="!gcdVisible" [disabled]="gcdDisabled" [(ngModel)]="gcdValue"></svc-date-editor>
+        <!-- [blank]="!gcdVisible" -->
+        <tbw-time-editor
+          options="iso_date"
+          timezone="UTC"
+          gregorianChangeDate="G"
+          min="300"
+          max="3900"
+          fxFlex="0 0 auto"
+          [disabled]="gcdDisabled"
+          [(ngModel)]="gcdValue"></tbw-time-editor>
       </div>
     </div>
     <div class="settings-row">

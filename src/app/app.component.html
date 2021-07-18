@@ -28,8 +28,16 @@
             <button pButton type="button" (click)="setToNow()" [disabled]="trackTime" label="Now"></button>
           </div>
           <div class="time-panel-item">
-            <svc-time-editor [(ngModel)]="time" [timezone]="timezone" [viewOnly]="trackTime" [gregorianChangeDate]="gcDate"
-              [nativeDateTime]="nativeDateTime"></svc-time-editor>
+            <tbw-time-editor [(ngModel)]="time"
+                [options]="['iso', { showDstSymbol: true, showOccurrence: true, showSeconds: false, showUtcOffset: true,
+                  yearStyle: SIGNED_YEAR }]"
+                [timezone]="timezone"
+                [min]="SVC_MIN_YEAR"
+                [max]="SVC_MAX_YEAR"
+                [viewOnly]="trackTime"
+                [promptForNative]="promptForNative"
+                [nativeDateTime]="nativeDateTime"
+                [gregorianChangeDate]="gcDate"></tbw-time-editor>
           </div>
           <div class="time-panel-item">
             <p-overlayPanel #calendarPopup class="calendar-popup">
