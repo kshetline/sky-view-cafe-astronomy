@@ -1,6 +1,5 @@
 import { Component, EventEmitter, Input, Output, ViewChild } from '@angular/core';
 import { TimeEditorComponent } from '@tubular/ng-widgets';
-import ttime, { DateTime, getISOFormatDate, parseISODate, YMDDate } from '@tubular/time';
 import { eventToKey } from '@tubular/util';
 import { MenuItem } from 'primeng/api';
 import {
@@ -13,7 +12,7 @@ interface MenuItemPlus extends MenuItem {
   value?: any;
 }
 
-const standardGregorian = new DateTime({ y: 1582, m: 10, d: 15 }, 'UTC').utcTimeMillis;
+const standardGregorian = '1582-10-15';
 
 @Component({
   selector: 'svc-preferences-dialog',
@@ -106,7 +105,7 @@ export class SvcPreferencesDialogComponent {
         const gcd = this.appService.gregorianChangeDate;
 
         if (!/[gj]/i.test(gcd))
-          this.gcdValue = new DateTime(gcd, 'UTC').utcTimeMillis;
+          this.gcdValue = gcd;
 
         this.locations = [];
 
@@ -196,7 +195,7 @@ export class SvcPreferencesDialogComponent {
     else
       this.appService.updateUserSetting({ view: VIEW_APP, property: PROPERTY_TWILIGHT_MINUTES, value: this.twilightMinutes, source: this });
 
-    let gcd = new DateTime(this.gcdValue, 'UTC').toIsoString(10);
+    let gcd = this.gcdValue;
 
     if (this.calendarOption === CalendarSetting.PURE_GREGORIAN)
       gcd = 'G';

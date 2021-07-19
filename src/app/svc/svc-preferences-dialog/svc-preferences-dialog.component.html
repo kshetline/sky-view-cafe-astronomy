@@ -46,7 +46,6 @@
       </div>
       <div class="settings-value flex-container" fxLayout="row" fxLayoutAlign="space-between center">
         <ks-dropdown [options]="calendarOptions" [(ngModel)]="calendarOption" ksSizer="23em" fxFlex="0 0 auto"></ks-dropdown>
-        <!-- [blank]="!gcdVisible" -->
         <tbw-time-editor
           options="iso_date"
           timezone="UTC"
@@ -55,7 +54,8 @@
           max="3900"
           fxFlex="0 0 auto"
           [disabled]="gcdDisabled"
-          [(ngModel)]="gcdValue"></tbw-time-editor>
+          [blank]="!gcdVisible"
+          [(date)]="gcdValue"></tbw-time-editor>
       </div>
     </div>
     <div class="settings-row">
