@@ -1,8 +1,8 @@
 import { Component, ViewChild } from '@angular/core';
-import { AngleStyle } from '@tubular/ng-widgets';
+import { AngleEditorOptions, AngleStyle } from '@tubular/ng-widgets';
 import { clone } from '@tubular/util';
 import { ConfirmationService } from 'primeng/api';
-import { AppService, Location, NEW_LOCATION } from '../../app.service';
+import { AppService, LatLongStyle, Location, NEW_LOCATION } from '../../app.service';
 import { KsDropdownComponent } from '../../widgets/ks-dropdown/ks-dropdown.component';
 
 const SELECT_A_LOCATION = 'Select a location';
@@ -14,9 +14,6 @@ const SELECT_A_LOCATION = 'Select a location';
   providers: [ConfirmationService]
 })
 export class SvcLocationSettingsComponent {
-  DD_MM = AngleStyle.DD_MM;
-  DDD_MM = AngleStyle.DDD_MM;
-
   locationNames: string[] = [];
   savedLocationNames: string[] = [];
   selectedName = '';
@@ -41,10 +38,24 @@ export class SvcLocationSettingsComponent {
       (<any> window).initGoogleMaps(() => this.mapsReady = true);
   }
 
+  get latitudeStyle(): AngleEditorOptions {
+    if (this.app.latLongStyle === LatLongStyle.DEGREES_AND_MINUTES)
+      return { angleStyle: AngleStyle.DD_MM, compass: true };
+    else
+      return { angleStyle: AngleStyle.DD, decimalPrecision: 2, compass: true };
+  }
+
   get latitude(): number { return this.app.latitude; }
   set latitude(newLatitude: number) {
     if (this.app.latitude !== newLatitude)
       this.app.latitude = newLatitude;
+  }
+
+  get longitudeStyle(): AngleEditorOptions {
+    if (this.app.latLongStyle === LatLongStyle.DEGREES_AND_MINUTES)
+      return { angleStyle: AngleStyle.DDD_MM, compass: true };
+    else
+      return { angleStyle: AngleStyle.DDD, decimalPrecision: 2, compass: true };
   }
 
   get longitude(): number { return this.app.longitude; }

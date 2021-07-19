@@ -18,6 +18,22 @@
     </div>
     <div class="settings-row">
       <div class="settings-label">
+        Input clock style:
+      </div>
+      <div class="settings-value">
+        <ks-dropdown [options]="clockStyles" [(ngModel)]="clockStyle"></ks-dropdown>
+      </div>
+    </div>
+    <div class="settings-row">
+      <div class="settings-label">
+        Enter latitude and longitude:
+      </div>
+      <div class="settings-value">
+        <ks-dropdown [options]="latLongStyles" [(ngModel)]="latLongStyle"></ks-dropdown>
+      </div>
+    </div>
+    <div class="settings-row">
+      <div class="settings-label">
         Azimuth:
       </div>
       <div class="settings-value">

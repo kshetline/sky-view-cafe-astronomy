@@ -1,14 +1,15 @@
 import { AfterViewInit, Component, HostListener, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
-import { YearStyle } from '@tubular/ng-widgets';
+import { Point } from '@tubular/math';
+import { TimeEditorOptions, YearStyle } from '@tubular/ng-widgets';
 import { DateTime, Timezone, YMDDate } from '@tubular/time';
-import { toggleFullScreen } from '@tubular/util';
+import { isEqual, toggleFullScreen } from '@tubular/util';
 import { debounce } from 'lodash-es';
 import { MenuItem, MessageService } from 'primeng/api';
 import { Subscription, timer } from 'rxjs';
 import {
-  AppService, currentMinuteMillis, CurrentTab, PROPERTY_GREGORIAN_CHANGE_DATE, PROPERTY_NATIVE_DATE_TIME,
-  SVC_MAX_YEAR, SVC_MIN_YEAR, UserSetting, VIEW_APP
+  AppService, ClockStyle, currentMinuteMillis, CurrentTab, PROPERTY_CLOCK_FLOATING, PROPERTY_CLOCK_POSITION, PROPERTY_GREGORIAN_CHANGE_DATE,
+  PROPERTY_NATIVE_DATE_TIME, SVC_MAX_YEAR, SVC_MIN_YEAR, UserSetting, VIEW_APP
 } from './app.service';
 import { SvcAtlasService } from './svc/svc-atlas.service';
 
@@ -22,10 +23,11 @@ const MIN_APP_HEIGHT = 640;
   providers: [AppService, MessageService]
 })
 export class AppComponent implements AfterViewInit, OnDestroy {
-  SIGNED_YEAR = YearStyle.SIGNED as number;
   SVC_MIN_YEAR = SVC_MIN_YEAR.toString();
   SVC_MAX_YEAR = SVC_MAX_YEAR.toString();
 
+  private _clockPosition: Point = undefined;
+  private clockPositionDebounce: any;
   private dateTime = new DateTime(null, Timezone.OS_ZONE);
   private _date = <YMDDate> {};
   private debouncedResize: () => void;
@@ -37,6 +39,7 @@ export class AppComponent implements AfterViewInit, OnDestroy {
   moreItems: MenuItem[] = [
     { label: 'Preferences', icon: 'fas fa-cog', command: (): any => this.displayPreferences = true },
     { label: 'Help', icon: 'fas fa-question-circle', command: (): void => this.openHelp() },
+    { label: 'Toggle floating clock', icon: 'far fa-clock', command: (): void => this.toggleFloatingClock() },
     { label: 'Toggle full screen', icon: 'fas fa-arrows-alt', command: (): void => this.toggleFullScreen() },
     { label: 'About Sky View Café', icon: 'fas fa-info-circle', command: (): any => this.displayAbout = true }
   ];
@@ -105,6 +108,17 @@ export class AppComponent implements AfterViewInit, OnDestroy {
     }
   }
 
+  get clockOptions(): string | TimeEditorOptions | (string | TimeEditorOptions)[]  {
+    if (this.app.clockStyle === ClockStyle.ISO)
+      return ['iso', { showDstSymbol: true, showOccurrence: true, showSeconds: false, showUtcOffset: true,
+                       yearStyle: YearStyle.SIGNED }];
+    else
+      return { showDstSymbol: true, showOccurrence: true, showSeconds: false, showUtcOffset: true,
+               twoDigitYear: false, yearStyle: YearStyle.AD_BC };
+  }
+
+  get showClockCaption(): boolean { return this.app.clockStyle === ClockStyle.ISO; }
+
   get timezone(): Timezone { return this._timeZone; }
 
   get date(): YMDDate {
@@ -155,6 +169,29 @@ export class AppComponent implements AfterViewInit, OnDestroy {
     if (this._timeZone.error)
       this.messageService.add({ key: 'general', severity: 'error', summary: 'Failed to retrieve timezone',
                                 detail: 'Using your OS timezone instead.' });
+  }
+
+  private toggleFloatingClock(value = !this.app.clockFloating): void {
+    this.app.updateUserSetting({ view: VIEW_APP, property: PROPERTY_CLOCK_FLOATING, value, source: this });
+  }
+
+  closeFloatingClock(): void {
+    this.toggleFloatingClock(false);
+  }
+
+  get clockPosition(): Point { return this._clockPosition ?? this.app.clockPosition; }
+  set clockPosition(newValue: Point) {
+    if (!isEqual(this._clockPosition, newValue)) {
+      this._clockPosition = newValue;
+
+      if (!this.clockPositionDebounce) {
+        this.clockPositionDebounce = debounce(() =>
+          this.app.updateUserSetting(
+            { view: VIEW_APP, property: PROPERTY_CLOCK_POSITION, value: JSON.stringify(this._clockPosition), source: this }), 500);
+      }
+
+      this.clockPositionDebounce();
+    }
   }
 
   // noinspection JSMethodCanBeStatic

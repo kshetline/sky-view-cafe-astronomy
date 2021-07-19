@@ -3,8 +3,8 @@
   <div fxLayout="column" fxLayoutAlign="start center" fxLayoutGap="4px">
     <div class="latlong">
       <div class="latlong-values">
-        <tbw-angle-editor [options]="{ angleStyle: DD_MM, compass: true }" [(ngModel)]="latitude"></tbw-angle-editor>
-        <tbw-angle-editor [options]="{ angleStyle: DDD_MM, compass: true }" [(ngModel)]="longitude"></tbw-angle-editor>
+        <tbw-angle-editor [options]="latitudeStyle" [(ngModel)]="latitude"></tbw-angle-editor>
+        <tbw-angle-editor [options]="longitudeStyle" [(ngModel)]="longitude"></tbw-angle-editor>
       </div>
       <div class="latlong-captions">
         <div class="latlong-caption">latitude</div>

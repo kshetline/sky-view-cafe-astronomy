@@ -3,8 +3,21 @@ import { TimeEditorComponent } from '@tubular/ng-widgets';
 import { eventToKey } from '@tubular/util';
 import { MenuItem } from 'primeng/api';
 import {
-  AppService, CalendarSetting, CurrentTab, PROPERTY_DEFAULT_TAB, PROPERTY_GREGORIAN_CHANGE_DATE, PROPERTY_INK_SAVER, PROPERTY_NATIVE_DATE_TIME, PROPERTY_NORTH_AZIMUTH,
-  PROPERTY_TWILIGHT_BY_DEGREES, PROPERTY_TWILIGHT_DEGREES, PROPERTY_TWILIGHT_MINUTES, VIEW_APP
+  AppService,
+  CalendarSetting,
+  CurrentTab,
+  ClockStyle,
+  LatLongStyle,
+  PROPERTY_DEFAULT_TAB,
+  PROPERTY_GREGORIAN_CHANGE_DATE,
+  PROPERTY_INK_SAVER,
+  PROPERTY_LAT_LONG_STYLE,
+  PROPERTY_NATIVE_DATE_TIME,
+  PROPERTY_NORTH_AZIMUTH,
+  PROPERTY_TWILIGHT_BY_DEGREES,
+  PROPERTY_TWILIGHT_DEGREES,
+  PROPERTY_TWILIGHT_MINUTES,
+  VIEW_APP, PROPERTY_CLOCK_STYLE
 } from '../../app.service';
 import { KsDropdownComponent } from '../../widgets/ks-dropdown/ks-dropdown.component';
 
@@ -41,6 +54,16 @@ export class SvcPreferencesDialogComponent {
     { label: 'Tables',     value: CurrentTab.TABLES }
   ];
 
+  clockStyles: MenuItemPlus[] = [
+    { label: 'ISO-8601, always 24-hour time', value: ClockStyle.ISO },
+    { label: 'Localized time format, possibly with AM/PM', value: ClockStyle.LOCAL }
+  ];
+
+  latLongStyles: MenuItemPlus[] = [
+    { label: 'Using degrees and minutes', value: LatLongStyle.DEGREES_AND_MINUTES },
+    { label: 'Using decimal degrees', value: LatLongStyle.DECIMAL }
+  ];
+
   azimuths: MenuItemPlus[] = [
     { label: 'Due south is 0°, azimuth increases westward', value: false },
     { label: 'Due north is 0°, azimuth increases eastward', value: true }
@@ -71,6 +94,8 @@ export class SvcPreferencesDialogComponent {
   locations: string[] = [''];
   defaultLocation = '';
   defaultTab = CurrentTab.SKY;
+  clockStyle = ClockStyle.ISO;
+  latLongStyle = LatLongStyle.DEGREES_AND_MINUTES;
   northAzimuth = false;
   twilightValue = this.twilightDegrees;
   gcdVisible = true;
@@ -90,6 +115,8 @@ export class SvcPreferencesDialogComponent {
       this.visibleChange.emit(isVisible);
 
       if (isVisible) {
+        this.clockStyle = this.appService.clockStyle;
+        this.latLongStyle = this.appService.latLongStyle;
         this.northAzimuth = this.appService.northAzimuth;
         this.defaultTab = this.appService.defaultTab;
         this.twilightDegrees = this.appService.twilightDegrees;
@@ -186,6 +213,8 @@ export class SvcPreferencesDialogComponent {
 
     this.appService.updateUserSetting({ view: VIEW_APP, property: PROPERTY_NORTH_AZIMUTH, value: this.northAzimuth, source: this });
     this.appService.updateUserSetting({ view: VIEW_APP, property: PROPERTY_INK_SAVER, value: this.inkSaver, source: this });
+    this.appService.updateUserSetting({ view: VIEW_APP, property: PROPERTY_CLOCK_STYLE, value: this.clockStyle, source: this });
+    this.appService.updateUserSetting({ view: VIEW_APP, property: PROPERTY_LAT_LONG_STYLE, value: this.latLongStyle, source: this });
     this.appService.updateUserSetting({ view: VIEW_APP, property: PROPERTY_NATIVE_DATE_TIME, value: this.nativeDateTime, source: this });
     this.appService.updateUserSetting({ view: VIEW_APP, property: PROPERTY_DEFAULT_TAB, value: this.defaultTab, source: this });
     this.appService.updateUserSetting({ view: VIEW_APP, property: PROPERTY_TWILIGHT_BY_DEGREES, value: this.twilightByDegrees, source: this });
