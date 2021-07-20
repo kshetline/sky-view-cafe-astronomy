@@ -21,11 +21,11 @@ export class KsIconButtonComponent {
     this._icon = value;
   }
 
-  onClick(event: MouseEvent): void {
-    event.stopPropagation();
-    event.preventDefault();
+  onClick(evt: MouseEvent): void {
+    evt.stopPropagation();
+    evt.preventDefault();
 
     if (!this.disabled)
-      this.click.emit(event);
+      this.click.emit(evt);
   }
 }

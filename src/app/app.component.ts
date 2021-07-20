@@ -1,6 +1,6 @@
 import { AfterViewInit, Component, HostListener, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
-import { Point } from '@tubular/math';
+import { max, min, Point } from '@tubular/math';
 import { TimeEditorOptions, YearStyle } from '@tubular/ng-widgets';
 import { DateTime, Timezone, YMDDate } from '@tubular/time';
 import { isEqual, toggleFullScreen } from '@tubular/util';
@@ -46,6 +46,7 @@ export class AppComponent implements AfterViewInit, OnDestroy {
 
   displayAbout = false;
   displayPreferences = false;
+  floatingClockFontSize = 3;
   selectedTab = <number> CurrentTab.SKY;
   gcDate = '1582-10-15';
   nativeDateTime = false;
@@ -211,7 +212,6 @@ export class AppComponent implements AfterViewInit, OnDestroy {
     this.debouncedResize();
   }
 
-  // noinspection JSMethodCanBeStatic
   private doResize(): void {
     let outermost = document.querySelector('html') as HTMLElement;
 
@@ -228,6 +228,20 @@ export class AppComponent implements AfterViewInit, OnDestroy {
 
     if (outermost.style.overflow !== origOverflow)
       document.dispatchEvent(new Event('scroll-changed'));
+
+    const floater = document.querySelector('#floating-clock > div');
+
+    if (floater) {
+      const origSize = this.floatingClockFontSize;
+      const clockWidth = floater.getBoundingClientRect().width;
+      const winWidth = max(window.innerWidth, document.documentElement.clientWidth) * 0.98;
+
+      this.floatingClockFontSize = min(this.floatingClockFontSize / (clockWidth / winWidth), 3);
+
+      if (this.floatingClockFontSize !== origSize && this._clockPosition) {
+        this.clockPosition.x += 0.001; // Just enough change to force position re-check.
+      }
+    }
   }
 
   promptForNative = (): boolean => {

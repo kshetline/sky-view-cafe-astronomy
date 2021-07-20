@@ -580,12 +580,12 @@ export class SvcOrbitViewComponent extends GenericPlanetaryViewDirective impleme
     }
   }
 
-  onWheel(event: WheelEvent): void {
+  onWheel(evt: WheelEvent): void {
     const oldZoom = this.zoom;
-    let zoomDelta = (event as any).wheelDeltaY;
+    let zoomDelta = (evt as any).wheelDeltaY;
 
     if (zoomDelta === undefined)
-      zoomDelta = event.deltaY / 5;
+      zoomDelta = evt.deltaY / 5;
     else
       zoomDelta /= 120;
 
@@ -601,7 +601,7 @@ export class SvcOrbitViewComponent extends GenericPlanetaryViewDirective impleme
       this.appService.updateUserSetting({ view: VIEW_ORBITS, property: PROPERTY_ZOOM, value: this.zoom, source: this });
     }
 
-    event.preventDefault();
+    if (evt.cancelable) evt.preventDefault();
   }
 
   protected startTouchZoom(): void {
@@ -643,8 +643,8 @@ export class SvcOrbitViewComponent extends GenericPlanetaryViewDirective impleme
     this.draw();
   }
 
-  tapChangeOrientation(event: TouchEvent, deltaX: number, deltaY: number): void {
-    event.preventDefault();
+  tapChangeOrientation(evt: TouchEvent, deltaX: number, deltaY: number): void {
+    if (evt.cancelable) evt.preventDefault();
     this.changeOrientation(deltaX, deltaY);
   }
 

@@ -38,11 +38,13 @@
                 [nativeDateTime]="nativeDateTime"
                 [gregorianChangeDate]="gcDate"></tbw-time-editor>
             <tbw-time-editor *ngIf="app.clockFloating"
+                id="floating-clock"
                 floating
+                wideSpinner
                 showCloser
                 (close)="closeFloatingClock()"
                 [(position)]="clockPosition"
-                style="font-size: 2.5em"
+                [style.font-size]="floatingClockFontSize + 'em'"
                 [(ngModel)]="time"
                 [options]="clockOptions"
                 [timezone]="timezone"

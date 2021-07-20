@@ -481,12 +481,12 @@ export class SvcMoonsViewComponent extends GenericPlanetaryViewDirective impleme
   }
 
   // noinspection JSUnusedGlobalSymbols
-  onWheel(event: WheelEvent): void {
+  onWheel(evt: WheelEvent): void {
     const oldZoom = this.zoom;
-    let zoomDelta = (event as any).wheelDeltaY;
+    let zoomDelta = (evt as any).wheelDeltaY;
 
     if (zoomDelta === undefined)
-      zoomDelta = event.deltaY / 5;
+      zoomDelta = evt.deltaY / 5;
     else
       zoomDelta /= 120;
 
@@ -502,7 +502,7 @@ export class SvcMoonsViewComponent extends GenericPlanetaryViewDirective impleme
       this.appService.updateUserSetting({ view: VIEW_MOONS, property: PROPERTY_ZOOM, value: this.zoom, source: this });
     }
 
-    event.preventDefault();
+    if (evt.cancelable) evt.preventDefault();
   }
 
   protected startTouchZoom(): void {

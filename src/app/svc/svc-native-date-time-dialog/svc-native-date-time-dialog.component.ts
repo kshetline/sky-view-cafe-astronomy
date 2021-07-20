@@ -26,12 +26,12 @@ export class SvcNativeDateTimeDialogComponent {
 
   constructor(private app: AppService) { }
 
-  onKey(event: KeyboardEvent): void {
-    const key = eventToKey(event);
+  onKey(evt: KeyboardEvent): void {
+    const key = eventToKey(evt);
 
     if (key === 'Enter') {
-      event.preventDefault();
-      // this.setPreferences();
+      evt.preventDefault();
+      // this.setPreferences(); // TODO: Why was this commented out?
     }
   }
 

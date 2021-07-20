@@ -220,8 +220,8 @@ export class KsCalendarComponent implements ControlValueAccessor, OnDestroy {
     }
   }
 
-  onTouchStart(event: TouchEvent, delta: number): void {
-    event.preventDefault();
+  onTouchStart(evt: TouchEvent, delta: number): void {
+    if (evt.cancelable) evt.preventDefault();
     this.onMouseDown(null, delta, true);
   }
 

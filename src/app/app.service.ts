@@ -121,7 +121,7 @@ export class AppService {
   private readonly debouncedSaveSettings: () => void;
   private knownIanaTimezones: Set<string>;
   private _clockFloating = false;
-  private _clockPosition = '{"x":10,y:"10"}';
+  private _clockPosition = '{"x":20,y:"20"}';
   private _clockStyle = ClockStyle.ISO;
   private _latLongStyle = LatLongStyle.DEGREES_AND_MINUTES;
   private _northAzimuth = false;
@@ -386,7 +386,7 @@ export class AppService {
     }
     catch {}
 
-    return { x: 10, y: 10 };
+    return { x: 20, y: 20 };
   }
 
   get clockStyle(): ClockStyle { return this._clockStyle; }
