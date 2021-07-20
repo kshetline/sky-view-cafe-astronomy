@@ -1,6 +1,10 @@
 // styles in src/style directory are applied to the whole page
 @import 'primeng-theme-tweaks';
 
+.tbw-dse-footer .tbw-dse-button {
+  line-height: 1.6em;
+}
+
 @mixin selectable($state) {
   -webkit-touch-callout: $state;
   -webkit-user-select: $state;
