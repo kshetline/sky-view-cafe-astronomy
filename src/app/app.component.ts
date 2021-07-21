@@ -114,7 +114,7 @@ export class AppComponent implements AfterViewInit, OnDestroy {
       return ['iso', { showDstSymbol: true, showOccurrence: true, showSeconds: false, showUtcOffset: true,
                        yearStyle: YearStyle.SIGNED }];
     else
-      return { showDstSymbol: true, showOccurrence: true, showSeconds: false, showUtcOffset: true,
+      return { numbering: 'latn', showDstSymbol: true, showOccurrence: true, showSeconds: false, showUtcOffset: true,
                twoDigitYear: false, yearStyle: YearStyle.AD_BC };
   }
 

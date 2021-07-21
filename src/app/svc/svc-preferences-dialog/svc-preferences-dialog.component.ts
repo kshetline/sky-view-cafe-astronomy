@@ -55,7 +55,7 @@ export class SvcPreferencesDialogComponent {
   ];
 
   clockStyles: MenuItemPlus[] = [
-    { label: 'ISO-8601, always 24-hour time', value: ClockStyle.ISO },
+    { label: 'ISO-8601 (±YYYY-MM-DD HH:mm), always 24-hour time', value: ClockStyle.ISO },
     { label: 'Localized time format, possibly with AM/PM', value: ClockStyle.LOCAL }
   ];
 
