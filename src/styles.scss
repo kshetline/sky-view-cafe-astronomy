@@ -5,6 +5,10 @@
   line-height: 1.6em;
 }
 
+.tbw-dse-wrapper {
+  border-color: #A6A6A6 !important;
+}
+
 @mixin selectable($state) {
   -webkit-touch-callout: $state;
   -webkit-user-select: $state;
