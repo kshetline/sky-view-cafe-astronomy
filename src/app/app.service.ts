@@ -38,7 +38,7 @@ export function currentMinuteMillis(): number {
 export enum CurrentTab { SKY, ECLIPTIC, ORBITS, MOONS_GRS, INSOLATION, MAP, CALENDAR, TIME, TABLES }
 const tabNames = ['sky', 'ecliptic', 'orbits', 'moons', 'insolation', 'map', 'calendar', 'time', 'tables'];
 export enum CalendarSetting { STANDARD, PURE_GREGORIAN, PURE_JULIAN, CUSTOM_GCD }
-export enum ClockStyle { ISO, LOCAL }
+export enum ClockStyle { ISO, LOCAL, ISO_SEC, LOCAL_SEC }
 export enum LatLongStyle { DEGREES_AND_MINUTES, DECIMAL }
 
 export interface AppEvent {
@@ -222,6 +222,8 @@ export class AppService {
     if (this._time.getValue() !== newTime)
       this._time.next(newTime);
   }
+
+  get showingSeconds(): boolean { return this._clockStyle === ClockStyle.ISO_SEC || this._clockStyle === ClockStyle.LOCAL_SEC; }
 
   getTimeUpdates(callback: (time: number) => void): Subscription {
     return this.timeObserver.subscribe(callback);

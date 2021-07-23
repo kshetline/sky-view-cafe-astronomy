@@ -33,6 +33,9 @@ const standardGregorian = '1582-10-15';
   styleUrls: ['./svc-preferences-dialog.component.scss']
 })
 export class SvcPreferencesDialogComponent {
+  ISO_SEC = ClockStyle.ISO_SEC;
+  LOCAL_SEC = ClockStyle.LOCAL_SEC;
+
   private _visible = false;
   private _calendarOption = CalendarSetting.STANDARD;
   private _twilightByDegrees = true;
@@ -56,7 +59,9 @@ export class SvcPreferencesDialogComponent {
 
   clockStyles: MenuItemPlus[] = [
     { label: 'ISO-8601 (±YYYY-MM-DD HH:mm), always 24-hour time', value: ClockStyle.ISO },
-    { label: 'Localized time format, possibly with AM/PM', value: ClockStyle.LOCAL }
+    { label: 'Localized time format, possibly with AM/PM', value: ClockStyle.LOCAL },
+    { label: 'ISO-8601 (±YYYY-MM-DD HH:mm:ss), 24-hour with seconds', value: ClockStyle.ISO_SEC },
+    { label: 'Localized time format with seconds, possibly AM/PM', value: ClockStyle.LOCAL_SEC }
   ];
 
   latLongStyles: MenuItemPlus[] = [

@@ -100,6 +100,7 @@
     </div>
   </div>
   <p-footer>
+    <div *ngIf="clockStyle === ISO_SEC || clockStyle === LOCAL_SEC" class="time-accuracy-note">See notes on time accuracy!</div>
     <div class="p-dialog-buttonpane ui-widget p-clearfix">
       <button type="button" pButton icon="far fa-window-close" (click)="visible=false" label="Cancel"></button>
       <button type="button" pButton icon="fas fa-check" (click)="setPreferences()" label="OK" [disabled]="!formValid"></button>

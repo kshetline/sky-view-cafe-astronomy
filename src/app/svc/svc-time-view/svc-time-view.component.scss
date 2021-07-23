@@ -10,4 +10,17 @@ th, td {
 
 td.value {
   font-family: "Andale Mono", "Courier New", monospace;
+  padding-left: 0.5em;
+}
+
+.local-time {
+  padding-bottom: 0.5em;
+}
+
+.footnote, .full-footnote {
+  color: #D3A;
+}
+
+.full-footnote {
+  padding-top: 0.5em;
 }

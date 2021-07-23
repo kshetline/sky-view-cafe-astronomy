@@ -1,8 +1,8 @@
 // styles in src/style directory are applied to the whole page
 @import 'primeng-theme-tweaks';
 
-.tbw-dse-footer .tbw-dse-button {
-  line-height: 1.6em;
+.tbw-dse-wrapper:hover:not([tabindex="-1"]) {
+  border-color: #212121 !important;
 }
 
 .tbw-dse-header, .tbw-dse-wrapper, .tbw-dse-footer, .tbw-dse-button {

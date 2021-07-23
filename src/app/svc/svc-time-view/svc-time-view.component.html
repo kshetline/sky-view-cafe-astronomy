@@ -1,6 +1,6 @@
 <table>
   <tr>
-    <th colspan=2>{{formattedLocalTime}}</th>
+    <th colspan=2 class="local-time">{{formattedLocalTime}}</th>
   </tr>
   <tr>
     <td>Universal Time (UT):</td>
@@ -15,7 +15,7 @@
     <td class="value">{{formattedLst}}</td>
   </tr>
   <tr>
-    <td>Local Mean Time ({{lmtLongitude}}):</td>
+    <td>Local Mean Time (at {{lmtLongitude}}):</td>
     <td class="value">{{formattedLmt}}</td>
   </tr>
   <tr>
@@ -23,12 +23,28 @@
     <td class="value">{{formattedSolarTime}}</td>
   </tr>
   <tr>
+    <td>ΔT (TDT - UT):</td>
+    <td class="value">{{deltaT}}</td>
+  </tr>
+  <tr>
+    <td>ΔTAI (TAI - UTC)<span class="footnote">*</span>:</td>
+    <td class="value">{{deltaTai}}</td>
+  </tr>
+  <tr>
     <td>Julian date:</td>
     <td class="value">{{formattedJulianDate}}</td>
   </tr>
   <tr>
+    <td>Modified Julian date:</td>
+    <td class="value">{{modifiedJulianDate}}</td>
+  </tr>
+  <tr>
     <td>Julian ephemeris date:</td>
     <td class="value">{{formattedEphemerisDate}}</td>
+  </tr>
+  <tr>
+    <td>Modified Julian ephemeris date:</td>
+    <td class="value">{{modifiedEphemerisDate}}</td>
   </tr>
   <tr>
     <td>Unix days:</td>
@@ -37,5 +53,8 @@
   <tr>
     <td>Unix seconds:</td>
     <td class="value">{{formattedSeconds}}</td>
+  </tr>
+  <tr>
+    <td colspan=2 class="full-footnote">*Extrapolated to TAI - UT outside of well-defined range for UTC.</td>
   </tr>
 </table>

@@ -8,13 +8,16 @@ import { debounce } from 'lodash-es';
 import { MenuItem, MessageService } from 'primeng/api';
 import { Subscription, timer } from 'rxjs';
 import {
-  AppService, ClockStyle, currentMinuteMillis, CurrentTab, PROPERTY_CLOCK_FLOATING, PROPERTY_CLOCK_POSITION, PROPERTY_GREGORIAN_CHANGE_DATE,
-  PROPERTY_NATIVE_DATE_TIME, SVC_MAX_YEAR, SVC_MIN_YEAR, UserSetting, VIEW_APP
+  AppService, ClockStyle, currentMinuteMillis, CurrentTab, PROPERTY_CLOCK_FLOATING, PROPERTY_CLOCK_POSITION,
+  PROPERTY_GREGORIAN_CHANGE_DATE, PROPERTY_NATIVE_DATE_TIME, SVC_MAX_YEAR, SVC_MIN_YEAR, UserSetting, VIEW_APP
 } from './app.service';
 import { SvcAtlasService } from './svc/svc-atlas.service';
 
 const MIN_APP_WIDTH = 1040;
 const MIN_APP_HEIGHT = 640;
+
+const FLOAT_CLOCK_MAX_FONT_SIZE_EMS = 3;
+const MAX_CLOCK_EFFECTIVE_WIDTH = 600;
 
 @Component({
   selector: 'svc-app',
@@ -44,12 +47,13 @@ export class AppComponent implements AfterViewInit, OnDestroy {
     { label: 'About Sky View Café', icon: 'fas fa-info-circle', command: (): any => this.displayAbout = true }
   ];
 
+  clockCaption = '\xA0';
   displayAbout = false;
   displayPreferences = false;
-  floatingClockFontSize = 3;
-  selectedTab = <number> CurrentTab.SKY;
+  floatingClockFontSize = FLOAT_CLOCK_MAX_FONT_SIZE_EMS;
   gcDate = '1582-10-15';
   nativeDateTime = false;
+  selectedTab = <number> CurrentTab.SKY;
 
   constructor(public app: AppService, private router: Router, atlasService: SvcAtlasService,
               private messageService: MessageService) {
@@ -110,15 +114,21 @@ export class AppComponent implements AfterViewInit, OnDestroy {
   }
 
   get clockOptions(): string | TimeEditorOptions | (string | TimeEditorOptions)[]  {
-    if (this.app.clockStyle === ClockStyle.ISO)
-      return ['iso', { showDstSymbol: true, showOccurrence: true, showSeconds: false, showUtcOffset: true,
-                       yearStyle: YearStyle.SIGNED }];
-    else
-      return { numbering: 'latn', showDstSymbol: true, showOccurrence: true, showSeconds: false, showUtcOffset: true,
-               twoDigitYear: false, yearStyle: YearStyle.AD_BC };
-  }
+    const showSeconds = (this.app.clockStyle === ClockStyle.ISO_SEC || this.app.clockStyle === ClockStyle.LOCAL_SEC);
 
-  get showClockCaption(): boolean { return this.app.clockStyle === ClockStyle.ISO; }
+    if (this.app.clockStyle === ClockStyle.ISO || this.app.clockStyle === ClockStyle.ISO_SEC) {
+      this.clockCaption = '±YYYY-MM-DD HH:mm' + (showSeconds ? ':ss' : '');
+
+      return ['iso', { showDstSymbol: true, showOccurrence: true, showSeconds, showUtcOffset: true,
+                       yearStyle: YearStyle.SIGNED }];
+    }
+    else {
+      this.clockCaption = '\xA0';
+
+      return { numbering: 'latn', showDstSymbol: true, showOccurrence: true, showSeconds, showUtcOffset: true,
+               twoDigitYear: false, yearStyle: YearStyle.AD_BC };
+    }
+  }
 
   get timezone(): Timezone { return this._timeZone; }
 
@@ -234,9 +244,16 @@ export class AppComponent implements AfterViewInit, OnDestroy {
     if (floater) {
       const origSize = this.floatingClockFontSize;
       const clockWidth = floater.getBoundingClientRect().width;
-      const winWidth = max(window.innerWidth, document.documentElement.clientWidth) * 0.98;
+      const winWidth = max(window.innerWidth, document.documentElement.clientWidth) * 0.95;
+      const prevFontSize = this.floatingClockFontSize;
+      const screenRatio = max(window.innerWidth / window.screen.width, 1);
 
-      this.floatingClockFontSize = min(this.floatingClockFontSize / (clockWidth / winWidth), 3);
+      this.floatingClockFontSize = min(this.floatingClockFontSize / (clockWidth / winWidth), FLOAT_CLOCK_MAX_FONT_SIZE_EMS);
+
+      const newEffectiveWidth = clockWidth * this.floatingClockFontSize / prevFontSize / screenRatio;
+
+      if (newEffectiveWidth > MAX_CLOCK_EFFECTIVE_WIDTH)
+        this.floatingClockFontSize *= MAX_CLOCK_EFFECTIVE_WIDTH / newEffectiveWidth;
 
       if (this.floatingClockFontSize !== origSize && this._clockPosition) {
         this.clockPosition.x += 0.001; // Just enough change to force position re-check.
