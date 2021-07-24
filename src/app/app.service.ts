@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 import { NavigationEnd, Router } from '@angular/router';
 import { SolarSystem, StarCatalog } from '@tubular/astronomy';
-import { Point } from '@tubular/math';
+import { min, Point } from '@tubular/math';
 import { addZonesUpdateListener, Calendar, pollForTimezoneUpdates, zonePollerBrowser } from '@tubular/time';
 import { clone, forEach, isEqual, isString } from '@tubular/util';
 import { compact, debounce, sortedIndexBy } from 'lodash-es';
@@ -120,8 +120,8 @@ export class AppService {
   private readonly allSettings: {[view: string]: {[setting: string]: boolean | number | string}} = {};
   private readonly debouncedSaveSettings: () => void;
   private knownIanaTimezones: Set<string>;
-  private _clockFloating = false;
-  private _clockPosition = '{"x":20,y:"20"}';
+  private _clockFloating = min(window.screen.width, window.screen.height) < 768;
+  private _clockPosition = '{"x":730,y:"0"}';
   private _clockStyle = ClockStyle.ISO;
   private _latLongStyle = LatLongStyle.DEGREES_AND_MINUTES;
   private _northAzimuth = false;
@@ -388,7 +388,7 @@ export class AppService {
     }
     catch {}
 
-    return { x: 20, y: 20 };
+    return { x: 730, y: 0 };
   }
 
   get clockStyle(): ClockStyle { return this._clockStyle; }

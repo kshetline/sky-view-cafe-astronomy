@@ -244,7 +244,7 @@ export class AppComponent implements AfterViewInit, OnDestroy {
     if (floater) {
       const origSize = this.floatingClockFontSize;
       const clockWidth = floater.getBoundingClientRect().width;
-      const winWidth = max(window.innerWidth, document.documentElement.clientWidth) * 0.95;
+      const winWidth = min(window.innerWidth, document.documentElement.clientWidth) * 0.95;
       const prevFontSize = this.floatingClockFontSize;
       const screenRatio = max(window.innerWidth / window.screen.width, 1);
 
