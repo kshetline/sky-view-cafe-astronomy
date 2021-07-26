@@ -49,6 +49,7 @@ export class SvcTimeViewComponent {
     });
 
     app.getCurrentTabUpdates(() => this.updateTime());
+    app.getUserSettingUpdates(() => this.updateTime());
   }
 
   private updateTime(): void {
@@ -67,7 +68,7 @@ export class SvcTimeViewComponent {
 
     this.deltaT = getDeltaTAtJulianDate(jdu).toFixed(3);
     this.deltaTai = (dateTime.deltaTaiMillis / 1000).toFixed(3);
-    this.formattedLocalTime = dateTime.format('IFL' + (showSecs ? '' : '{second:numeric}'));
+    this.formattedLocalTime = dateTime.format('IF' + (showSecs ? 'L' : 'S z') + ' Z');
     this.formattedLst = this.skyObserver.getLocalHourAngle(jdu, true).toTimeString(angleFormat);
 
     const longitudeMinutes = round(mod2(this.longitude, 360) * 4);
