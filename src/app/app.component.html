@@ -54,12 +54,13 @@
                 [gregorianChangeDate]="gcDate"></tbw-time-editor>
           </div>
           <div class="time-panel-item">
+            <span #calendarTarget style="position: relative; left: -1.2em; top: 2px"></span>
             <p-overlayPanel #calendarPopup class="calendar-popup">
               <tbw-calendar #calendar [(ngModel)]="date" [timezone]="timezone" [gregorianChangeDate]="gcDate" showDst [minYear]="-6000" [maxYear]="9999"
                            (dayClick)="calendarPopup.hide()"></tbw-calendar>
             </p-overlayPanel>
             <ks-icon-button [disabled]="trackTime" icon="far fa-calendar-alt fa-lg"
-                            (click)="calendarPopup.toggle($event); calendar.reset()"></ks-icon-button>&nbsp;
+                            (click)="calendarPopup.toggle($event, calendarTarget); calendar.reset()"></ks-icon-button>&nbsp;
           </div>
           <div class="time-panel-item">
             <p-checkbox [(ngModel)]="trackTime" binary="true" label="Track current time"></p-checkbox>
