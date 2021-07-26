@@ -69,6 +69,6 @@ export class KsCheckboxComponent implements ControlValueAccessor {
 
   onClick(event: MouseEvent): void {
     if (!this.disabled)
-      (<any> this.checkboxRef).onClick(event);
+      (this.checkboxRef as any).onClick(event);
   }
 }

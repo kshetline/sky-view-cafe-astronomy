@@ -104,11 +104,11 @@ export class SvcTableViewComponent implements AfterViewInit {
         let forced = false;
 
         if (setting.property === PROPERTY_PLANET_CHOICE)
-          this.planetChoice = <number> setting.value;
+          this.planetChoice = setting.value as number;
         else if (setting.property === PROPERTY_TABLE_TYPE)
-          this.tableType = <TableType> setting.value;
+          this.tableType = setting.value as TableType;
         else if (setting.property === PROPERTY_TWILIGHT) {
-          this.twilight = <number> setting.value;
+          this.twilight = setting.value as number;
           forced = true;
         }
 

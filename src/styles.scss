@@ -9,6 +9,10 @@
   border-color: #A6A6A6 !important;
 }
 
+tbw-calendar {
+  font-size: 1.5em;
+}
+
 @mixin selectable($state) {
   -webkit-touch-callout: $state;
   -webkit-user-select: $state;

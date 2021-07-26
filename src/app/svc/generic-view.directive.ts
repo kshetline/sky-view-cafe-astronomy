@@ -409,7 +409,7 @@ export abstract class GenericViewDirective implements AfterViewInit {
       return;
 
     const startTime = performance.now();
-    const dc = <DrawingContext> {};
+    const dc = {} as DrawingContext;
 
     dc.w = this.width;
     dc.h = this.height;
@@ -535,7 +535,7 @@ export abstract class GenericViewDirective implements AfterViewInit {
     }
 
     if (isString(this.additional)) {
-      const id = this.appService.solarSystem.getPlanetByName(<string> this.additional);
+      const id = this.appService.solarSystem.getPlanetByName(this.additional);
 
       if (id !== NO_MATCH)
         this.planetsToDraw.push(id);

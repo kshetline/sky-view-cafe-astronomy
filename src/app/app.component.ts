@@ -32,7 +32,7 @@ export class AppComponent implements AfterViewInit, OnDestroy {
   private _clockPosition: Point = undefined;
   private clockPositionDebounce: any;
   private dateTime = new DateTime(null, Timezone.OS_ZONE);
-  private _date = <YMDDate> {};
+  private _date: YMDDate = {};
   private debouncedResize: () => void;
   private _timeZone: Timezone = Timezone.OS_ZONE;
   private _time: number = this.dateTime.utcTimeMillis;
@@ -53,7 +53,7 @@ export class AppComponent implements AfterViewInit, OnDestroy {
   floatingClockFontSize = FLOAT_CLOCK_MAX_FONT_SIZE_EMS;
   gcDate = '1582-10-15';
   nativeDateTime = false;
-  selectedTab = <number> CurrentTab.SKY;
+  selectedTab = CurrentTab.SKY;
 
   constructor(public app: AppService, private router: Router, atlasService: SvcAtlasService,
               private messageService: MessageService) {
@@ -76,7 +76,7 @@ export class AppComponent implements AfterViewInit, OnDestroy {
           this.gcDate = app.gregorianChangeDate;
         }
         else if (setting.property === PROPERTY_NATIVE_DATE_TIME)
-          this.nativeDateTime = <boolean> setting.value;
+          this.nativeDateTime = setting.value as boolean;
       }
     });
 
@@ -88,7 +88,7 @@ export class AppComponent implements AfterViewInit, OnDestroy {
       this.doResize();
 
       if (this.router.url === '/') {
-        this.selectedTab = <number> this.app.defaultTab;
+        this.selectedTab = this.app.defaultTab;
         this.app.currentTab = this.app.defaultTab;
       }
     });
@@ -170,7 +170,7 @@ export class AppComponent implements AfterViewInit, OnDestroy {
   }
 
   tabChanged(index: number): void {
-    this.app.currentTab = <CurrentTab> index;
+    this.app.currentTab = index;
   }
 
   private updateTimeZone(): void {

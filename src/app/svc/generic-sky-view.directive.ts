@@ -223,7 +223,7 @@ export abstract class GenericSkyViewDirective extends GenericPlanetaryViewDirect
       planets.push({ planet: p, pos: this.getSphericalPosition(p, dc) });
     });
 
-    planets = reverse(sortBy(planets, [(p: SortablePlanet): any => (<SphericalPosition3D> p.pos).radius]));
+    planets = reverse(sortBy(planets, [(p: SortablePlanet): any => (p.pos as SphericalPosition3D).radius]));
 
     for (const planet of planets) {
       const p = planet.planet;

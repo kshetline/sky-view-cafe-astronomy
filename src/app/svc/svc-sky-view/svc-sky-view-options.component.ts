@@ -2,7 +2,7 @@ import { AfterViewInit, Component } from '@angular/core';
 import { MenuItem, SelectItem } from 'primeng/api';
 import { AppService, UserSetting } from '../../app.service';
 import { ALL_DEEP_SKY, NO_DEEP_SKY } from '../generic-sky-view.directive';
-import { ADDITIONALS, PROPERTY_ADDITIONALS } from '../generic-view.directive';
+import { PROPERTY_ADDITIONALS } from '../generic-view.directive';
 import { SvcGenericOptionsComponent } from '../svc-generic-options.component';
 import {
   PROPERTY_BRIGHTEN_STARS, PROPERTY_CELESTIAL_GRID, PROPERTY_ECLIPTIC_GRID, PROPERTY_ENLARGE_SUN_MOON, PROPERTY_LABEL_BRIGHT_STARS,
@@ -100,36 +100,36 @@ export class SvcSkyViewOptionsComponent extends SvcGenericOptionsComponent imple
     appService.getUserSettingUpdates((setting: UserSetting) => {
       if (setting.view === VIEW_SKY && setting.source !== this) {
         if (setting.property === PROPERTY_VIEW_TYPE)
-          this.viewType = <VIEW_TYPE> setting.value;
+          this.viewType = setting.value as VIEW_TYPE;
         else if (setting.property === PROPERTY_SKY_COLOR)
-          this.skyColor = <SKY_COLOR> setting.value;
+          this.skyColor = setting.value as SKY_COLOR;
         else if (setting.property === PROPERTY_REFRACTION)
-          this.refraction = <boolean> setting.value;
+          this.refraction = setting.value as boolean;
         else if (setting.property === PROPERTY_CELESTIAL_GRID)
-          this.celestial = <boolean> setting.value;
+          this.celestial = setting.value as boolean;
         else if (setting.property === PROPERTY_ECLIPTIC_GRID)
-          this.ecliptic = <boolean> setting.value;
+          this.ecliptic = setting.value as boolean;
         else if (setting.property === PROPERTY_PATH_OF_SUN)
-          this.pathOfSun = <boolean> setting.value;
+          this.pathOfSun = setting.value as boolean;
         else if (setting.property === PROPERTY_PATH_OF_MOON)
-          this.pathOfMoon = <boolean> setting.value;
+          this.pathOfMoon = setting.value as boolean;
         else if (setting.property === PROPERTY_BRIGHTEN_STARS)
-          this.brightenStars = <boolean> setting.value;
+          this.brightenStars = setting.value as boolean;
         else if (setting.property === PROPERTY_SHOW_CONSTELLATIONS)
-          this.showConstellations = <boolean> setting.value;
+          this.showConstellations = setting.value as boolean;
         else if (setting.property === PROPERTY_ENLARGE_SUN_MOON)
-          this.enlargeSunMoon = <boolean> setting.value;
+          this.enlargeSunMoon = setting.value as boolean;
         else if (setting.property === PROPERTY_SHOW_MILKY_WAY)
-          this.showMilkyWay = <boolean> setting.value;
+          this.showMilkyWay = setting.value as boolean;
         else if (setting.property === PROPERTY_ADDITIONALS)
-          this.additional = <ADDITIONALS | string> setting.value;
+          this.additional = setting.value as string;
         else if (setting.property === PROPERTY_LABEL_PLANETS ||
                  setting.property === PROPERTY_LABEL_BRIGHT_STARS ||
                  setting.property === PROPERTY_LABEL_STARS ||
                  setting.property === PROPERTY_LABEL_CONSTELLATIONS)
-          this.updateShowNames(setting.property, <boolean> setting.value);
+          this.updateShowNames(setting.property, setting.value as boolean);
         else if (setting.property === PROPERTY_LABEL_DSOS) {
-          this.deepSkyLabelMagnitude = <number> setting.value;
+          this.deepSkyLabelMagnitude = setting.value as number;
           this.adjustShowNamesMenu(setting.property);
         }
       }

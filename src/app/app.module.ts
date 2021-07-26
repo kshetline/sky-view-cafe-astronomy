@@ -60,7 +60,6 @@ import { SvcTimeViewComponent } from './svc/svc-time-view/svc-time-view.componen
 import { SvcZoneSelectorComponent } from './svc/svc-zone-selector/svc-zone-selector.component';
 import { JpegCommentReader } from './util/ks-read-jpeg-comment';
 import { KsTimeService } from './util/ks-time.service';
-import { KsCalendarComponent } from './widgets/ks-calendar/ks-calendar.component';
 import { KsCheckboxComponent } from './widgets/ks-checkbox/ks-checkbox.component';
 import { KsDropdownComponent } from './widgets/ks-dropdown/ks-dropdown.component';
 import { KsIconButtonComponent } from './widgets/ks-icon-button/ks-icon-button.component';
@@ -102,7 +101,6 @@ import { AppRoutingModule } from './app-routing.module';
   ],
   declarations: [
     AppComponent,
-    KsCalendarComponent,
     KsCheckboxComponent,
     KsDropdownComponent,
     KsIconButtonComponent,

@@ -40,6 +40,12 @@
         "functions": "never"
       }
     ],
+    "@typescript-eslint/consistent-type-assertions": [
+      "error",
+      {
+        "assertionStyle": "as"
+      }
+    ],
     "curly": "off",
     "@typescript-eslint/explicit-function-return-type":  "error",
     "indent": "off",

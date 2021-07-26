@@ -31,19 +31,19 @@ export class SvcMoonsViewOptionsComponent implements AfterViewInit {
     appService.getUserSettingUpdates((setting: UserSetting) => {
       if (setting.view === VIEW_MOONS && setting.source !== this) {
         if (setting.property === PROPERTY_NORTH_ON_TOP)
-          this.northOnTop = <boolean> setting.value;
+          this.northOnTop = setting.value as boolean;
         else if (setting.property === PROPERTY_EAST_ON_LEFT)
-          this.eastOnLeft = <boolean> setting.value;
+          this.eastOnLeft = setting.value as boolean;
         else if (setting.property === PROPERTY_PHOTOGRAPHIC_PLANETS)
-          this.photoPlanets = <boolean> setting.value;
+          this.photoPlanets = setting.value as boolean;
         else if (setting.property === PROPERTY_MARK_GRS)
-          this.markGrs = <boolean> setting.value;
+          this.markGrs = setting.value as boolean;
         else if (setting.property === PROPERTY_GRS_OVERRIDE)
-          this.grsOverride = <boolean> setting.value;
+          this.grsOverride = setting.value as boolean;
         else if (setting.property === PROPERTY_FIXED_GRS)
-          this.fixedGrs = <number> setting.value;
+          this.fixedGrs = setting.value as number;
         else if (setting.property === PROPERTY_ZOOM)
-          this.reverseZoom = ZOOM_STEPS - <number> setting.value;
+          this.reverseZoom = ZOOM_STEPS - (setting.value as number);
       }
     });
   }

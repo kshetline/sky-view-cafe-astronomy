@@ -84,23 +84,23 @@ export class SvcMoonsViewComponent extends GenericPlanetaryViewDirective impleme
     appService.getUserSettingUpdates((setting: UserSetting) => {
       if (setting.view === VIEW_MOONS && setting.source !== this) {
         if (setting.property === PROPERTY_NORTH_ON_TOP)
-          this.northOnTop = <boolean> setting.value;
+          this.northOnTop = setting.value as boolean;
         else if (setting.property === PROPERTY_EAST_ON_LEFT)
-          this.eastOnLeft = <boolean> setting.value;
+          this.eastOnLeft = setting.value as boolean;
         else if (setting.property === PROPERTY_MOON_NUMBERS)
-          this.moonNumbers = <boolean> setting.value;
+          this.moonNumbers = setting.value as boolean;
         else if (setting.property === PROPERTY_MOON_NAMES)
-          this.moonNames = <boolean> setting.value;
+          this.moonNames = setting.value as boolean;
         else if (setting.property === PROPERTY_PHOTOGRAPHIC_PLANETS)
-          this.photoPlanets = <boolean> setting.value;
+          this.photoPlanets = setting.value as boolean;
         else if (setting.property === PROPERTY_MARK_GRS)
-          this.markGrs = <boolean> setting.value;
+          this.markGrs = setting.value as boolean;
         else if (setting.property === PROPERTY_GRS_OVERRIDE)
-          this.grsOverride = <boolean> setting.value;
+          this.grsOverride = setting.value as boolean;
         else if (setting.property === PROPERTY_FIXED_GRS)
-          this.fixedGrs = <number> setting.value;
+          this.fixedGrs = setting.value as number;
         else if (setting.property === PROPERTY_ZOOM)
-          this.zoom = <number> setting.value;
+          this.zoom = setting.value as number;
 
         this.throttledRedraw();
       }
@@ -194,7 +194,7 @@ export class SvcMoonsViewComponent extends GenericPlanetaryViewDirective impleme
     let sunPos: MoonInfo = null;
     let planetShown = false;
     let colorOfMoon: string = null;
-    const pt = <Point> {};
+    const pt = {} as Point;
     let num = '', name = '', longName = '';
     let transitNames = '';
     let offscreenNames = '';
@@ -530,7 +530,7 @@ export class SvcMoonsViewComponent extends GenericPlanetaryViewDirective impleme
     if (!this.lastDrawingContext)
       return false;
 
-    return this.withinPlot(this.lastMoveX, this.lastMoveY, <DrawingContextPlanetary> this.lastDrawingContext);
+    return this.withinPlot(this.lastMoveX, this.lastMoveY, this.lastDrawingContext as DrawingContextPlanetary);
   }
 
   protected withinPlot(x: number, y: number, dc?: DrawingContextPlanetary): boolean {

@@ -104,7 +104,7 @@ export class SvcEventNavigatorComponent implements AfterViewInit, OnDestroy {
     app.getUserSettingUpdates((setting: UserSetting) => {
       if (setting.view === VIEW_MOONS && this.jupiterInfo) {
         if (setting.property === PROPERTY_GRS_OVERRIDE) {
-          this.lastGrsOverride = <boolean> setting.value;
+          this.lastGrsOverride = setting.value as boolean;
 
           if (this.lastGrsOverride)
             this.jupiterInfo.setFixedGRSLongitude(this.lastGrsLongitude);
@@ -112,7 +112,7 @@ export class SvcEventNavigatorComponent implements AfterViewInit, OnDestroy {
             this.jupiterInfo.clearFixedGRSLongitude();
         }
         else if (setting.property === PROPERTY_FIXED_GRS) {
-          this.lastGrsLongitude = <number> setting.value;
+          this.lastGrsLongitude = setting.value as number;
 
           if (this.lastGrsOverride)
             this.jupiterInfo.setFixedGRSLongitude(this.lastGrsLongitude);
@@ -262,9 +262,9 @@ export class SvcEventNavigatorComponent implements AfterViewInit, OnDestroy {
       let message: string;
 
       if (isString(event.miscInfo))
-        message = <string> event.miscInfo;
+        message = event.miscInfo as string;
       else if (event.eventType === LUNAR_ECLIPSE || event.eventType === SOLAR_ECLIPSE) {
-        const ei = <EclipseInfo> event.miscInfo;
+        const ei = event.miscInfo as EclipseInfo;
 
         if (ei.total)
           message = 'Total';

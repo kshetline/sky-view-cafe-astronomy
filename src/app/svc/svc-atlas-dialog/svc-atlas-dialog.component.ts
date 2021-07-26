@@ -83,7 +83,7 @@ export class SvcAtlasDialogComponent {
 
         // Put focus on the search field.
         setTimeout(() => {
-          (<HTMLInputElement> this.searchField.nativeElement).focus();
+          (this.searchField.nativeElement as HTMLInputElement).focus();
           this.becomingVisible = false;
         }, 250);
       }

@@ -30,21 +30,21 @@ export class SvcMapViewOptionsComponent implements AfterViewInit {
     appService.getUserSettingUpdates((setting: UserSetting) => {
       if (setting.view === VIEW_MAP && setting.source !== this) {
         if (setting.property === PROPERTY_MAP_TYPE)
-          this.mapType = <MapType> setting.value;
+          this.mapType = setting.value as MapType;
         else if (setting.property === PROPERTY_SHOW_DAY_NIGHT)
-          this.showDayNight = <boolean> setting.value;
+          this.showDayNight = setting.value as boolean;
         else if (setting.property === PROPERTY_SHOW_ECLIPSE_SHADOWS)
-          this.showEclipseShadows = <boolean> setting.value;
+          this.showEclipseShadows = setting.value as boolean;
         else if (setting.property === PROPERTY_SHOW_LOCATION_MARKERS)
-          this.showMarkers = <boolean> setting.value;
+          this.showMarkers = setting.value as boolean;
         else if (setting.property === PROPERTY_BLINK_LOCATION_MARKERS)
-          this.blink = <boolean> setting.value;
+          this.blink = setting.value as boolean;
       }
     });
 
     appService.getAppEventUpdates((appEvent: AppEvent) => {
       if (appEvent.name === EVENT_MAP_ACTIVE_ECLIPSE)
-        this.eclipseActive = <boolean> appEvent.value;
+        this.eclipseActive = appEvent.value as boolean;
     });
 
     appService.sendAppEvent(EVENT_MAP_ACTIVE_ECLIPSE_REQUEST);

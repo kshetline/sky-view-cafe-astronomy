@@ -9,7 +9,7 @@ import {
   ASTEROID_COLOR_INDEX, COMET_COLOR_INDEX, DrawingContextPlanetary, GenericPlanetaryViewDirective, LABEL_TYPE, LabelInfo, MARQUEE_AU,
   MARQUEE_DISTANCE, MARQUEE_ECLIPTIC, MARQUEE_HELIOCENTRIC, planetColors, planetPrintColors, SELECTION_TYPE, SUBJECT
 } from '../generic-planetary-view.directive';
-import { ADDITIONALS, GenericViewDirective, PROPERTY_ADDITIONALS } from '../generic-view.directive';
+import { GenericViewDirective, PROPERTY_ADDITIONALS } from '../generic-view.directive';
 
 export const  VIEW_ORBITS = 'orbits';
 export const    PROPERTY_EXTENT = 'extent';
@@ -141,7 +141,7 @@ export class SvcOrbitViewComponent extends GenericPlanetaryViewDirective impleme
         if (setting.property === PROPERTY_EXTENT) {
           const oldZoom = this.zoom;
 
-          this.extent = <number> setting.value;
+          this.extent = setting.value as number;
           this.updatePlanetsToDraw();
 
           // When loading old settings, extent might be set after zoom is set rather than before.
@@ -156,31 +156,31 @@ export class SvcOrbitViewComponent extends GenericPlanetaryViewDirective impleme
           }
         }
         else if (setting.property === PROPERTY_CENTER_EARTH)
-          this.centerEarth = <boolean> setting.value;
+          this.centerEarth = setting.value as boolean;
         else if (setting.property === PROPERTY_MARQUEE_UNITS)
-          this.marqueeUnits = <number> setting.value;
+          this.marqueeUnits = setting.value as number;
         else if (setting.property === PROPERTY_SHOW_PATHS)
-          this.showPaths = <boolean> setting.value;
+          this.showPaths = setting.value as boolean;
         else if (setting.property === PROPERTY_SHOW_MARKERS)
-          this.showMarkers = <boolean> setting.value;
+          this.showMarkers = setting.value as boolean;
         else if (setting.property === PROPERTY_GRAY_ORBITS)
-          this.grayOrbits = <boolean> setting.value;
+          this.grayOrbits = setting.value as boolean;
         else if (setting.property === PROPERTY_SHOW_NAMES)
-          this.showNames = <boolean> setting.value;
+          this.showNames = setting.value as boolean;
         else if (setting.property === PROPERTY_ZOOM) {
-          this.zoom = <number> setting.value;
+          this.zoom = setting.value as number;
           this.zoomLastSet = performance.now();
         }
         else if (setting.property === PROPERTY_ROTATION_XZ)
-          this.rotation_xz = <number> setting.value;
+          this.rotation_xz = setting.value as number;
         else if (setting.property === PROPERTY_ROTATION_YZ)
-          this.rotation_yz = <number> setting.value;
+          this.rotation_yz = setting.value as number;
         else if (setting.property === PROPERTY_ANAGLYPH_3D)
-          this.anaglyph3d = <boolean> setting.value;
+          this.anaglyph3d = setting.value as boolean;
         else if (setting.property === PROPERTY_ANAGLYPH_RC)
-          this.anaglyphRC = <boolean> setting.value;
+          this.anaglyphRC = setting.value as boolean;
         else if (setting.property === PROPERTY_ADDITIONALS) {
-          this.additional = <ADDITIONALS | string> setting.value;
+          this.additional = setting.value as string;
           this.updatePlanetsToDraw();
         }
 
@@ -329,7 +329,7 @@ export class SvcOrbitViewComponent extends GenericPlanetaryViewDirective impleme
 
             pos = pos.translate(earthPos);
             pos = this.ecliptic.eclipticToEquatorial3D(pos, dc.jde, NMode.MEAN_OBLIQUITY);
-            pos = <SphericalPosition3D> dc.skyObserver.equatorialToHorizontal(pos, dc.jdu, REFRACTION);
+            pos = dc.skyObserver.equatorialToHorizontal(pos, dc.jdu, REFRACTION) as SphericalPosition3D;
 
             if (pos.altitude.degrees < 0)
               color = (dc.inkSaver ? BELOW_HORIZON_PRINT_COLOR : BELOW_HORIZON_COLOR);
@@ -405,7 +405,7 @@ export class SvcOrbitViewComponent extends GenericPlanetaryViewDirective impleme
 
               pos = pos.translate(earthPos);
               pos = this.ecliptic.eclipticToEquatorial3D(pos, dc.jde, NMode.MEAN_OBLIQUITY);
-              pos = <SphericalPosition3D> dc.skyObserver.equatorialToHorizontal(pos, dc.jdu, REFRACTION);
+              pos = dc.skyObserver.equatorialToHorizontal(pos, dc.jdu, REFRACTION) as SphericalPosition3D;
 
               if (pos.altitude.degrees < 0)
                 color = (dc.inkSaver ? BELOW_HORIZON_PRINT_COLOR : BELOW_HORIZON_COLOR);
@@ -625,7 +625,7 @@ export class SvcOrbitViewComponent extends GenericPlanetaryViewDirective impleme
     if (!this.lastDrawingContext)
       return false;
 
-    return this.withinPlot(this.lastMoveX, this.lastMoveY, <DrawingContextPlanetary> this.lastDrawingContext);
+    return this.withinPlot(this.lastMoveX, this.lastMoveY, this.lastDrawingContext as DrawingContextPlanetary);
   }
 
   protected withinPlot(x: number, y: number, dc?: DrawingContextPlanetary): boolean {

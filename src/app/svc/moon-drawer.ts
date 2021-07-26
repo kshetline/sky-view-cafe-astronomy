@@ -24,7 +24,7 @@ export class MoonDrawer {
 
   constructor(private moonImage: HTMLImageElement) {
     const size = moonImage.width; // height should be identical.
-    const canvas = <HTMLCanvasElement> document.createElement('canvas');
+    const canvas = document.createElement('canvas');
 
     canvas.width = size;
     canvas.height = size;
@@ -99,7 +99,7 @@ export class MoonDrawer {
     let pixel: number;
 
     if (!this.scaledBuffer || this.scaledBuffer.width !== size) {
-      this.canvas = <HTMLCanvasElement> document.createElement('canvas');
+      this.canvas = document.createElement('canvas');
 
       this.canvas.width = size;
       this.canvas.height = size;

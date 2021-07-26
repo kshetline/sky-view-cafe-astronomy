@@ -45,9 +45,9 @@ export class SvcCalendarViewOptionsComponent implements AfterViewInit, OnDestroy
     appService.getUserSettingUpdates((setting: UserSetting) => {
       if (setting.view === VIEW_CALENDAR && setting.source !== this) {
         if (setting.property === PROPERTY_EVENT_TYPE)
-          this.eventType = <number> setting.value;
+          this.eventType = setting.value as number;
         else if (setting.property === PROPERTY_INCLUDE_TRANSITS)
-          this.includeTransits = <boolean> setting.value;
+          this.includeTransits = setting.value as boolean;
       }
     });
   }

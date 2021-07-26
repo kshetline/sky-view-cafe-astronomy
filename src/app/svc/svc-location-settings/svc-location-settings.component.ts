@@ -32,10 +32,10 @@ export class SvcLocationSettingsComponent {
     app.getLocationUpdates(() => this.buildLocationMenu());
     this.buildLocationMenu();
 
-    if ((<any> window).mapsInitialized)
+    if ((window as any).mapsInitialized)
       this.mapsReady = true;
     else
-      (<any> window).initGoogleMaps(() => this.mapsReady = true);
+      (window as any).initGoogleMaps(() => this.mapsReady = true);
   }
 
   get latitudeStyle(): AngleEditorOptions {
