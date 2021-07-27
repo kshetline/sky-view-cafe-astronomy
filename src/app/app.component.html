@@ -56,8 +56,15 @@
           <div class="time-panel-item">
             <span #calendarTarget style="position: relative; left: -1.2em; top: 2px"></span>
             <p-overlayPanel #calendarPopup class="calendar-popup">
-              <tbw-calendar #calendar [(ngModel)]="date" [timezone]="timezone" [gregorianChangeDate]="gcDate" showDst [minYear]="-6000" [maxYear]="9999"
-                           (dayClick)="calendarPopup.hide()"></tbw-calendar>
+              <tbw-calendar #calendar
+                  [(ngModel)]="date"
+                  [timezone]="timezone"
+                  [gregorianChangeDate]="gcDate"
+                  showDst
+                  [minYear]="SVC_MIN_YEAR"
+                  [maxYear]="SVC_MAX_YEAR"
+                  [backgroundDecorator]="getBackground"
+                  (dayClick)="calendarPopup.hide()"></tbw-calendar>
             </p-overlayPanel>
             <ks-icon-button [disabled]="trackTime" icon="far fa-calendar-alt fa-lg"
                             (click)="calendarPopup.toggle($event, calendarTarget); calendar.reset()"></ks-icon-button>&nbsp;

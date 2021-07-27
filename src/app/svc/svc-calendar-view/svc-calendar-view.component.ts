@@ -6,9 +6,9 @@ import {
   SPRING_EQUINOX, SUMMER_SOLSTICE, SUN, TRANSIT_EVENT, TWILIGHT_BEGINS, TWILIGHT_ENDS, UNSEEN_ALL_DAY, URANUS, VENUS,
   VISIBLE_ALL_DAY, WINTER_SOLSTICE
 } from '@tubular/astronomy';
-import { DateAndTime, DateTime, Timezone, utToTdt, YMDDate } from '@tubular/time';
+import { DateAndTime, DateTime, defaultLocale, getStartOfWeek, Timezone, utToTdt, YMDDate } from '@tubular/time';
 import { ceil, floor, max, min, round } from '@tubular/math';
-import { isEdge, isFirefox, isIE } from '@tubular/util';
+import { isEdge, isFirefox } from '@tubular/util';
 import { throttle } from 'lodash-es';
 import {
   AppService, CurrentTab, Location, PROPERTY_GREGORIAN_CHANGE_DATE, SVC_MAX_YEAR, SVC_MIN_YEAR, UserSetting, VIEW_APP
@@ -77,7 +77,7 @@ export class SvcCalendarViewComponent implements AfterViewInit {
   private observer: ISkyObserver;
   private year = Number.MIN_SAFE_INTEGER;
   private month = -1;
-  private _firstDay = 0;
+  private _firstDay = getStartOfWeek(defaultLocale);
   private _minYear = SVC_MIN_YEAR;
   private _maxYear = SVC_MAX_YEAR;
   private events: AstroEvent[] = [];
@@ -122,7 +122,7 @@ export class SvcCalendarViewComponent implements AfterViewInit {
 
   constructor(private appService: AppService, private datePipe: DatePipe) {
     this.isFirefox = isFirefox();
-    this.isEdgeOrIE = isEdge() || isIE();
+    this.isEdgeOrIE = isEdge();
     // TODO: Call method below whenever first day of week changes.
     this.updateDayHeadings();
 
