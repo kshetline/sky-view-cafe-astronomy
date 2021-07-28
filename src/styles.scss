@@ -1,10 +1,35 @@
 // styles in src/style directory are applied to the whole page
 @import 'primeng-theme-tweaks';
 
-.tbw-dse-wrapper {
-  background-color: white !important;
+// For some reason, the primeng-theme-tweaks undo some of the @tubular/ng-widgets styling, so that styling
+// is reasserted here.
+.tbw-dse-wrapper { background-color: white !important; }
+.tbw-disabled-background { background-color: #CCC !important; }
+.tbw-error-background { background-color: #F67 !important; }
+.tbw-confirm-background { background-color: #6C6 !important; }
+.tbw-normal-background { background-color: white !important; }
+.tbw-selected-background { background-color: black !important; }
+.tbw-view-only-background { background-color: black !important; }
+.tbw-warning-background { background-color: #FC6 !important; }
+.tbw-transparent { background-color: transparent !important; }
+.tbw-dse-header { background-color: #F4F4F4 !important; }
+.tbw-dse-closer { background-color: white !important; }
+.tbw-dse-focus-indicator { background-color: transparent !important; }
+.tbw-dse-divider { background-color: #A6A6A6 !important; }
+
+.tbw-dse-footer {
+  background-color: #F4F4F4 !important;
+
+  input, .tbw-dse-paste-hint {
+    background-color: transparent !important;
+  }
+
+  .tbw-dse-paste-hint {
+    background-color: inherit !important;
+  }
 }
 
+// These are deliberate changes to @tubular/ng-widgets styling, not just reassertion.
 .tbw-dse-wrapper:hover:not([tabindex="-1"]) {
   border-color: #212121 !important;
 }
