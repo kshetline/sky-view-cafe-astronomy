@@ -1,6 +1,10 @@
 // styles in src/style directory are applied to the whole page
 @import 'primeng-theme-tweaks';
 
+.tbw-dse-wrapper {
+  background-color: white !important;
+}
+
 .tbw-dse-wrapper:hover:not([tabindex="-1"]) {
   border-color: #212121 !important;
 }

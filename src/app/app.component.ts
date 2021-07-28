@@ -191,7 +191,7 @@ export class AppComponent implements AfterViewInit, OnDestroy {
 
         if (!html) {
           html = this.sanitizer.bypassSecurityTrustHtml(
-`<img src="${phaseImage}" alt="${phaseImage.substr(18)}" style="opacity: 0.5; width: 1.2em; height: 1.2em; position: relative; top: -0.075em;">`);
+`<img src="${phaseImage}" alt="${phaseImage.substr(18)}" style="opacity: 0.5; width: 1em; height: 1em; position: relative">`);
           this.cachedSafeHtml.set(phaseImage, html);
         }
 
