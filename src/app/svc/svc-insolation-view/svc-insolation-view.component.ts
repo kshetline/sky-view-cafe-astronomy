@@ -72,9 +72,9 @@ export class SvcInsolationViewComponent extends GenericViewDirective implements 
     appService.getUserSettingUpdates((setting: UserSetting) => {
       if (setting.view === VIEW_INSOLATION && setting.source !== this) {
         if (setting.property === PROPERTY_CENTER_MIDNIGHT)
-          this.centerMidnight = <boolean> setting.value;
+          this.centerMidnight = setting.value as boolean;
         else if (setting.property === PROPERTY_SHOW_MOONLIGHT)
-          this.showMoonlight = <boolean> setting.value;
+          this.showMoonlight = setting.value as boolean;
 
         this.refreshImage = true;
         this.throttledRedraw();
@@ -137,7 +137,7 @@ export class SvcInsolationViewComponent extends GenericViewDirective implements 
       this.daysInYear = this.dateTime.getDaysInYear(this.currentYear);
 
       if (!this.insolationCanvas)
-        this.insolationCanvas = <HTMLCanvasElement> document.createElement('canvas');
+        this.insolationCanvas = document.createElement('canvas');
 
       this.insolationCanvas.width = FIVE_MIN_INTERVALS_PER_DAY;
       this.insolationCanvas.height = this.daysInYear;

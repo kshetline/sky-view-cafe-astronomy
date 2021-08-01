@@ -188,8 +188,8 @@ export abstract class GenericPlanetaryViewDirective extends GenericViewDirective
     appService.getUserSettingUpdates((setting: UserSetting) => {
       if (setting.view === VIEW_APP) {
         if (setting.property === PROPERTY_NORTH_AZIMUTH) {
-          if (this.northAzimuth !== <boolean> setting.value) {
-            this.northAzimuth = <boolean> setting.value;
+          if (this.northAzimuth !== setting.value) {
+            this.northAzimuth = setting.value as boolean;
             this.draw();
           }
         }
@@ -204,7 +204,7 @@ export abstract class GenericPlanetaryViewDirective extends GenericViewDirective
       if (this.specialLabelIndex === NO_MATCH)
         this.marqueeText = '';
       else
-        this.showSelection(<DrawingContextPlanetary> this.lastDrawingContext);
+        this.showSelection(this.lastDrawingContext as DrawingContextPlanetary);
     }
   }
 
@@ -497,7 +497,7 @@ export abstract class GenericPlanetaryViewDirective extends GenericViewDirective
   protected addLabel(li: LabelInfo, dc: DrawingContextPlanetary): void {
     let textWidth: number;
 
-    li.textPt = <Point> {};
+    li.textPt = {} as Point;
     li.overlapped = false;
 
     if (li.labelType === LABEL_TYPE.CONSTELLATION || li.labelType === LABEL_TYPE.SOLE_CONSTELLATION) {
@@ -843,7 +843,7 @@ export abstract class GenericPlanetaryViewDirective extends GenericViewDirective
       info += ', Lat. = ' + eclPos.latitude.toString(format);
 
       if ((this.marqueeFlags & MARQUEE_DISTANCE) !== 0) {
-        const r = (<SphericalPosition3D> eclPos).radius;
+        const r = (eclPos as SphericalPosition3D).radius;
 
         if (this.marqueeUnits === MARQUEE_AU)
           info += ', Dist. ' + r.toFixed(4) + ' AU';

@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 import { NavigationEnd, Router } from '@angular/router';
 import { SolarSystem, StarCatalog } from '@tubular/astronomy';
+import { min, Point } from '@tubular/math';
 import { addZonesUpdateListener, Calendar, pollForTimezoneUpdates, zonePollerBrowser } from '@tubular/time';
 import { clone, forEach, isEqual, isString } from '@tubular/util';
 import { compact, debounce, sortedIndexBy } from 'lodash-es';
@@ -13,6 +14,10 @@ export const SVC_MIN_YEAR = -6000;
 export const SVC_MAX_YEAR = 9999;
 
 export const  VIEW_APP = 'app';
+export const    PROPERTY_CLOCK_FLOATING = 'clock_floating';
+export const    PROPERTY_CLOCK_POSITION = 'clock_position';
+export const    PROPERTY_CLOCK_STYLE = 'clock_style';
+export const    PROPERTY_LAT_LONG_STYLE = 'lat_long_style';
 export const    PROPERTY_NORTH_AZIMUTH = 'north_azimuth';
 export const    PROPERTY_DEFAULT_TAB = 'default_tab';
 export const    PROPERTY_TWILIGHT_BY_DEGREES = 'twilight_by_degrees';
@@ -30,9 +35,11 @@ export function currentMinuteMillis(): number {
   return Math.floor(Date.now() / 60000) * 60000;
 }
 
-export enum CurrentTab {SKY, ECLIPTIC, ORBITS, MOONS_GRS, INSOLATION, MAP, CALENDAR, TIME, TABLES}
+export enum CurrentTab { SKY, ECLIPTIC, ORBITS, MOONS_GRS, INSOLATION, MAP, CALENDAR, TIME, TABLES }
 const tabNames = ['sky', 'ecliptic', 'orbits', 'moons', 'insolation', 'map', 'calendar', 'time', 'tables'];
-export enum CalendarSetting {STANDARD, PURE_GREGORIAN, PURE_JULIAN, CUSTOM_GCD}
+export enum CalendarSetting { STANDARD, PURE_GREGORIAN, PURE_JULIAN, CUSTOM_GCD }
+export enum ClockStyle { ISO, LOCAL, ISO_SEC, LOCAL_SEC }
+export enum LatLongStyle { DEGREES_AND_MINUTES, DECIMAL }
 
 export interface AppEvent {
   name: string;
@@ -113,6 +120,10 @@ export class AppService {
   private readonly allSettings: {[view: string]: {[setting: string]: boolean | number | string}} = {};
   private readonly debouncedSaveSettings: () => void;
   private knownIanaTimezones: Set<string>;
+  private _clockFloating = min(window.screen.width, window.screen.height) < 768;
+  private _clockPosition = '{"x":730,y:"0"}';
+  private _clockStyle = ClockStyle.ISO;
+  private _latLongStyle = LatLongStyle.DEGREES_AND_MINUTES;
   private _northAzimuth = false;
   private _defaultTab = CurrentTab.SKY;
   private _twilightByDegrees = true;
@@ -211,6 +222,8 @@ export class AppService {
     if (this._time.getValue() !== newTime)
       this._time.next(newTime);
   }
+
+  get showingSeconds(): boolean { return this._clockStyle === ClockStyle.ISO_SEC || this._clockStyle === ClockStyle.LOCAL_SEC; }
 
   getTimeUpdates(callback: (time: number) => void): Subscription {
     return this.timeObserver.subscribe(callback);
@@ -367,6 +380,21 @@ export class AppService {
     return this.knownIanaTimezones && this.knownIanaTimezones.has(zone);
   }
 
+  get clockFloating(): boolean { return this._clockFloating; }
+
+  get clockPosition(): Point {
+    try {
+      return JSON.parse(this._clockPosition);
+    }
+    catch {}
+
+    return { x: 730, y: 0 };
+  }
+
+  get clockStyle(): ClockStyle { return this._clockStyle; }
+
+  get latLongStyle(): LatLongStyle { return this._latLongStyle; }
+
   get northAzimuth(): boolean { return this._northAzimuth; }
 
   get defaultTab(): CurrentTab { return this._defaultTab; }
@@ -404,25 +432,25 @@ export class AppService {
 
   get warningNativeDateTime(): boolean { return this._warningNativeDateTime; }
 
+  private propertyMap: Record<string, string> = {
+    [PROPERTY_CLOCK_FLOATING]: '_clockFloating',
+    [PROPERTY_CLOCK_POSITION]: '_clockPosition',
+    [PROPERTY_CLOCK_STYLE]: '_clockStyle',
+    [PROPERTY_LAT_LONG_STYLE]: '_latLongStyle',
+    [PROPERTY_NORTH_AZIMUTH]: '_northAzimuth',
+    [PROPERTY_DEFAULT_TAB]: '_defaultTab',
+    [PROPERTY_TWILIGHT_BY_DEGREES]: '_twilightByDegrees',
+    [PROPERTY_TWILIGHT_DEGREES]: '_twilightDegrees',
+    [PROPERTY_TWILIGHT_MINUTES]: '_twilightMinutes',
+    [PROPERTY_GREGORIAN_CHANGE_DATE]: '_gcDate',
+    [PROPERTY_INK_SAVER]: '_inkSaver',
+    [PROPERTY_NATIVE_DATE_TIME]: '_nativeDateTime',
+    [PROPERTY_WARNING_NATIVE_DATE_TIME]: '_warningNativeDateTime'
+  };
+
   private checkAppSetting(property: string, value: any): void {
-    if (property === PROPERTY_NORTH_AZIMUTH)
-      this._northAzimuth = <boolean> value;
-    else if (property === PROPERTY_DEFAULT_TAB)
-      this._defaultTab = <CurrentTab> value;
-    else if (property === PROPERTY_TWILIGHT_BY_DEGREES)
-      this._twilightByDegrees = <boolean> value;
-    else if (property === PROPERTY_TWILIGHT_DEGREES)
-      this._twilightDegrees = <number> value;
-    else if (property === PROPERTY_TWILIGHT_MINUTES)
-      this._twilightMinutes = <number> value;
-    else if (property === PROPERTY_GREGORIAN_CHANGE_DATE)
-      this._gcDate = <string> value;
-    else if (property === PROPERTY_INK_SAVER)
-      this._inkSaver = <boolean> value;
-    else if (property === PROPERTY_NATIVE_DATE_TIME)
-      this._nativeDateTime = <boolean> value;
-    else if (property === PROPERTY_WARNING_NATIVE_DATE_TIME)
-      this._warningNativeDateTime = <boolean> value;
+    if (this.propertyMap[property])
+      (this as any)[this.propertyMap[property]] = value;
   }
 
   resetWarnings(): void {

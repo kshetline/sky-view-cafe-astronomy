@@ -1,7 +1,7 @@
 import { AfterViewInit, Component } from '@angular/core';
 import { SelectItem } from 'primeng/api';
 import { AppService, UserSetting } from '../../app.service';
-import { ADDITIONALS, PROPERTY_ADDITIONALS } from '../generic-view.directive';
+import { PROPERTY_ADDITIONALS } from '../generic-view.directive';
 import { SvcGenericOptionsComponent } from '../svc-generic-options.component';
 import {
   PROPERTY_ANAGLYPH_3D, PROPERTY_ANAGLYPH_RC, PROPERTY_CENTER_EARTH, PROPERTY_EXTENT, PROPERTY_GRAY_ORBITS, PROPERTY_MARQUEE_UNITS,
@@ -49,27 +49,27 @@ export class SvcOrbitViewOptionsComponent extends SvcGenericOptionsComponent imp
     appService.getUserSettingUpdates((setting: UserSetting) => {
       if (setting.view === VIEW_ORBITS && setting.source !== this) {
         if (setting.property === PROPERTY_EXTENT)
-          this.extent = <number> setting.value;
+          this.extent = setting.value as number;
         else if (setting.property === PROPERTY_CENTER_EARTH)
-          this.centerEarth = <boolean> setting.value;
+          this.centerEarth = setting.value as boolean;
         else if (setting.property === PROPERTY_MARQUEE_UNITS)
-          this.marqueeUnits = <number> setting.value;
+          this.marqueeUnits = setting.value as number;
         else if (setting.property === PROPERTY_SHOW_PATHS)
-          this.showPaths = <boolean> setting.value;
+          this.showPaths = setting.value as boolean;
         else if (setting.property === PROPERTY_SHOW_MARKERS)
-          this.showMarkers = <boolean> setting.value;
+          this.showMarkers = setting.value as boolean;
         else if (setting.property === PROPERTY_GRAY_ORBITS)
-          this.grayOrbits = <boolean> setting.value;
+          this.grayOrbits = setting.value as boolean;
         else if (setting.property === PROPERTY_SHOW_NAMES)
-          this.showNames = <boolean> setting.value;
+          this.showNames = setting.value as boolean;
         else if (setting.property === PROPERTY_ZOOM)
-          this.reverseZoom = ZOOM_STEPS - <number> setting.value;
+          this.reverseZoom = ZOOM_STEPS - (setting.value as number);
         else if (setting.property === PROPERTY_ANAGLYPH_3D)
-          this.anaglyph3d = <boolean> setting.value;
+          this.anaglyph3d = setting.value as boolean;
         else if (setting.property === PROPERTY_ANAGLYPH_RC)
-          this.anaglyphRC = <boolean> setting.value;
+          this.anaglyphRC = setting.value as boolean;
         else if (setting.property === PROPERTY_ADDITIONALS)
-          this.additional = <ADDITIONALS | string> setting.value;
+          this.additional = setting.value as string;
       }
     });
   }

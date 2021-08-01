@@ -14,7 +14,7 @@ import {
   eclipticColor, eclipticGridColor, eclipticGridPrintColor, eclipticPrintColor, equatorColor, equatorPrintColor, GenericSkyViewDirective,
   horizonColor, horizonPrintColor
 } from '../generic-sky-view.directive';
-import { ADDITIONALS, PROPERTY_ADDITIONALS } from '../generic-view.directive';
+import { PROPERTY_ADDITIONALS } from '../generic-view.directive';
 
 export const  VIEW_ECLIPTIC = 'ecliptic';
 export const    PROPERTY_SPAN_25 = 'span_25';
@@ -68,41 +68,41 @@ export class SvcEclipticViewComponent extends GenericSkyViewDirective implements
     appService.getUserSettingUpdates((setting: UserSetting) => {
       if (setting.view === VIEW_ECLIPTIC && setting.source !== this) {
         if (setting.property === PROPERTY_SPAN_25)
-          this.span25 = <boolean> setting.value;
+          this.span25 = setting.value as boolean;
         else if (setting.property === PROPERTY_ORIENTATION)
-          this.northOutward = <boolean> setting.value;
+          this.northOutward = setting.value as boolean;
         else if (setting.property === PROPERTY_ECLIPTIC_GRID)
-          this.showEclipticGrid = <boolean> setting.value;
+          this.showEclipticGrid = setting.value as boolean;
         else if (setting.property === PROPERTY_CELESTIAL_EQUATOR)
-          this.showCelestialEquator = <boolean> setting.value;
+          this.showCelestialEquator = setting.value as boolean;
         else if (setting.property === PROPERTY_SHOW_CONSTELLATIONS)
-          this.showConstellations = <boolean> setting.value;
+          this.showConstellations = setting.value as boolean;
         else if (setting.property === PROPERTY_LOCAL_HORIZON)
-          this.localHorizon = <boolean> setting.value;
+          this.localHorizon = setting.value as boolean;
         else if (setting.property === PROPERTY_SHOW_STARS)
-          this.showStars = <boolean> setting.value;
+          this.showStars = setting.value as boolean;
         else if (setting.property === PROPERTY_BRIGHTEN_STARS)
-          this.brightenStars(<boolean> setting.value);
+          this.brightenStars(setting.value as boolean);
         else if (setting.property === PROPERTY_TOPOCENTRIC_MOON)
-          this.topocentricMoon = <boolean> setting.value;
+          this.topocentricMoon = setting.value as boolean;
         else if (setting.property === PROPERTY_ENLARGE_SUN_MOON)
-          this.enlargeSunMoon = <boolean> setting.value;
+          this.enlargeSunMoon = setting.value as boolean;
         else if (setting.property === PROPERTY_LABEL_PLANETS)
-          this.labelPlanets = <boolean> setting.value;
+          this.labelPlanets = setting.value as boolean;
         else if (setting.property === PROPERTY_LABEL_BRIGHT_STARS) {
-          this.labelBrightStars = <boolean> setting.value;
+          this.labelBrightStars = setting.value as boolean;
           this.labelStars = this.labelStars && !this.labelBrightStars;
         }
         else if (setting.property === PROPERTY_LABEL_STARS) {
-          this.labelStars = <boolean> setting.value;
+          this.labelStars = setting.value as boolean;
           this.labelBrightStars = this.labelBrightStars && !this.labelStars;
         }
         else if (setting.property === PROPERTY_LABEL_CONSTELLATIONS)
-          this.labelConstellations = <boolean> setting.value;
+          this.labelConstellations = setting.value as boolean;
         else if (setting.property === PROPERTY_LABEL_DSOS)
-          this.deepSkyLabelMagnitude = <number> setting.value;
+          this.deepSkyLabelMagnitude = setting.value as number;
         else if (setting.property === PROPERTY_ADDITIONALS) {
-          this.additional = <ADDITIONALS | string> setting.value;
+          this.additional = setting.value as string;
           this.updatePlanetsToDraw();
         }
 
@@ -227,10 +227,10 @@ export class SvcEclipticViewComponent extends GenericSkyViewDirective implements
     if (!this.lastDrawingContext)
       return false;
 
-    return this.withinPlot(this.lastMoveX, this.lastMoveY, <DrawingContextEcliptic> this.lastDrawingContext);
+    return this.withinPlot(this.lastMoveX, this.lastMoveY, this.lastDrawingContext as DrawingContextEcliptic);
   }
 
-  protected withinPlot(x: number, y: number, dc = <DrawingContextEcliptic> this.lastDrawingContext): boolean {
+  protected withinPlot(x: number, y: number, dc = this.lastDrawingContext as DrawingContextEcliptic): boolean {
     if (!dc)
       return false;
 

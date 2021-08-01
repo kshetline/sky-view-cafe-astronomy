@@ -18,6 +18,22 @@
     </div>
     <div class="settings-row">
       <div class="settings-label">
+        Input clock style:
+      </div>
+      <div class="settings-value">
+        <ks-dropdown [options]="clockStyles" [(ngModel)]="clockStyle"></ks-dropdown>
+      </div>
+    </div>
+    <div class="settings-row">
+      <div class="settings-label">
+        Enter latitude and longitude:
+      </div>
+      <div class="settings-value">
+        <ks-dropdown [options]="latLongStyles" [(ngModel)]="latLongStyle"></ks-dropdown>
+      </div>
+    </div>
+    <div class="settings-row">
+      <div class="settings-label">
         Azimuth:
       </div>
       <div class="settings-value">
@@ -46,8 +62,16 @@
       </div>
       <div class="settings-value flex-container" fxLayout="row" fxLayoutAlign="space-between center">
         <ks-dropdown [options]="calendarOptions" [(ngModel)]="calendarOption" ksSizer="23em" fxFlex="0 0 auto"></ks-dropdown>
-        <svc-date-editor [pureGregorian]="true" [minYear]="300" [maxYear]="3900"
-                         fxFlex="0 0 auto" [blank]="!gcdVisible" [disabled]="gcdDisabled" [(ngModel)]="gcdValue"></svc-date-editor>
+        <tbw-time-editor
+          options="iso_date"
+          timezone="UTC"
+          gregorianChangeDate="G"
+          min="300"
+          max="3900"
+          fxFlex="0 0 auto"
+          [disabled]="gcdDisabled"
+          [blank]="!gcdVisible"
+          [(date)]="gcdValue"></tbw-time-editor>
       </div>
     </div>
     <div class="settings-row">
@@ -76,6 +100,7 @@
     </div>
   </div>
   <p-footer>
+    <div *ngIf="clockStyle === ISO_SEC || clockStyle === LOCAL_SEC" class="time-accuracy-note">See notes on time accuracy!</div>
     <div class="p-dialog-buttonpane ui-widget p-clearfix">
       <button type="button" pButton icon="far fa-window-close" (click)="visible=false" label="Cancel"></button>
       <button type="button" pButton icon="fas fa-check" (click)="setPreferences()" label="OK" [disabled]="!formValid"></button>

@@ -1,17 +1,31 @@
 import { Component, EventEmitter, Input, Output, ViewChild } from '@angular/core';
-import { getISOFormatDate, parseISODate, YMDDate } from '@tubular/time';
+import { TimeEditorComponent } from '@tubular/ng-widgets';
 import { eventToKey } from '@tubular/util';
 import { MenuItem } from 'primeng/api';
 import {
-  AppService, CalendarSetting, CurrentTab, PROPERTY_DEFAULT_TAB, PROPERTY_GREGORIAN_CHANGE_DATE, PROPERTY_INK_SAVER, PROPERTY_NATIVE_DATE_TIME, PROPERTY_NORTH_AZIMUTH,
-  PROPERTY_TWILIGHT_BY_DEGREES, PROPERTY_TWILIGHT_DEGREES, PROPERTY_TWILIGHT_MINUTES, VIEW_APP
+  AppService,
+  CalendarSetting,
+  CurrentTab,
+  ClockStyle,
+  LatLongStyle,
+  PROPERTY_DEFAULT_TAB,
+  PROPERTY_GREGORIAN_CHANGE_DATE,
+  PROPERTY_INK_SAVER,
+  PROPERTY_LAT_LONG_STYLE,
+  PROPERTY_NATIVE_DATE_TIME,
+  PROPERTY_NORTH_AZIMUTH,
+  PROPERTY_TWILIGHT_BY_DEGREES,
+  PROPERTY_TWILIGHT_DEGREES,
+  PROPERTY_TWILIGHT_MINUTES,
+  VIEW_APP, PROPERTY_CLOCK_STYLE
 } from '../../app.service';
 import { KsDropdownComponent } from '../../widgets/ks-dropdown/ks-dropdown.component';
-import { SvcTimeEditorComponent } from '../svc-time-editor/svc-time-editor.component';
 
 interface MenuItemPlus extends MenuItem {
   value?: any;
 }
+
+const standardGregorian = '1582-10-15';
 
 @Component({
   selector: 'svc-preferences-dialog',
@@ -19,6 +33,9 @@ interface MenuItemPlus extends MenuItem {
   styleUrls: ['./svc-preferences-dialog.component.scss']
 })
 export class SvcPreferencesDialogComponent {
+  ISO_SEC = ClockStyle.ISO_SEC;
+  LOCAL_SEC = ClockStyle.LOCAL_SEC;
+
   private _visible = false;
   private _calendarOption = CalendarSetting.STANDARD;
   private _twilightByDegrees = true;
@@ -38,6 +55,18 @@ export class SvcPreferencesDialogComponent {
     { label: 'Calendar',   value: CurrentTab.CALENDAR },
     { label: 'Time',       value: CurrentTab.TIME },
     { label: 'Tables',     value: CurrentTab.TABLES }
+  ];
+
+  clockStyles: MenuItemPlus[] = [
+    { label: 'ISO-8601 (±YYYY-MM-DD HH:mm), always 24-hour time', value: ClockStyle.ISO },
+    { label: 'Localized time format, possibly with AM/PM', value: ClockStyle.LOCAL },
+    { label: 'ISO-8601 (±YYYY-MM-DD HH:mm:ss), 24-hour with seconds', value: ClockStyle.ISO_SEC },
+    { label: 'Localized time format with seconds, possibly AM/PM', value: ClockStyle.LOCAL_SEC }
+  ];
+
+  latLongStyles: MenuItemPlus[] = [
+    { label: 'Using degrees and minutes', value: LatLongStyle.DEGREES_AND_MINUTES },
+    { label: 'Using decimal degrees', value: LatLongStyle.DECIMAL }
   ];
 
   azimuths: MenuItemPlus[] = [
@@ -70,16 +99,18 @@ export class SvcPreferencesDialogComponent {
   locations: string[] = [''];
   defaultLocation = '';
   defaultTab = CurrentTab.SKY;
+  clockStyle = ClockStyle.ISO;
+  latLongStyle = LatLongStyle.DEGREES_AND_MINUTES;
   northAzimuth = false;
   twilightValue = this.twilightDegrees;
   gcdVisible = true;
   gcdDisabled = true;
-  gcdValue: YMDDate = { y: 1582, m: 10, d: 15 };
+  gcdValue = standardGregorian;
   formValid = true;
   invalidMessage = '';
   inkSaver = true;
   nativeDateTime = false;
-  showDateTimeOptions = SvcTimeEditorComponent.supportsNativeDateTime;
+  showDateTimeOptions = TimeEditorComponent.supportsNativeDateTime;
   resetWarnings = false;
 
   @Input() get visible(): boolean { return this._visible; }
@@ -89,6 +120,8 @@ export class SvcPreferencesDialogComponent {
       this.visibleChange.emit(isVisible);
 
       if (isVisible) {
+        this.clockStyle = this.appService.clockStyle;
+        this.latLongStyle = this.appService.latLongStyle;
         this.northAzimuth = this.appService.northAzimuth;
         this.defaultTab = this.appService.defaultTab;
         this.twilightDegrees = this.appService.twilightDegrees;
@@ -104,7 +137,7 @@ export class SvcPreferencesDialogComponent {
         const gcd = this.appService.gregorianChangeDate;
 
         if (!/[gj]/i.test(gcd))
-          this.gcdValue = parseISODate(gcd);
+          this.gcdValue = gcd;
 
         this.locations = [];
 
@@ -144,7 +177,7 @@ export class SvcPreferencesDialogComponent {
         case CalendarSetting.STANDARD:
           this.gcdVisible = true;
           this.gcdDisabled = true;
-          this.gcdValue = { y: 1582, m: 10, d: 15 };
+          this.gcdValue = standardGregorian;
           break;
 
         case CalendarSetting.PURE_GREGORIAN:
@@ -185,6 +218,8 @@ export class SvcPreferencesDialogComponent {
 
     this.appService.updateUserSetting({ view: VIEW_APP, property: PROPERTY_NORTH_AZIMUTH, value: this.northAzimuth, source: this });
     this.appService.updateUserSetting({ view: VIEW_APP, property: PROPERTY_INK_SAVER, value: this.inkSaver, source: this });
+    this.appService.updateUserSetting({ view: VIEW_APP, property: PROPERTY_CLOCK_STYLE, value: this.clockStyle, source: this });
+    this.appService.updateUserSetting({ view: VIEW_APP, property: PROPERTY_LAT_LONG_STYLE, value: this.latLongStyle, source: this });
     this.appService.updateUserSetting({ view: VIEW_APP, property: PROPERTY_NATIVE_DATE_TIME, value: this.nativeDateTime, source: this });
     this.appService.updateUserSetting({ view: VIEW_APP, property: PROPERTY_DEFAULT_TAB, value: this.defaultTab, source: this });
     this.appService.updateUserSetting({ view: VIEW_APP, property: PROPERTY_TWILIGHT_BY_DEGREES, value: this.twilightByDegrees, source: this });
@@ -194,7 +229,7 @@ export class SvcPreferencesDialogComponent {
     else
       this.appService.updateUserSetting({ view: VIEW_APP, property: PROPERTY_TWILIGHT_MINUTES, value: this.twilightMinutes, source: this });
 
-    let gcd = getISOFormatDate(this.gcdValue);
+    let gcd = this.gcdValue;
 
     if (this.calendarOption === CalendarSetting.PURE_GREGORIAN)
       gcd = 'G';

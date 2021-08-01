@@ -81,22 +81,22 @@ export class SvcEclipticViewOptionsComponent extends SvcGenericOptionsComponent 
     appService.getUserSettingUpdates((setting: UserSetting) => {
       if (setting.view === VIEW_ECLIPTIC && setting.source !== this) {
         if (setting.property === PROPERTY_CELESTIAL_EQUATOR)
-          this.celestial = <boolean> setting.value;
+          this.celestial = setting.value as boolean;
         else if (setting.property === PROPERTY_ECLIPTIC_GRID)
-          this.ecliptic = <boolean> setting.value;
+          this.ecliptic = setting.value as boolean;
         else if (setting.property === PROPERTY_BRIGHTEN_STARS)
-          this.brightenStars = <boolean> setting.value;
+          this.brightenStars = setting.value as boolean;
         else if (setting.property === PROPERTY_SHOW_CONSTELLATIONS)
-          this.showConstellations = <boolean> setting.value;
+          this.showConstellations = setting.value as boolean;
         else if (setting.property === PROPERTY_ENLARGE_SUN_MOON)
-          this.enlargeSunMoon = <boolean> setting.value;
+          this.enlargeSunMoon = setting.value as boolean;
         else if (setting.property === PROPERTY_LABEL_PLANETS ||
                  setting.property === PROPERTY_LABEL_BRIGHT_STARS ||
                  setting.property === PROPERTY_LABEL_STARS ||
                  setting.property === PROPERTY_LABEL_CONSTELLATIONS)
-          this.updateShowNames(setting.property, <boolean> setting.value);
+          this.updateShowNames(setting.property, setting.value as boolean);
         else if (setting.property === PROPERTY_LABEL_DSOS) {
-          this.deepSkyLabelMagnitude = <number> setting.value;
+          this.deepSkyLabelMagnitude = setting.value as number;
           this.adjustShowNamesMenu(setting.property);
         }
       }

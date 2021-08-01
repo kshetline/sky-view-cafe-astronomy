@@ -23,9 +23,9 @@ export class SvcInsolationViewOptionsComponent implements AfterViewInit {
     appService.getUserSettingUpdates((setting: UserSetting) => {
       if (setting.view === VIEW_INSOLATION && setting.source !== this) {
         if (setting.property === PROPERTY_CENTER_MIDNIGHT)
-          this.centerMidnight = <boolean> setting.value;
+          this.centerMidnight = setting.value as boolean;
         else if (setting.property === PROPERTY_SHOW_MOONLIGHT)
-          this.showMoonlight = <boolean> setting.value;
+          this.showMoonlight = setting.value as boolean;
       }
     });
   }

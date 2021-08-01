@@ -2,7 +2,7 @@
 <p-dialog header="Find Latitude, Longitude, and Timezone" [modal]="true" [(visible)]="visible" [style]="{width: '797px'}"
           (keyup)="onKey($event)">
   <div style="position: relative">
-    <div class="search-controls" [ngBusy]="busy">
+    <div class="search-controls">
       <div class="top-caption-row">
         <span>City/place name -or- ZIP/postal code</span><span>US state -or- Canadian province -or- country</span>
         <span></span>
@@ -18,9 +18,12 @@
       <div class="bottom-caption-row">
         <span>Required</span><span>(Optional)</span><span></span>
       </div>
+      <p-checkbox [(ngModel)]="extended" class="ext-search" binary="true" label="Extended search (slower, possibly more matches)"></p-checkbox>
+      <div class="busy" [style.display]="busy ? 'flex' : 'none'">
+        <div><i class="fas fa-spinner fa-pulse fa-2x fa-fw"></i><span>&nbsp;&nbsp;&nbsp;Searching...</span></div>
+      </div>
     </div>
   </div>
-  <p-checkbox [(ngModel)]="extended" binary="true" label="Extended search (slower, possibly more matches)"></p-checkbox>
   <p-table #locationTable [value]="locations" selectionMode="single" [scrollable]="locations?.length > 11"
            scrollHeight="264px" sortMode="none" [(selection)]="selection" metaKeySelection="true" class="results-table">
     <ng-template pTemplate="colgroup">

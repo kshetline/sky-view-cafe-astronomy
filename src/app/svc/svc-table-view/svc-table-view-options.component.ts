@@ -28,11 +28,11 @@ export class SvcTableViewOptionsComponent implements AfterViewInit {
     appService.getUserSettingUpdates((setting: UserSetting) => {
       if (setting.view === VIEW_TABLES && setting.source !== this) {
         if (setting.property === PROPERTY_PLANET_CHOICE)
-          this.planetChoice = <number> setting.value;
+          this.planetChoice = setting.value as number;
         else if (setting.property === PROPERTY_TABLE_TYPE)
-          this.tableType = <TableType> setting.value;
+          this.tableType = setting.value as TableType;
         else if (setting.property === PROPERTY_TWILIGHT)
-          this.twilight = <number> setting.value;
+          this.twilight = setting.value as number;
 
         this.twilightDisabled = (this.tableType !== TableType.RISE_SET_TIMES || this.planetChoice !== SUN);
       }

@@ -24,6 +24,7 @@
     table.table-view td {
       font-family: Courier New, monospace;
       white-space: pre;
+      -webkit-text-stroke-width: 0.33px;
     }
 
     table.table-view tr td:first-child {

@@ -1,5 +1,17 @@
-// styles in src/style directory are applied to the whole page
 @import 'primeng-theme-tweaks';
+
+// Changes to @tubular/ng-widgets styling.
+.tbw-dse-wrapper:hover:not([tabindex="-1"]) {
+  border-color: #212121 !important;
+}
+
+.tbw-dse-header, .tbw-dse-wrapper, .tbw-dse-footer, .tbw-dse-button {
+  border-color: #A6A6A6 !important;
+}
+
+tbw-calendar {
+  font-size: 1.5em;
+}
 
 @mixin selectable($state) {
   -webkit-touch-callout: $state;

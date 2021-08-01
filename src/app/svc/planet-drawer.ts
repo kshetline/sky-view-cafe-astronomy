@@ -19,11 +19,11 @@ export abstract class PlanetDrawer {
 
   protected constructor(protected baseImage: HTMLImageElement, protected flattening: number, protected defaultColor: string) {
     if (baseImage) {
-      this.scaledCylinderCanvas = <HTMLCanvasElement> <any> document.createElement('canvas');
+      this.scaledCylinderCanvas = document.createElement('canvas');
       this.scaledCylinderCanvas.width = 1;
       this.scaledCylinderCanvas.height = 1;
-      this.stretchCanvas = <HTMLCanvasElement> <any> document.createElement('canvas');
-      this.spheroidCanvas = <HTMLCanvasElement> <any> document.createElement('canvas');
+      this.stretchCanvas = document.createElement('canvas');
+      this.spheroidCanvas = document.createElement('canvas');
       this.spheroidCanvas.width = 1;
       this.spheroidCanvas.height = 1;
     }

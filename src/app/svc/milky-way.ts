@@ -12,7 +12,7 @@ export class MilkyWay {
         const image = new Image();
 
         image.onload = (): void => {
-          const canvas = <HTMLCanvasElement> document.createElement('canvas');
+          const canvas = document.createElement('canvas') as HTMLCanvasElement;
 
           canvas.width = image.width;
           canvas.height = image.height;
@@ -41,12 +41,12 @@ export class MilkyWay {
     let longitude: number;
 
     if (isNumber(posOrLongitude)) {
-      longitude = <number> posOrLongitude;
+      longitude = posOrLongitude;
       latitude = latitude || 0;
     }
     else {
-      longitude = (<SphericalPosition> posOrLongitude).longitude.degrees;
-      latitude = (<SphericalPosition> posOrLongitude).latitude.degrees;
+      longitude = posOrLongitude.longitude.degrees;
+      latitude = posOrLongitude.latitude.degrees;
     }
 
     const w = MilkyWay.milkyWayPixels.width;

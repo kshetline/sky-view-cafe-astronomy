@@ -53,11 +53,11 @@ export class KsDropdownComponent implements ControlValueAccessor, OnInit {
   ngOnInit(): void {
   }
 
-  selectClick(event: MouseEvent): void {
+  selectClick(evt: MouseEvent): void {
     if (!this.usingTouch) {
       this.useSelect = false;
-      event.preventDefault();
-      event.stopPropagation();
+      evt.preventDefault();
+      evt.stopPropagation();
       this.pDropdown.focus();
       setTimeout(() => this.pDropdown.containerViewChild.nativeElement.click());
     }

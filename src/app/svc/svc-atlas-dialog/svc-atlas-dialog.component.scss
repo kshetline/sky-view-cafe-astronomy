@@ -21,6 +21,26 @@
   vertical-align: top;
 }
 
+.busy {
+  align-items: center;
+  background-color: rgba(black, 0.5);
+  color: white;
+  display: none;
+  font-size: 1.5em;
+  height: 100%;
+  justify-content: center;
+  left: 0;
+  position: absolute;
+  right: 0;
+  top: 0;
+
+  span {
+    display: inline-block;
+    position: relative;
+    top: -0.4em
+  }
+}
+
 .search-row > span {
   display: table-cell;
   vertical-align: middle;
@@ -28,6 +48,12 @@
 
 input.city-field {
   width: 19em;
+}
+
+.ext-search {
+  display: inline-block;
+  width: 10em;
+  overflow: visible;
 }
 
 .map-wrapper {

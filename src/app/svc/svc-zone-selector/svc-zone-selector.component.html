@@ -5,22 +5,22 @@
 </div>
 
 <div class="zone-selector">
-  <div class="by-region" [style.opacity] ="+!selectByOffset" [style.pointer-events]="selectByOffset ? 'none' : 'auto'">
-    <ks-dropdown [options]="regions" [(ngModel)]="region"  [disabled]="disabled" (focus)="onDropdownFocus($event)"
+  <div class="by-region" [style.opacity]="+!selectByOffset" [style.pointer-events]="selectByOffset ? 'none' : 'auto'">
+    <ks-dropdown [options]="regions" [(ngModel)]="region"  [disabled]="disabled || selectByOffset" (focus)="onDropdownFocus($event)"
                   (blur)="onDropdownBlur($event)" scrollHeight="396px"></ks-dropdown>
     <div class="caption">timezone region/category &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>
 
-    <ks-dropdown [options]="subzones" [(ngModel)]="subzone" [disabled]="disabled" (focus)="onDropdownFocus($event)"
+    <ks-dropdown [options]="subzones" [(ngModel)]="subzone" [disabled]="disabled || selectByOffset" (focus)="onDropdownFocus($event)"
                 (blur)="onDropdownBlur($event)" scrollHeight="308px"></ks-dropdown>
     <div class="caption">specific timezone &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>
   </div>
 
-  <div class="by-offset" [style.opacity] ="+selectByOffset" [style.pointer-events]="selectByOffset ? 'auto' : 'none'">
-    <ks-dropdown [options]="offsets"  [(ngModel)]="offset"  [disabled]="disabled" (focus)="onDropdownFocus($event)"
+  <div class="by-offset" [style.opacity]="+selectByOffset" [style.pointer-events]="selectByOffset ? 'auto' : 'none'">
+    <ks-dropdown [options]="offsets"  [(ngModel)]="offset"  [disabled]="disabled || !selectByOffset" (focus)="onDropdownFocus($event)"
                 (blur)="onDropdownBlur($event)" scrollHeight="220px"></ks-dropdown>
     <div class="caption">utc offset/dst &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>
 
-    <ks-dropdown [options]="zones" [(ngModel)]="zone" [disabled]="disabled" (focus)="onDropdownFocus($event)"
+    <ks-dropdown [options]="zones" [(ngModel)]="zone" [disabled]="disabled || !selectByOffset" (focus)="onDropdownFocus($event)"
                 (blur)="onDropdownBlur($event)" scrollHeight="308px"></ks-dropdown>
     <div class="caption">specific timezone &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>
   </div>

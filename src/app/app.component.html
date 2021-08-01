@@ -4,7 +4,7 @@
   <div class="about-dialog">
     <img src="/assets/resources/svc_lunar_eclipse.png" alt="lunar eclipse" width="64" height="64">
     <h2>Sky View Café NP</h2>
-    Version 1.12.4<br><br>
+    Version 1.14.3<br><br>
     Copyright © 2016-2021 Kerry Shetline.
   </div>
 </p-dialog>
@@ -28,16 +28,46 @@
             <button pButton type="button" (click)="setToNow()" [disabled]="trackTime" label="Now"></button>
           </div>
           <div class="time-panel-item">
-            <svc-time-editor [(ngModel)]="time" [timezone]="timezone" [viewOnly]="trackTime" [gregorianChangeDate]="gcDate"
-              [nativeDateTime]="nativeDateTime"></svc-time-editor>
+            <tbw-time-editor [(ngModel)]="time"
+                [options]="clockOptions"
+                [timezone]="timezone"
+                [min]="SVC_MIN_YEAR"
+                [max]="SVC_MAX_YEAR"
+                [viewOnly]="trackTime"
+                [promptForNative]="promptForNative"
+                [nativeDateTime]="nativeDateTime"
+                [gregorianChangeDate]="gcDate"></tbw-time-editor>
+            <tbw-time-editor *ngIf="app.clockFloating"
+                id="floating-clock"
+                floating
+                wideSpinner
+                showCloser
+                (close)="closeFloatingClock()"
+                [(position)]="clockPosition"
+                [style.font-size]="floatingClockFontSize + 'em'"
+                [(ngModel)]="time"
+                [options]="clockOptions"
+                [timezone]="timezone"
+                [min]="SVC_MIN_YEAR"
+                [max]="SVC_MAX_YEAR"
+                [viewOnly]="trackTime"
+                [gregorianChangeDate]="gcDate"></tbw-time-editor>
           </div>
           <div class="time-panel-item">
+            <span #calendarTarget style="position: relative; left: -1.2em; top: 2px"></span>
             <p-overlayPanel #calendarPopup class="calendar-popup">
-              <ks-calendar #calendar [(ngModel)]="date" [timezone]="timezone" [gregorianChangeDate]="gcDate" [showDst]="true" [minYear]="-6000" [maxYear]="9999"
-                           (dayClick)="calendarPopup.hide()"></ks-calendar>
+              <tbw-calendar #calendar
+                  [(ngModel)]="date"
+                  [timezone]="timezone"
+                  [gregorianChangeDate]="gcDate"
+                  showDst
+                  [minYear]="SVC_MIN_YEAR"
+                  [maxYear]="SVC_MAX_YEAR"
+                  [backgroundDecorator]="getBackground"
+                  (dayClick)="calendarPopup.hide()"></tbw-calendar>
             </p-overlayPanel>
-            <ks-icon-button [disabled]="trackTime" icon="far fa-calendar-alt"
-                            (click)="calendarPopup.toggle($event); calendar.reset()"></ks-icon-button>&nbsp;
+            <ks-icon-button [disabled]="trackTime" icon="far fa-calendar-alt fa-lg"
+                            (click)="calendarPopup.toggle($event, calendarTarget); calendar.reset()"></ks-icon-button>&nbsp;
           </div>
           <div class="time-panel-item">
             <p-checkbox [(ngModel)]="trackTime" binary="true" label="Track current time"></p-checkbox>
@@ -49,7 +79,7 @@
         </div>
         <div class="time-panel-row">
           <div class="time-panel-item">&nbsp;</div>
-          <div class="time-panel-caption">±YYYY-MM-DD HH:mm</div>
+          <div class="time-panel-caption">{{clockCaption}}</div>
           <div class="time-panel-item">&nbsp;</div>
           <div class="time-panel-item">&nbsp;</div>
           <div class="time-panel-item">&nbsp;</div>

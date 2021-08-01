@@ -8,46 +8,69 @@
 <link rel="icon" href="img/favicon.ico" type="image/x-icon">
 <style type="text/css">
 
-body {
-  position: absolute;
-  margin: 8px;
-  background-color: #330066;
-  background-image: url('img/twilight_bkg.gif');
-  color: #CCCCCC;
-  font-family: Arial, Helvetica, sans-serif;
-  font-size: 12px;
-}
+  body {
+    position: absolute;
+    margin: 8px;
+    background-color: #452F7E;
+    color: #CCCCCC;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 12px;
+    width: calc(100vw - 16px);
+  }
 
-a:link    { color: #6699FF }
-a:visited { color: #009999 }
-a:active  { color: #FFFFFF }
-a:hover   { color: #FFFFFF }
+  #background {
+    width: 100%;
+    position: absolute;
+    left: -8px;
+    right: -8px;
+    top: -8px;
+    bottom: -8px;
+  }
 
-.page { position: absolute; left: 0; top: 80px; width: 640px; bottom: 0; }
+  .stretch {
+    width: 100%;
+    height: 100%;
+  }
 
-.title-sans {
-  font-family: Arial, Helvetica, sans-serif;
-  font-size: 18px;
-  font-weight: bold;
-}
+  a:link    { color: #6699FF }
+  a:visited { color: #009999 }
+  a:active  { color: #FFFFFF }
+  a:hover   { color: #FFFFFF }
 
-.header-sans {
-  font-family: Arial, Helvetica, sans-serif;
-  font-size: 16px;
-  font-weight: bold;
-}
+  .page {
+    background: none;
+    position: relative;
+    left: 0; top: 0; width: 640px; bottom: 0;
+  }
 
-.footnote {
-  font-family: Times New Roman, Times, serif;
-  font-size: 10px;
-  color: #9966CC;
-}
+  .title-sans {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 18px;
+    font-weight: bold;
+  }
+
+  .header-sans {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 16px;
+    font-weight: bold;
+  }
+
+  .footnote {
+    font-family: Times New Roman, Times, serif;
+    font-size: 10px;
+    color: #9966CC;
+  }
+
+  li {
+    padding-left: 0.6em;
+  }
 
 </style>
 </head>
 <body>
-<img src="img/svc_banner.jpg" width="640" height="42" alt="SVC Banner">
+<div id="background"><img src="img/twilight_bkg.gif" class="stretch" alt=""></div>
 <div class="page">
+  <img src="img/svc_banner.jpg" width="640" height="42" alt="SVC Banner" style="margin-bottom: 38px">
   <div align=center class="title-sans">Welcome to Sky View Caf&eacute; NP</div>
   <p>
     Sky View Caf&eacute; is an app that lets you see many types of astronomical
@@ -60,6 +83,28 @@ a:hover   { color: #FFFFFF }
 
   <h2 class="header-sans"><a name="history">What's New / Version History</a></h2>
   <div  style="padding-left: 1em; text-indent: -1em">
+
+  <p><b>1.14.3 2021-07-31:</b> Minor style improvements for new time/angle entry widgets.</p>
+
+  <p><b>1.14.2 2021-07-28:</b> Fix other background color issues for iOS Safari.</p>
+
+  <p><b>1.14.1 2021-07-27:</b> Fix floating clock background for iOS Safari.</p>
+
+  <p><b>1.14.0 2021-07-27:</b> Major update with:</p>
+    <ul>
+      <li>Larger input clock with both ISO-8601 and localized date/time formats.</li>
+      <li>Larger dropdown calendar for date selection, with moon phases.</li>
+      <li>Optional large floating clock for easier date/time entry on mobile devices.</li>
+      <li>Optional seconds precision for clock, most useful for close examination of eclipse timing.</li>
+      <li>Choice of degrees/minutes or decimal degrees for latitude/longitude input.</li>
+      <li>Improved usability on mobile devices. (Alas, this is still a more desktop-oriented app.)</li>
+      <li>More information provided in Time view.</li>
+    </ul>
+
+  <p><b>1.13.1 2021-06-30:</b> GRS update, dropped support for older web browser which don’t support
+    at least ES6 JavaScript.</p>
+
+  <p><b>1.13.0 2021-06-05:</b> Asteroid/comet updates, dependency updates.</p>
 
   <p><b>1.12.4 2021-05-05:</b> Update dependencies.</p>
 

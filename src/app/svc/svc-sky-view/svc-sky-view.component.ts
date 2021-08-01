@@ -19,7 +19,7 @@ import {
   eclipticColor, eclipticGridColor, eclipticGridPrintColor, eclipticPrintColor, equatorColor, equatorialGridColor,
   equatorialGridPrintColor, equatorPrintColor, GenericSkyViewDirective, moonPathColor, sunPathColor
 } from '../generic-sky-view.directive';
-import { ADDITIONALS, PROPERTY_ADDITIONALS } from '../generic-view.directive';
+import { PROPERTY_ADDITIONALS } from '../generic-view.directive';
 import { MilkyWay } from '../milky-way';
 import { MoonDrawer } from '../moon-drawer';
 
@@ -203,49 +203,49 @@ export class SvcSkyViewComponent extends GenericSkyViewDirective implements Afte
     appService.getUserSettingUpdates((setting: UserSetting) => {
       if (setting.view === VIEW_SKY && setting.source !== this) {
         if (setting.property === PROPERTY_VIEW_TYPE)
-          this.viewType = <VIEW_TYPE> setting.value;
+          this.viewType = setting.value as VIEW_TYPE;
         else if (setting.property === PROPERTY_SKY_COLOR)
-          this.skyColor = <SKY_COLOR> setting.value;
+          this.skyColor = setting.value as SKY_COLOR;
         else if (setting.property === PROPERTY_REFRACTION)
-          this.refraction = <boolean> setting.value;
+          this.refraction = setting.value as boolean;
         else if (setting.property === PROPERTY_CELESTIAL_GRID)
-          this.showCelestialGrid = <boolean> setting.value;
+          this.showCelestialGrid = setting.value as boolean;
         else if (setting.property === PROPERTY_ECLIPTIC_GRID)
-          this.showEclipticGrid = <boolean> setting.value;
+          this.showEclipticGrid = setting.value as boolean;
         else if (setting.property === PROPERTY_PATH_OF_SUN)
-          this.showPathOfSun = <boolean> setting.value;
+          this.showPathOfSun = setting.value as boolean;
         else if (setting.property === PROPERTY_PATH_OF_MOON)
-          this.showPathOfMoon = <boolean> setting.value;
+          this.showPathOfMoon = setting.value as boolean;
         else if (setting.property === PROPERTY_BRIGHTEN_STARS)
-          this.brightenStars(<boolean> setting.value);
+          this.brightenStars(setting.value as boolean);
         else if (setting.property === PROPERTY_SHOW_CONSTELLATIONS)
-          this.showConstellations = <boolean> setting.value;
+          this.showConstellations = setting.value as boolean;
         else if (setting.property === PROPERTY_ENLARGE_SUN_MOON)
-          this.enlargeSunMoon = <boolean> setting.value;
+          this.enlargeSunMoon = setting.value as boolean;
         else if (setting.property === PROPERTY_SHOW_MILKY_WAY)
-          this.showMilkyWay = <boolean> setting.value;
+          this.showMilkyWay = setting.value as boolean;
         else if (setting.property === PROPERTY_LABEL_PLANETS)
-          this.labelPlanets = <boolean> setting.value;
+          this.labelPlanets = setting.value as boolean;
         else if (setting.property === PROPERTY_LABEL_BRIGHT_STARS) {
-          this.labelBrightStars = <boolean> setting.value;
+          this.labelBrightStars = setting.value as boolean;
           this.labelStars = this.labelStars && !this.labelBrightStars;
         }
         else if (setting.property === PROPERTY_LABEL_STARS) {
-          this.labelStars = <boolean> setting.value;
+          this.labelStars = setting.value as boolean;
           this.labelBrightStars = this.labelBrightStars && !this.labelStars;
         }
         else if (setting.property === PROPERTY_LABEL_CONSTELLATIONS)
-          this.labelConstellations = <boolean> setting.value;
+          this.labelConstellations = setting.value as boolean;
         else if (setting.property === PROPERTY_LABEL_DSOS)
-          this.deepSkyLabelMagnitude = <number> setting.value;
+          this.deepSkyLabelMagnitude = setting.value as number;
         else if (setting.property === PROPERTY_FACING)
-          this.facing = <number> setting.value;
+          this.facing = setting.value as number;
         else if (setting.property === PROPERTY_TRACK_SUN)
-          this.trackSun = <boolean> setting.value;
+          this.trackSun = setting.value as boolean;
         else if (setting.property === PROPERTY_PARALLEL_TO_ECLIPTIC)
-          this.parallelToEcliptic = <boolean> setting.value;
+          this.parallelToEcliptic = setting.value as boolean;
         else if (setting.property === PROPERTY_ADDITIONALS) {
-          this.additional = <ADDITIONALS | string> setting.value;
+          this.additional = setting.value as string;
           this.updatePlanetsToDraw();
         }
 
@@ -433,9 +433,9 @@ export class SvcSkyViewComponent extends GenericSkyViewDirective implements Afte
       if (this.viewMode === VIEW_MODE.HORIZON)
         this.facing = mod(this.dragStartFacing -
                           (this.lastMoveX - this.clickX) * this.viewWidth /
-                          (<DrawingContextSky> this.lastDrawingContext).plotWidth, 360.0);
+                          (this.lastDrawingContext as DrawingContextSky).plotWidth, 360.0);
       else {
-        const lastDc = <DrawingContextPlanetary> this.lastDrawingContext;
+        const lastDc = this.lastDrawingContext as DrawingContextPlanetary;
         const dx1 = this.clickX - lastDc.xctr;
         const dy1 = this.clickY - lastDc.yctr;
         const dx2 = lastX - lastDc.xctr;
@@ -451,7 +451,7 @@ export class SvcSkyViewComponent extends GenericSkyViewDirective implements Afte
     const x = event.offsetX;
     const y = event.offsetY;
     const clickPos = this.screenXYToHorizontal(x, y);
-    const lastDc = <DrawingContextPlanetary> this.lastDrawingContext;
+    const lastDc = this.lastDrawingContext as DrawingContextPlanetary;
 
     if (this.viewMode !== VIEW_MODE.FULL_SKY)
       this.viewType = this.lastFullSkyType;
@@ -835,10 +835,10 @@ export class SvcSkyViewComponent extends GenericSkyViewDirective implements Afte
     if (!this.lastDrawingContext)
       return false;
 
-    return this.withinPlot(this.lastMoveX, this.lastMoveY, <DrawingContextSky> this.lastDrawingContext);
+    return this.withinPlot(this.lastMoveX, this.lastMoveY, this.lastDrawingContext as DrawingContextSky);
   }
 
-  protected withinPlot(x: number, y: number, dc = <DrawingContextSky> this.lastDrawingContext): boolean {
+  protected withinPlot(x: number, y: number, dc = this.lastDrawingContext as DrawingContextSky): boolean {
     if (!dc)
       return false;
 
@@ -888,7 +888,7 @@ export class SvcSkyViewComponent extends GenericSkyViewDirective implements Afte
     }
   }
 
-  protected screenXYToHorizontal(x: number, y: number, dc = <DrawingContextSky> this.lastDrawingContext): SphericalPosition {
+  protected screenXYToHorizontal(x: number, y: number, dc = this.lastDrawingContext as DrawingContextSky): SphericalPosition {
     let az;
     let alt;
 
@@ -957,7 +957,7 @@ export class SvcSkyViewComponent extends GenericSkyViewDirective implements Afte
     else if (subject !== SUN && subject !== MOON && alt < this.minAlt)
       return null;
 
-    const pt = <Point> {};
+    const pt = {} as Point;
 
     if (this.viewMode === VIEW_MODE.HORIZON) {
       const azOffset = mod2(az - this.facing, 360.0);
@@ -1286,7 +1286,7 @@ export class SvcSkyViewComponent extends GenericSkyViewDirective implements Afte
         inSky = false;
 
       if (lastPt != null && inSky !== lastInSky) {
-        midPt = <Point> {};
+        midPt = {} as Point;
         // noinspection JSSuspiciousNameCombination
         midPt.x = this.scaledRound(interpolate(alt, -REFRACTION_AT_HORIZON, lastAlt, pt.x, lastPt.x));
         midPt.y = this.scaledRound(interpolate(alt, -REFRACTION_AT_HORIZON, lastAlt, pt.y, lastPt.y));

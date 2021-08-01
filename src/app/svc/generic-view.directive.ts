@@ -247,24 +247,24 @@ export abstract class GenericViewDirective implements AfterViewInit {
     this.draw(forceFullDraw);
   }
 
-  onTouchStart(event: TouchEvent): void {
-    if (this.touchGuard && event.touches.length > 2) {
+  onTouchStart(evt: TouchEvent): void {
+    if (this.touchGuard && evt.touches.length > 2) {
       this.touchGuard.style.display = 'block';
       this.goodDragStart = false;
       this.initialZoomSpread = 0;
       this.clearMouseHighlighting();
       this.resetCursor();
-      event.preventDefault();
+      if (evt.cancelable) evt.preventDefault();
 
       return;
     }
 
-    const pt0 = getXYForTouchEvent(event);
+    const pt0 = getXYForTouchEvent(evt);
     const pt = clone(pt0);
     let pt1;
 
-    if (event.touches.length > 1) {
-      pt1 = getXYForTouchEvent(event, 1);
+    if (evt.touches.length > 1) {
+      pt1 = getXYForTouchEvent(evt, 1);
       pt.x = (pt0.x + pt1.x) / 2;
       pt.y = (pt0.y + pt1.y) / 2;
     }
@@ -276,7 +276,7 @@ export abstract class GenericViewDirective implements AfterViewInit {
       this.goodDragStart = true;
       this.dragStartTime = performance.now();
       this.draw();
-      event.preventDefault();
+      if (evt.cancelable) evt.preventDefault();
 
       if (this.canTouchZoom && pt1) {
         const dx = pt1.x - pt0.x;
@@ -294,10 +294,10 @@ export abstract class GenericViewDirective implements AfterViewInit {
     }
   }
 
-  protected onTouchStartForTouchGuard(event: TouchEvent): void {
-    if (event.touches.length > 2) {
+  protected onTouchStartForTouchGuard(evt: TouchEvent): void {
+    if (evt.touches.length > 2) {
       this.touchGuard.style.display = 'none';
-      event.preventDefault();
+      if (evt.cancelable) evt.preventDefault();
     }
   }
 
@@ -307,19 +307,19 @@ export abstract class GenericViewDirective implements AfterViewInit {
     this.goodDragStart = this.canDrag && this.isInsideView();
   }
 
-  onTouchMove(event: TouchEvent): void {
+  onTouchMove(evt: TouchEvent): void {
     const notAFlick = performance.now() > this.dragStartTime + FLICK_REJECTION_THRESHOLD;
-    const pt0 = getXYForTouchEvent(event);
+    const pt0 = getXYForTouchEvent(evt);
     const pt = clone(pt0);
     let pt1;
 
-    if (event.touches.length > 1) {
-      pt1 = getXYForTouchEvent(event, 1);
+    if (evt.touches.length > 1) {
+      pt1 = getXYForTouchEvent(evt, 1);
       pt.x = (pt0.x + pt1.x) / 2;
       pt.y = (pt0.y + pt1.y) / 2;
     }
 
-    if (this.goodDragStart && notAFlick && event.touches.length === 1 || this.canTouchZoom)
+    if (this.goodDragStart && notAFlick && evt.touches.length === 1 || this.canTouchZoom)
       this.handleMouseMove(pt.x, pt.y, true);
 
     if (this.initialZoomSpread) {
@@ -335,8 +335,8 @@ export abstract class GenericViewDirective implements AfterViewInit {
         this.initialZoomSpread = 0;
     }
 
-    if (this.isInsideView() && notAFlick)
-      event.preventDefault();
+    if (this.isInsideView() && notAFlick && evt.cancelable)
+      evt.preventDefault();
   }
 
   protected startTouchZoom(): void {
@@ -379,16 +379,16 @@ export abstract class GenericViewDirective implements AfterViewInit {
     this.lastMoveX = this.lastMoveY = -1;
   }
 
-  onTouchEnd(event: TouchEvent): void {
-    if (event.touches.length < 2)
+  onTouchEnd(evt: TouchEvent): void {
+    if (evt.touches.length < 2)
       this.initialZoomSpread = 0;
 
-    if (event.touches.length === 1)
-      this.onTouchStart(event);
-    else if (event.touches.length === 0) {
+    if (evt.touches.length === 1)
+      this.onTouchStart(evt);
+    else if (evt.touches.length === 0) {
       this.dragging = false;
       this.goodDragStart = false;
-      event.preventDefault();
+      if (evt.cancelable) evt.preventDefault();
     }
   }
 
@@ -409,7 +409,7 @@ export abstract class GenericViewDirective implements AfterViewInit {
       return;
 
     const startTime = performance.now();
-    const dc = <DrawingContext> {};
+    const dc = {} as DrawingContext;
 
     dc.w = this.width;
     dc.h = this.height;
@@ -535,7 +535,7 @@ export abstract class GenericViewDirective implements AfterViewInit {
     }
 
     if (isString(this.additional)) {
-      const id = this.appService.solarSystem.getPlanetByName(<string> this.additional);
+      const id = this.appService.solarSystem.getPlanetByName(this.additional);
 
       if (id !== NO_MATCH)
         this.planetsToDraw.push(id);
