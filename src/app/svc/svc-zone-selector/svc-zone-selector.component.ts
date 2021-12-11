@@ -127,6 +127,8 @@ export class SvcZoneSelectorComponent implements ControlValueAccessor, OnInit {
       return LMT;
     else if (this._region === OS_OPTION)
       return OS;
+    else if (this._subzone.startsWith('UT'))
+      return null;
 
     return toCanonicalZone(this._region + '/' + this._subzone);
   }
