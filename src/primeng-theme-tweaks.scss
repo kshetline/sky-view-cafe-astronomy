@@ -246,3 +246,51 @@ body {
     font: $theme-font;
   }
 }
+
+.p-datatable-scrollable {
+  table {
+    width: 100%;
+  }
+
+  .p-datatable-thead  {
+    display: table-header-group !important;
+
+    > tr {
+      display: table-row !important;
+      flex-wrap: initial !important;
+
+      > th {
+        display: table-cell !important;
+        flex: initial !important;
+      }
+    }
+  }
+
+  .p-datatable-tbody {
+    display: table-row-group !important;
+
+    > tr {
+      display: table-row !important;
+      flex-wrap: initial !important;
+
+      > td {
+        display: table-cell !important;
+        flex: initial !important;
+      }
+    }
+  }
+
+  .p-datatable-tfoot {
+    display: table-footer-group !important;
+
+    > tr {
+      display: table-row !important;
+      flex-wrap: initial !important;
+
+      > td {
+        display: table-cell !important;
+        flex: initial !important;
+      }
+    }
+  }
+}
