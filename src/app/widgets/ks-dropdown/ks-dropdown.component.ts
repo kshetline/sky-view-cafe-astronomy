@@ -1,4 +1,4 @@
-import { Component, EventEmitter, forwardRef, Input, OnInit, Output, ViewChild } from '@angular/core';
+import { Component, EventEmitter, forwardRef, Input, Output, ViewChild } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { isArray, isObject, isString, isEqual, noop } from '@tubular/util';
 import { SelectItem } from 'primeng/api';
@@ -16,7 +16,7 @@ const DROPDOWN_VALUE_ACCESSOR: any = {
   styleUrls: ['./ks-dropdown.component.scss'],
   providers: [DROPDOWN_VALUE_ACCESSOR]
 })
-export class KsDropdownComponent implements ControlValueAccessor, OnInit {
+export class KsDropdownComponent implements ControlValueAccessor {
   private _options: any[] = [];
   private _value: any;
   private _primeValue: any;
@@ -48,9 +48,6 @@ export class KsDropdownComponent implements ControlValueAccessor, OnInit {
       this._selectValue = this.findMatchingIndex(newValue);
       this.onChangeCallback(newValue);
     }
-  }
-
-  ngOnInit(): void {
   }
 
   selectClick(evt: MouseEvent): void {

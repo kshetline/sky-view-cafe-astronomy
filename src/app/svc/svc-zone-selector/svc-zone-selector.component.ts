@@ -50,6 +50,9 @@ function toCanonicalZone(zone: string): string {
 }
 
 function toDisplayOffset(offset: string): string {
+  if (!offset)
+    return null;
+
   let off = offset;
   let dst = '';
   const $ = /([-+]\d+(?::\d+)?)([§#~^\u2744])?/.exec(offset);
@@ -195,6 +198,9 @@ export class SvcZoneSelectorComponent implements ControlValueAccessor, OnInit {
   }
 
   private updateOffsetAndZoneForValue(newZone: string): void {
+    if (!newZone)
+      return;
+
     const offset = toDisplayOffset(this.offsetByZone.get(newZone));
 
     if (offset) {
