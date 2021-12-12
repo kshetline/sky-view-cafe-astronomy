@@ -70,6 +70,7 @@ export class SvcAtlasDialogComponent {
       if (isVisible) {
         this.atlasService.ping();
         // Reset state of dialog before showing it again.
+        this._selection = null;
         this.city = '';
         this.state = '';
         this.extended = false;
