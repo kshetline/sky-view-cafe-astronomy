@@ -4,16 +4,20 @@ import { SelectItem } from 'primeng/api';
 import { AppService } from '../app.service';
 import { ADDITIONALS, PROPERTY_ADDITIONALS } from './generic-view.directive';
 
+interface ACSelectItem extends SelectItem {
+  search?: string;
+}
+
 export class SvcGenericOptionsComponent {
   private _additional: ADDITIONALS | string = ADDITIONALS.NONE;
 
   asteroidsReady = false;
 
-  additionals: SelectItem[] = [
-    { label: 'No asteroids or comets', value: ADDITIONALS.NONE },
-    { label: 'All asteroids', value: ADDITIONALS.ALL_ASTEROIDS },
-    { label: 'All comets', value: ADDITIONALS.ALL_COMETS },
-    { label: 'All asteroids and comets', value: ADDITIONALS.ALL }
+  additionals: ACSelectItem[] = [
+    { label: 'No asteroids or comets', value: ADDITIONALS.NONE, search: '\x00' },
+    { label: 'All asteroids', value: ADDITIONALS.ALL_ASTEROIDS, search: '\x00' },
+    { label: 'All comets', value: ADDITIONALS.ALL_COMETS, search: '\x00' },
+    { label: 'All asteroids and comets', value: ADDITIONALS.ALL, search: '\x00' }
   ];
 
   constructor(protected appService: AppService, protected viewName: string) {
@@ -41,7 +45,7 @@ export class SvcGenericOptionsComponent {
       if (matches)
         value = matches[1];
 
-      this.additionals.push({ label: name, value: value });
+      this.additionals.push({ label: name, value: value, search: value });
     });
 
     // Force menu update.

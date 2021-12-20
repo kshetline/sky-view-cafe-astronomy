@@ -127,6 +127,10 @@ body {
     padding: 0.25rem 0.5rem;
   }
 
+  .p-dropdown-filter-icon {
+    top: calc(50% + 2px);
+  }
+
   .p-inputtext {
     font: $theme-font;
     font-size: 12px;

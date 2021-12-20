@@ -84,7 +84,7 @@ export interface UserSetting {
   view: string;
   property: string;
   value: boolean | number | string;
-  source: any;
+  source?: any;
 }
 
 interface IpLocation {
@@ -351,7 +351,7 @@ export class AppService {
     const viewSettings = this.allSettings[view];
 
     if (viewSettings) {
-      forEach(viewSettings, (value, property: string) => {
+      forEach(viewSettings, (property, value) => {
         const userSetting = { view: view, property: property, value: value, source: this };
         this.settingsSource.next(userSetting);
       });

@@ -44,7 +44,15 @@ export class SvcCalendarViewOptionsComponent implements AfterViewInit, OnDestroy
   constructor(private appService: AppService) {
     appService.getUserSettingUpdates((setting: UserSetting) => {
       if (setting.view === VIEW_CALENDAR && setting.source !== this) {
-        if (setting.property === PROPERTY_EVENT_TYPE)
+        if (setting.property === PROPERTY_KEY_MOON_PHASES)
+          this.keyMoonPhases = setting.value as boolean;
+        else if (setting.property === PROPERTY_EQUISOLSTICE)
+          this.equisolstice = setting.value as boolean;
+        else if (setting.property === PROPERTY_DAILY_DAYLIGHT)
+          this.dailyDaylight = setting.value as boolean;
+        else if (setting.property === PROPERTY_DAILY_MOON_PHASE)
+          this.dailyMoonPhase = setting.value as boolean;
+        else if (setting.property === PROPERTY_EVENT_TYPE)
           this.eventType = setting.value as number;
         else if (setting.property === PROPERTY_INCLUDE_TRANSITS)
           this.includeTransits = setting.value as boolean;
