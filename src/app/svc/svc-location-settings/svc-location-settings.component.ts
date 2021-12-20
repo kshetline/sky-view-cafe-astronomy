@@ -66,9 +66,8 @@ export class SvcLocationSettingsComponent {
 
   get zone(): string { return this.app.timezone; }
   set zone(newZone: string) {
-    if (this.app.timezone !== newZone) {
+    if (this.app.timezone !== newZone)
       this.app.timezone = newZone;
-    }
   }
 
   get locationName(): string { return this.app.location.name; }

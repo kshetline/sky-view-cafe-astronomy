@@ -11,7 +11,7 @@
     <div class="caption">timezone region/category &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>
 
     <ks-dropdown [options]="subzones" [(ngModel)]="subzone" [disabled]="disabled || selectByOffset" (focus)="onDropdownFocus($event)"
-                (blur)="onDropdownBlur($event)" scrollHeight="308px"></ks-dropdown>
+                (blur)="onDropdownBlur($event)" scrollHeight="308px" class="constrained-dropdown"></ks-dropdown>
     <div class="caption">specific timezone &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>
   </div>
 
@@ -21,7 +21,7 @@
     <div class="caption">utc offset/dst &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>
 
     <ks-dropdown [options]="zones" [(ngModel)]="zone" [disabled]="disabled || !selectByOffset" (focus)="onDropdownFocus($event)"
-                (blur)="onDropdownBlur($event)" scrollHeight="308px"></ks-dropdown>
+                (blur)="onDropdownBlur($event)" scrollHeight="308px" class="constrained-dropdown"></ks-dropdown>
     <div class="caption">specific timezone &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>
   </div>
   <p [hidden]="!error" class="error">{{error}}</p>

@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { SkyObserver } from '@tubular/astronomy';
-import ttime, { DAY_MSEC, DateTime, Timezone, utToTdt } from '@tubular/time';
+import ttime, { DAY_MSEC, DateTime, Timezone, utToTdt, isSafeUtcMillis } from '@tubular/time';
 import { Angle, FMT_MINS, FMT_SECS, mod2, Mode, round, Unit } from '@tubular/math';
 import { padLeft, toDefaultLocaleFixed } from '@tubular/util';
 import { AppService, CurrentTab, Location } from '../../app.service';
@@ -34,6 +34,7 @@ export class SvcTimeViewComponent {
   formattedSeconds: string;
   modifiedEphemerisDate: string;
   modifiedJulianDate: string;
+  taiToUtcWellDefined = false;
 
   constructor(private app: AppService) {
     app.getTimeUpdates((time: number) => {
@@ -68,6 +69,7 @@ export class SvcTimeViewComponent {
 
     this.deltaT = getDeltaTAtJulianDate(jdu).toFixed(3);
     this.deltaTai = (dateTime.deltaTaiMillis / 1000).toFixed(3);
+    this.taiToUtcWellDefined = isSafeUtcMillis(this.time);
     this.formattedLocalTime = dateTime.format('IF' + (showSecs ? 'L' : 'S z') + ' Z');
     this.formattedLst = this.skyObserver.getLocalHourAngle(jdu, true).toTimeString(angleFormat);
 

@@ -127,6 +127,15 @@ body {
     padding: 0.25rem 0.5rem;
   }
 
+  .p-dropdown-trigger-icon {
+    position: relative;
+    top: 2px;
+  }
+
+  .p-dropdown-filter-icon {
+    top: calc(50% + 2px);
+  }
+
   .p-inputtext {
     font: $theme-font;
     font-size: 12px;
@@ -244,5 +253,87 @@ body {
 
   .p-widget {
     font: $theme-font;
+  }
+}
+
+.p-datatable-scrollable {
+  &::before {
+    border-top: 1px solid #c8c8c8;
+    content: '';
+    display: block;
+    height: 1px;
+    left: 0;
+    position: absolute;
+    top: 0;
+    width: 100%;
+    z-index: 1;
+  }
+
+  &::after {
+    border-bottom: 1px solid #c8c8c8;
+    content: '';
+    display: block;
+    height: 1px;
+    left: 0;
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+  }
+
+  table {
+    width: 100%;
+  }
+
+  .p-datatable-thead  {
+    display: table-header-group !important;
+
+    > tr {
+      display: table-row !important;
+      flex-wrap: initial !important;
+
+      > th {
+        display: table-cell !important;
+        flex: initial !important;
+
+        &::after {
+          border-bottom: 1px solid #c8c8c8;
+          content: '';
+          display: block;
+          height: 1px;
+          left: 0;
+          position: absolute;
+          bottom: 0;
+          width: 100%;
+        }
+      }
+    }
+  }
+
+  .p-datatable-tbody {
+    display: table-row-group !important;
+
+    > tr {
+      display: table-row !important;
+      flex-wrap: initial !important;
+
+      > td {
+        display: table-cell !important;
+        flex: initial !important;
+      }
+    }
+  }
+
+  .p-datatable-tfoot {
+    display: table-footer-group !important;
+
+    > tr {
+      display: table-row !important;
+      flex-wrap: initial !important;
+
+      > td {
+        display: table-cell !important;
+        flex: initial !important;
+      }
+    }
   }
 }

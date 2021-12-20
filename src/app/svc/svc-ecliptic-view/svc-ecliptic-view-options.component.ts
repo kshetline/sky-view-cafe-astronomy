@@ -2,6 +2,7 @@ import { AfterViewInit, Component } from '@angular/core';
 import { MenuItem, SelectItem } from 'primeng/api';
 import { AppService, UserSetting } from '../../app.service';
 import { ALL_DEEP_SKY, NO_DEEP_SKY } from '../generic-sky-view.directive';
+import { PROPERTY_ADDITIONALS } from '../generic-view.directive';
 import { SvcGenericOptionsComponent } from '../svc-generic-options.component';
 import { PROPERTY_BRIGHTEN_STARS, PROPERTY_CELESTIAL_EQUATOR, PROPERTY_ECLIPTIC_GRID, PROPERTY_ENLARGE_SUN_MOON, PROPERTY_LABEL_BRIGHT_STARS,
   PROPERTY_LABEL_CONSTELLATIONS, PROPERTY_LABEL_DSOS, PROPERTY_LABEL_PLANETS, PROPERTY_LABEL_STARS,
@@ -80,14 +81,24 @@ export class SvcEclipticViewOptionsComponent extends SvcGenericOptionsComponent 
 
     appService.getUserSettingUpdates((setting: UserSetting) => {
       if (setting.view === VIEW_ECLIPTIC && setting.source !== this) {
-        if (setting.property === PROPERTY_CELESTIAL_EQUATOR)
-          this.celestial = setting.value as boolean;
+        if (setting.property === PROPERTY_SPAN_25)
+          this.span25 = setting.value as boolean;
+        else if (setting.property === PROPERTY_ORIENTATION)
+          this.northOutward = setting.value as boolean;
         else if (setting.property === PROPERTY_ECLIPTIC_GRID)
           this.ecliptic = setting.value as boolean;
-        else if (setting.property === PROPERTY_BRIGHTEN_STARS)
-          this.brightenStars = setting.value as boolean;
+        else if (setting.property === PROPERTY_CELESTIAL_EQUATOR)
+          this.celestial = setting.value as boolean;
         else if (setting.property === PROPERTY_SHOW_CONSTELLATIONS)
           this.showConstellations = setting.value as boolean;
+        else if (setting.property === PROPERTY_LOCAL_HORIZON)
+          this.localHorizon = setting.value as boolean;
+        else if (setting.property === PROPERTY_SHOW_STARS)
+          this.showStars = setting.value as boolean;
+        else if (setting.property === PROPERTY_BRIGHTEN_STARS)
+          this.brightenStars = setting.value as boolean;
+        else if (setting.property === PROPERTY_TOPOCENTRIC_MOON)
+          this.topocentricMoon = setting.value as boolean;
         else if (setting.property === PROPERTY_ENLARGE_SUN_MOON)
           this.enlargeSunMoon = setting.value as boolean;
         else if (setting.property === PROPERTY_LABEL_PLANETS ||
@@ -99,6 +110,8 @@ export class SvcEclipticViewOptionsComponent extends SvcGenericOptionsComponent 
           this.deepSkyLabelMagnitude = setting.value as number;
           this.adjustShowNamesMenu(setting.property);
         }
+        else if (setting.property === PROPERTY_ADDITIONALS)
+          this.additional = setting.value as string;
       }
     });
   }

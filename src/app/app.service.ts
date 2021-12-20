@@ -84,7 +84,7 @@ export interface UserSetting {
   view: string;
   property: string;
   value: boolean | number | string;
-  source: any;
+  source?: any;
 }
 
 interface IpLocation {
@@ -138,8 +138,12 @@ export class AppService {
   private readonly port: number;
   private readonly localTesting: boolean;
 
-  constructor(astroDataService: AstroDataService, private httpClient: HttpClient, private _sanitizer: DomSanitizer,
-              private router: Router) {
+  constructor(
+    astroDataService: AstroDataService,
+    private httpClient: HttpClient,
+    private _sanitizer: DomSanitizer,
+    private router: Router
+  ) {
     this.hostname = document.location.hostname;
     this.port = parseInt(document.location.port, 10);
     this.localTesting = (this.hostname === 'localhost' || this.hostname === '127.0.0.1' || this.port === 3000);
@@ -189,6 +193,13 @@ export class AppService {
           this.currentTab = newTab;
         else
           this.currentTab = CurrentTab.SKY;
+
+        setTimeout(() => {
+          if (location.href.endsWith('#/'))
+            history.replaceState(undefined, undefined, location.href.slice(0, -2));
+          else if (location.href.endsWith('#/' + tabNames[this.defaultTab]))
+            history.replaceState(undefined, undefined, location.href.slice(0, -2 - tabNames[this.defaultTab].length));
+        });
       }
     });
 
@@ -351,7 +362,7 @@ export class AppService {
     const viewSettings = this.allSettings[view];
 
     if (viewSettings) {
-      forEach(viewSettings, (value, property: string) => {
+      forEach(viewSettings, (property, value) => {
         const userSetting = { view: view, property: property, value: value, source: this };
         this.settingsSource.next(userSetting);
       });
@@ -398,6 +409,20 @@ export class AppService {
   get northAzimuth(): boolean { return this._northAzimuth; }
 
   get defaultTab(): CurrentTab { return this._defaultTab; }
+  set defaultTab(value: CurrentTab) {
+    if (this._defaultTab !== value) {
+      this._defaultTab = value;
+
+      const currTab = this._currentTab.getValue();
+
+      if (currTab === value) {
+        if (location.href.endsWith('#/' + tabNames[value]))
+          history.replaceState(undefined, undefined, location.href.slice(0, -2 - tabNames[value].length));
+      }
+      else if (!location.href.includes('#'))
+        history.replaceState(undefined, undefined, location.href + '#/' + tabNames[currTab]);
+    }
+  }
 
   get twilightByDegrees(): boolean { return this._twilightByDegrees; }
 
@@ -438,7 +463,7 @@ export class AppService {
     [PROPERTY_CLOCK_STYLE]: '_clockStyle',
     [PROPERTY_LAT_LONG_STYLE]: '_latLongStyle',
     [PROPERTY_NORTH_AZIMUTH]: '_northAzimuth',
-    [PROPERTY_DEFAULT_TAB]: '_defaultTab',
+    [PROPERTY_DEFAULT_TAB]: 'defaultTab',
     [PROPERTY_TWILIGHT_BY_DEGREES]: '_twilightByDegrees',
     [PROPERTY_TWILIGHT_DEGREES]: '_twilightDegrees',
     [PROPERTY_TWILIGHT_MINUTES]: '_twilightMinutes',

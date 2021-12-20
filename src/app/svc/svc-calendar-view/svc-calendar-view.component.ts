@@ -152,24 +152,18 @@ export class SvcCalendarViewComponent implements AfterViewInit {
 
     appService.getUserSettingUpdates((setting: UserSetting) => {
       if (setting.view === VIEW_CALENDAR && setting.source !== this) {
-        if (setting.property === PROPERTY_KEY_MOON_PHASES) {
+        if (setting.property === PROPERTY_KEY_MOON_PHASES)
           this.keyMoonPhases = setting.value as boolean;
-        }
-        else if (setting.property === PROPERTY_EQUISOLSTICE) {
+        else if (setting.property === PROPERTY_EQUISOLSTICE)
           this.equisolstice = setting.value as boolean;
-        }
-        else if (setting.property === PROPERTY_DAILY_DAYLIGHT) {
+        else if (setting.property === PROPERTY_DAILY_DAYLIGHT)
           this.dailyDaylight = setting.value as boolean;
-        }
-        else if (setting.property === PROPERTY_DAILY_MOON_PHASE) {
+        else if (setting.property === PROPERTY_DAILY_MOON_PHASE)
           this.dailyMoonPhase = setting.value as boolean;
-        }
-        else if (setting.property === PROPERTY_EVENT_TYPE) {
+        else if (setting.property === PROPERTY_EVENT_TYPE)
           this.eventType = setting.value as number;
-        }
-        else if (setting.property === PROPERTY_INCLUDE_TRANSITS) {
+        else if (setting.property === PROPERTY_INCLUDE_TRANSITS)
           this.includeTransits = setting.value as boolean;
-        }
 
         this.updateView(true);
       }

@@ -83,10 +83,35 @@ input.city-field {
   box-sizing: content-box;
 }
 
+.table-wrapper {
+  position: relative;
+  width: 448px;
+
+  .table-border {
+    background-color: #F0F8FF;
+    border: 1px solid #C8C8C8;
+    bottom: 0;
+    left: 0;
+    position: absolute;
+    right: 0;
+    top: 12px;
+  }
+
+  .table-overlay {
+    background-color: #F0F8FF;
+    height: 8px;
+    left: 1px;
+    position: absolute;
+    top: 38px;
+    right: 1px;
+    z-index: 1;
+  }
+}
+
 .results-table {
   display: block;
   height: 312px;
   margin-bottom: 12px;
   padding-top: 12px;
-  width: 448px;
+  width: 100%;
 }
