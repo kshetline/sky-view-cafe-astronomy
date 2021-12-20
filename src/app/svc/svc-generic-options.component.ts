@@ -14,10 +14,10 @@ export class SvcGenericOptionsComponent {
   asteroidsReady = false;
 
   additionals: ACSelectItem[] = [
-    { label: 'No asteroids or comets', value: ADDITIONALS.NONE, search: '\x00' },
-    { label: 'All asteroids', value: ADDITIONALS.ALL_ASTEROIDS, search: '\x00' },
-    { label: 'All comets', value: ADDITIONALS.ALL_COMETS, search: '\x00' },
-    { label: 'All asteroids and comets', value: ADDITIONALS.ALL, search: '\x00' }
+    { label: 'No asteroids or comets', value: ADDITIONALS.NONE, search: 'no asteroids or comets' },
+    { label: 'All asteroids', value: ADDITIONALS.ALL_ASTEROIDS, search: 'all asteroids' },
+    { label: 'All comets', value: ADDITIONALS.ALL_COMETS, search: 'all comets' },
+    { label: 'All asteroids and comets', value: ADDITIONALS.ALL, search: 'all asteroids and comets' }
   ];
 
   constructor(protected appService: AppService, protected viewName: string) {
