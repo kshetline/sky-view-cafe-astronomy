@@ -13,7 +13,7 @@
     </div>
     <svc-zone-selector [(ngModel)]="zone"></svc-zone-selector>
     <hr>
-    <ks-dropdown [options]="locationNames" [(ngModel)]="locationName"></ks-dropdown>
+    <ks-dropdown [options]="locationNames" [(ngModel)]="locationName" class="constrained-dropdown"></ks-dropdown>
     <div fxLayout="row" fxLayoutGap="4px">
       <button pButton type="button" label="Find" [disabled]="!mapsReady" (click)="openFindDialog()"></button>
       <button pButton type="button" label="Save" (click)="openSaveDialog()"></button>
