@@ -1,4 +1,4 @@
-import { Component, HostListener, OnDestroy, OnInit } from '@angular/core';
+import { AfterViewInit, Component, HostListener, OnDestroy } from '@angular/core';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { Router } from '@angular/router';
 import { AstroEvent, EventFinder, FIRST_QUARTER, FULL_MOON, LAST_QUARTER, NEW_MOON } from '@tubular/astronomy';
@@ -27,7 +27,7 @@ const MAX_CLOCK_EFFECTIVE_WIDTH = 600;
   styleUrls: ['./app.component.scss'],
   providers: [AppService, MessageService]
 })
-export class AppComponent implements OnInit, OnDestroy {
+export class AppComponent implements AfterViewInit, OnDestroy {
   SVC_MIN_YEAR = SVC_MIN_YEAR.toString();
   SVC_MAX_YEAR = SVC_MAX_YEAR.toString();
 
@@ -95,7 +95,7 @@ export class AppComponent implements OnInit, OnDestroy {
     app.getCurrentTabUpdates(tabIndex => this.selectedTab = tabIndex);
   }
 
-  ngOnInit(): void {
+  ngAfterViewInit(): void {
     setTimeout(() => {
       this.doResize();
 
