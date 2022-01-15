@@ -3,8 +3,9 @@ import { DateTimeField, DateTime, Timezone } from '@tubular/time';
 import { SelectItem } from 'primeng/api';
 import { Subscription, timer } from 'rxjs';
 import { AppService, SVC_MAX_YEAR, SVC_MIN_YEAR, UserSetting } from '../../app.service';
-import { PROPERTY_DAILY_DAYLIGHT, PROPERTY_DAILY_MOON_PHASE, PROPERTY_EQUISOLSTICE, PROPERTY_EVENT_TYPE, PROPERTY_INCLUDE_TRANSITS,
-  PROPERTY_KEY_MOON_PHASES, VIEW_CALENDAR
+import {
+  PROPERTY_DAILY_DAYLIGHT, PROPERTY_FIRST_DAY_OF_WEEK, PROPERTY_DAILY_MOON_PHASE, PROPERTY_EQUISOLSTICE, PROPERTY_EVENT_TYPE,
+  PROPERTY_INCLUDE_TRANSITS, PROPERTY_KEY_MOON_PHASES, VIEW_CALENDAR
 } from './svc-calendar-view.component';
 
 const CLICK_REPEAT_DELAY = 500;
@@ -17,6 +18,7 @@ const CLICK_REPEAT_RATE  = 250;
 })
 export class SvcCalendarViewOptionsComponent implements AfterViewInit, OnDestroy {
   private _eventType = 0;
+  private _firstDay = -1;
   private _keyMoonPhases = true;
   private _equisolstice = true;
   private _dailyDaylight = true;
@@ -24,6 +26,17 @@ export class SvcCalendarViewOptionsComponent implements AfterViewInit, OnDestroy
   private _includeTransits = false;
   private clickTimer: Subscription;
   private pendingDelta = 0;
+
+  firstDays: SelectItem[] = [
+    { label: 'Default',   value: -1 },
+    { label: 'Sunday',    value: 0 },
+    { label: 'Monday',    value: 1 },
+    { label: 'Tuesday',   value: 2 },
+    { label: 'Wednesday', value: 3 },
+    { label: 'Thursday',  value: 4 },
+    { label: 'Friday',    value: 5 },
+    { label: 'Saturday',  value: 6 }
+  ];
 
   eventTypes: SelectItem[] = [
     { label: 'Rise/Set Sun',     value: 0 },
@@ -56,6 +69,8 @@ export class SvcCalendarViewOptionsComponent implements AfterViewInit, OnDestroy
           this.eventType = setting.value as number;
         else if (setting.property === PROPERTY_INCLUDE_TRANSITS)
           this.includeTransits = setting.value as boolean;
+        else if (setting.property === PROPERTY_FIRST_DAY_OF_WEEK)
+          this.firstDay = setting.value as number;
       }
     });
   }
@@ -66,6 +81,14 @@ export class SvcCalendarViewOptionsComponent implements AfterViewInit, OnDestroy
 
   ngOnDestroy(): void {
     this.stopClickTimer();
+  }
+
+  get firstDay(): number { return this._firstDay; }
+  set firstDay(value: number) {
+    if (this._firstDay !== value) {
+      this._firstDay = value;
+      this.appService.updateUserSetting({ view: VIEW_CALENDAR, property: PROPERTY_FIRST_DAY_OF_WEEK, value: value, source: this });
+    }
   }
 
   get eventType(): number { return this._eventType; }

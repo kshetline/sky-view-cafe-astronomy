@@ -10,7 +10,8 @@
     "build-debug": "ng build --sourceMap=true",
     "test": "ng test",
     "lint": "eslint 'src/**/*.ts'",
-    "e2e": "ng e2e"
+    "e2e": "ng e2e",
+    "postinstall": "patch-package"
   },
   "private": true,
   "dependencies": {
@@ -28,7 +29,7 @@
     "@tubular/array-buffer-reader": "^3.0.2",
     "@tubular/astronomy": "^3.1.0",
     "@tubular/math": "^3.1.0",
-    "@tubular/ng-widgets": "^2.0.2",
+    "@tubular/ng-widgets": "^2.0.3",
     "@tubular/time": "^3.8.0",
     "@tubular/util": "^4.6.0",
     "core-js": "^2.6.12",
@@ -62,6 +63,7 @@
     "karma-coverage-istanbul-reporter": "~3.0.3",
     "karma-jasmine": "~4.0.1",
     "karma-jasmine-html-reporter": "^1.7.0",
+    "patch-package": "^6.4.7",
     "protractor": "~7.0.0",
     "ts-node": "^10.4.0",
     "typescript": "^4.5.4"

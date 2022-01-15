@@ -17,6 +17,7 @@ import { GenericViewDirective } from '../generic-view.directive';
 import { MoonDrawer } from '../moon-drawer';
 
 export const  VIEW_CALENDAR = 'calendar';
+export const    PROPERTY_FIRST_DAY_OF_WEEK = 'first_day_of_week';
 export const    PROPERTY_KEY_MOON_PHASES = 'key_moon_phases';
 export const    PROPERTY_EQUISOLSTICE = 'equisolstice';
 export const    PROPERTY_DAILY_DAYLIGHT = 'daily_daylight';
@@ -77,7 +78,7 @@ export class SvcCalendarViewComponent implements AfterViewInit {
   private observer: ISkyObserver;
   private year = Number.MIN_SAFE_INTEGER;
   private month = -1;
-  private _firstDay = getStartOfWeek(defaultLocale);
+  private firstDay = getStartOfWeek(defaultLocale);
   private _minYear = SVC_MIN_YEAR;
   private _maxYear = SVC_MAX_YEAR;
   private events: AstroEvent[] = [];
@@ -164,6 +165,10 @@ export class SvcCalendarViewComponent implements AfterViewInit {
           this.eventType = setting.value as number;
         else if (setting.property === PROPERTY_INCLUDE_TRANSITS)
           this.includeTransits = setting.value as boolean;
+        else if (setting.property === PROPERTY_FIRST_DAY_OF_WEEK) {
+          this.firstDay = (setting.value as number) < 0 ? getStartOfWeek(defaultLocale) : setting.value as number;
+          this.updateDayHeadings();
+        }
 
         this.updateView(true);
       }
@@ -261,7 +266,7 @@ export class SvcCalendarViewComponent implements AfterViewInit {
     this.daysOfWeek = [];
 
     for (let d = 1; d <= 7; ++d)
-      this.daysOfWeek.push(this.datePipe.transform(new Date(2017, 0, d + this._firstDay, 12, 0), 'EEE'));
+      this.daysOfWeek.push(this.datePipe.transform(new Date(2017, 0, d + this.firstDay, 12, 0), 'EEE'));
   }
 
   private updateView(forceUpdate?: boolean): void {
@@ -282,7 +287,7 @@ export class SvcCalendarViewComponent implements AfterViewInit {
       this.title = this.datePipe.transform(new Date(4000, this.month - 1, 1, 12, 0), 'MMMM ') + this.year +
         (this.year <= 0 ? ' (' + (-this.year + 1) + ' BCE)' : '');
 
-      const calendar = this.dateTime.getCalendarMonth(this.year, this.month, this._firstDay);
+      const calendar = this.dateTime.getCalendarMonth(this.year, this.month, this.firstDay);
 
       this.calendar = [];
       calendar.forEach((date: DateInfo, index: number) => {
