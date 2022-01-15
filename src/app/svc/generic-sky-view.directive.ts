@@ -5,7 +5,7 @@ import { strokeEllipse } from '@tubular/util';
 import { reverse, sortBy } from 'lodash-es';
 import { AppService, CurrentTab } from '../app.service';
 import {
-  DrawingContextPlanetary, FAR_AWAY, GenericPlanetaryViewDirective, highlightedStarColor, LABEL_TYPE, NONPLANET, SELECTION_TYPE,
+  DrawingContextPlanetary, FAR_AWAY, GenericPlanetaryViewDirective, highlightedStarColor, LABEL_TYPE, LabelInfo, NONPLANET, SELECTION_TYPE,
   SortablePlanet, SUBJECT
 } from './generic-planetary-view.directive';
 
@@ -83,10 +83,10 @@ export abstract class GenericSkyViewDirective extends GenericPlanetaryViewDirect
 
   protected drawConstellations(dc: DrawingContextPlanetary): void {
     let minD = FAR_AWAY;
-    let selectedLabel;
+    let selectedLabel: LabelInfo;
 
-    for (let i = 0; i < dc.sc.getConstellationCount(); ++i) {
-      const starList = dc.sc.getConstellationDrawingStars(i);
+    dc.sc.forEachConstellation(cInfo => {
+      const starList = cInfo.starList;
       let starCount = 0;
       let breakLine = true;
       let minX = Number.MAX_SAFE_INTEGER, minY = Number.MAX_SAFE_INTEGER;
@@ -138,7 +138,7 @@ export abstract class GenericSkyViewDirective extends GenericPlanetaryViewDirect
         const pt = { x: this.scaledRound((minX + maxX) / 2), y: this.scaledRound((minY + maxY) / 2) };
 
         if (this.withinPlot(pt.x, pt.y, dc)) {
-          const name = dc.sc.getConstellationName(i).toUpperCase();
+          const name = cInfo.name.toUpperCase();
           const li = { name: name, pt: pt, labelType: LABEL_TYPE.CONSTELLATION, bodyIndex: NO_MATCH };
 
           if (this.lastMoveX < 0 || this.lastMoveY < 0)
@@ -156,7 +156,7 @@ export abstract class GenericSkyViewDirective extends GenericPlanetaryViewDirect
           }
         }
       }
-    }
+    });
 
     if (selectedLabel)
       this.addLabel(selectedLabel, dc);
