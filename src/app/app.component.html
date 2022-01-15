@@ -4,8 +4,8 @@
   <div class="about-dialog">
     <img src="/assets/resources/svc_lunar_eclipse.png" alt="lunar eclipse" width="64" height="64">
     <h2>Sky View Café NP</h2>
-    Version 1.14.5<br><br>
-    Copyright © 2016-2021 Kerry Shetline.
+    Version 1.14.6<br><br>
+    Copyright © 2016-2022 Kerry Shetline.
   </div>
 </p-dialog>
 <svc-native-date-time-dialog [(visible)]="app.showNativeInputDialog"></svc-native-date-time-dialog>
@@ -59,6 +59,7 @@
               <tbw-calendar #calendar
                   [(ngModel)]="date"
                   [timezone]="timezone"
+                  [firstDay]="firstDay"
                   [gregorianChangeDate]="gcDate"
                   showDst
                   [minYear]="SVC_MIN_YEAR"

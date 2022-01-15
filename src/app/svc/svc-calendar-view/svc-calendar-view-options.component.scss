@@ -1,3 +1,5 @@
+@import "../../../styles";
+
 hr {
   width: 12em;
   border: 1px #D8D8D8 solid;
@@ -22,4 +24,9 @@ hr {
   padding: 0.333em;
   text-align: center;
   vertical-align: middle;
+}
+
+.first-day-caption {
+  @extend .small-caption;
+  text-align: center;
 }

@@ -1,10 +1,10 @@
-import { AfterViewInit, Component, HostListener, OnDestroy } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, HostListener, OnDestroy } from '@angular/core';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { Router } from '@angular/router';
 import { AstroEvent, EventFinder, FIRST_QUARTER, FULL_MOON, LAST_QUARTER, NEW_MOON } from '@tubular/astronomy';
 import { max, min, Point } from '@tubular/math';
 import { CalendarDateInfo, TimeEditorOptions, YearStyle } from '@tubular/ng-widgets';
-import { DateTime, Timezone, YMDDate } from '@tubular/time';
+import { DateTime, defaultLocale, getStartOfWeek, Timezone, YMDDate } from '@tubular/time';
 import { isEqual, toggleFullScreen } from '@tubular/util';
 import { debounce } from 'lodash-es';
 import { MenuItem, MessageService } from 'primeng/api';
@@ -14,6 +14,8 @@ import {
   PROPERTY_GREGORIAN_CHANGE_DATE, PROPERTY_NATIVE_DATE_TIME, SVC_MAX_YEAR, SVC_MIN_YEAR, UserSetting, VIEW_APP
 } from './app.service';
 import { SvcAtlasService } from './svc/svc-atlas.service';
+import { addResizeListener, removeResizeListener } from 'detect-resize';
+import { PROPERTY_FIRST_DAY_OF_WEEK, VIEW_CALENDAR } from './svc/svc-calendar-view/svc-calendar-view.component';
 
 const MIN_APP_WIDTH = 1040;
 const MIN_APP_HEIGHT = 640;
@@ -56,6 +58,7 @@ export class AppComponent implements AfterViewInit, OnDestroy {
   clockCaption = '\xA0';
   displayAbout = false;
   displayPreferences = false;
+  firstDay = getStartOfWeek(defaultLocale);
   floatingClockFontSize = FLOAT_CLOCK_MAX_FONT_SIZE_EMS;
   gcDate = '1582-10-15';
   nativeDateTime = false;
@@ -66,7 +69,8 @@ export class AppComponent implements AfterViewInit, OnDestroy {
     private router: Router,
     atlasService: SvcAtlasService,
     private messageService: MessageService,
-    private sanitizer: DomSanitizer
+    private sanitizer: DomSanitizer,
+    private elemRef: ElementRef
   ) {
     this.time = app.time;
 
@@ -90,12 +94,15 @@ export class AppComponent implements AfterViewInit, OnDestroy {
         else if (setting.property === PROPERTY_NATIVE_DATE_TIME)
           this.nativeDateTime = setting.value as boolean;
       }
+      else if (setting.view === VIEW_CALENDAR && setting.property === PROPERTY_FIRST_DAY_OF_WEEK)
+        this.firstDay = (setting.value as number) < 0 ? getStartOfWeek(defaultLocale) : setting.value as number;
     });
 
     app.getCurrentTabUpdates(tabIndex => this.selectedTab = tabIndex);
   }
 
   ngAfterViewInit(): void {
+    addResizeListener(this.elemRef.nativeElement, this.onResize);
     setTimeout(() => {
       this.doResize();
 
@@ -108,6 +115,7 @@ export class AppComponent implements AfterViewInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.stopTimer();
+    removeResizeListener(this.elemRef.nativeElement, this.onResize);
   }
 
   stopTimer(): void {
@@ -268,7 +276,7 @@ export class AppComponent implements AfterViewInit, OnDestroy {
     toggleFullScreen();
   }
 
-  @HostListener('window:resize') private onResize(): void {
+  @HostListener('window:resize') private onResize = (): void => {
     if (!this.debouncedResize)
       this.debouncedResize = debounce(() => this.doResize(), 1000);
 

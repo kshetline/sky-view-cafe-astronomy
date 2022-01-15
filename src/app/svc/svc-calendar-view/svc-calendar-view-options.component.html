@@ -21,6 +21,8 @@
     </div>
   </div>
   <hr>
+  <ks-dropdown fxFlex="0 0 auto" [options]="firstDays" [(ngModel)]="firstDay"></ks-dropdown>
+  <div class="first-day-caption">first day of week</div>
   <ks-checkbox fxFlex="0 0 auto" [(ngModel)]="keyMoonPhases" binary="true" label="Key Moon phases"></ks-checkbox>
   <ks-checkbox fxFlex="0 0 auto" [(ngModel)]="equisolstice" binary="true" label="Equinox/Solstice"></ks-checkbox>
   <ks-checkbox fxFlex="0 0 auto" [(ngModel)]="dailyDaylight" binary="true" label="Daily daylight"></ks-checkbox>

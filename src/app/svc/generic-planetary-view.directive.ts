@@ -522,7 +522,7 @@ export abstract class GenericPlanetaryViewDirective extends GenericViewDirective
     let crowdedDso = false;
 
     if (li.labelType === LABEL_TYPE.DSO) {
-      const ngc = dc.sc.getNGCNumber(-1 - li.bodyIndex);
+      const ngc = dc.sc.getNgcNumber(-1 - li.bodyIndex);
       crowdedDso = (ngc === 869 || ngc === 884);
     }
 
