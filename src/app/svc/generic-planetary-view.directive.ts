@@ -14,7 +14,7 @@ import { DrawingContext, GenericViewDirective } from './generic-view.directive';
 
 export interface SortablePlanet {
   planet: number;
-  pos: SphericalPosition;
+  pos: SphericalPosition3D;
 }
 
 export enum LABEL_CLASS {MINOR, STAR_OR_PLANET, CONSTELLATION}

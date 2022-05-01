@@ -11,6 +11,7 @@
     "index.d.ts"
   ],
   "include": [
+    "ambient.d.ts",
     "src/**/*.d.ts"
   ]
 }

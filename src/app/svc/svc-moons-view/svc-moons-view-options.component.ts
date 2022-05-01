@@ -56,7 +56,7 @@ export class SvcMoonsViewOptionsComponent implements AfterViewInit {
   set northOnTop(value: boolean) {
     if (this._northOnTop !== value) {
       this._northOnTop = value;
-      this.appService.updateUserSetting({ view: VIEW_MOONS, property: PROPERTY_NORTH_ON_TOP, value: value, source: this });
+      this.appService.updateUserSetting({ view: VIEW_MOONS, property: PROPERTY_NORTH_ON_TOP, value, source: this });
     }
   }
 
@@ -64,7 +64,7 @@ export class SvcMoonsViewOptionsComponent implements AfterViewInit {
   set eastOnLeft(value: boolean) {
     if (this._eastOnLeft !== value) {
       this._eastOnLeft = value;
-      this.appService.updateUserSetting({ view: VIEW_MOONS, property: PROPERTY_EAST_ON_LEFT, value: value, source: this });
+      this.appService.updateUserSetting({ view: VIEW_MOONS, property: PROPERTY_EAST_ON_LEFT, value, source: this });
     }
   }
 
@@ -72,7 +72,7 @@ export class SvcMoonsViewOptionsComponent implements AfterViewInit {
   set moonNumbers(value: boolean) {
     if (this._moonNumbers !== value) {
       this._moonNumbers = value;
-      this.appService.updateUserSetting({ view: VIEW_MOONS, property: PROPERTY_MOON_NUMBERS, value: value, source: this });
+      this.appService.updateUserSetting({ view: VIEW_MOONS, property: PROPERTY_MOON_NUMBERS, value, source: this });
     }
   }
 
@@ -80,7 +80,7 @@ export class SvcMoonsViewOptionsComponent implements AfterViewInit {
   set moonNames(value: boolean) {
     if (this._moonNames !== value) {
       this._moonNames = value;
-      this.appService.updateUserSetting({ view: VIEW_MOONS, property: PROPERTY_MOON_NAMES, value: value, source: this });
+      this.appService.updateUserSetting({ view: VIEW_MOONS, property: PROPERTY_MOON_NAMES, value, source: this });
     }
   }
 
@@ -88,7 +88,7 @@ export class SvcMoonsViewOptionsComponent implements AfterViewInit {
   set photoPlanets(value: boolean) {
     if (this._photoPlanets !== value) {
       this._photoPlanets = value;
-      this.appService.updateUserSetting({ view: VIEW_MOONS, property: PROPERTY_PHOTOGRAPHIC_PLANETS, value: value, source: this });
+      this.appService.updateUserSetting({ view: VIEW_MOONS, property: PROPERTY_PHOTOGRAPHIC_PLANETS, value, source: this });
     }
   }
 
@@ -96,7 +96,7 @@ export class SvcMoonsViewOptionsComponent implements AfterViewInit {
   set markGrs(value: boolean) {
     if (this._markGrs !== value) {
       this._markGrs = value;
-      this.appService.updateUserSetting({ view: VIEW_MOONS, property: PROPERTY_MARK_GRS, value: value, source: this });
+      this.appService.updateUserSetting({ view: VIEW_MOONS, property: PROPERTY_MARK_GRS, value, source: this });
     }
   }
 
@@ -104,7 +104,7 @@ export class SvcMoonsViewOptionsComponent implements AfterViewInit {
   set grsOverride(value: boolean) {
     if (this._grsOverride !== value) {
       this._grsOverride = value;
-      this.appService.updateUserSetting({ view: VIEW_MOONS, property: PROPERTY_GRS_OVERRIDE, value: value, source: this });
+      this.appService.updateUserSetting({ view: VIEW_MOONS, property: PROPERTY_GRS_OVERRIDE, value, source: this });
     }
   }
 
@@ -112,7 +112,7 @@ export class SvcMoonsViewOptionsComponent implements AfterViewInit {
   set fixedGrs(value: number) {
     if (this._fixedGrs !== value) {
       this._fixedGrs = value;
-      this.appService.updateUserSetting({ view: VIEW_MOONS, property: PROPERTY_FIXED_GRS, value: value, source: this });
+      this.appService.updateUserSetting({ view: VIEW_MOONS, property: PROPERTY_FIXED_GRS, value, source: this });
     }
   }
 

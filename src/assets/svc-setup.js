@@ -1,8 +1,10 @@
-var mapsInitialized = false;
-var mapsCallback = null;
+/* eslint-disable @typescript-eslint/no-unused-vars, no-undef */
+
+let mapsInitialized = false;
+let mapsCallback = null;
 
 // noinspection JSUnusedGlobalSymbols
-function initGoogleMaps(callback) {
+function initGoogleMaps(callback) { // eslint-disable-line @typescript-eslint/no-unused-vars
   if (callback)
     mapsCallback = callback;
   else {
@@ -13,16 +15,16 @@ function initGoogleMaps(callback) {
   }
 }
 
-(function() {
-  var minWidth = 1024;
-  var minHeight = 640;
-  var width = Math.max(screen.width, screen.height);
-  var origWidth = width;
-  var height = Math.min(screen.height, screen.width);
+(function () {
+  const minWidth = 1024;
+  const minHeight = 640;
+  let width = Math.max(screen.width, screen.height);
+  const origWidth = width;
+  let height = Math.min(screen.height, screen.width);
 
   if (width < minWidth || height < minHeight) {
-    var metaViewport = document.querySelector('meta[name=viewport]');
-    var ratio = width / height;
+    const metaViewport = document.querySelector('meta[name=viewport]');
+    const ratio = width / height;
 
     if (height / ratio < minHeight) {
       width = Math.round(minHeight * ratio);
@@ -35,16 +37,16 @@ function initGoogleMaps(callback) {
       height = Math.round(minWidth / ratio) + 2;
     }
 
-    var scale = origWidth / width;
+    const scale = origWidth / width;
 
     metaViewport.setAttribute('content', 'width=' + width + ', height=' + height + ', initial-scale=' + scale);
   }
 
-  var location = document.location && document.location.href || window.location.href;
-  var protocol = 'https';
-  var host ='test.skyviewcafe.com';
-  var realWorld = true;
-  var $ = /^(http(?:s?)):\/\/([^\/]+)/.exec(location);
+  const location = document.location && document.location.href || window.location.href;
+  let protocol = 'https';
+  let host = 'test.skyviewcafe.com';
+  let realWorld = true;
+  let $ = /^(http(?:s?)):\/\/([^/]+)/.exec(location);
 
   if ($ && !/:(3000|8080)\b/.test($[2])) {
     protocol = $[1];
@@ -53,11 +55,11 @@ function initGoogleMaps(callback) {
   else
     realWorld = false;
 
-  var base = (realWorld ? '' : protocol + '://' + host);
-  var oldAppendChild = document.head.appendChild;
+  const base = (realWorld ? '' : protocol + '://' + host);
+  const oldAppendChild = document.head.appendChild;
 
   // noinspection JSValidateTypes
-  document.head.appendChild = function(node) {
+  document.head.appendChild = function (node) {
     if (node.localName === 'script' && ($ = /^https:\/\/maps.googleapis.com(.*)$/.exec(node.src))) {
       node.src = base + '/maps/proxy' + $[1];
 
@@ -69,7 +71,7 @@ function initGoogleMaps(callback) {
     return oldAppendChild.apply(document.head, arguments);
   };
 
-  var mapScript = document.createElement('script');
+  const mapScript = document.createElement('script');
 
   mapScript.src = base + '/maps/script/';
   mapScript.setAttribute('async', '');

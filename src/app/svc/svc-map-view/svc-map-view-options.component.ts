@@ -58,7 +58,7 @@ export class SvcMapViewOptionsComponent implements AfterViewInit {
   set mapType(value: MapType) {
     if (this._mapType !== value) {
       this._mapType = value;
-      this.appService.updateUserSetting({ view: VIEW_MAP, property: PROPERTY_MAP_TYPE, value: value, source: this });
+      this.appService.updateUserSetting({ view: VIEW_MAP, property: PROPERTY_MAP_TYPE, value, source: this });
     }
   }
 
@@ -66,7 +66,7 @@ export class SvcMapViewOptionsComponent implements AfterViewInit {
   set showDayNight(value: boolean) {
     if (this._showDayNight !== value) {
       this._showDayNight = value;
-      this.appService.updateUserSetting({ view: VIEW_MAP, property: PROPERTY_SHOW_DAY_NIGHT, value: value, source: this });
+      this.appService.updateUserSetting({ view: VIEW_MAP, property: PROPERTY_SHOW_DAY_NIGHT, value, source: this });
     }
   }
 
@@ -74,7 +74,7 @@ export class SvcMapViewOptionsComponent implements AfterViewInit {
   set showEclipseShadows(value: boolean) {
     if (this._showEclipseShadows !== value) {
       this._showEclipseShadows = value;
-      this.appService.updateUserSetting({ view: VIEW_MAP, property: PROPERTY_SHOW_ECLIPSE_SHADOWS, value: value, source: this });
+      this.appService.updateUserSetting({ view: VIEW_MAP, property: PROPERTY_SHOW_ECLIPSE_SHADOWS, value, source: this });
     }
   }
 
@@ -82,7 +82,7 @@ export class SvcMapViewOptionsComponent implements AfterViewInit {
   set showMarkers(value: boolean) {
     if (this._showMarkers !== value) {
       this._showMarkers = value;
-      this.appService.updateUserSetting({ view: VIEW_MAP, property: PROPERTY_SHOW_LOCATION_MARKERS, value: value, source: this });
+      this.appService.updateUserSetting({ view: VIEW_MAP, property: PROPERTY_SHOW_LOCATION_MARKERS, value, source: this });
     }
   }
 
@@ -90,7 +90,7 @@ export class SvcMapViewOptionsComponent implements AfterViewInit {
   set blink(value: boolean) {
     if (this._blink !== value) {
       this._blink = value;
-      this.appService.updateUserSetting({ view: VIEW_MAP, property: PROPERTY_BLINK_LOCATION_MARKERS, value: value, source: this });
+      this.appService.updateUserSetting({ view: VIEW_MAP, property: PROPERTY_BLINK_LOCATION_MARKERS, value, source: this });
     }
   }
 

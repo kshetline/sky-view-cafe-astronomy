@@ -45,7 +45,7 @@ export class SvcGenericOptionsComponent {
       if (matches)
         value = matches[1];
 
-      this.additionals.push({ label: name, value: value, search: value });
+      this.additionals.push({ label: name, value, search: value });
     });
 
     // Force menu update.
@@ -56,7 +56,7 @@ export class SvcGenericOptionsComponent {
   set additional(value: ADDITIONALS | string) {
     if (this._additional !== value) {
       this._additional = value;
-      this.appService.updateUserSetting({ view: this.viewName, property: PROPERTY_ADDITIONALS, value: value, source: this });
+      this.appService.updateUserSetting({ view: this.viewName, property: PROPERTY_ADDITIONALS, value, source: this });
     }
   }
 }

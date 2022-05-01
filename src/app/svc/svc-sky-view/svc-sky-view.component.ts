@@ -391,7 +391,7 @@ export class SvcSkyViewComponent extends GenericSkyViewDirective implements Afte
 
       this.onResize();
       this.draw();
-      this.appService.updateUserSetting({ view: VIEW_SKY, property: PROPERTY_VIEW_TYPE, value: value, source: this });
+      this.appService.updateUserSetting({ view: VIEW_SKY, property: PROPERTY_VIEW_TYPE, value, source: this });
     }
   }
 
@@ -405,7 +405,7 @@ export class SvcSkyViewComponent extends GenericSkyViewDirective implements Afte
   set trackSun(value: boolean) {
     if (this._trackSun !== value) {
       this._trackSun = value;
-      this.appService.updateUserSetting({ view: VIEW_SKY, property: PROPERTY_TRACK_SUN, value: value, source: this });
+      this.appService.updateUserSetting({ view: VIEW_SKY, property: PROPERTY_TRACK_SUN, value, source: this });
       this.draw();
     }
   }
@@ -414,7 +414,7 @@ export class SvcSkyViewComponent extends GenericSkyViewDirective implements Afte
   set parallelToEcliptic(value: boolean) {
     if (this._parallelToEcliptic !== value) {
       this._parallelToEcliptic = value;
-      this.appService.updateUserSetting({ view: VIEW_SKY, property: PROPERTY_PARALLEL_TO_ECLIPTIC, value: value, source: this });
+      this.appService.updateUserSetting({ view: VIEW_SKY, property: PROPERTY_PARALLEL_TO_ECLIPTIC, value, source: this });
       this.draw();
     }
   }

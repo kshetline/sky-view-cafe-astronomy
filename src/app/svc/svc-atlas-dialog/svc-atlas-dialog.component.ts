@@ -268,7 +268,7 @@ export class SvcAtlasDialogComponent {
 
     if (!this.map) {
       const mapOptions: google.maps.MapOptions = {
-        center: center,
+        center,
         zoom: 5,
         mapTypeControl: true,
         mapTypeControlOptions: {

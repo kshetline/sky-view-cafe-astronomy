@@ -352,7 +352,7 @@ export class SvcMoonsViewComponent extends GenericPlanetaryViewDirective impleme
             else if (this.moonNumbers)
               name = num;
 
-            const li = { name: name, pt: pt, labelType: hidden ? LABEL_TYPE.HIDDEN_MOON : LABEL_TYPE.MOON, bodyIndex: pos.moonIndex };
+            const li = { name, pt, labelType: hidden ? LABEL_TYPE.HIDDEN_MOON : LABEL_TYPE.MOON, bodyIndex: pos.moonIndex };
             this.addLabel(li, dc);
           }
         }
