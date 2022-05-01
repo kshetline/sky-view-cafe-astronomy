@@ -2,7 +2,6 @@ import { AfterViewInit, Directive } from '@angular/core';
 import { LABEL_ANCHOR, LINE_BREAK, NO_MATCH, REFRACTION } from '@tubular/astronomy';
 import { max, min, Point, pow, round, SphericalPosition, SphericalPosition3D } from '@tubular/math';
 import { strokeEllipse } from '@tubular/util';
-import { reverse, sortBy } from 'lodash-es';
 import { AppService, CurrentTab } from '../app.service';
 import {
   DrawingContextPlanetary, FAR_AWAY, GenericPlanetaryViewDirective, highlightedStarColor, LABEL_TYPE, LabelInfo, NONPLANET, SELECTION_TYPE,
@@ -139,7 +138,7 @@ export abstract class GenericSkyViewDirective extends GenericPlanetaryViewDirect
 
         if (this.withinPlot(pt.x, pt.y, dc)) {
           const name = cInfo.name.toUpperCase();
-          const li = { name: name, pt: pt, labelType: LABEL_TYPE.CONSTELLATION, bodyIndex: NO_MATCH };
+          const li = { name, pt, labelType: LABEL_TYPE.CONSTELLATION, bodyIndex: NO_MATCH };
 
           if (this.lastMoveX < 0 || this.lastMoveY < 0)
             this.addLabel(li, dc);
@@ -210,8 +209,7 @@ export abstract class GenericSkyViewDirective extends GenericPlanetaryViewDirect
           name = fullName;
 
         if (name)
-          this.addLabel({ name: name, pt: pt, bodyIndex: bodyIndex,
-                          labelType: isDeepSky ? LABEL_TYPE.DSO : LABEL_TYPE.STAR }, dc);
+          this.addLabel({ name, pt, bodyIndex, labelType: isDeepSky ? LABEL_TYPE.DSO : LABEL_TYPE.STAR }, dc);
       }
     }
   }
@@ -220,10 +218,10 @@ export abstract class GenericSkyViewDirective extends GenericPlanetaryViewDirect
     let planets: SortablePlanet[] = [];
 
     this.planetsToDraw.forEach(p => {
-      planets.push({ planet: p, pos: this.getSphericalPosition(p, dc) });
+      planets.push({ planet: p, pos: this.getSphericalPosition(p, dc) as SphericalPosition3D });
     });
 
-    planets = reverse(sortBy(planets, [(p: SortablePlanet): any => (p.pos as SphericalPosition3D).radius]));
+    planets = planets.sort((a, b) => b.pos.radius - a.pos.radius);
 
     for (const planet of planets) {
       const p = planet.planet;
@@ -236,7 +234,7 @@ export abstract class GenericSkyViewDirective extends GenericPlanetaryViewDirect
         this.qualifyBodyForSelection(pt, SELECTION_TYPE.PLANET, p, Boolean(pt), dc);
 
       if (pt && this.labelPlanets && this.withinToleranceOfPlot(pt.x, pt.y, 2, dc)) {
-        this.addLabel({ name: dc.ss.getPlanetName(p), pt: pt, bodyIndex: p,
+        this.addLabel({ name: dc.ss.getPlanetName(p), pt, bodyIndex: p,
                         labelType: LABEL_TYPE.PLANET }, dc);
       }
     }

@@ -136,7 +136,7 @@ export class SvcTableViewComponent implements AfterViewInit {
   set tableType(value: TableType) {
     if (this._tableType !== value) {
       this._tableType = value;
-      this.appService.updateUserSetting({ view: VIEW_TABLES, property: PROPERTY_TABLE_TYPE, value: value, source: this });
+      this.appService.updateUserSetting({ view: VIEW_TABLES, property: PROPERTY_TABLE_TYPE, value, source: this });
       this.updatePlanetChoices();
       this.updateView();
     }
@@ -146,7 +146,7 @@ export class SvcTableViewComponent implements AfterViewInit {
   set planetChoice(value: number) {
     if (this._planetChoice !== value) {
       this._planetChoice = value;
-      this.appService.updateUserSetting({ view: VIEW_TABLES, property: PROPERTY_PLANET_CHOICE, value: value, source: this });
+      this.appService.updateUserSetting({ view: VIEW_TABLES, property: PROPERTY_PLANET_CHOICE, value, source: this });
       this.updateView(true);
     }
   }

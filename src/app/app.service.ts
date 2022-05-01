@@ -223,7 +223,7 @@ export class AppService {
 
   sendAppEvent(appEventOrName: AppEvent | string, value?: any): void {
     if (isString(appEventOrName))
-      this._appEvent.next({ name: appEventOrName, value: value });
+      this._appEvent.next({ name: appEventOrName, value });
     else
       this._appEvent.next(appEventOrName);
   }
@@ -363,7 +363,7 @@ export class AppService {
 
     if (viewSettings) {
       forEach(viewSettings, (property, value) => {
-        const userSetting = { view: view, property: property, value: value, source: this };
+        const userSetting = { view, property, value, source: this };
         this.settingsSource.next(userSetting);
       });
     }

@@ -29,12 +29,10 @@ export class ZBuffer {
   addFilledRect(color: string, x: number, y: number, w: number, h: number, z: number): void {
     this.items.push({
       action: DrawAction.FILLED_RECT,
-      color: color,
+      color,
       x1: x,
       y1: y,
-      w: w,
-      h: h,
-      z: z
+      w, h, z
     });
     this.sorted = false;
   }
@@ -42,13 +40,7 @@ export class ZBuffer {
   addLine(color: string, x1: number, y1: number, x2: number, y2: number, z: number, heavy = false): void {
     this.items.push({
       action: DrawAction.LINE,
-      color: color,
-      x1: x1,
-      y1: y1,
-      x2: x2,
-      y2: y2,
-      z: z,
-      heavy: heavy
+      color, x1, y1, x2, y2, z, heavy
     });
     this.sorted = false;
   }
@@ -56,11 +48,11 @@ export class ZBuffer {
   addCircle(color: string, x: number, y: number, r: number, z: number): void {
     this.items.push({
       action: DrawAction.CIRCLE,
-      color: color,
+      color,
       x1: x,
       y1: y,
-      r: r,
-      z: z
+      r,
+      z
     });
     this.sorted = false;
   }
@@ -68,12 +60,10 @@ export class ZBuffer {
   addRect(color: string, x: number, y: number, w: number, h: number, z: number): void {
     this.items.push({
       action: DrawAction.RECT,
-      color: color,
+      color,
       x1: x,
       y1: y,
-      w: w,
-      h: h,
-      z: z
+      w, h, z
     });
     this.sorted = false;
   }
