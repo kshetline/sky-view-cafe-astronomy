@@ -151,7 +151,7 @@ export abstract class PlanetDrawer {
       a = 0xFF;
 
     const dxm = sqrt(1.0 - dy1 * dy1);
-    const  dx1 = limitNeg1to1(dx / w2 / dxm);
+    const dx1 = limitNeg1to1(dx / w2 / dxm);
     const shade = 0xFF - floor(0x80 * tan_deg(dr / w2 * 88.0) / 28.64);
     const sx = asin(dx1) / PI * wc / 2.0 + sctr;
     const isx = floor(sx);

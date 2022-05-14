@@ -437,7 +437,7 @@ export class SvcOrbitViewComponent extends GenericPlanetaryViewDirective impleme
       const pt = { x: this.scaledRound(dc.xctr + pt0.x * pixelsPerUnit),
                    y: this.scaledRound(dc.yctr - pt0.y * pixelsPerUnit) };
 
-      positions.push({ planet: planet, pos: pt0, pt: pt });
+      positions.push({ planet, pos: pt0, pt });
     }
 
     positions = sortBy(positions, [(position: ZSortablePlanet): any => position.pos.z]);
@@ -456,7 +456,7 @@ export class SvcOrbitViewComponent extends GenericPlanetaryViewDirective impleme
 
       if (this.showNames) {
         const name = dc.ss.getPlanetName(p);
-        const li: LabelInfo = { name: name, pt: pt, bodyIndex: p, labelType: LABEL_TYPE.PLANET, overrideColor: overrideColor };
+        const li: LabelInfo = { name, pt, bodyIndex: p, labelType: LABEL_TYPE.PLANET, overrideColor };
 
         if (mode === DrawingMode.LEFT_EYE)
           this.leftEyeLabels.push(li);

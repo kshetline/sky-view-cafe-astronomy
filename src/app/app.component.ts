@@ -208,7 +208,7 @@ export class AppComponent implements AfterViewInit, OnDestroy {
     }
 
     return '';
-  }
+  };
 
   get trackTime(): boolean { return this._trackTime; }
   set trackTime(state: boolean) {
@@ -281,7 +281,7 @@ export class AppComponent implements AfterViewInit, OnDestroy {
       this.debouncedResize = debounce(() => this.doResize(), 1000);
 
     this.debouncedResize();
-  }
+  };
 
   private doResize(): void {
     let outermost = document.querySelector('html') as HTMLElement;
@@ -329,5 +329,5 @@ export class AppComponent implements AfterViewInit, OnDestroy {
     this.app.showNativeInputDialog = true;
 
     return true;
-  }
+  };
 }

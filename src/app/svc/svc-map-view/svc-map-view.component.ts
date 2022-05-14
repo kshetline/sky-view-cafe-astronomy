@@ -406,7 +406,7 @@ export class SvcMapViewComponent extends GenericViewDirective implements AfterVi
     const stack: Point[] = [];
 
     this.moonShadowPts = [];
-    stack.push({ x: x, y: y });
+    stack.push({ x, y });
 
     while (stack.length > 0) {
       ({ x, y } = stack.pop());
