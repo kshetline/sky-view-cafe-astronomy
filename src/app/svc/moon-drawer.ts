@@ -70,6 +70,7 @@ export class MoonDrawer {
     if (size === 0 && observer)
       size = ceil(solarSystem.getAngularDiameter(MOON, time_JDE, observer) * pixelsPerArcSec);
 
+    pixelsPerArcSec *= pixelRatio;
     size *= pixelRatio;
     // Make sure that the size is odd, so that one pixel can be the exact center of the image.
     size += (size + 1) % 2;
@@ -121,7 +122,7 @@ export class MoonDrawer {
     }
 
     // I'm going to treat the umbra and penumbra of the Earth as imaginary circular
-    // objects directly opposite from the Sun and located at the same distance from
+    // objects directly opposite to the Sun and located at the same distance from
     // the Earth as the Moon.
     //
     // If you can imagine the typical diagram of how umbral and penumbral shadows are
@@ -145,8 +146,8 @@ export class MoonDrawer {
         const uRadius = round(ei.umbraRadius * pixelsPerArcSec) + 2;
         const pRadius = round(ei.penumbraRadius * pixelsPerArcSec) + 2;
 
-        u2 = uRadius * uRadius;
-        p2 = pRadius * pRadius;
+        u2 = uRadius ** 2;
+        p2 = pRadius ** 2;
       }
     }
 
@@ -191,7 +192,7 @@ export class MoonDrawer {
 
           // Are we within the penumbra?
           if (sdx * sdx + sdy * sdy <= p2) {
-            // Also within the umbra? Even darker a shadow.
+            // Also within the umbra? Even darker shadow.
             if (sdx * sdx + sdy * sdy <= u2)
               gray /= 2.5;
 
