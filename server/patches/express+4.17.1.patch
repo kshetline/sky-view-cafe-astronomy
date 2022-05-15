@@ -1,0 +1,22 @@
+diff --git a/node_modules/express/lib/response.js b/node_modules/express/lib/response.js
+index c9f08cd..391d82d 100644
+--- a/node_modules/express/lib/response.js
++++ b/node_modules/express/lib/response.js
+@@ -301,7 +301,7 @@ res.jsonp = function jsonp(obj) {
+   var replacer = app.get('json replacer');
+   var spaces = app.get('json spaces');
+   var body = stringify(val, replacer, spaces, escape)
+-  var callback = this.req.query[app.get('jsonp callback name')];
++  var callback = this.req.query[app.get('jsonp callback name') || 'callback']; // KS patch
+ 
+   // content-type
+   if (!this.get('Content-Type')) {
+@@ -317,7 +317,7 @@ res.jsonp = function jsonp(obj) {
+   // jsonp
+   if (typeof callback === 'string' && callback.length !== 0) {
+     this.set('X-Content-Type-Options', 'nosniff');
+-    this.set('Content-Type', 'text/javascript');
++    this.set('Content-Type', 'application/javascript'); // KS patch
+ 
+     // restrict callback charset
+     callback = callback.replace(/[^\[\]\w$.]/g, '');

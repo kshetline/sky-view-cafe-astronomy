@@ -1,0 +1,208 @@
+Acamar
+Achernar
+Acrux
+Adara
+Agena
+al Mizar
+Albireo
+Alcor
+Alcyone
+Aldebaran
+Alderamin
+Algenib
+Algieba
+Algol
+Alhena
+Alioth
+Alkaid
+Almaak
+Alnair
+Alnath
+Alnilam
+Alnitak
+Alpha Centauri
+Alphard
+Alphekka
+Alpheratz
+Alshain
+Altair
+Andromeda
+Andromeda Galaxy
+Andromeda Nebula
+Ankaa
+Antares
+Antlia
+Apus
+Aquarius
+Aquila
+Ara
+Arcturus
+Aries
+Arneb
+Auriga
+Bellatrix
+Betelgeuse
+Big Dipper
+Boötes
+Caelum
+Camelopardalis
+Cancer
+Canes Venatici
+Canis Major
+Canis Minor
+Canopus
+Capella
+Capricorn
+Capricornus
+Carina
+Cassiopeia
+Castor
+Centaurus
+Cepheus
+Cetus
+Chameleon
+Circinus
+Columba
+Coma Berenices
+Cor Caroli
+Corona Australis
+Corona Borealis
+Corvus
+Crab Nebula
+Crater
+Crux
+Cygnus
+Delphinus
+Deneb
+Deneb Algenubi
+Denebola
+Dheneb
+Diphda
+Dog Star
+Dorado
+Draco
+Dubhe
+Earth
+Enif
+Equulues
+Eridanus
+Etamin
+Fomalhaut
+Fornax
+Gemini
+Grus
+Hamal
+Hercules
+Horologium
+Horsehead Nebula
+Hydra
+Hydrus
+Indus
+Izar
+Jupiter
+Kaus Australis
+Kocab
+Lacerta
+Leo
+Leo Minor
+Lepus
+Libra
+Little Dipper
+Luna
+Lupus
+Lynx
+Lyra
+Markab
+Mars
+Megrez
+Menkar
+Mensa
+Merach
+Merak
+Mercury
+Microscopium
+Milky Way
+Mintaka
+Mira
+Mirac
+Mirach
+Mirak
+Mirphak
+Mizar
+Monoceros
+Moon
+Musca
+Neptune
+Nihal
+Norma
+North Star
+Nunki
+Octans
+Ophiuchus
+Orion
+Pavo
+Pegasus
+Perseus
+Phad
+Pictor
+Pisces
+Piscis Austrinus
+Pleiades
+Pluto
+Polaris
+Pollux
+Procyon
+Proxima Centauri
+Puppis
+Pyxis
+Rasalgethi
+Rasalhague
+Regulus
+Reticulum
+Rigel
+Sadalmelik
+Sagitta
+Sagittarius
+Saiph
+Saturn
+Scheat
+Scorpius
+Sculptor
+Scutum
+Serpens
+Serpens Caput
+Serpens Cauda
+Sextans
+Shaula
+Shedir
+Sirius
+Sol
+Southern Cross
+Spica
+Sun
+Tarazed
+Taurus
+Telescopium
+The Big Dipper
+The Dog Star
+The Little Dipper
+The Milky Way
+The Moon
+The North Star
+The Southern Cross
+The Sun
+Thuban
+Triangulum
+Triangulum Australe
+Tucana
+Unukalhai
+Uranus
+Ursa Major
+Ursa Minor
+Vega
+Vela
+Venus
+Vindemiatrix
+Virgo
+Volans
+Vulpecula
