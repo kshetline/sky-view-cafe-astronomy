@@ -1,7 +1,7 @@
 import { ISkyObserver, KM_PER_AU, MOON, SolarSystem } from '@tubular/astronomy';
-import { abs, Angle, ceil, floor, interpolate, max, PI, round, sqrt, to_radian, TWO_PI, Unit } from '@tubular/math';
+import { abs, Angle, ceil, cos_deg, floor, interpolate, max, PI, round, sin_deg, sqrt, to_radian, TWO_PI, Unit } from '@tubular/math';
 import { getPixel, setPixel } from '@tubular/util';
-import { CanvasTexture, Mesh, MeshBasicMaterial, PerspectiveCamera, Scene, SphereGeometry, WebGLRenderer } from 'three';
+import { AmbientLight, CanvasTexture, DirectionalLight, Mesh, MeshLambertMaterial, PerspectiveCamera, Scene, SphereGeometry, WebGLRenderer } from 'three';
 
 let hasWebGl = !/\bwebgl=[0fn]/i.test(location.search);
 
@@ -22,6 +22,7 @@ export class MoonDrawer {
   private rendererHost: HTMLElement;
   private scaledBuffer: ImageData;
   private scene: Scene;
+  private sun: DirectionalLight;
   private webGlRendererSize = 0;
 
   static getMoonDrawer(): Promise<MoonDrawer> {
@@ -275,11 +276,15 @@ export class MoonDrawer {
       this.webGlRendererSize = size;
     }
 
-    const lib = solarSystem.getLunarLibration(time_JDE, observer);
+    const phase = solarSystem.getLunarPhase(time_JDE);
+    const libration = solarSystem.getLunarLibration(time_JDE, observer);
 
-    this.camera.position.z = lib.D * KM_PER_AU;
-    this.globeMesh.rotation.y = to_radian(lib.l);
-    this.globeMesh.rotation.x = to_radian(lib.b);
+    this.camera.position.z = libration.D * KM_PER_AU;
+    this.camera.rotation.z = (parallacticAngle ? parallacticAngle.radians : 0);
+    this.globeMesh.rotation.y = to_radian(-libration.l);
+    this.globeMesh.rotation.x = to_radian(libration.b);
+    this.sun.position.x = 93000000 * sin_deg(phase);
+    this.sun.position.z = -93000000 * cos_deg(phase);
     this.renderer.render(this.scene, this.camera);
     context.drawImage(this.renderer.domElement, cx - size / 2, cy - size / 2);
   }
@@ -290,8 +295,13 @@ export class MoonDrawer {
     globe.rotateY(-PI / 2);
     this.camera = new PerspectiveCamera(MAX_LUNAR_ANGULAR_DIAMETER / 60, 1, 0.1, 500000);
     this.scene = new Scene();
-    this.globeMesh = new Mesh(globe, new MeshBasicMaterial({ map: new CanvasTexture(this.moonImageForWebGL) }));
+    this.globeMesh = new Mesh(globe, new MeshLambertMaterial({ map: new CanvasTexture(this.moonImageForWebGL),
+      refractionRatio: 0.0 }));
     this.scene.add(this.globeMesh);
     this.renderer = new WebGLRenderer({ alpha: true, antialias: true });
+    this.sun = new DirectionalLight('white', 1.5);
+    this.sun.position.y = 0;
+    this.scene.add(this.sun);
+    this.scene.add(new AmbientLight('white', 0.15));
   }
 }
