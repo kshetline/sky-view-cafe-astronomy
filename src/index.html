@@ -30,6 +30,12 @@
     <meta name="keywords" content="astronomy, planetarium, interactive, stars, chart, star charts, star chart, starcharts, starchart, sky charts, sky chart, star maps, star map, sky maps, sky map, sky, planets, moon, moon phase, solar eclipse, lunar eclipse, orrery, Galilean moons, moons of Jupiter, moons of Saturn, deep sky objects, Messier, NGC, constellations, orbits, ecliptic, insolation, calendar, sunrise, sunset, rise, set, conjunction, opposition, greatest elongation, magnitude, visual magnitude, aphelion, perihelion, illuminated fraction, angular diameter, semidiameter, kerry, shetline, Mercury, Venus, Earth, Mars, Jupiter, Saturn, Uranus, Neptune, Pluto, Io, Europa, Ganymede, Callisto, Mimas, Enceladus, Tethys, Dione, Rhea, Titan, Hyperion, Iapetus, GRS, Great Red Spot">
     <title>Sky View Café</title>
     <base href="/">
+    <!--[if IE]><script type="text/javascript">
+      (function() { // Fix for IE ignoring relative base tags.
+          var baseTag = document.getElementsByTagName('base')[0];
+          baseTag.href = baseTag.href + '';
+      })();
+    </script><![endif]-->
     <link rel="icon" type="image/x-icon" href="favicon.ico">
     <style>
       .startup-spinner {
@@ -64,6 +70,9 @@
     <meta property="og:image" content="https://skyviewcafe.com/assets/img/svc_lunar_eclipse_og.png">
 
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!--suppress HtmlUnknownTarget -->
+    <script src="assets/browser-check.min.js" type="text/javascript" data-bc-vers="0,0,79,79,13.1,605" data-bc-min-es="2017"
+      data-bc-fail-url="assets/incompatible.html"></script>
     <script type="text/javascript" src="/assets/svc-setup.js"></script>
   </head>
   <body>

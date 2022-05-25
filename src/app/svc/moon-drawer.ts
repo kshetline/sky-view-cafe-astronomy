@@ -1,18 +1,51 @@
-import { ISkyObserver, MOON, SolarSystem } from '@tubular/astronomy';
-import { abs, Angle, ceil, floor, interpolate, max, round, sqrt, TWO_PI, Unit } from '@tubular/math';
+import { ISkyObserver, KM_PER_AU, MOON, SolarSystem } from '@tubular/astronomy';
+import { abs, Angle, ceil, floor, interpolate, max, PI, round, sqrt, to_radian, TWO_PI, Unit } from '@tubular/math';
 import { getPixel, setPixel } from '@tubular/util';
+import { CanvasTexture, Mesh, MeshBasicMaterial, PerspectiveCamera, Scene, SphereGeometry, WebGLRenderer } from 'three';
+
+let hasWebGl = !/\bwebgl=[0fn]/i.test(location.search);
+
+try {
+  hasWebGl = hasWebGl && !!document.createElement('canvas').getContext('webgl2');
+}
+catch {}
+
+const MAX_LUNAR_ANGULAR_DIAMETER = 34; // In arc-minutes, rounded up from 33.66.
+const MOON_RADIUS = 1737.4; // km
 
 export class MoonDrawer {
   private moonPixels: ImageData;
+  private camera: PerspectiveCamera;
   private canvas: HTMLCanvasElement;
+  private globeMesh: Mesh;
+  private renderer: WebGLRenderer;
+  private rendererHost: HTMLElement;
   private scaledBuffer: ImageData;
+  private scene: Scene;
+  private webGlRendererSize = 0;
 
   static getMoonDrawer(): Promise<MoonDrawer> {
     return new Promise<MoonDrawer>((resolve, reject) => {
       const image = new Image();
 
       image.onload = (): void => {
-        resolve(new MoonDrawer(image));
+        if (!hasWebGl) {
+          resolve(new MoonDrawer(image));
+          return;
+        }
+
+        const image2 = new Image();
+
+        image2.onload = (): void => {
+          resolve(new MoonDrawer(image, image2));
+        };
+        image2.onerror = (reason): void => {
+          console.warn('Map image for WebGL moon drawing failed to load:', reason);
+          reject(new Error('Moon image failed to load from: ' + image.src));
+          resolve(new MoonDrawer(image));
+        };
+
+        image2.src = 'assets/resources/moon_map.jpg';
       };
       image.onerror = (): void => {
         reject(new Error('Moon image failed to load from: ' + image.src));
@@ -22,7 +55,10 @@ export class MoonDrawer {
     });
   }
 
-  constructor(private moonImage: HTMLImageElement) {
+  constructor(
+    private moonImage: HTMLImageElement,
+    private moonImageForWebGL?: HTMLImageElement
+  ) {
     const size = moonImage.width; // height should be identical.
     const canvas = document.createElement('canvas');
 
@@ -64,6 +100,17 @@ export class MoonDrawer {
 
   drawMoon(context: CanvasRenderingContext2D, solarSystem: SolarSystem, time_JDE: number,
            cx: number, cy: number, size: number, pixelsPerArcSec: number, pixelRatio = 1,
+           parallacticAngle?: Angle, observer?: ISkyObserver, showEclipses?: boolean): void {
+    if (hasWebGl && this.moonImageForWebGL)
+      this.drawMoonWebGL(context, solarSystem, time_JDE, cx, cy, size, pixelsPerArcSec, pixelRatio,
+           parallacticAngle, observer, showEclipses);
+    else
+      this.drawMoon2D(context, solarSystem, time_JDE, cx, cy, size, pixelsPerArcSec, pixelRatio,
+           parallacticAngle, observer, showEclipses);
+  }
+
+  private drawMoon2D(context: CanvasRenderingContext2D, solarSystem: SolarSystem, time_JDE: number,
+           cx: number, cy: number, size: number, pixelsPerArcSec: number, pixelRatio: number,
            parallacticAngle?: Angle, observer?: ISkyObserver, showEclipses?: boolean): void {
     const originalImageSize = this.moonPixels.width;
 
@@ -212,5 +259,39 @@ export class MoonDrawer {
 
     this.canvas.getContext('2d').putImageData(this.scaledBuffer, 0, 0);
     context.drawImage(this.canvas, cx - r0 / pixelRatio, cy - r0 / pixelRatio, size / pixelRatio, size / pixelRatio);
+  }
+
+  private drawMoonWebGL(context: CanvasRenderingContext2D, solarSystem: SolarSystem, time_JDE: number,
+           cx: number, cy: number, size: number, pixelsPerArcSec: number, pixelRatio: number,
+           parallacticAngle?: Angle, observer?: ISkyObserver, _showEclipses?: boolean): void {
+    if (!this.renderer)
+      this.setUpRenderer();
+
+    if (size === 0)
+      size = MAX_LUNAR_ANGULAR_DIAMETER * pixelsPerArcSec * 60;
+
+    if (this.webGlRendererSize !== size) {
+      this.renderer.setSize(size, size);
+      this.webGlRendererSize = size;
+    }
+
+    const lib = solarSystem.getLunarLibration(time_JDE, observer);
+
+    this.camera.position.z = lib.D * KM_PER_AU;
+    this.globeMesh.rotation.y = to_radian(lib.l);
+    this.globeMesh.rotation.x = to_radian(lib.b);
+    this.renderer.render(this.scene, this.camera);
+    context.drawImage(this.renderer.domElement, cx - size / 2, cy - size / 2);
+  }
+
+  private setUpRenderer(): void {
+    const globe = new SphereGeometry(MOON_RADIUS, 50, 50);
+
+    globe.rotateY(-PI / 2);
+    this.camera = new PerspectiveCamera(MAX_LUNAR_ANGULAR_DIAMETER / 60, 1, 0.1, 500000);
+    this.scene = new Scene();
+    this.globeMesh = new Mesh(globe, new MeshBasicMaterial({ map: new CanvasTexture(this.moonImageForWebGL) }));
+    this.scene.add(this.globeMesh);
+    this.renderer = new WebGLRenderer({ alpha: true, antialias: true });
   }
 }
