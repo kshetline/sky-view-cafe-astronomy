@@ -1,7 +1,10 @@
 import { ISkyObserver, KM_PER_AU, MOON, SolarSystem } from '@tubular/astronomy';
 import { abs, Angle, ceil, cos_deg, floor, interpolate, max, PI, round, sin_deg, sqrt, to_radian, TWO_PI, Unit } from '@tubular/math';
 import { getPixel, setPixel } from '@tubular/util';
-import { AmbientLight, CanvasTexture, DirectionalLight, Mesh, MeshLambertMaterial, PerspectiveCamera, Scene, SphereGeometry, WebGLRenderer } from 'three';
+import {
+  AmbientLight, CanvasTexture, Mesh, MeshPhongMaterial, PerspectiveCamera, PointLight, Scene,
+  SphereGeometry, sRGBEncoding, WebGLRenderer
+} from 'three';
 
 let hasWebGl = !/\bwebgl=[0fn]/i.test(location.search);
 
@@ -14,15 +17,16 @@ const MAX_LUNAR_ANGULAR_DIAMETER = 34; // In arc-minutes, rounded up from 33.66.
 const MOON_RADIUS = 1737.4; // km
 
 export class MoonDrawer {
-  private moonPixels: ImageData;
   private camera: PerspectiveCamera;
   private canvas: HTMLCanvasElement;
-  private globeMesh: Mesh;
+  private earthShine: AmbientLight;
+  private moonMesh: Mesh;
+  private moonPixels: ImageData;
   private renderer: WebGLRenderer;
   private rendererHost: HTMLElement;
   private scaledBuffer: ImageData;
   private scene: Scene;
-  private sun: DirectionalLight;
+  private sun: PointLight;
   private webGlRendererSize = 0;
 
   static getMoonDrawer(): Promise<MoonDrawer> {
@@ -281,27 +285,32 @@ export class MoonDrawer {
 
     this.camera.position.z = libration.D * KM_PER_AU;
     this.camera.rotation.z = (parallacticAngle ? parallacticAngle.radians : 0);
-    this.globeMesh.rotation.y = to_radian(-libration.l);
-    this.globeMesh.rotation.x = to_radian(libration.b);
+    this.moonMesh.rotation.y = to_radian(-libration.l);
+    this.moonMesh.rotation.x = to_radian(libration.b);
     this.sun.position.x = 93000000 * sin_deg(phase);
     this.sun.position.z = -93000000 * cos_deg(phase);
+    this.sun.shadow.camera.position.z = this.sun.position.z + 1000;
+    this.earthShine.intensity = 0.025 + cos_deg(phase) * 0.0125;
     this.renderer.render(this.scene, this.camera);
     context.drawImage(this.renderer.domElement, cx - size / 2, cy - size / 2);
   }
 
   private setUpRenderer(): void {
-    const globe = new SphereGeometry(MOON_RADIUS, 50, 50);
+    const moon = new SphereGeometry(MOON_RADIUS, 50, 50);
 
-    globe.rotateY(-PI / 2);
-    this.camera = new PerspectiveCamera(MAX_LUNAR_ANGULAR_DIAMETER / 60, 1, 0.1, 500000);
+    moon.rotateY(-PI / 2);
+    this.camera = new PerspectiveCamera(MAX_LUNAR_ANGULAR_DIAMETER / 60, 1, 100, 500000);
     this.scene = new Scene();
-    this.globeMesh = new Mesh(globe, new MeshLambertMaterial({ map: new CanvasTexture(this.moonImageForWebGL),
-      refractionRatio: 0.0 }));
-    this.scene.add(this.globeMesh);
+    this.moonMesh = new Mesh(moon, new MeshPhongMaterial({ map: new CanvasTexture(this.moonImageForWebGL),
+      reflectivity: 0, shininess: 0 }));
+    this.scene.add(this.moonMesh);
     this.renderer = new WebGLRenderer({ alpha: true, antialias: true });
-    this.sun = new DirectionalLight('white', 1.5);
-    this.sun.position.y = 0;
+    this.renderer.outputEncoding = sRGBEncoding;
+
+    this.sun = new PointLight('white', 1.5);
     this.scene.add(this.sun);
-    this.scene.add(new AmbientLight('white', 0.15));
+
+    this.earthShine = new AmbientLight('white');
+    this.scene.add(this.earthShine);
   }
 }
