@@ -1,5 +1,5 @@
 import { ISkyObserver, KM_PER_AU, MOON, SolarSystem } from '@tubular/astronomy';
-import { abs, Angle, ceil, cos_deg, floor, interpolate, max, PI, round, sin_deg, sqrt, to_radian, TWO_PI, Unit } from '@tubular/math';
+import { abs, Angle, ceil, cos_deg, floor, interpolate, max, min, PI, round, sin_deg, sqrt, to_radian, TWO_PI, Unit } from '@tubular/math';
 import { fillEllipse, getPixel, setPixel, strokeCircle } from '@tubular/util';
 import {
   AmbientLight, CanvasTexture, Mesh, MeshPhongMaterial, PerspectiveCamera, PointLight, Scene,
@@ -281,7 +281,7 @@ export class MoonDrawer {
       this.webGlRendererSize = size;
     }
 
-    const s2 = size / 2;
+    const r = size / 2;
     const saveCompOp = context.globalCompositeOperation;
     const phase = solarSystem.getLunarPhase(time_JDE);
     const libration = solarSystem.getLunarLibration(time_JDE, observer);
@@ -296,7 +296,7 @@ export class MoonDrawer {
     this.earthShine.intensity = 0.025 + cos_deg(phase) * 0.0125;
     this.renderer.render(this.scene, this.camera);
     context.globalCompositeOperation = 'source-over';
-    context.drawImage(this.renderer.domElement, cx - s2, cy - s2);
+    context.drawImage(this.renderer.domElement, cx - r, cy - r);
 
     // If we're near a full moon, it's worth checking for a lunar eclipse, but not otherwise.
     if (showEclipses && abs(phase - 180.0) < 3.0) {
@@ -307,10 +307,17 @@ export class MoonDrawer {
         const dLat = ei.shadowPos.latitude.subtract(ei.pos.latitude).getAngle(Unit.ARC_SECONDS);
         const sin_pa = parallacticAngle ? parallacticAngle.sin : 0;
         const cos_pa = parallacticAngle ? parallacticAngle.cos : 1;
-        const sx = (dLon * cos_pa - dLat * sin_pa) * -pixelsPerArcSec + s2;
-        const sy = (dLon * sin_pa + dLat * cos_pa) * -pixelsPerArcSec + s2;
+        const sx = (dLon * cos_pa - dLat * sin_pa) * -pixelsPerArcSec + r;
+        const sy = (dLon * sin_pa + dLat * cos_pa) * -pixelsPerArcSec + r;
         const uRadius = ei.umbraRadius * pixelsPerArcSec + 2;
         const pRadius = ei.penumbraRadius * pixelsPerArcSec + 2;
+        let totality = 0;
+
+        if (ei.inUmbra) {
+          const d = sqrt((sx - r) ** 2 + (sy - r) ** 2);
+
+          totality = min((uRadius - d + r) / size * 100, 100);
+        }
 
         if (!this.shadowCanvas)
           this.shadowCanvas = document.createElement('canvas');
@@ -320,21 +327,21 @@ export class MoonDrawer {
 
         const context2 = this.shadowCanvas.getContext('2d');
 
-        context2.fillStyle = '#FFFFFF00';
+        context2.fillStyle = '#FFFFFF';
         context2.fillRect(0, 0, size, size);
-        context2.fillStyle = '#FFCC80';
+        context2.fillStyle = `hsl(36deg ${100 - totality}% 75%)`;
         context2.filter = `blur(${size / 6}px)`;
         fillEllipse(context2, sx, sy, pRadius - size / 6, pRadius - size / 6);
         context2.fillStyle = '#665133';
-        context2.filter = `blur(${size / 50}px)`;
+        context2.filter = `blur(${size / 75}px)`;
         fillEllipse(context2, sx, sy, uRadius, uRadius);
         context2.filter = 'blur(1px)';
         context2.strokeStyle = 'white';
-        context2.lineWidth = s2;
-        strokeCircle(context2, s2, s2, ei.radius * pixelsPerArcSec + s2 / 2);
+        context2.lineWidth = r;
+        strokeCircle(context2, r, r, ei.radius * pixelsPerArcSec + r / 2);
 
         context.globalCompositeOperation = 'multiply';
-        context.drawImage(this.shadowCanvas, cx - size / 2, cy - size / 2);
+        context.drawImage(this.shadowCanvas, cx - r, cy - r);
       }
     }
 
@@ -353,7 +360,7 @@ export class MoonDrawer {
     this.renderer = new WebGLRenderer({ alpha: true, antialias: true });
     this.renderer.outputEncoding = sRGBEncoding;
 
-    this.sun = new PointLight('white', 1.5);
+    this.sun = new PointLight('white');
     this.scene.add(this.sun);
 
     this.earthShine = new AmbientLight('white');
