@@ -46,6 +46,7 @@ export class MoonDrawer {
     const targetSize = size;
 
     size *= pixelRatio;
+    pixelsPerArcSec *= pixelRatio;
 
     if (this.webGlRendererSize !== size) {
       this.renderer.setSize(size, size);
@@ -77,10 +78,11 @@ export class MoonDrawer {
         const dLat = ei.shadowPos.latitude.subtract(ei.pos.latitude).getAngle(Unit.ARC_SECONDS);
         const sin_pa = parallacticAngle ? parallacticAngle.sin : 0;
         const cos_pa = parallacticAngle ? parallacticAngle.cos : 1;
-        const sx = (dLon * cos_pa - dLat * sin_pa) * -pixelsPerArcSec * pixelRatio + r;
-        const sy = (dLon * sin_pa + dLat * cos_pa) * -pixelsPerArcSec * pixelRatio + r;
-        const uRadius = ei.umbraRadius * pixelsPerArcSec * pixelRatio + 2;
-        const pRadius = ei.penumbraRadius * pixelsPerArcSec * pixelRatio + 2;
+        const sx = (dLon * cos_pa - dLat * sin_pa) * -pixelsPerArcSec + r;
+        const sy = (dLon * sin_pa + dLat * cos_pa) * -pixelsPerArcSec + r;
+        const uRadius = ei.umbraRadius * pixelsPerArcSec + 2;
+        const pRadius = ei.penumbraRadius * pixelsPerArcSec + 2;
+        const moonR = ei.radius * pixelsPerArcSec;
         let totality = 0;
 
         if (ei.inUmbra) {
@@ -108,10 +110,23 @@ export class MoonDrawer {
         context2.filter = 'blur(1px)';
         context2.strokeStyle = 'white';
         context2.lineWidth = r;
-        strokeCircle(context2, r, r, ei.radius * pixelsPerArcSec * pixelRatio + r / 2);
+        strokeCircle(context2, r, r, moonR + r / 2);
 
         context.globalCompositeOperation = 'multiply';
         context.drawImage(this.shadowCanvas, cx - targetSize / 2, cy - targetSize / 2, targetSize, targetSize);
+
+        if (totality > 80) {
+          // Brighten remaining illuminated portion of moon to increase contrast with shadowed part.
+          context2.clearRect(0, 0, size, size);
+          context2.filter = '';
+          context2.fillStyle = `rgba(255, 255, 255, ${(totality - 80) / 25})`;
+          fillEllipse(context2, r, r, moonR, moonR);
+          context2.fillStyle = 'black';
+          context2.filter = `blur(${size / 125}px)`;
+          fillEllipse(context2, sx, sy, uRadius, uRadius);
+          context.globalCompositeOperation = 'lighten';
+          context.drawImage(this.shadowCanvas, cx - targetSize / 2, cy - targetSize / 2, targetSize, targetSize);
+        }
       }
     }
 
