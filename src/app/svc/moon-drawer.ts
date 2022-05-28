@@ -2,8 +2,8 @@ import { ISkyObserver, KM_PER_AU, SolarSystem } from '@tubular/astronomy';
 import { abs, Angle, cos_deg, PI, sin_deg, to_radian, Unit } from '@tubular/math';
 import { fillCircle, strokeCircle } from '@tubular/util';
 import {
-  AmbientLight, CanvasTexture, Mesh, MeshPhongMaterial, PerspectiveCamera, PointLight, Scene,
-  SphereGeometry, sRGBEncoding, WebGLRenderer
+  AmbientLight, CanvasTexture, Mesh, MeshPhongMaterial, PerspectiveCamera, PointLight, Scene, SphereGeometry,
+  sRGBEncoding, WebGLRenderer
 } from 'three';
 
 const MAX_LUNAR_ANGULAR_DIAMETER = 34; // In arc-minutes, rounded up from 33.66.
@@ -26,13 +26,28 @@ export class MoonDrawer {
     return new Promise<MoonDrawer>((resolve, reject) => {
       const image = new Image();
 
-      image.onload = (): void => resolve(new MoonDrawer(image));
-      image.onerror = (): void => reject(new Error('Moon map failed to load from: ' + image.src));
+      image.onload = (): void => {
+        const image2 = new Image();
+
+        image2.onload = (): void => {
+          resolve(new MoonDrawer(image, image2));
+        };
+        image2.onerror = (reason): void => {
+          console.warn('Moon bump map failed to load:', reason);
+          resolve(new MoonDrawer(image));
+        };
+
+        image2.src = 'assets/resources/moon_map_bump.jpg';
+      };
+      image.onerror = (reason): void => {
+        reject(new Error('Moon map failed to load: ' + reason));
+      };
+
       image.src = 'assets/resources/moon_map.jpg';
     });
   }
 
-  constructor(private moonImage: HTMLImageElement) {}
+  constructor(private moonImage: HTMLImageElement, private moonBumps?: HTMLImageElement) {}
 
   drawMoon(context: CanvasRenderingContext2D, solarSystem: SolarSystem, time_JDE: number,
            cx: number, cy: number, size: number, pixelsPerArcSec: number, pixelRatio = 1,
@@ -139,6 +154,7 @@ export class MoonDrawer {
     this.camera = new PerspectiveCamera(MAX_LUNAR_ANGULAR_DIAMETER / 60, 1, 100, 500000);
     this.scene = new Scene();
     this.moonMesh = new Mesh(moon, new MeshPhongMaterial({ map: new CanvasTexture(this.moonImage),
+      bumpMap: this.moonBumps ? new CanvasTexture(this.moonBumps) : undefined, bumpScale: 15,
       reflectivity: 0, shininess: 0 }));
     this.scene.add(this.moonMesh);
     this.renderer = new WebGLRenderer({ alpha: true, antialias: true });
