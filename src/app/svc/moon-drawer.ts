@@ -1,6 +1,6 @@
 import { ISkyObserver, KM_PER_AU, SolarSystem } from '@tubular/astronomy';
-import { abs, Angle, cos_deg, min, PI, sin_deg, sqrt, to_radian, Unit } from '@tubular/math';
-import { fillEllipse, strokeCircle } from '@tubular/util';
+import { abs, Angle, cos_deg, PI, sin_deg, to_radian, Unit } from '@tubular/math';
+import { fillCircle, strokeCircle } from '@tubular/util';
 import {
   AmbientLight, CanvasTexture, Mesh, MeshPhongMaterial, PerspectiveCamera, PointLight, Scene,
   SphereGeometry, sRGBEncoding, WebGLRenderer
@@ -62,7 +62,7 @@ export class MoonDrawer {
     this.camera.rotation.z = (parallacticAngle ? parallacticAngle.radians : 0);
     this.moonMesh.rotation.y = to_radian(-libration.l);
     this.moonMesh.rotation.x = to_radian(libration.b);
-    this.sun.position.x = 93000000 * sin_deg(phase);
+    this.sun.position.x = 93000000 * sin_deg(phase); // Very approximate, but good enough.
     this.sun.position.z = -93000000 * cos_deg(phase);
     this.earthShine.intensity = 0.025 + cos_deg(phase) * 0.0125;
     this.renderer.render(this.scene, this.camera);
@@ -83,15 +83,8 @@ export class MoonDrawer {
         const uRadius = ei.umbraRadius * pixelsPerArcSec + 2;
         const pRadius = ei.penumbraRadius * pixelsPerArcSec + 2;
         const moonR = ei.radius * pixelsPerArcSec;
-        let totality = 0;
 
-        if (ei.inUmbra) {
-          const d = sqrt((sx - r) ** 2 + (sy - r) ** 2);
-
-          totality = min((uRadius - d + r) / size * 100, 100);
-        }
-
-        if (!this.shadowCanvas)
+        if (!this.shadowCanvas) // Turns out that rendering eclipse shadows with 2D graphics works better than using WebGL.
           this.shadowCanvas = document.createElement('canvas');
 
         if (this.shadowCanvas.width !== size || this.shadowCanvas.height !== size)
@@ -101,12 +94,15 @@ export class MoonDrawer {
 
         context2.fillStyle = '#FFFFFF';
         context2.fillRect(0, 0, size, size);
-        context2.fillStyle = `hsl(36deg ${100 - totality}% 75%)`;
+        // Penumbra
+        context2.fillStyle = `hsl(36deg ${100 - ei.totality * 100}% 75%)`;
         context2.filter = `blur(${size / 6}px)`;
-        fillEllipse(context2, sx, sy, pRadius - size / 6, pRadius - size / 6);
+        fillCircle(context2, sx, sy, pRadius - size / 6);
+        // Umbra
         context2.fillStyle = '#664533';
         context2.filter = `blur(${size / 125}px)`;
-        fillEllipse(context2, sx, sy, uRadius, uRadius);
+        fillCircle(context2, sx, sy, uRadius);
+        // Mask off penumbra and umbra beyond edge of moon
         context2.filter = 'blur(1px)';
         context2.strokeStyle = 'white';
         context2.lineWidth = r;
@@ -115,15 +111,15 @@ export class MoonDrawer {
         context.globalCompositeOperation = 'multiply';
         context.drawImage(this.shadowCanvas, cx - targetSize / 2, cy - targetSize / 2, targetSize, targetSize);
 
-        if (totality > 80) {
+        if (ei.totality > 0.8) {
           // Brighten remaining illuminated portion of moon to increase contrast with shadowed part.
           context2.clearRect(0, 0, size, size);
           context2.filter = '';
-          context2.fillStyle = `rgba(255, 255, 255, ${(totality - 80) / 25})`;
-          fillEllipse(context2, r, r, moonR, moonR);
+          context2.fillStyle = `rgba(255, 255, 255, ${(ei.totality - 0.8) / 0.25})`;
+          fillCircle(context2, r, r, moonR);
           context2.fillStyle = 'black';
           context2.filter = `blur(${size / 125}px)`;
-          fillEllipse(context2, sx, sy, uRadius, uRadius);
+          fillCircle(context2, sx, sy, uRadius);
           context.globalCompositeOperation = 'lighten';
           context.drawImage(this.shadowCanvas, cx - targetSize / 2, cy - targetSize / 2, targetSize, targetSize);
         }
