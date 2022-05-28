@@ -1,4 +1,5 @@
 {
+  "root": true,
   "env": {
     "es2020": true,
     "mocha": true,
@@ -18,9 +19,10 @@
     "sourceType": "module"
   },
   "plugins": [
-    "@typescript-eslint"
+    "@typescript-eslint",
+    "chai-friendly"
   ],
-  "ignorePatterns": ["dist/**/*"],
+  "ignorePatterns": ["dist/**/*", "build.js"],
   "rules": {
     "brace-style": [
       "error",
@@ -38,12 +40,6 @@
         "imports": "only-multiline",
         "exports": "only-multiline",
         "functions": "never"
-      }
-    ],
-    "@typescript-eslint/consistent-type-assertions": [
-      "error",
-      {
-        "assertionStyle": "as"
       }
     ],
     "curly": "off",
@@ -70,16 +66,25 @@
     "guard-for-in": "error",
     "key-spacing": "off",
     "multiline-ternary": "off",
+    "node/no-callback-literal": "off",
     "no-control-regex": "off",
     "no-empty": "off",
     "no-labels": "off",
     "no-mixed-operators": "off",
-    "no-multi-spaces": "off",
+    "no-multi-spaces": ["error", {
+      "ignoreEOLComments": true,
+      "exceptions": {
+        "Property": true,
+        "VariableDeclarator": true
+      }
+    }],
     "no-new": "off",
     "no-return-assign": "off",
     "no-unexpected-multiline": "off",
     "no-unused-expressions": "off",
     "no-useless-constructor": "off",
+    "@typescript-eslint/no-useless-constructor": "error",
+    "chai-friendly/no-unused-expressions": 2,
     "no-unused-vars": "off",
     "@typescript-eslint/no-unused-vars": [
       "error",
@@ -90,6 +95,7 @@
         "vars": "all"
       }
     ],
+    "node/no-unsupported-features/es-syntax": "off",
     "object-curly-newline": "off",
     "object-property-newline": "off",
     "one-var": "off",
@@ -106,7 +112,8 @@
         "asyncArrow": "always"
       }
     ],
-    "quotes": [
+    "quotes": "off",
+    "@typescript-eslint/quotes": [
       "error",
       "single",
       {
@@ -124,27 +131,9 @@
   },
   "overrides": [
     {
-      "files": ["*.js", "*.cjs", "*.html"],
-      "parser": "espree",
-      "parserOptions": {
-        "ecmaVersion": 2018,
-        "sourceType": "module"
-      },
+      "files": ["*.js", "*.cjs"],
       "rules": {
-        "@typescript-eslint/explicit-function-return-type": "off",
-        "indent": [
-          "error",
-          2,
-          {
-            "ArrayExpression": "first",
-            "FunctionDeclaration": { "parameters": "off" },
-            "FunctionExpression": { "parameters": "off" },
-            "ignoreComments": true,
-            "ObjectExpression": "first",
-            "SwitchCase": 1
-          }
-        ],
-        "no-var": "off"
+        "@typescript-eslint/explicit-function-return-type": "off"
       }
     }
   ]

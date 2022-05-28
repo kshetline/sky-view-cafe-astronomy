@@ -22,5 +22,7 @@
     "paths": {
       "@angular/core/src/metadata/*": ["../node_modules/@angular/core"]
     }
-  }
+  },
+  "include": ["./ambient.d.ts", "./src/**/*"],
+  "exclude": ["node_modules", "server", "**/*.spec.ts"]
 }

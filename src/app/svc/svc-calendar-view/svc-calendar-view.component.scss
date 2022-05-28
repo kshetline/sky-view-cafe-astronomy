@@ -6,6 +6,13 @@
   align-items: stretch;
 }
 
+@mixin text-stroke {
+  paint-order: stroke fill;
+  stroke: black;
+  stroke-width: 4px;
+  -webkit-text-stroke: 4px black;
+}
+
 div.wrapper {
   flex-grow: 1;
   background-color: black;
@@ -76,9 +83,9 @@ div.day-wrapper.ffox-fix-2 {
 }
 
 div.day-number {
+  @include text-stroke;
   font-size: 1.5em;
   color: #6666FF;
-  text-shadow: -1px -1px black, -1px 1px black, 1px -1px black, 1px 1px black;
 }
 
 div.day-number.highlight {
@@ -114,28 +121,28 @@ div.rise-set-list {
 div.rise-set {
   font-size: 0.833em;
   color: #00FF99;
-  text-shadow: -1px -1px black, -1px 1px black, 1px -1px black, 1px 1px black;
+  @include text-stroke;
 }
 
 div.phase {
   font-size: 0.833em;
   color: #FF66FF;
-  text-shadow: -1px -1px black, -1px 1px black, 1px -1px black, 1px 1px black;
   position: absolute;
   top: 2px;
   right: 2px;
   text-align: right;
+  @include text-stroke;
 }
 
 div.daylight {
   font-family: Astronomy, Arial, Helvetica, sans-serif;
   font-size: 0.833em;
   color: #FFFF99;
-  text-shadow: -1px -1px black, -1px 1px black, 1px -1px black, 1px 1px black;
   position: absolute;
   bottom: -1px;
   right: 2px;
   text-align: right;
+  @include text-stroke;
 
   &::first-letter {
     font-size: 1.5em;
@@ -149,7 +156,7 @@ div.edge-ie-fix-2 {
 span.equiSolstice {
   font-size: 0.833em;
   color: #FF9966;
-  text-shadow: -1px -1px black, -1px 1px black, 1px -1px black, 1px 1px black;
+  @include text-stroke;
 }
 
 div.day-number, div.rise-set, span.equiSolstice, img.phase, div.phaseTime {
@@ -185,5 +192,31 @@ div.day-number.void-day {
 
   div.daylight {
     color: #EEBB00;
+  }
+}
+
+.chrome {
+  div.day-number,
+  div.rise-set,
+  div.phase,
+  div.daylight,
+  span.equiSolstice {
+    -webkit-text-stroke: unset;
+    text-shadow: -1px -1px 1px black, -1px 0 1px black, -1px 1px 1px black,
+                 0 -1px 1px black,                  0 1px 1px black,
+                 1px -1px 1px black, 1px 0 1px black, 1px 1px 1px black;
+  }
+}
+
+@media print {
+  .chrome {
+    div.day-number,
+    div.rise-set,
+    div.phase,
+    div.daylight,
+    span.equiSolstice {
+      -webkit-print-color-adjust: exact;
+      -webkit-filter: opacity(1);
+    }
   }
 }

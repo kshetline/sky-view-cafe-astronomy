@@ -1,216 +1,169 @@
-import { ISkyObserver, MOON, SolarSystem } from '@tubular/astronomy';
-import { abs, Angle, ceil, floor, interpolate, max, round, sqrt, TWO_PI, Unit } from '@tubular/math';
-import { getPixel, setPixel } from '@tubular/util';
+import { ISkyObserver, KM_PER_AU, SolarSystem } from '@tubular/astronomy';
+import { abs, Angle, cos_deg, PI, sin_deg, to_radian, Unit } from '@tubular/math';
+import { fillCircle, strokeCircle } from '@tubular/util';
+import {
+  AmbientLight, CanvasTexture, Mesh, MeshPhongMaterial, PerspectiveCamera, PointLight, Scene, SphereGeometry,
+  sRGBEncoding, WebGLRenderer
+} from 'three';
+
+const MAX_LUNAR_ANGULAR_DIAMETER = 34; // In arc-minutes, rounded up from 33.66.
+const MOON_RADIUS = 1737.4; // km
 
 export class MoonDrawer {
-  private moonPixels: ImageData;
+  private camera: PerspectiveCamera;
   private canvas: HTMLCanvasElement;
+  private earthShine: AmbientLight;
+  private moonMesh: Mesh;
+  private renderer: WebGLRenderer;
+  private rendererHost: HTMLElement;
   private scaledBuffer: ImageData;
+  private scene: Scene;
+  private shadowCanvas: HTMLCanvasElement;
+  private sun: PointLight;
+  private webGlRendererSize = 0;
 
   static getMoonDrawer(): Promise<MoonDrawer> {
     return new Promise<MoonDrawer>((resolve, reject) => {
       const image = new Image();
 
       image.onload = (): void => {
-        resolve(new MoonDrawer(image));
+        const image2 = new Image();
+
+        image2.onload = (): void => {
+          resolve(new MoonDrawer(image, image2));
+        };
+        image2.onerror = (reason): void => {
+          console.warn('Moon bump map failed to load:', reason);
+          resolve(new MoonDrawer(image));
+        };
+
+        image2.src = 'assets/resources/moon_map_bump.jpg';
       };
-      image.onerror = (): void => {
-        reject(new Error('Moon image failed to load from: ' + image.src));
+      image.onerror = (reason): void => {
+        reject(new Error('Moon map failed to load: ' + reason));
       };
 
-      image.src = 'assets/resources/full_moon.jpg';
+      image.src = 'assets/resources/moon_map.jpg';
     });
   }
 
-  constructor(private moonImage: HTMLImageElement) {
-    const size = moonImage.width; // height should be identical.
-    const canvas = document.createElement('canvas');
-
-    canvas.width = size;
-    canvas.height = size;
-    canvas.style.width = size + 'px';
-    canvas.style.height = size + 'px';
-
-    const context = canvas.getContext('2d');
-
-    context.drawImage(this.moonImage, 0, 0);
-    this.moonPixels = context.getImageData(0, 0, size, size);
-  }
-
-  private getPixel(x: number, y: number): number {
-    const size = this.moonPixels.width;
-
-    // The upper-left hand corner should be a neutral gray that can be substituted
-    // for any off-the-edge pixel requests.
-    if (x < 0 || x >= size || y < 0 || y >= size)
-      return this.moonPixels.data[0];
-
-    return this.moonPixels.data[(y * size + x) * 4];
-  }
-
-  private getPixelLevel(x: number, y: number): number {
-    const x0 = floor(x);
-    const x1 = x0 + 1;
-    const dx = x - x0;
-    const y0 = floor(y);
-    const y1 = y0 + 1;
-    const dy = y - y0;
-
-    const v0 = this.getPixel(x0, y0) * (1.0 - dx) + this.getPixel(x1, y0) * dx;
-    const v1 = this.getPixel(x0, y1) * (1.0 - dx) + this.getPixel(x1, y1) * dx;
-
-    return v0 * (1.0 - dy) + v1 * dy;
-  }
+  constructor(private moonImage: HTMLImageElement, private moonBumps?: HTMLImageElement) {}
 
   drawMoon(context: CanvasRenderingContext2D, solarSystem: SolarSystem, time_JDE: number,
            cx: number, cy: number, size: number, pixelsPerArcSec: number, pixelRatio = 1,
            parallacticAngle?: Angle, observer?: ISkyObserver, showEclipses?: boolean): void {
-    const originalImageSize = this.moonPixels.width;
+    if (!this.renderer)
+      this.setUpRenderer();
 
-    if (size === 0 && observer)
-      size = ceil(solarSystem.getAngularDiameter(MOON, time_JDE, observer) * pixelsPerArcSec);
+    if (size === 0)
+      size = MAX_LUNAR_ANGULAR_DIAMETER * pixelsPerArcSec * 60;
 
-    pixelsPerArcSec *= pixelRatio;
+    const targetSize = size;
+
+    if (!pixelsPerArcSec)
+      pixelsPerArcSec = size / MAX_LUNAR_ANGULAR_DIAMETER / 60;
+
     size *= pixelRatio;
-    // Make sure that the size is odd, so that one pixel can be the exact center of the image.
-    size += (size + 1) % 2;
+    pixelsPerArcSec *= pixelRatio;
 
-    if (size < 3)
-      size = 3;
+    if (this.webGlRendererSize !== size) {
+      this.renderer.setSize(size, size);
+      this.webGlRendererSize = size;
+    }
 
+    const r = size / 2;
+    const saveCompOp = context.globalCompositeOperation;
     const phase = solarSystem.getLunarPhase(time_JDE);
-    const illum = solarSystem.getLunarIlluminatedFraction(time_JDE);
-    const waxing = phase < 180.0;
-    const r0 = floor(size / 2);
-    const r2 = round((r0 + 0.5) * (r0 + 0.5));
-    let x: number, y: number;
-    let xmax: number, xmax2: number;
-    let lineWidth;
-    let shadowWidth;
-    let shadowEdge;
-    let gray;
-    const parallactic = Boolean(parallacticAngle);
-    let sin_pa = 0.0;
-    let cos_pa = 1.0;
-    let eclipsed = false;
-    let u2 = 0; // umbral radius, squared
-    let p2 = 0; // penumbral radius, squared
-    let sx = 0, sy = 0; // shadow center
-    let sdx: number, sdy: number; // offset shadow center
-    let pixel: number;
+    const libration = solarSystem.getLunarLibration(time_JDE, observer);
 
-    if (!this.scaledBuffer || this.scaledBuffer.width !== size) {
-      this.canvas = document.createElement('canvas');
-
-      this.canvas.width = size;
-      this.canvas.height = size;
-
-      const context2 = this.canvas.getContext('2d');
-
-      context2.clearRect(0, 0, size, size);
-      context2.beginPath();
-      context2.arc(r0 + 0.5, r0 + 0.5, r0, 0, TWO_PI);
-      context2.fillStyle = 'white';
-      context2.fill();
-
-      this.scaledBuffer = context2.getImageData(0, 0, size, size);
-    }
-
-    if (parallactic) {
-      sin_pa = parallacticAngle.sin;
-      cos_pa = parallacticAngle.cos;
-    }
-
-    // I'm going to treat the umbra and penumbra of the Earth as imaginary circular
-    // objects directly opposite to the Sun and located at the same distance from
-    // the Earth as the Moon.
-    //
-    // If you can imagine the typical diagram of how umbral and penumbral shadows are
-    // cast, I'm simply solving some similar triangles that can be drawn into such a
-    // diagram to figure out the size of the Moon-distanced cross-sections of the
-    // two types of shadow.
+    this.camera.position.z = libration.D * KM_PER_AU;
+    this.camera.rotation.z = (parallacticAngle ? parallacticAngle.radians : 0);
+    this.moonMesh.rotation.y = to_radian(-libration.l);
+    this.moonMesh.rotation.x = to_radian(libration.b);
+    this.sun.position.x = 93000000 * sin_deg(phase); // Very approximate, but good enough.
+    this.sun.position.z = -93000000 * cos_deg(phase);
+    this.earthShine.intensity = 0.025 + cos_deg(phase) * 0.0125;
+    this.renderer.render(this.scene, this.camera);
+    context.globalCompositeOperation = 'source-over';
+    context.drawImage(this.renderer.domElement, cx - targetSize / 2, cy - targetSize / 2, targetSize, targetSize);
 
     // If we're near a full moon, it's worth checking for a lunar eclipse, but not otherwise.
     if (showEclipses && abs(phase - 180.0) < 3.0) {
       const ei = solarSystem.getLunarEclipseInfo(time_JDE);
 
       if (ei.inPenumbra) {
-        eclipsed = true;
-
         const dLon = ei.shadowPos.longitude.subtract(ei.pos.longitude).getAngle(Unit.ARC_SECONDS);
         const dLat = ei.shadowPos.latitude.subtract(ei.pos.latitude).getAngle(Unit.ARC_SECONDS);
+        const sin_pa = parallacticAngle ? parallacticAngle.sin : 0;
+        const cos_pa = parallacticAngle ? parallacticAngle.cos : 1;
+        const sx = (dLon * cos_pa - dLat * sin_pa) * -pixelsPerArcSec + r;
+        const sy = (dLon * sin_pa + dLat * cos_pa) * -pixelsPerArcSec + r;
+        const uRadius = ei.umbraRadius * pixelsPerArcSec + 2;
+        const pRadius = ei.penumbraRadius * pixelsPerArcSec + 2;
+        const moonR = ei.radius * pixelsPerArcSec;
 
-        sx = round((dLon * cos_pa - dLat * sin_pa) * -pixelsPerArcSec);
-        sy = round((dLon * sin_pa + dLat * cos_pa) * -pixelsPerArcSec);
+        if (!this.shadowCanvas) // Turns out that rendering eclipse shadows with 2D graphics works better than using WebGL.
+          this.shadowCanvas = document.createElement('canvas');
 
-        const uRadius = round(ei.umbraRadius * pixelsPerArcSec) + 2;
-        const pRadius = round(ei.penumbraRadius * pixelsPerArcSec) + 2;
+        if (this.shadowCanvas.width !== size || this.shadowCanvas.height !== size)
+          this.shadowCanvas.width = this.shadowCanvas.height = size;
 
-        u2 = uRadius ** 2;
-        p2 = pRadius ** 2;
+        const context2 = this.shadowCanvas.getContext('2d');
+
+        context2.fillStyle = '#FFFFFF';
+        context2.fillRect(0, 0, size, size);
+        // Penumbra
+        context2.fillStyle = `hsl(36deg ${100 - ei.totality * 100}% 75%)`;
+        context2.filter = `blur(${size / 6}px)`;
+        fillCircle(context2, sx, sy, pRadius - size / 6);
+        // Umbra
+        context2.fillStyle = '#664533';
+        context2.filter = `blur(${size / 125}px)`;
+        fillCircle(context2, sx, sy, uRadius);
+        // Mask off penumbra and umbra beyond edge of moon
+        context2.filter = 'blur(1px)';
+        context2.strokeStyle = 'white';
+        context2.lineWidth = r;
+        strokeCircle(context2, r, r, moonR + r / 2);
+
+        context.globalCompositeOperation = 'multiply';
+        context.drawImage(this.shadowCanvas, cx - targetSize / 2, cy - targetSize / 2, targetSize, targetSize);
+
+        if (ei.totality > 0.8) {
+          // Brighten remaining illuminated portion of moon to increase contrast with shadowed part.
+          context2.clearRect(0, 0, size, size);
+          context2.filter = '';
+          context2.fillStyle = `rgba(255, 255, 255, ${(ei.totality - 0.8) / 0.25})`;
+          fillCircle(context2, r, r, moonR);
+          context2.fillStyle = 'black';
+          context2.filter = `blur(${size / 125}px)`;
+          fillCircle(context2, sx, sy, uRadius);
+          context.globalCompositeOperation = 'lighten';
+          context.drawImage(this.shadowCanvas, cx - targetSize / 2, cy - targetSize / 2, targetSize, targetSize);
+        }
       }
     }
 
-    for (let dy = -r0; dy <= r0; ++dy) {
-      xmax = ceil(sqrt(r2 - dy * dy));
+    context.globalCompositeOperation = saveCompOp;
+  }
 
-      for (let dx = -xmax; dx <= xmax; ++dx) {
-        x = dx * cos_pa + dy * sin_pa;
-        y = dy * cos_pa - dx * sin_pa;
+  private setUpRenderer(): void {
+    const moon = new SphereGeometry(MOON_RADIUS, 50, 50);
 
-        gray = this.getPixelLevel((x + r0) * originalImageSize / size,
-                                  (y + r0) * originalImageSize / size);
+    moon.rotateY(-PI / 2);
+    this.camera = new PerspectiveCamera(MAX_LUNAR_ANGULAR_DIAMETER / 60, 1, 100, 500000);
+    this.scene = new Scene();
+    this.moonMesh = new Mesh(moon, new MeshPhongMaterial({ map: new CanvasTexture(this.moonImage),
+      bumpMap: this.moonBumps ? new CanvasTexture(this.moonBumps) : undefined, bumpScale: 15,
+      reflectivity: 0, shininess: 0 }));
+    this.scene.add(this.moonMesh);
+    this.renderer = new WebGLRenderer({ alpha: true, antialias: true });
+    this.renderer.outputEncoding = sRGBEncoding;
 
-        xmax2 = round(sqrt(max(r2 - y * y, 0)));
-        lineWidth = xmax2 * 2 + 1;
-        // When the Moon is new, shadowWidth is biased one pixel wider, when full, one pixel narrower, with the
-        // bias varying smoothly in between (no bias at all at half-full).
-        shadowWidth = lineWidth * (1.0 - illum) - illum * 2.0 + 1.0;
+    this.sun = new PointLight('white');
+    this.scene.add(this.sun);
 
-        if (waxing) {
-          shadowEdge = -xmax2 + shadowWidth;
-
-          if (x < shadowEdge - 1.0 || illum < 0.02)
-            gray /= 5.0;
-          else if (x < shadowEdge + 1.0)
-            gray /= interpolate(shadowEdge - 1.0, x, shadowEdge + 1.0, 5.0, 1.0);
-        }
-        else {
-          shadowEdge = xmax2 - shadowWidth;
-
-          if (x > shadowEdge + 1.0 || illum < 0.02)
-            gray /= 5.0;
-          else if (x > shadowEdge - 1.0)
-            gray /= interpolate(shadowEdge + 1.0, x, shadowEdge - 1.0, 5.0, 1.0);
-        }
-
-        pixel = (getPixel(this.scaledBuffer, r0 + dx, r0 + dy) & 0xFF000000) | (0x010101 * round(gray));
-
-        if (eclipsed) {
-          sdx = sx - dx;
-          sdy = sy - dy;
-
-          // Are we within the penumbra?
-          if (sdx * sdx + sdy * sdy <= p2) {
-            // Also within the umbra? Even darker shadow.
-            if (sdx * sdx + sdy * sdy <= u2)
-              gray /= 2.5;
-
-            const igray = round(gray);
-
-            // A shading of the moon image, leaning toward orange and brown.
-            pixel = (pixel & 0xFF000000) |
-                    (igray        << 16) |
-                    (round(igray * 0.8) << 8) |
-                     round(igray * 0.5);
-          }
-        }
-
-        setPixel(this.scaledBuffer, r0 + dx, r0 + dy, pixel);
-      }
-    }
-
-    this.canvas.getContext('2d').putImageData(this.scaledBuffer, 0, 0);
-    context.drawImage(this.canvas, cx - r0 / pixelRatio, cy - r0 / pixelRatio, size / pixelRatio, size / pixelRatio);
+    this.earthShine = new AmbientLight('white');
+    this.scene.add(this.earthShine);
   }
 }

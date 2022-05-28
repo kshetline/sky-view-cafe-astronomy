@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Sky View Café - Simulator incompatible with your web browser</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <base href="./">
+<style>
+  body {
+    background: #0E3D64;
+    color: white;
+    font: 14px Arial, Helvetica, sans-serif;
+    margin: 1em;
+  }
+
+  a {
+    color: #6AF;
+    font: 14px Arial, Helvetica, sans-serif;
+  }
+  a:active, a:hover { color: #9DF; }
+  a:visited { color: #6AF; }
+</style>
+</head>
+<body>
+  <script>
+    var msg = (/\bmsg=([^&]*)/.exec(location.search) || [])[1];
+
+    if (msg)
+      document.write('<p style="color: #F9B">' + decodeURIComponent(msg) + '</p>');
+
+    if (history.replaceState && location.href.indexOf('?') >= 0)
+        history.replaceState(undefined, undefined, location.href.replace(/\?.*$/, ''));
+  </script>
+  <div>
+    <p>Your web browser does not have the capabilities needed to run the simulator.
+      Please try again with a more up-to-date web browser.</p>
+    <a href="https://skyviewcafe.com/">https://skyviewcafe.com</a>
+  </div>
+</body>
+</html>

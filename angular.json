@@ -23,6 +23,11 @@
                 "glob": "**/*",
                 "input": "node_modules/@tubular/astronomy/dist/resources",
                 "output": "/assets/resources"
+              },
+              {
+                "glob": "browser-check.min.js*",
+                "input": "./node_modules/@tubular/browser-check/dist/",
+                "output": "./assets/"
               }
             ],
             "styles": [
@@ -115,6 +120,11 @@
                 "glob": "**/*",
                 "input": "node_modules/@tubular/astronomy/dist/resources",
                 "output": "/assets/resources"
+              },
+              {
+                "glob": "browser-check.min.js*",
+                "input": "./node_modules/@tubular/browser-check/dist/",
+                "output": "./assets/"
               }
             ]
           }

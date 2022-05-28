@@ -28,8 +28,8 @@ export const    PROPERTY_VIEW_TYPE = 'view_type';
 export enum       VIEW_TYPE {FULL_SKY_FLAT, FULL_SKY_DOME,
                              HORIZON_45, HORIZON_90, HORIZON_120, HORIZON_TO_ZENITH,
                              ZENITH_100,
-                             MOON_CLOSEUP_1, MOON_CLOSEUP_4, MOON_CLOSEUP_8, MOON_CLOSEUP_16,
-                             SUN_CLOSEUP_1, SUN_CLOSEUP_4, SUN_CLOSEUP_8, SUN_CLOSEUP_16}
+                             MOON_CLOSEUP_2, MOON_CLOSEUP_4, MOON_CLOSEUP_8, MOON_CLOSEUP_16,
+                             SUN_CLOSEUP_2, SUN_CLOSEUP_4, SUN_CLOSEUP_8, SUN_CLOSEUP_16}
 export const    PROPERTY_SKY_COLOR = 'sky_color';
 export enum       SKY_COLOR {BLACK, BASIC, MULTI}
 export const    PROPERTY_REFRACTION = 'refraction';
@@ -324,11 +324,11 @@ export class SvcSkyViewComponent extends GenericSkyViewDirective implements Afte
           this.minAlt = 40.0;
           break;
 
-        case VIEW_TYPE.MOON_CLOSEUP_1:
+        case VIEW_TYPE.MOON_CLOSEUP_2:
           this.viewMode = VIEW_MODE.MOON_CLOSEUP;
           this.lastMoonType = value;
           this.trackingPlanet = MOON;
-          this.viewWidth = 1.0;
+          this.viewWidth = 2.0;
           this.minAlt = -90.0;
           break;
 
@@ -356,11 +356,11 @@ export class SvcSkyViewComponent extends GenericSkyViewDirective implements Afte
           this.minAlt = -90.0;
           break;
 
-        case VIEW_TYPE.SUN_CLOSEUP_1:
+        case VIEW_TYPE.SUN_CLOSEUP_2:
           this.viewMode = VIEW_MODE.SUN_CLOSEUP;
           this.lastSunType = value;
           this.trackingPlanet = SUN;
-          this.viewWidth = 1.0;
+          this.viewWidth = 2.0;
           this.minAlt = -90.0;
           break;
 

@@ -2,7 +2,7 @@
 <div #wrapper class="wrapper" (window:resize)="onResize()">
   <div class="anchor">
     <canvas #canvas></canvas>
-    <table #calendarTable [ngStyle]="{visibility: hasBeenDrawn ? 'visible' : 'hidden'}">
+    <table #calendarTable [ngStyle]="{visibility: hasBeenDrawn ? 'visible' : 'hidden'}" [class.chrome]="isChrome">
       <tr class="title" #titleRow>
         <th colspan="7">{{title}}</th>
       </tr>
