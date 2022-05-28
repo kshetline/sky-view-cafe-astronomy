@@ -46,7 +46,7 @@
     "@angular/cli": "^13.2.6",
     "@angular/compiler-cli": "^13.2.7",
     "@angular/language-service": "^13.2.7",
-    "@tubular/browser-check": "^1.1.0",
+    "@tubular/browser-check": "^1.2.0",
     "@types/googlemaps": "^3.43.3",
     "@types/jasmine": "^4.0.3",
     "@types/jasminewd2": "^2.0.10",

@@ -8,7 +8,7 @@ import {
 } from '@tubular/astronomy';
 import { DateAndTime, DateTime, defaultLocale, getStartOfWeek, Timezone, utToTdt, YMDDate } from '@tubular/time';
 import { ceil, floor, max, min, round } from '@tubular/math';
-import { isEdge, isFirefox } from '@tubular/util';
+import { isChrome, isEdge, isFirefox } from '@tubular/util';
 import { throttle } from 'lodash-es';
 import {
   AppService, CurrentTab, Location, PROPERTY_GREGORIAN_CHANGE_DATE, SVC_MAX_YEAR, SVC_MIN_YEAR, UserSetting, VIEW_APP
@@ -64,6 +64,8 @@ interface DateInfo extends YMDDate {
   styleUrls: ['./svc-calendar-view.component.scss']
 })
 export class SvcCalendarViewComponent implements AfterViewInit {
+  isChrome = isChrome();
+
   private wrapper: HTMLDivElement;
   private canvas: HTMLCanvasElement;
   private canvasScaling = 1;
