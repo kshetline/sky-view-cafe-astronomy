@@ -121,7 +121,7 @@ export class AppService {
   private readonly debouncedSaveSettings: () => void;
   private knownIanaTimezones: Set<string>;
   private _clockFloating = min(window.screen.width, window.screen.height) < 768;
-  private _clockPosition = '{"x":730,y:"0"}';
+  private _clockPosition = '';
   private _clockStyle = ClockStyle.ISO;
   private _latLongStyle = LatLongStyle.DEGREES_AND_MINUTES;
   private _northAzimuth = false;
@@ -172,7 +172,10 @@ export class AppService {
     const savedSettings = localStorage.getItem('allSettings');
 
     if (savedSettings) {
-      this.allSettings = JSON.parse(savedSettings);
+      try {
+        this.allSettings = JSON.parse(savedSettings);
+      }
+      catch {}
 
       const appSettings = this.allSettings[VIEW_APP];
 
@@ -399,7 +402,7 @@ export class AppService {
     }
     catch {}
 
-    return { x: 730, y: 0 };
+    return { x: window.innerWidth - 665, y: 30 };
   }
 
   get clockStyle(): ClockStyle { return this._clockStyle; }
