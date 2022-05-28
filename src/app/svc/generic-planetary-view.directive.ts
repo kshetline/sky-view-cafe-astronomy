@@ -8,7 +8,7 @@ import {
   abs, Angle, cos_deg, floor, FMT_MINS, FMT_SECS, intersects, max, min, mod2, Point, Rectangle, round, sin_deg, SphericalPosition,
   SphericalPosition3D, sqrt, TWO_PI, union
 } from '@tubular/math';
-import { getTextWidth, toDefaultLocaleFixed } from '@tubular/util';
+import { blendColors, getTextWidth, toDefaultLocaleFixed } from '@tubular/util';
 import { AppService, CurrentTab, PROPERTY_NORTH_AZIMUTH, UserSetting, VIEW_APP } from '../app.service';
 import { DrawingContext, GenericViewDirective } from './generic-view.directive';
 
@@ -85,10 +85,11 @@ export const    MARQUEE_KM        = 1;
 export const    MARQUEE_MILES     = 2;
 
 // These color specifications are left incomplete so that the alpha value can be varied.
-const SHADED_MOON            = 'rgba(102,153,204,';
-const INTERMEDIATE_MOON      = 'rgba(178,204,229,';
-const ILLUMINATED_MOON       = 'rgba(255,255,255,';
-const ILLUMINATED_MOON_PRINT = 'rgba(221,221,187,';
+const SHADED_MOON            = 'rgba(102,153,204';
+const INTERMEDIATE_MOON      = 'rgba(178,204,229';
+const ILLUMINATED_MOON       = 'rgba(255,255,255';
+const ILLUMINATED_MOON_PRINT = 'rgba(221,221,187';
+const ECLIPSED_MOON          = '#850E';
 
 export interface DrawingContextPlanetary extends DrawingContext {
   size: number;
@@ -310,6 +311,22 @@ export abstract class GenericPlanetaryViewDirective extends GenericViewDirective
       const sin_sa = sin_deg(shadeAngle);
       const cos_sa = cos_deg(shadeAngle);
       const r02 = r0 * r0;
+      let calcColor = false;
+
+      if (abs(mod2(phase, 360)) < 20.0)
+        color = SHADED_MOON;
+      else if (abs(phase - 180.0) < 20.0) {
+        color = (dc.inkSaver ? ILLUMINATED_MOON_PRINT : ILLUMINATED_MOON);
+
+        if (abs(phase - 180.0) < 3.0) {
+          const ei = dc.ss.getLunarEclipseInfo(dc.jde);
+
+          if (ei.inUmbra)
+            color = blendColors(ECLIPSED_MOON, color + ',0.93)', ei.totality).replace(/,[^,]+\)/, '');
+        }
+      }
+      else
+        calcColor = true;
 
       for (let dy = -r0 - 1; dy <= r0 + 1; ++dy) {
         for (let dx = -r0 - 1; dx <= r0 + 1; ++dx) {
@@ -323,12 +340,7 @@ export abstract class GenericPlanetaryViewDirective extends GenericViewDirective
             if (r > r0)
               alpha = 1.0 - r + r0;
 
-            if (abs(mod2(phase, 360)) < 20.0) {
-              color = SHADED_MOON;
-            }
-            else if (abs(phase - 180.0) < 20.0)
-              color = (dc.inkSaver ? ILLUMINATED_MOON_PRINT : ILLUMINATED_MOON);
-            else {
+            if (calcColor) {
               const lineWidth = 2 * sqrt(max(r02 - rot_y * rot_y, 0.0)) + 1.0;
               const inset = rot_x + (lineWidth - 1.0) / 2;
               const shadowWidth = coverage * lineWidth;
@@ -349,7 +361,7 @@ export abstract class GenericPlanetaryViewDirective extends GenericViewDirective
                 color = (dc.inkSaver ? ILLUMINATED_MOON_PRINT : ILLUMINATED_MOON);
             }
 
-            dc.context.fillStyle = color + alpha + ')';
+            dc.context.fillStyle = `${color},${alpha}`;
             dc.context.fillRect(x + dx, y + dy, 1, 1);
           }
         }
