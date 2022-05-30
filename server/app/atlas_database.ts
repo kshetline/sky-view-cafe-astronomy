@@ -2,7 +2,7 @@ import { doubleMetaphone } from './double-metaphone';
 import { Pool, PoolConnection } from './mysql-await-async';
 import {
   closeMatchForState, code3ToName, countyStateCleanUp, getFlagCode, LocationMap, makeLocationKey,
-  ParsedSearchString, simplify, closeMatchForCity, code3ToNameByLang, admin1ToNameByLang
+  ParsedSearchString, simplify, closeMatchForCity, code3ToNameByLang, admin1ToNameByLang, admin1s
 } from './gazetteer';
 import { AtlasLocation } from './atlas-location';
 import { MIN_EXTERNAL_SOURCE } from './common';
@@ -128,7 +128,7 @@ export async function doDataBaseSearch(connection: PoolConnection, parsed: Parse
             rankAdjust = 1;
             values = [simplifiedCity];
 
-            if (lang && lang !== 'en') {
+            if (lang && lang !== 'en' && pass === 0) {
               fromAlt = true;
               values.push(lang);
               query = `SELECT * FROM gazetteer_alt_names WHERE key_name = ? AND lang = ? AND type = 'P' AND colloquial = 0 AND historic = 0`;
@@ -147,7 +147,7 @@ export async function doDataBaseSearch(connection: PoolConnection, parsed: Parse
         case MatchType.STARTS_WITH:
           values = [simplifiedCity, simplifiedCity + '~'];
 
-          if (lang && lang !== 'en') {
+          if (lang && lang !== 'en' && pass === 0) {
             values.push(lang);
             query = `SELECT * FROM gazetteer_alt_names WHERE key_name >= ? AND type = 'P' AND key_name < ? AND lang = ?`;
             fromAlt = true;
@@ -246,11 +246,11 @@ export async function doDataBaseSearch(connection: PoolConnection, parsed: Parse
         location.source = source;
         location.geonamesID = geonamesID;
 
-        if (/^\d+$/.test(location.state)) {
-          const key = location.country + '.' + location.state;
-          const foo = admin1ToNameByLang;
+        if (/^\d+$/.test(location.state) || (country !== 'USA' && country !== 'CAN' && /^[A-Z]{3,}$/.test(location.state))) {
+          const key = country + '.' + location.state;
 
-          location.state = (foo[key] || {})[lang || 'en'] || (foo[key] || {})[''] || location.state;
+          location.state = (admin1ToNameByLang[key] || {})[lang || 'en'] || (admin1ToNameByLang[key] || {})[''] ||
+            admin1s[key] || location.state;
         }
 
         if (matchType === MatchType.EXACT_MATCH_ALT)
