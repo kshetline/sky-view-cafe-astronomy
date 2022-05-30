@@ -2,7 +2,7 @@ import { doubleMetaphone } from './double-metaphone';
 import { Pool, PoolConnection } from './mysql-await-async';
 import {
   closeMatchForState, code3ToName, countyStateCleanUp, getFlagCode, LocationMap, makeLocationKey,
-  ParsedSearchString, simplify, closeMatchForCity
+  ParsedSearchString, simplify, closeMatchForCity, code3ToNameByLang, admin1ToNameByLang
 } from './gazetteer';
 import { AtlasLocation } from './atlas-location';
 import { MIN_EXTERNAL_SOURCE } from './common';
@@ -23,8 +23,7 @@ const MAX_MONTHS_BEFORE_REDOING_EXTENDED_SEARCH = 12;
 const ZIP_RANK = 9;
 
 pool.on('connection', connection => {
-  // noinspection JSIgnoredPromiseFromCall
-  connection.query("SET NAMES 'utf8'");
+  connection.query("SET NAMES 'utf8'").finally();
 });
 
 export function logMessage(message: string, noTrace = false): void {
@@ -130,9 +129,9 @@ export async function doDataBaseSearch(connection: PoolConnection, parsed: Parse
             values = [simplifiedCity];
 
             if (lang && lang !== 'en') {
-              values.push(lang);
-              query = 'SELECT gazetteer_id FROM gazetteer_alt_names WHERE key_name = ? AND lang = ? AND colloquial = 0 AND historic = 0';
               fromAlt = true;
+              values.push(lang);
+              query = `SELECT * FROM gazetteer_alt_names WHERE key_name = ? AND lang = ? AND type = 'P' AND colloquial = 0 AND historic = 0`;
             }
             else
               query = 'SELECT * FROM gazetteer WHERE key_name = ?' + condition;
@@ -141,7 +140,7 @@ export async function doDataBaseSearch(connection: PoolConnection, parsed: Parse
 
         case MatchType.EXACT_MATCH_ALT:
           fromAlt = true;
-          query = `SELECT gazetteer_id FROM gazetteer_alt_names WHERE key_name = ? AND (lang = '' OR lang = 'en' OR lang = ?)`;
+          query = `SELECT * FROM gazetteer_alt_names WHERE key_name = ? AND type = 'P' AND (lang = '' OR lang = 'en' OR lang = ?)`;
           values = [simplifiedCity, lang];
           break;
 
@@ -150,7 +149,7 @@ export async function doDataBaseSearch(connection: PoolConnection, parsed: Parse
 
           if (lang && lang !== 'en') {
             values.push(lang);
-            query = 'SELECT * FROM gazetteer_alt_names WHERE key_name >= ? AND key_name < ? AND lang = ?';
+            query = `SELECT * FROM gazetteer_alt_names WHERE key_name >= ? AND type = 'P' AND key_name < ? AND lang = ?`;
             fromAlt = true;
           }
           else
@@ -169,35 +168,41 @@ export async function doDataBaseSearch(connection: PoolConnection, parsed: Parse
       }
 
       let results = (await connection.queryResults(query, values)) || [];
+      let idMap: Map<number, any>;
 
       if (fromAlt && results.length > 0) {
+        idMap = new Map<number, any>();
+
+        for (const row of results)
+          idMap.set(row.gazetteer_id, row);
+
         values = [results.map((row: any) => row.gazetteer_id).join(', ')];
         query = `SELECT * FROM gazetteer WHERE id IN (${values[0]})` + condition;
         results = (await connection.queryResults(query)) || [];
       }
 
-      for (const result of results) {
-        const id = result.id;
+      for (const row of results) {
+        const id = row.id;
 
         if (examined.has(id))
           continue;
 
         examined.add(id);
 
-        const city = result.name;
-        const county = result.admin2;
-        const state = result.admin1;
-        const country = result.country;
-        const longCountry = code3ToName[country];
-        const latitude: number = result.latitude;
-        const longitude: number = result.longitude;
-        const elevation: number = result.elevation;
-        const zone = result.timezone;
+        const city = idMap ? idMap.get(id).name : row.name;
+        const county = row.admin2;
+        const state = row.admin1;
+        const country = row.country;
+        const longCountry = (code3ToNameByLang[country] || {})[lang || 'en'] || code3ToName[country];
+        const latitude: number = row.latitude;
+        const longitude: number = row.longitude;
+        const elevation: number = row.elevation;
+        const zone = row.timezone;
         let zip = '';
-        let rank: number = result.rank;
-        const placeType = result.feature_code;
-        const source = result.source;
-        const geonamesID: number = result.geonames_id;
+        let rank: number = row.rank;
+        const placeType = row.feature_code;
+        const source = row.source;
+        const geonamesID: number = row.geonames_id;
 
         if (!parsed.postalCode && ((source >= MIN_EXTERNAL_SOURCE && !extendedSearch && pass === 0) ||
             !closeMatchForState(parsed.targetState, state, country)))
@@ -240,6 +245,13 @@ export async function doDataBaseSearch(connection: PoolConnection, parsed: Parse
         location.placeType = placeType;
         location.source = source;
         location.geonamesID = geonamesID;
+
+        if (/^\d+$/.test(location.state)) {
+          const key = location.country + '.' + location.state;
+          const foo = admin1ToNameByLang;
+
+          location.state = (foo[key] || {})[lang || 'en'] || (foo[key] || {})[''] || location.state;
+        }
 
         if (matchType === MatchType.EXACT_MATCH_ALT)
           location.matchedByAlternateName = true;

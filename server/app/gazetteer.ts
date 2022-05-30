@@ -48,6 +48,7 @@ export const stateAbbreviations: Record<string, string> = {};
 export const altFormToStd: Record<string, string> = {};
 export const code3ToName: Record<string, string> = {};
 export const code3ToNameByLang: Record<string, Record<string, string>> = {};
+export const admin1ToNameByLang: Record<string, Record<string, string>> = {};
 export const nameToCode3: Record<string, string> = {};
 export const code2ToCode3: Record<string, string> = {};
 export const code3ToCode2: Record<string, string> = {};
@@ -64,7 +65,7 @@ interface CountryIn {
   iso2: string;
   iso3: string;
   key_name: string;
-  geonames_id: string;
+  geonames_id: number;
   postal_regex: string;
 }
 
@@ -72,7 +73,19 @@ interface AdminIn {
   id: number;
   name: string;
   key_name: string;
-  geonames_id: string;
+  geonames_id: number;
+}
+
+interface AltNames {
+  geonames_orig_id: number;
+  lang: string;
+  name: string;
+}
+
+interface GazetteerEntry {
+  admin1: string;
+  country: string;
+  geonames_id: number;
 }
 
 export async function initGazetteer(): Promise<void> {
@@ -83,10 +96,12 @@ export async function initGazetteer(): Promise<void> {
     connection = await pool.getConnection();
 
     let rows = (await connection.query('SELECT * FROM gazetteer_countries')).results;
+    const idToCode3: Record<number, string> = {};
 
     for (const row of rows as CountryIn[]) {
       nameToCode3[simplify(row.name).substr(0, 40)] = row.iso3;
       code3ToName[row.iso3] = row.name;
+      idToCode3[row.geonames_id] = row.iso3;
 
       if (row.iso2) {
         code2ToCode3[row.iso2] = row.iso3;
@@ -97,13 +112,74 @@ export async function initGazetteer(): Promise<void> {
         postalPatterns.set(row.iso3, new RegExp(row.postal_regex, 'i'));
     }
 
+    rows = (await connection.query(`SELECT * FROM gazetteer_alt_names WHERE type ='C'`)).results;
+
+    for (const row of rows as AltNames[]) {
+      const iso3 = idToCode3[row.geonames_orig_id];
+      let countryRec = code3ToNameByLang[iso3];
+
+      if (!countryRec) {
+        countryRec = {};
+        code3ToNameByLang[iso3] = countryRec;
+      }
+
+      countryRec[row.lang || ''] = row.name;
+    }
+
+    const idToAdmin1: Record<number, string> = {};
+
     rows = (await connection.query('SELECT * FROM gazetteer_admin1')).results;
 
     for (const row of rows as AdminIn[]) {
       admin1s[row.key_name] = row.name;
+      idToAdmin1[row.geonames_id] = row.key_name;
 
       if (row.key_name.startsWith('USA.'))
         longStates[row.key_name.substr(4)] = row.name;
+    }
+
+    rows = (await connection.query(`SELECT * FROM gazetteer_alt_names WHERE type ='1'`)).results;
+
+    const notFound: { id: number, lang: string, name: string }[] = [];
+
+    for (const row of rows as AltNames[]) {
+      const admin1 = idToAdmin1[row.geonames_orig_id];
+
+      if (!admin1) {
+        notFound.push({ id: row.geonames_orig_id, lang: row.lang, name: row.name });
+        continue;
+      }
+
+      let adminRec = admin1ToNameByLang[admin1];
+
+      if (!adminRec) {
+        adminRec = {};
+        admin1ToNameByLang[admin1] = adminRec;
+      }
+
+      adminRec[row.lang || ''] = row.name;
+    }
+
+    if (notFound.length > 0) {
+      const values = Array.from(new Set(notFound.map(nf => nf.id)).values()).join(', ');
+
+      rows = (await connection.query(`SELECT * FROM gazetteer WHERE geonames_id IN (${values})`)).results;
+
+      for (const row of rows as GazetteerEntry[]) {
+        const admin1 = `${row.country}.${row.admin1}`;
+
+        let adminRec = admin1ToNameByLang[admin1];
+
+        if (!adminRec) {
+          adminRec = {};
+          admin1ToNameByLang[admin1] = adminRec;
+        }
+
+        for (const nf of notFound) {
+          if (nf.id === row.geonames_id)
+            adminRec[nf.lang || ''] = nf.name;
+        }
+      }
     }
 
     rows = (await connection.query('SELECT * FROM gazetteer_admin2')).results;
