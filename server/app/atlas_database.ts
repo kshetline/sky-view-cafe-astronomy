@@ -2,12 +2,12 @@ import { doubleMetaphone } from './double-metaphone';
 import { Pool, PoolConnection } from './mysql-await-async';
 import {
   closeMatchForState, code3ToName, countyStateCleanUp, getFlagCode, LocationMap, makeLocationKey,
-  ParsedSearchString, simplify, closeMatchForCity, code3ToNameByLang, admin1ToNameByLang, admin1s
+  ParsedSearchString, simplify, closeMatchForCity, code3ToNameByLang, admin1ToNameByLang, admin1s, code2ToCode3
 } from './gazetteer';
 import { AtlasLocation } from './atlas-location';
 import { MIN_EXTERNAL_SOURCE } from './common';
 import { svcApiConsole } from './svc-api-logger';
-import { toBoolean } from '@tubular/util';
+import { isAllUppercaseWords, toBoolean, toMixedCase } from '@tubular/util';
 
 export const pool = new Pool({
   host: (toBoolean(process.env.DB_REMOTE) ? 'skyviewcafe.com' : '127.0.0.1'),
@@ -105,6 +105,7 @@ export async function doDataBaseSearch(connection: PoolConnection, parsed: Parse
   const simplifiedCity = simplify(parsed.targetCity);
   const examined = new Set<number>();
   const matches = new LocationMap();
+  const postal = !!parsed.postalCode;
 
   for (let pass = 0; pass < 2; ++pass) {
     const condition = (pass === 0 ? ' AND rank > 0' : '');
@@ -119,8 +120,8 @@ export async function doDataBaseSearch(connection: PoolConnection, parsed: Parse
 
       switch (matchType) {
         case MatchType.EXACT_MATCH:
-          if (parsed.postalCode) {
-            query = 'SELECT gazetteer_id FROM gazetteer_postal WHERE code = ?';
+          if (postal) {
+            query = 'SELECT * FROM gazetteer_postal WHERE code = ?';
             values = [parsed.postalCode];
             fromAlt = true;
           }
@@ -168,6 +169,7 @@ export async function doDataBaseSearch(connection: PoolConnection, parsed: Parse
       }
 
       let results = (await connection.queryResults(query, values)) || [];
+      const postalResults = (postal ? results : undefined);
       let idMap: Map<number, any>;
 
       if (fromAlt && results.length > 0) {
@@ -176,9 +178,49 @@ export async function doDataBaseSearch(connection: PoolConnection, parsed: Parse
         for (const row of results)
           idMap.set(row.gazetteer_id, row);
 
-        values = [results.map((row: any) => row.gazetteer_id).join(', ')];
-        query = `SELECT * FROM gazetteer WHERE id IN (${values[0]})` + condition;
-        results = (await connection.queryResults(query)) || [];
+        values = [results.map((row: any) => row.gazetteer_id).filter((id: number) => id !== 0).join(', ')];
+
+        if (values[0]) {
+          query = `SELECT * FROM gazetteer WHERE id IN (${values[0]})` + condition;
+          results = (await connection.queryResults(query)) || [];
+        }
+        else
+          results = [];
+      }
+
+      if (postalResults) {
+        const addOns: any[] = [];
+
+        for (const row of postalResults) {
+          const name = row.name;
+          const gRow = row.gazetteer_id && idMap.get(row.gazetteer_id);
+
+          if (/[/()]/.test(name) || isAllUppercaseWords(name))
+            row.name = toMixedCase(name.replace(/[/()].*$/, '').trim());
+
+          if (gRow) {
+            gRow.source = row.source;
+
+            if (row.accuracy > 4) {
+              gRow.latitude = row.latitude;
+              gRow.longitude = row.longitude;
+            }
+          }
+          else
+            addOns.push({
+              admin1: row.admin1?.length > 1 ? row.admin1 : '',
+              admin2: '',
+              country: code2ToCode3[row.country] || row.country,
+              id: -row.id,
+              latitude: row.latitude,
+              longitude: row.longitude,
+              source: row.source,
+              name: row.name,
+              zone: row.timezone
+            });
+        }
+
+        results.push(...addOns);
       }
 
       for (const row of results) {
@@ -189,7 +231,7 @@ export async function doDataBaseSearch(connection: PoolConnection, parsed: Parse
 
         examined.add(id);
 
-        const city = idMap ? idMap.get(id).name : row.name;
+        const city = idMap ? idMap.get(id)?.name || row.name : row.name;
         const county = row.admin2;
         const state = row.admin1;
         const country = row.country;
@@ -204,11 +246,11 @@ export async function doDataBaseSearch(connection: PoolConnection, parsed: Parse
         const source = row.source;
         const geonamesID: number = row.geonames_id;
 
-        if (!parsed.postalCode && ((source >= MIN_EXTERNAL_SOURCE && !extendedSearch && pass === 0) ||
+        if (!postal && ((source >= MIN_EXTERNAL_SOURCE && !extendedSearch && pass === 0) ||
             !closeMatchForState(parsed.targetState, state, country)))
           continue;
 
-        if (parsed.postalCode) {
+        if (postal) {
           rank = ZIP_RANK;
           zip = parsed.postalCode;
 
@@ -267,11 +309,11 @@ export async function doDataBaseSearch(connection: PoolConnection, parsed: Parse
       }
 
       // Skip SOUNDS_LIKE search step on first pass, or if better matches have already been found. Only one step needed for postal codes.
-      if (((pass === 0 || matches.size > 0) && matchType >= MatchType.STARTS_WITH) || parsed.postalCode)
+      if (((pass === 0 || matches.size > 0) && matchType >= MatchType.STARTS_WITH) || postal)
         break;
     }
 
-    if (parsed.postalCode)
+    if (postal)
       break;
   }
 
