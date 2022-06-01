@@ -9,7 +9,7 @@ import { AppService, CurrentTab } from '../../app.service';
 export class SvcOptionsPanelComponent {
   currentTab = CurrentTab.SKY;
 
-  constructor(private app: AppService) {
+  constructor(app: AppService) {
     app.getCurrentTabUpdates((tabIndex: CurrentTab) => {
       this.currentTab = tabIndex;
     });
