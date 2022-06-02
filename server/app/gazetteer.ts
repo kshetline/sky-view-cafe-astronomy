@@ -1,4 +1,5 @@
 import { readdirSync } from 'fs';
+import unidecode from 'unidecode-plus';
 import { eqci, getFileContents } from './common';
 import { AtlasLocation } from './atlas-location';
 import { decode } from 'html-entities';
@@ -12,11 +13,14 @@ import { asLines, makePlainASCII_UC, toNumber } from '@tubular/util';
 import { requestText } from 'by-request';
 
 export interface ParsedSearchString {
+  actualSearch: string;
+  altCity?: string;
+  altNormalized?: string;
+  altState?: string;
+  normalizedSearch: string;
   postalCode: string;
   targetCity: string;
   targetState: string;
-  actualSearch: string;
-  normalizedSearch: string;
 }
 
 export interface NameAndCode {
@@ -26,7 +30,7 @@ export interface NameAndCode {
 
 export type ParseMode = 'loose' | 'strict';
 
-const TRAILING_STATE_PATTERN = /(.+)\b(\w{2,3})$/;
+const TRAILING_STATE_PATTERN = /(.+)\s+(\p{L}{2,})$/u;
 const usTerritories = ['AS', 'FM', 'GU', 'MH', 'MP', 'PW', 'VI'];
 const canadianProvinceAbbrs = ['AB', 'BC', 'MB', 'NB', 'NF', '', 'NS', 'ON', 'PE', 'QC', 'SK', 'YT', 'NT', 'NU'];
 
@@ -80,12 +84,18 @@ interface AltNames {
   geonames_orig_id: number;
   lang: string;
   name: string;
+  preferred: number;
+  short: number;
 }
 
 interface GazetteerEntry {
   admin1: string;
   country: string;
   geonames_id: number;
+}
+
+export function makeKey(name: string): string {
+  return unidecode(name || '', { german: true }).toUpperCase().replace(/[^A-Z\d]+/g, '').substring(0, 40);
 }
 
 export async function initGazetteer(): Promise<void> {
@@ -112,7 +122,7 @@ export async function initGazetteer(): Promise<void> {
         postalPatterns.set(row.iso3, new RegExp(row.postal_regex, 'i'));
     }
 
-    rows = (await connection.query(`SELECT * FROM gazetteer_alt_names WHERE type ='C'`)).results;
+    rows = (await connection.query(`SELECT * FROM gazetteer_alt_names WHERE type ='C' AND historic = 0 AND colloquial = 0`)).results;
 
     for (const row of rows as AltNames[]) {
       const iso3 = idToCode3[row.geonames_orig_id];
@@ -123,7 +133,11 @@ export async function initGazetteer(): Promise<void> {
         code3ToNameByLang[iso3] = countryRec;
       }
 
-      countryRec[row.lang || ''] = row.name;
+      if (!row.short && (!row.lang || row.lang === 'en'))
+        countryRec[row.lang || ''] = code3ToName[iso3];
+
+      if (row.short || !countryRec[row.lang || ''])
+        countryRec[row.lang || ''] = row.name;
     }
 
     const idToAdmin1: Record<number, string> = {};
@@ -138,7 +152,7 @@ export async function initGazetteer(): Promise<void> {
         longStates[row.key_name.substr(4)] = row.name;
     }
 
-    rows = (await connection.query(`SELECT * FROM gazetteer_alt_names WHERE type ='1'`)).results;
+    rows = (await connection.query(`SELECT * FROM gazetteer_alt_names WHERE type ='1' AND historic = 0 AND colloquial = 0`)).results;
 
     const notFound: { id: number, lang: string, name: string }[] = [];
 
@@ -157,7 +171,10 @@ export async function initGazetteer(): Promise<void> {
         admin1ToNameByLang[admin1] = adminRec;
       }
 
-      adminRec[row.lang || ''] = row.name;
+      if (row.lang === 'en' && !row.preferred)
+        adminRec.en = admin1s[admin1];
+      else if (row.short || !adminRec[row.lang || ''])
+        adminRec[row.lang || ''] = row.name;
     }
 
     if (notFound.length > 0) {
@@ -318,11 +335,12 @@ export function closeMatchForCity(target: string, candidate: string): boolean {
   return candidate.startsWith(target);
 }
 
-export function closeMatchForState(target: string, state: string, country: string): boolean {
-  if (!target)
+export function closeMatchForState(target: string, state: string, country: string, lang?: string): boolean {
+  if (!target || (!state && !country))
     return true;
 
-  const longState   = longStates[state];
+  const stateKey = `${country}.${state}`;
+  const longState   = lang ? (admin1ToNameByLang[stateKey] || {})[lang] || longStates[state] : longStates[state];
   const longCountry = code3ToName[country];
   const code2       = code3ToCode2[country];
 
@@ -641,23 +659,29 @@ export function parseSearchString(q: string, mode: ParseMode): ParsedSearchStrin
       targetState = '';
     }
     else
-      targetCity = makePlainASCII_UC(targetCity);
+      targetCity = makeKey(targetCity);
   }
 
-  targetState = makePlainASCII_UC(targetState);
-  targetCountry = makePlainASCII_UC(targetCountry);
+  targetState = makeKey(targetState);
+  targetCountry = makeKey(targetCountry);
 
   if (targetCountry)
     targetState = targetCountry;
 
-  if (mode === 'loose' && !targetState && ($ = TRAILING_STATE_PATTERN.exec(targetCity))) {
-    const start = $[1].trim();
-    const end = $[2];
+  if (!targetState && ($ = TRAILING_STATE_PATTERN.exec(parts[0]))) {
+    const start = makeKey($[1].trim());
+    const end = $[2].toUpperCase();
 
-    if (longStates[end] || code3ToName[end]) {
+    if (mode === 'loose' && (longStates[end] || code3ToName[end])) {
       targetCity = start;
       targetState = end;
     }
+    else {
+      parsed.altCity = start;
+      parsed.altState = end;
+    }
+
+    parsed.altNormalized = `${start}, ${end}`;
   }
 
   parsed.postalCode = postalCode;

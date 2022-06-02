@@ -154,6 +154,9 @@ router.get('/', asyncHandler(async (req: Request, res: Response) => {
 
   result.matches = uniqueMatches;
 
+  if (parsed.altNormalized)
+    result.normalizedSearch += '; ' + parsed.altNormalized;
+
   const { celestial, suggestions } = summarizeResults(result, remoteResults, dbError, extend, version, parsed, svc);
 
 //  if (!dbError)

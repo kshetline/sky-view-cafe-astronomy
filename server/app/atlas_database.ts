@@ -2,7 +2,7 @@ import { doubleMetaphone } from './double-metaphone';
 import { Pool, PoolConnection } from './mysql-await-async';
 import {
   closeMatchForState, code3ToName, countyStateCleanUp, getFlagCode, LocationMap, makeLocationKey,
-  ParsedSearchString, simplify, closeMatchForCity, code3ToNameByLang, admin1ToNameByLang, admin1s, code2ToCode3
+  ParsedSearchString, simplify, closeMatchForCity, code3ToNameByLang, admin1ToNameByLang, admin1s, code2ToCode3, admin2s
 } from './gazetteer';
 import { AtlasLocation } from './atlas-location';
 import { MIN_EXTERNAL_SOURCE } from './common';
@@ -102,12 +102,16 @@ export async function logSearchResults(connection: PoolConnection, searchStr: st
 
 export async function doDataBaseSearch(connection: PoolConnection, parsed: ParsedSearchString, extendedSearch: boolean,
                                        maxMatches: number, canMatchBySound = true, lang?: string): Promise<LocationMap> {
-  const simplifiedCity = simplify(parsed.targetCity);
   const examined = new Set<number>();
   const matches = new LocationMap();
   const postal = !!parsed.postalCode;
+  let altParseMatches = 0;
 
   for (let pass = 0; pass < 2; ++pass) {
+    const altParse = (pass > 0 && !!parsed.altCity);
+    const city = (altParse ? parsed.altCity : parsed.targetCity);
+    const targetState = (altParse ? parsed.altState : parsed.targetState);
+    const simplifiedCity = simplify(city);
     const condition = (pass === 0 ? ' AND rank > 0' : '');
 
     examined.clear();
@@ -214,8 +218,8 @@ export async function doDataBaseSearch(connection: PoolConnection, parsed: Parse
               id: -row.id,
               latitude: row.latitude,
               longitude: row.longitude,
-              source: row.source,
               name: row.name,
+              source: row.source,
               zone: row.timezone
             });
         }
@@ -232,7 +236,8 @@ export async function doDataBaseSearch(connection: PoolConnection, parsed: Parse
         examined.add(id);
 
         const city = idMap ? idMap.get(id)?.name || row.name : row.name;
-        const county = row.admin2;
+        const countyKey = `${row.country}.${row.admin1}.${row.admin2}`;
+        const county = admin2s[countyKey] || row.admin2;
         const state = row.admin1;
         const country = row.country;
         const longCountry = (code3ToNameByLang[country] || {})[lang || 'en'] || code3ToName[country];
@@ -240,14 +245,14 @@ export async function doDataBaseSearch(connection: PoolConnection, parsed: Parse
         const longitude: number = row.longitude;
         const elevation: number = row.elevation;
         const zone = row.timezone;
-        let zip = '';
+        let zip = row.postalCode || '';
         let rank: number = row.rank;
         const placeType = row.feature_code;
         const source = row.source;
         const geonamesID: number = row.geonames_id;
 
         if (!postal && ((source >= MIN_EXTERNAL_SOURCE && !extendedSearch && pass === 0) ||
-            !closeMatchForState(parsed.targetState, state, country)))
+            !closeMatchForState(targetState, state, country, lang)))
           continue;
 
         if (postal) {
@@ -257,8 +262,8 @@ export async function doDataBaseSearch(connection: PoolConnection, parsed: Parse
           if (results.length > 1) {
             rank += parsed.targetCity && closeMatchForCity(parsed.targetCity, city) ? 2 : 0;
             rank += parsed.targetCity && closeMatchForState(parsed.targetCity, state, country) ? 1 : 0;
-            rank += parsed.targetState && closeMatchForState(parsed.targetState, state, country) ? 1 : 0;
-            rank += parsed.targetState && closeMatchForCity(parsed.targetState, city) ? 1 : 0;
+            rank += targetState && closeMatchForState(targetState, state, country) ? 1 : 0;
+            rank += targetState && closeMatchForCity(targetState, city) ? 1 : 0;
           }
         }
         else {
@@ -303,6 +308,7 @@ export async function doDataBaseSearch(connection: PoolConnection, parsed: Parse
         const key = makeLocationKey(city, state, country, matches);
 
         matches.set(key, location);
+        altParseMatches += (altParse ? 1 : 0);
 
         if (matches.size > maxMatches * 4)
           break;
@@ -315,6 +321,12 @@ export async function doDataBaseSearch(connection: PoolConnection, parsed: Parse
 
     if (postal)
       break;
+  }
+
+  if (altParseMatches === 0) {
+    delete parsed.altCity;
+    delete parsed.altNormalized;
+    delete parsed.altState;
   }
 
   return matches;
