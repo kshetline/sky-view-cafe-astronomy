@@ -105,7 +105,7 @@ export async function initGazetteer(): Promise<void> {
     await initFlagCodes();
     connection = await pool.getConnection();
 
-    let rows = (await connection.query('SELECT * FROM gazetteer_countries')).results;
+    let rows = (await connection.queryResults('SELECT * FROM gazetteer_countries'));
     const idToCode3: Record<number, string> = {};
 
     for (const row of rows as CountryIn[]) {
@@ -122,7 +122,7 @@ export async function initGazetteer(): Promise<void> {
         postalPatterns.set(row.iso3, new RegExp(row.postal_regex, 'i'));
     }
 
-    rows = (await connection.query(`SELECT * FROM gazetteer_alt_names WHERE type ='C' AND historic = 0 AND colloquial = 0`)).results;
+    rows = (await connection.queryResults(`SELECT * FROM gazetteer_alt_names WHERE type ='C' AND (historic = 0 OR preferred = 1) AND colloquial = 0`));
 
     for (const row of rows as AltNames[]) {
       if (!row.lang)
@@ -145,7 +145,7 @@ export async function initGazetteer(): Promise<void> {
 
     const idToAdmin1: Record<number, string> = {};
 
-    rows = (await connection.query('SELECT * FROM gazetteer_admin1')).results;
+    rows = (await connection.queryResults('SELECT * FROM gazetteer_admin1'));
 
     for (const row of rows as AdminIn[]) {
       admin1s[row.key_name] = row.name;
@@ -155,7 +155,7 @@ export async function initGazetteer(): Promise<void> {
         longStates[row.key_name.substr(4)] = row.name;
     }
 
-    rows = (await connection.query(`SELECT * FROM gazetteer_alt_names WHERE type ='1' AND historic = 0 AND colloquial = 0`)).results;
+    rows = (await connection.queryResults(`SELECT * FROM gazetteer_alt_names WHERE type ='1' AND historic = 0 AND colloquial = 0`));
 
     const notFound: { id: number, lang: string, name: string }[] = [];
 
@@ -189,7 +189,7 @@ export async function initGazetteer(): Promise<void> {
     if (notFound.length > 0) {
       const values = Array.from(new Set(notFound.map(nf => nf.id)).values()).join(', ');
 
-      rows = (await connection.query(`SELECT * FROM gazetteer WHERE geonames_id IN (${values})`)).results;
+      rows = (await connection.queryResults(`SELECT * FROM gazetteer WHERE geonames_id IN (${values})`));
 
       for (const row of rows as GazetteerEntry[]) {
         const admin1 = `${row.country}.${row.admin1}`;
@@ -207,7 +207,7 @@ export async function initGazetteer(): Promise<void> {
       }
     }
 
-    rows = (await connection.query('SELECT * FROM gazetteer_admin2')).results;
+    rows = (await connection.queryResults('SELECT * FROM gazetteer_admin2'));
 
     for (const row of rows as AdminIn[]) {
       admin2s[row.key_name] = row.name;
