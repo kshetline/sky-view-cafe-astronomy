@@ -1,6 +1,6 @@
 {
   "name": "svc-ng",
-  "version": "1.15.0",
+  "version": "1.15.1",
   "license": "MIT AND GPL-3.0-or-later",
   "author": "Kerry Shetline <kerry@shetline.com>",
   "scripts": {
