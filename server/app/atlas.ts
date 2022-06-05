@@ -1,3 +1,4 @@
+import { max } from '@tubular/math';
 import { Request, Response, Router } from 'express';
 
 import { asyncHandler, notFoundForEverythingElse, formatVariablePrecision } from './common';
@@ -149,7 +150,6 @@ router.get('/', asyncHandler(async (req: Request, res: Response) => {
     uniqueMatches.length = limit;
     result.limitReached = true;
   }
-
   result.matches = uniqueMatches;
 
   if (parsed.altNormalized)
@@ -387,6 +387,10 @@ function eliminateDuplicatesAndSort(mergedMatches: LocationArrayMap, limit: numb
         uniqueMatches.push(location);
     });
   });
+
+  const maxRank = max(0, ...uniqueMatches.map(m => m.rank));
+
+  uniqueMatches.forEach(m => m.rank = max(m.rank - max(maxRank - 5, 0), 1));
 
   return uniqueMatches.sort((a, b) => a.compareTo(b));
 }

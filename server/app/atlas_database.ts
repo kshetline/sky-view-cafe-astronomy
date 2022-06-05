@@ -22,6 +22,7 @@ enum MatchType { EXACT_MATCH, EXACT_MATCH_ALT, STARTS_WITH, SOUNDS_LIKE }
 const NO_RESULTS_YET = -1;
 const MAX_MONTHS_BEFORE_REDOING_EXTENDED_SEARCH = 12;
 const ZIP_RANK = 9;
+const ZIP_SUPPLEMENT_RANK = 1;
 
 export function logMessage(message: string, noTrace = false): void {
   svcApiConsole.info(message);
@@ -249,7 +250,7 @@ export async function doDataBaseSearch(connection: PoolConnection, parsed: Parse
               latitude: row.latitude,
               longitude: row.longitude,
               name: row.name,
-              rank: ZIP_RANK,
+              rank: ZIP_SUPPLEMENT_RANK,
               source: row.source,
               zone: row.timezone
             };
