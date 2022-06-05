@@ -22,10 +22,6 @@ const NO_RESULTS_YET = -1;
 const MAX_MONTHS_BEFORE_REDOING_EXTENDED_SEARCH = 12;
 const ZIP_RANK = 9;
 
-pool.on('connection', connection => {
-  connection.query("SET NAMES 'utf8'").finally();
-});
-
 export function logMessage(message: string, noTrace = false): void {
   svcApiConsole.info(message);
 

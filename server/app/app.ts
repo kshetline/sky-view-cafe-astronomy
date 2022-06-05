@@ -49,7 +49,7 @@ app.use('/log/', logRouter);
 app.use('/zoneloc/', zoneRouter);
 app.use('/timeservices/zoneloc/', zoneRouter); // Legacy Tomcat path
 app.use('/maps/', mapsRouter);
-app.use(express.static('../public'));
+app.use(express.static(pathJoin(__dirname, 'public')));
 // Make the flags folder browsable.
 app.use('/assets/resources/flags/', serveIndex(pathJoin(__dirname, '../../public/assets/resources/flags/')));
 app.get('/', (req: Request, res: Response) => {

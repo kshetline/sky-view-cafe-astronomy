@@ -6,7 +6,7 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
-    "build": "ng build --configuration production --sourceMap=true",
+    "build": "rimraf dist && ng build --configuration production --sourceMap=true && cd server && npm run build && cd .. && copyfiles -u 2 \"server/dist/**/*\" \"dist\"",
     "build-debug": "ng build --sourceMap=true",
     "test": "ng test",
     "lint": "eslint \"src/**/*.ts\"",
@@ -54,6 +54,7 @@
     "@typescript-eslint/eslint-plugin": "^5.23.0",
     "@typescript-eslint/parser": "^5.23.0",
     "codelyzer": "^6.0.2",
+    "copyfiles": "^2.4.1",
     "eslint": "^8.15.0",
     "eslint-config-standard": "^17.0.0",
     "eslint-plugin-import": "^2.26.0",
@@ -66,6 +67,7 @@
     "karma-jasmine": "~5.0.0",
     "karma-jasmine-html-reporter": "^1.7.0",
     "protractor": "~7.0.0",
+    "rimraf": "^3.0.2",
     "ts-node": "^10.7.0",
     "typescript": "^4.5.5"
   }
