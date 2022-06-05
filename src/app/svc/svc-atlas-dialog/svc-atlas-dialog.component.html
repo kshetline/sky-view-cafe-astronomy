@@ -11,7 +11,7 @@
         <span><input #searchField type="text" pInputText class="city-field" [(ngModel)]="city" [disabled]="searching"
                  (focus)="searchFocus(true)" (blur)="searchFocus(false)"
                  autocorrect="off" autocapitalize="off" autocomplete="off"/></span>
-        <span><ks-dropdown [(ngModel)]="state" [options]="states" [editable]="true" ksSizer="19em"></ks-dropdown></span>
+        <span><ks-dropdown id="state-select" [(ngModel)]="state" [options]="states" [editable]="true" ksSizer="19em"></ks-dropdown></span>
         <span><button type="button" pButton icon="fas fa-search" (click)="search()" label="Search" [disabled]="searching || becomingVisible"
                       (focus)="searchFocus(true)" (blur)="searchFocus(false)"></button></span>
       </div>
@@ -32,7 +32,7 @@
       <ng-template pTemplate="colgroup">
         <colgroup>
           <col style="width: 40px">
-          <col style="width: 200px">
+          <col style="width: 200px; max-width: 200px; overflow: hidden; text-overflow: ellipsis;">
           <col style="width: 55px">
           <col style="width: 62px">
           <col style="width: 74px">
@@ -50,7 +50,7 @@
       <ng-template pTemplate="body" let-loc>
         <tr [pSelectableRow]="loc" (dblclick)="onDoubleClick()">
           <td>{{loc.rank.toString(16).toUpperCase()}} <img src="assets/resources/flags/{{loc.flagCode}}.png" class="flag-image" width="16" height="11" alt="{{loc.flagCode}}"></td>
-          <td style="text-overflow: ellipsis; overflow: hidden"><span [pTooltip]="showTooltip(loc.name)">{{loc.name}}</span></td>
+          <td style="max-width: 200px; text-overflow: ellipsis; overflow: hidden"><span [pTooltip]="showTooltip(loc.name)">{{loc.name}}</span></td>
           <td>{{loc.lat}}</td>
           <td>{{loc.lon}}</td>
           <td><span [pTooltip]="showTooltip(loc.zone)">{{loc.zoneInfo}}</span></td>

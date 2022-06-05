@@ -1,3 +1,4 @@
+import { abs } from '@tubular/math';
 import { doubleMetaphone } from './double-metaphone';
 import { Pool, PoolConnection } from './mysql-await-async';
 import {
@@ -119,6 +120,10 @@ async function logSearchResultsImpl(connection: PoolConnection, searchStr: strin
   return found;
 }
 
+function ntn(s: string): string { // No trailing number
+  return s?.replace(/\b\d+$/, '').trim();
+}
+
 export async function doDataBaseSearch(connection: PoolConnection, parsed: ParsedSearchString, extendedSearch: boolean,
                                        maxMatches: number, canMatchBySound = true, lang?: string): Promise<LocationMap> {
   const examined = new Set<number>();
@@ -218,9 +223,6 @@ export async function doDataBaseSearch(connection: PoolConnection, parsed: Parse
           const name = row.name;
           const gRow = row.gazetteer_id && idMap.get(row.gazetteer_id);
 
-          if (/[/()]/.test(name) || isAllUppercaseWords(name))
-            row.name = toMixedCase(name.replace(/[/()].*$/, '').trim());
-
           if (gRow) {
             gRow.source = row.source;
 
@@ -229,8 +231,11 @@ export async function doDataBaseSearch(connection: PoolConnection, parsed: Parse
               gRow.longitude = row.longitude;
             }
           }
-          else
-            addOns.push({
+          else if (!/(\d+-)|(\b(avenue|drive|escuela|kilometro|kilómetro|lane|lorong|lote|street|way) \d+)|(\b(markaz|sección|sector)$)|(\b(&amp;|box#|cpo-po|office|zone)\b)|(\b\d+\/\d+\b)|(^(chak|\w\d))/i.test(row.name)) {
+            if (/[/()]/.test(name) || isAllUppercaseWords(name))
+              row.name = toMixedCase(name.replace(/[/()].*$/, '').trim());
+
+            const addOn = {
               admin1: row.admin1?.length > 1 ? row.admin1 : '',
               admin2: '',
               country: code2ToCode3[row.country] || row.country,
@@ -240,7 +245,15 @@ export async function doDataBaseSearch(connection: PoolConnection, parsed: Parse
               name: row.name,
               source: row.source,
               zone: row.timezone
-            });
+            };
+            const match = addOns.find(ao => ao.country === addOn.country && ao.admin1 === addOn.admin1 && ao.zone === addOn.zone &&
+              abs(ao.latitude - addOn.latitude) < 0.1 && abs(ao.longitude - addOn.longitude) < 0.1 && ntn(ao.name) === ntn(addOn.name));
+
+            if (match)
+              match.name = ntn(match.name);
+            else
+              addOns.push(addOn);
+          }
         }
 
         results.push(...addOns);
