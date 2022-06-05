@@ -49,7 +49,7 @@
       </ng-template>
       <ng-template pTemplate="body" let-loc>
         <tr [pSelectableRow]="loc" (dblclick)="onDoubleClick()">
-          <td>{{loc.rank.toString(16).toUpperCase()}} <img src="assets/resources/flags/{{loc.flagCode}}.png" class="flag-image" width="16" height="11" alt="{{loc.flagCode}}"></td>
+          <td>{{(loc.rank || 0).toString(16).toUpperCase()}} <img src="assets/resources/flags/{{loc.flagCode}}.png" class="flag-image" width="16" height="11" alt="{{loc.flagCode}}"></td>
           <td style="max-width: 200px; text-overflow: ellipsis; overflow: hidden"><span [pTooltip]="showTooltip(loc.name)">{{loc.name}}</span></td>
           <td>{{loc.lat}}</td>
           <td>{{loc.lon}}</td>

@@ -138,6 +138,8 @@ export class AppService {
   private readonly port: number;
   private readonly localTesting: boolean;
 
+  mapsReady = false;
+
   constructor(
     astroDataService: AstroDataService,
     private httpClient: HttpClient,

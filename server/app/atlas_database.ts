@@ -197,7 +197,7 @@ export async function doDataBaseSearch(connection: PoolConnection, parsed: Parse
       }
 
       let results = (await connection.queryResults(query, values)) || [];
-      const postalResults = (postal ? results : undefined);
+      let postalResults = (postal ? results : undefined);
       let idMap: Map<number, any>;
 
       if (fromAlt && results.length > 0) {
@@ -216,12 +216,18 @@ export async function doDataBaseSearch(connection: PoolConnection, parsed: Parse
           results = [];
       }
 
+      if (!postalResults && results.find((row: any) => row.source === 'GEOZ')) {
+        postalResults = results.filter((row: any) => row.source === 'GEOZ');
+        results = results.filter((row: any) => row.source !== 'GEOZ');
+        results.forEach((row: any) => row.id = -row.id);
+      }
+
       if (postalResults) {
         const addOns: any[] = [];
 
         for (const row of postalResults) {
           const name = row.name;
-          const gRow = row.gazetteer_id && idMap.get(row.gazetteer_id);
+          const gRow = row.gazetteer_id && idMap?.get(row.gazetteer_id);
 
           if (gRow) {
             gRow.source = row.source;
@@ -243,6 +249,7 @@ export async function doDataBaseSearch(connection: PoolConnection, parsed: Parse
               latitude: row.latitude,
               longitude: row.longitude,
               name: row.name,
+              rank: ZIP_RANK,
               source: row.source,
               zone: row.timezone
             };

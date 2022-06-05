@@ -269,7 +269,7 @@ export class SvcAtlasDialogComponent {
   }
 
   private showMap(): void {
-    if (!this._selection) {
+    if (!this._selection || !this.appService.mapsReady) {
       this.obscureMap();
       return;
     }
