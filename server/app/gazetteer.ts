@@ -218,7 +218,7 @@ export async function initGazetteer(): Promise<void> {
 
     usCounties.add('Washington, DC');
 
-    const lines = asLines(await getFileContents('app/data/celestial.txt', 'utf8'));
+    const lines = asLines(await getFileContents('data/celestial.txt', 'utf8'));
 
     lines.forEach(line => celestialNames.add(makePlainASCII_UC(line.trim())));
   }
