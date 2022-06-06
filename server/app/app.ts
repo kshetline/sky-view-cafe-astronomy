@@ -1,5 +1,4 @@
 import express, { Application, Request, Response } from 'express';
-import serveIndex from 'serve-index';
 import morgan from 'morgan';
 import { join as pathJoin } from 'path';
 
@@ -9,6 +8,7 @@ import { router as ipToLocationRouter } from './ip-to-location';
 import { router as logRouter } from './log-access';
 import { router as zoneRouter } from './zone-for-location';
 import { router as mapsRouter } from './maps-api';
+import { router as directoryRouter } from './directory-listing';
 import { initTimezoneLargeAlt } from '@tubular/time';
 import { svcApiConsole, svcApiLogStream, svcApiSkipFilter } from './svc-api-logger';
 import { formatDateTime } from '@tubular/util';
@@ -49,9 +49,9 @@ app.use('/log/', logRouter);
 app.use('/zoneloc/', zoneRouter);
 app.use('/timeservices/zoneloc/', zoneRouter); // Legacy Tomcat path
 app.use('/maps/', mapsRouter);
-app.use(express.static(pathJoin(__dirname, 'public')));
 // Make the flags folder browsable.
-app.use('/assets/resources/flags/', serveIndex(pathJoin(__dirname, '../../public/assets/resources/flags/')));
+app.use('/assets/resources/flags/', directoryRouter);
+app.use(express.static(pathJoin(__dirname, 'public')));
 app.get('/', (req: Request, res: Response) => {
   res.send('Static home file not found');
 });

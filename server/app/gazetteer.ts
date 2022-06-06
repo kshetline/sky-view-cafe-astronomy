@@ -233,7 +233,7 @@ const flagCodes = new Set<string>();
 
 async function initFlagCodes(): Promise<void> {
   try {
-    const flagFiles = readdirSync(pathJoin(__dirname, '../../public/assets/resources/flags'));
+    const flagFiles = readdirSync(pathJoin(__dirname, 'public/assets/resources/flags'));
     let $: string[];
 
     flagFiles.forEach(file => {

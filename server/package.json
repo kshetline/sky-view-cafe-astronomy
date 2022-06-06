@@ -31,7 +31,6 @@
     "public-ip": "^4.0.4",
     "request-ip": "^2.2.0",
     "rotating-file-stream": "^1.4.6",
-    "serve-index": "^1.9.1",
     "unidecode-plus": "^1.0.4"
   },
   "devDependencies": {

@@ -4,7 +4,7 @@ const TerserPlugin = require('terser-webpack-plugin');
 const path = require('path');
 const mode = process.env.NODE_ENV || 'production';
 
-// noinspection JSUnresolvedFunction,JSCheckFunctionSignatures
+// noinspection JSUnresolvedFunction
 module.exports = {
   mode,
   entry: './app/app.ts',
@@ -33,11 +33,12 @@ module.exports = {
     ]
   },
   optimization: {
+    // TODO: Minification breaks mysql. How to exclude mysql from minification, but include in output?
     minimize: false, // mode === 'production',
     minimizer: [new TerserPlugin({
+      exclude: /node_modules\/mysql/,
       terserOptions: {
         output: { max_line_len: 511 },
-        exclude: /node_modules\/mysql/
       }
     })],
   },
