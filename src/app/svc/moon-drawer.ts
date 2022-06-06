@@ -11,12 +11,9 @@ const MOON_RADIUS = 1737.4; // km
 
 export class MoonDrawer {
   private camera: PerspectiveCamera;
-  private canvas: HTMLCanvasElement;
   private earthShine: AmbientLight;
   private moonMesh: Mesh;
   private renderer: WebGLRenderer;
-  private rendererHost: HTMLElement;
-  private scaledBuffer: ImageData;
   private scene: Scene;
   private shadowCanvas: HTMLCanvasElement;
   private sun: PointLight;
@@ -80,8 +77,8 @@ export class MoonDrawer {
     this.camera.rotation.z = (parallacticAngle ? parallacticAngle.radians : 0);
     this.moonMesh.rotation.y = to_radian(-libration.l);
     this.moonMesh.rotation.x = to_radian(libration.b);
-    this.sun.position.x = 93000000 * sin_deg(phase); // Very approximate, but good enough.
-    this.sun.position.z = -93000000 * cos_deg(phase);
+    this.sun.position.x = 150000000 * sin_deg(phase); // Very approximate, but good enough.
+    this.sun.position.z = -150000000 * cos_deg(phase);
     this.earthShine.intensity = 0.025 + cos_deg(phase) * 0.0125;
     this.renderer.render(this.scene, this.camera);
     context.globalCompositeOperation = 'source-over';

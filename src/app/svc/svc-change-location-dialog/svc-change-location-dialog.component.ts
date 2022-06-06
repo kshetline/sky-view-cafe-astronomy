@@ -13,7 +13,6 @@ export class SvcChangeLocationDialogComponent {
   private _latitude: number;
   private _longitude: number;
   private _timezone: string;
-  private hourOffset: number;
 
   formattedLatitude: string;
   formattedLongitude: string;
@@ -47,7 +46,7 @@ export class SvcChangeLocationDialogComponent {
       this._longitude = value;
       this.formattedLongitude = formatLongitude(value);
       const h = SvcChangeLocationDialogComponent.longitudeToHourOffset(value);
-      this.hourOffset = h;
+
       this.formattedHourOffset = 'UT';
 
       if (h < 0)

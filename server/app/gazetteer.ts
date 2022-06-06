@@ -1,4 +1,5 @@
 import { readdirSync } from 'fs';
+import unidecode from 'unidecode-plus';
 import { eqci, getFileContents } from './common';
 import { AtlasLocation } from './atlas-location';
 import { decode } from 'html-entities';
@@ -12,11 +13,14 @@ import { asLines, makePlainASCII_UC, toNumber } from '@tubular/util';
 import { requestText } from 'by-request';
 
 export interface ParsedSearchString {
+  actualSearch: string;
+  altCity?: string;
+  altNormalized?: string;
+  altState?: string;
+  normalizedSearch: string;
   postalCode: string;
   targetCity: string;
   targetState: string;
-  actualSearch: string;
-  normalizedSearch: string;
 }
 
 export interface NameAndCode {
@@ -26,7 +30,7 @@ export interface NameAndCode {
 
 export type ParseMode = 'loose' | 'strict';
 
-const TRAILING_STATE_PATTERN = /(.+)\b(\w{2,3})$/;
+const TRAILING_STATE_PATTERN = /(.+)\s+(\p{L}{2,})$/u;
 const usTerritories = ['AS', 'FM', 'GU', 'MH', 'MP', 'PW', 'VI'];
 const canadianProvinceAbbrs = ['AB', 'BC', 'MB', 'NB', 'NF', '', 'NS', 'ON', 'PE', 'QC', 'SK', 'YT', 'NT', 'NU'];
 
@@ -48,6 +52,7 @@ export const stateAbbreviations: Record<string, string> = {};
 export const altFormToStd: Record<string, string> = {};
 export const code3ToName: Record<string, string> = {};
 export const code3ToNameByLang: Record<string, Record<string, string>> = {};
+export const admin1ToNameByLang: Record<string, Record<string, string>> = {};
 export const nameToCode3: Record<string, string> = {};
 export const code2ToCode3: Record<string, string> = {};
 export const code3ToCode2: Record<string, string> = {};
@@ -64,7 +69,7 @@ interface CountryIn {
   iso2: string;
   iso3: string;
   key_name: string;
-  geonames_id: string;
+  geonames_id: number;
   postal_regex: string;
 }
 
@@ -72,7 +77,25 @@ interface AdminIn {
   id: number;
   name: string;
   key_name: string;
-  geonames_id: string;
+  geonames_id: number;
+}
+
+interface AltNames {
+  geonames_orig_id: number;
+  lang: string;
+  name: string;
+  preferred: number;
+  short: number;
+}
+
+interface GazetteerEntry {
+  admin1: string;
+  country: string;
+  geonames_id: number;
+}
+
+export function makeKey(name: string): string {
+  return unidecode(name || '', { german: true }).toUpperCase().replace(/[^A-Z\d]+/g, '').substring(0, 40);
 }
 
 export async function initGazetteer(): Promise<void> {
@@ -82,11 +105,13 @@ export async function initGazetteer(): Promise<void> {
     await initFlagCodes();
     connection = await pool.getConnection();
 
-    let rows = (await connection.query('SELECT * FROM gazetteer_countries')).results;
+    let rows = (await connection.queryResults('SELECT * FROM gazetteer_countries'));
+    const idToCode3: Record<number, string> = {};
 
     for (const row of rows as CountryIn[]) {
       nameToCode3[simplify(row.name).substr(0, 40)] = row.iso3;
       code3ToName[row.iso3] = row.name;
+      idToCode3[row.geonames_id] = row.iso3;
 
       if (row.iso2) {
         code2ToCode3[row.iso2] = row.iso3;
@@ -97,16 +122,92 @@ export async function initGazetteer(): Promise<void> {
         postalPatterns.set(row.iso3, new RegExp(row.postal_regex, 'i'));
     }
 
-    rows = (await connection.query('SELECT * FROM gazetteer_admin1')).results;
+    rows = (await connection.queryResults(`SELECT * FROM gazetteer_alt_names WHERE type ='C' AND (historic = 0 OR preferred = 1) AND colloquial = 0`));
+
+    for (const row of rows as AltNames[]) {
+      if (!row.lang)
+        row.lang = '';
+
+      const iso3 = idToCode3[row.geonames_orig_id];
+      let countryRec = code3ToNameByLang[iso3];
+
+      if (!countryRec) {
+        countryRec = {};
+        code3ToNameByLang[iso3] = countryRec;
+      }
+
+      if (!row.short && (!row.lang || row.lang === 'en'))
+        countryRec[row.lang] = code3ToName[iso3];
+
+      if (row.short || row.preferred || !countryRec[row.lang])
+        countryRec[row.lang] = row.name;
+    }
+
+    const idToAdmin1: Record<number, string> = {};
+
+    rows = (await connection.queryResults('SELECT * FROM gazetteer_admin1'));
 
     for (const row of rows as AdminIn[]) {
       admin1s[row.key_name] = row.name;
+      idToAdmin1[row.geonames_id] = row.key_name;
 
       if (row.key_name.startsWith('USA.'))
         longStates[row.key_name.substr(4)] = row.name;
     }
 
-    rows = (await connection.query('SELECT * FROM gazetteer_admin2')).results;
+    rows = (await connection.queryResults(`SELECT * FROM gazetteer_alt_names WHERE type ='1' AND historic = 0 AND colloquial = 0`));
+
+    const notFound: { id: number, lang: string, name: string }[] = [];
+
+    for (const row of rows as AltNames[]) {
+      if (!row.lang)
+        row.lang = '';
+
+      const admin1 = idToAdmin1[row.geonames_orig_id];
+
+      if (row.lang === 'es' && /^Estado de /i.test(row.name))
+        row.name = row.name.substring(10).trim();
+
+      if (!admin1) {
+        notFound.push({ id: row.geonames_orig_id, lang: row.lang, name: row.name });
+        continue;
+      }
+
+      let adminRec = admin1ToNameByLang[admin1];
+
+      if (!adminRec) {
+        adminRec = {};
+        admin1ToNameByLang[admin1] = adminRec;
+      }
+
+      if (row.lang === 'en' && !row.preferred)
+        adminRec.en = admin1s[admin1];
+      else if (row.short || row.preferred || !adminRec[row.lang])
+        adminRec[row.lang] = row.name;
+    }
+
+    if (notFound.length > 0) {
+      const values = Array.from(new Set(notFound.map(nf => nf.id)).values()).join(', ');
+
+      rows = (await connection.queryResults(`SELECT * FROM gazetteer WHERE geonames_id IN (${values})`));
+
+      for (const row of rows as GazetteerEntry[]) {
+        const admin1 = `${row.country}.${row.admin1}`;
+        let adminRec = admin1ToNameByLang[admin1];
+
+        if (!adminRec) {
+          adminRec = {};
+          admin1ToNameByLang[admin1] = adminRec;
+        }
+
+        for (const nf of notFound) {
+          if (nf.id === row.geonames_id)
+            adminRec[nf.lang || ''] = nf.name;
+        }
+      }
+    }
+
+    rows = (await connection.queryResults('SELECT * FROM gazetteer_admin2'));
 
     for (const row of rows as AdminIn[]) {
       admin2s[row.key_name] = row.name;
@@ -117,7 +218,7 @@ export async function initGazetteer(): Promise<void> {
 
     usCounties.add('Washington, DC');
 
-    const lines = asLines(await getFileContents('app/data/celestial.txt', 'utf8'));
+    const lines = asLines(await getFileContents('data/celestial.txt', 'utf8'));
 
     lines.forEach(line => celestialNames.add(makePlainASCII_UC(line.trim())));
   }
@@ -132,7 +233,7 @@ const flagCodes = new Set<string>();
 
 async function initFlagCodes(): Promise<void> {
   try {
-    const flagFiles = readdirSync(pathJoin(__dirname, '../../public/assets/resources/flags'));
+    const flagFiles = readdirSync(pathJoin(__dirname, 'public/assets/resources/flags'));
     let $: string[];
 
     flagFiles.forEach(file => {
@@ -242,11 +343,12 @@ export function closeMatchForCity(target: string, candidate: string): boolean {
   return candidate.startsWith(target);
 }
 
-export function closeMatchForState(target: string, state: string, country: string): boolean {
-  if (!target)
+export function closeMatchForState(target: string, state: string, country: string, lang?: string): boolean {
+  if (!target || (!state && !country))
     return true;
 
-  const longState   = longStates[state];
+  const stateKey = `${country}.${state}`;
+  const longState   = lang ? (admin1ToNameByLang[stateKey] || {})[lang] || longStates[state] : longStates[state];
   const longCountry = code3ToName[country];
   const code2       = code3ToCode2[country];
 
@@ -342,12 +444,6 @@ export function getCode3ForCountry(country: string): string {
   return nameToCode3[country];
 }
 
-const APARTMENTS_ETC = new RegExp('\\b((mobile|trailer|vehicle)\\s+(acre|city|community|corral|court|estate|garden|grove|harbor|haven|' +
-                                  'home|inn|lodge|lot|manor|park|plaza|ranch|resort|terrace|town|villa|village)s?)|' +
-                                  '((apartment|condominium|\\(subdivision\\))s?)\\b', 'i');
-const IGNORED_PLACES = new RegExp('bloomingtonmn|census designated place|colonia \\(|colonia number|condominium|circonscription electorale d|' +
-                                  'election precinct|\\(historical\\)|mobilehome|subdivision|unorganized territory|\\{|\\}', 'i');
-
 export function processPlaceNames(city: string, county: string, state: string, country: string, continent: string,
                                   decodeHTML = false, noTrace = true): ProcessedNames {
   let abbrevState: string;
@@ -365,12 +461,6 @@ export function processPlaceNames(city: string, county: string, state: string, c
   }
 
   if (/\b\d+[a-z]/i.test(city))
-    return null;
-
-  if (APARTMENTS_ETC.test(city))
-    return null;
-
-  if (IGNORED_PLACES.test(city))
     return null;
 
   if (/\bParis \d\d\b/i.test(city))
@@ -565,23 +655,29 @@ export function parseSearchString(q: string, mode: ParseMode): ParsedSearchStrin
       targetState = '';
     }
     else
-      targetCity = makePlainASCII_UC(targetCity);
+      targetCity = makeKey(targetCity);
   }
 
-  targetState = makePlainASCII_UC(targetState);
-  targetCountry = makePlainASCII_UC(targetCountry);
+  targetState = makeKey(targetState);
+  targetCountry = makeKey(targetCountry);
 
   if (targetCountry)
     targetState = targetCountry;
 
-  if (mode === 'loose' && !targetState && ($ = TRAILING_STATE_PATTERN.exec(targetCity))) {
-    const start = $[1].trim();
-    const end = $[2];
+  if (!targetState && ($ = TRAILING_STATE_PATTERN.exec(parts[0]))) {
+    const start = makeKey($[1].trim());
+    const end = $[2].toUpperCase();
 
-    if (longStates[end] || code3ToName[end]) {
+    if (mode === 'loose' && (longStates[end] || code3ToName[end])) {
       targetCity = start;
       targetState = end;
     }
+    else {
+      parsed.altCity = start;
+      parsed.altState = end;
+    }
+
+    parsed.altNormalized = `${start}, ${end}`;
   }
 
   parsed.postalCode = postalCode;
@@ -623,7 +719,7 @@ export function adjustUSCountyName(county: string, state: string): string {
   return county;
 }
 
-export function getStatesProvincesAndCountries(): NameAndCode[] {
+export function getStatesProvincesAndCountries(lang = 'en'): NameAndCode[] {
   const usStates: NameAndCode[] = Object.keys(admin1s).filter(key => key.startsWith('USA')).map(key =>
     ({ name: admin1s[key], code: key.substr(4) }));
   const canadianProvinces: NameAndCode[] = Object.keys(admin1s).filter(key => key.startsWith('CAN')).map(key =>
@@ -631,18 +727,26 @@ export function getStatesProvincesAndCountries(): NameAndCode[] {
   const countries: NameAndCode[] = [];
   const results: NameAndCode[] = [];
 
-  usStates.sort((a, b) => a.name.localeCompare(b.name, 'en'));
+  if (lang !== 'en') {
+    usStates.forEach(state => state.name = (admin1ToNameByLang['USA.' + state.code] || [] as any)[lang] || state.name);
+    canadianProvinces.forEach(province => {
+      province.name = (admin1ToNameByLang['CAN.' +
+        (canadianProvinceAbbrs.indexOf(province.code) + 1).toString().padStart(2, '0')] || [] as any)[lang] || province.name;
+    });
+  }
+
+  usStates.sort((a, b) => a.name.localeCompare(b.name, lang));
   results.push(...usStates);
 
-  canadianProvinces.sort((a, b) => a.name.localeCompare(b.name, 'en'));
+  canadianProvinces.sort((a, b) => a.name.localeCompare(b.name, lang));
   results.push(null, ...canadianProvinces);
 
   Object.keys(code3ToName).forEach(code => {
     if (!/^(NML|XX.|(.*[^A-Z].*))$/.test(code))
-      countries.push({ name: code3ToName[code], code });
+      countries.push({ name: (code3ToNameByLang[code] || [] as any)[lang] || code3ToName[code], code });
   });
 
-  countries.sort((a, b) => a.name.localeCompare(b.name, 'en'));
+  countries.sort((a, b) => a.name.localeCompare(b.name, lang));
   results.push(null, ...countries);
 
   return results;

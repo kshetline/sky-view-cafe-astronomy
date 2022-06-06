@@ -107,7 +107,12 @@ export class SvcAtlasDialogComponent {
   @Input() get state(): string { return this._state; }
   set state(newState: string) {
     if (this._state !== newState) {
-      this._state = (newState && newState.includes('---') ? '' : newState);
+      const state = (newState && (newState === '\xA0' || newState.includes('---')) ? '' : newState);
+      this._state = state;
+
+      if (state !== newState)
+        setTimeout(() => (document.querySelector('#state-select input.p-inputtext') as HTMLInputElement).value = state);
+
       this.stateChange.emit(this._state);
     }
   }
@@ -139,7 +144,14 @@ export class SvcAtlasDialogComponent {
 
   constructor(private appService: AppService, private atlasService: SvcAtlasService,
               private messageService: MessageService) {
-    atlasService.getStates().then((states: string[]) => this.states = states).catch(() => this.states = ['']);
+    atlasService.getStates()
+      .then((states: string[]) => {
+        this.states = states;
+
+        if (this.states[0] === '')
+          this.states[0] = '\xA0';
+      })
+      .catch(() => this.states = ['']);
   }
 
   onKey(event: KeyboardEvent): void {
@@ -257,7 +269,7 @@ export class SvcAtlasDialogComponent {
   }
 
   private showMap(): void {
-    if (!this._selection) {
+    if (!this._selection || !this.appService.mapsReady) {
       this.obscureMap();
       return;
     }

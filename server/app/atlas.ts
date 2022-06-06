@@ -1,7 +1,8 @@
+import { max } from '@tubular/math';
 import { Request, Response, Router } from 'express';
 
 import { asyncHandler, notFoundForEverythingElse, formatVariablePrecision } from './common';
-import { doDataBaseSearch, hasSearchBeenDoneRecently, logMessage, pool } from './atlas_database';
+import { doDataBaseSearch, hasSearchBeenDoneRecently, logMessage, logSearchResults, pool } from './atlas_database';
 import {
   celestialNames, initGazetteer, LocationMap, ParsedSearchString, parseSearchString,
   roughDistanceBetweenLocationsInKm
@@ -14,6 +15,7 @@ import { initTimezones } from './timezones';
 import { GeonamesMetrics, geonamesSearch } from './geonames-search';
 import { svcApiConsole } from './svc-api-logger';
 import { toInt, toBoolean, makePlainASCII_UC, processMillis } from '@tubular/util';
+import * as requestIp from 'request-ip';
 
 export const router = Router();
 
@@ -35,7 +37,7 @@ interface RemoteSearchResults {
 const DEFAULT_MATCH_LIMIT = 75;
 const MAX_MATCH_LIMIT = 500;
 const REFRESH_TIME_FOR_INIT_DATA = 86400; // seconds
-// const DB_UPDATE = true;
+const DB_UPDATE = true;
 
 let lastInit = 0;
 
@@ -69,20 +71,19 @@ router.get('/', asyncHandler(async (req: Request, res: Response) => {
   const svc = (!client || client === 'sa' || client === 'web');
   const limit = Math.min(toInt(req.query.limit, DEFAULT_MATCH_LIMIT), MAX_MATCH_LIMIT);
   const noTrace = toBoolean(req.query.notrace, false, true) || remoteMode === 'only';
-//  const dbUpdate = DB_UPDATE && !noTrace;
+  const dbUpdate = DB_UPDATE && !noTrace;
 
   const parsed = parseSearchString(q, version < 3 ? 'loose' : 'strict');
   const result = new SearchResult(q, parsed.normalizedSearch);
+  const connection = (withoutDB ? null : await pool.getConnection());
   let consultRemoteData = false;
   let remoteResults: RemoteSearchResults;
   let dbMatchedOnlyBySound = false;
   let dbMatches: LocationMap;
   let dbError: string;
-//  let gotBetterMatchesFromRemoteData = false;
+  // let gotBetterMatchesFromRemoteData = false;
 
   for (let attempt = 0; attempt < 2; ++attempt) {
-    const connection = await pool.getConnection();
-
     if (/forced|only|geonames|getty/i.test(remoteMode) ||
       (remoteMode !== 'skip' && !(await hasSearchBeenDoneRecently(connection, parsed.normalizedSearch, extend)))) {
       consultRemoteData = true;
@@ -114,8 +115,6 @@ router.get('/', asyncHandler(async (req: Request, res: Response) => {
           continue;
       }
     }
-
-    connection.release();
 
     if (consultRemoteData) {
       const doGeonames = remoteMode !== 'getty';
@@ -151,8 +150,10 @@ router.get('/', asyncHandler(async (req: Request, res: Response) => {
     uniqueMatches.length = limit;
     result.limitReached = true;
   }
-
   result.matches = uniqueMatches;
+
+  if (parsed.altNormalized)
+    result.normalizedSearch += '; ' + parsed.altNormalized;
 
   const { celestial, suggestions } = summarizeResults(result, remoteResults, dbError, extend, version, parsed, svc);
 
@@ -165,6 +166,11 @@ router.get('/', asyncHandler(async (req: Request, res: Response) => {
   logMessage(log, noTrace);
 
   result.time = processMillis() - startTime;
+
+  if (dbUpdate && connection)
+    logSearchResults(connection, result.normalizedSearch, extend, result.matches.length, requestIp.getClientIp(req)).finally();
+
+  connection?.release();
 
   if (plainText) {
     res.set('Content-Type', 'text/plain');
@@ -381,6 +387,10 @@ function eliminateDuplicatesAndSort(mergedMatches: LocationArrayMap, limit: numb
         uniqueMatches.push(location);
     });
   });
+
+  const maxRank = max(0, ...uniqueMatches.map(m => m.rank));
+
+  uniqueMatches.forEach(m => m.rank = max(m.rank - max(maxRank - 5, 0), 1));
 
   return uniqueMatches.sort((a, b) => a.compareTo(b));
 }

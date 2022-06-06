@@ -6,9 +6,10 @@ export const router = Router();
 
 router.get('/', (req: Request, res: Response) => {
   const plainText = toBoolean(req.query.pt, false, true);
+  const lang = (req.query.lang?.toString().trim().toLowerCase() || req.header('Accept-Language') || 'en').substring(0, 2);
   const response = [''];
 
-  response.push(...getStatesProvincesAndCountries().map(nameAndCode => {
+  response.push(...getStatesProvincesAndCountries(lang).map(nameAndCode => {
     if (nameAndCode)
       return `${nameAndCode.name} - ${nameAndCode.code}`;
     else

@@ -35,7 +35,7 @@ export class SvcLocationSettingsComponent {
     if ((window as any).mapsInitialized)
       this.mapsReady = true;
     else
-      (window as any).initGoogleMaps(() => this.mapsReady = true);
+      (window as any).initGoogleMaps(() => this.mapsReady = app.mapsReady = true);
   }
 
   get latitudeStyle(): AngleEditorOptions {

@@ -3,14 +3,22 @@
     "target": "ES2018",
     "module": "commonjs",
     "sourceMap": true,
-    "outDir": "./build",
+    "outDir": "./dist",
     "noImplicitAny": true,
     "noImplicitThis": true,
     "alwaysStrict": true,
     "noUnusedLocals": true,
     "noImplicitReturns": true,
     "moduleResolution": "node",
-    "esModuleInterop": true
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "types": [
+      "node"
+    ],
+    "lib": [
+      "dom",
+      "es2020"
+    ]
   },
   "include": ["../ambient.d.ts", "./app/**/*"],
   "exclude": ["node_modules", "**/*.spec.ts"]
