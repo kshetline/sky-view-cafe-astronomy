@@ -168,7 +168,7 @@ router.get('/', asyncHandler(async (req: Request, res: Response) => {
   result.time = processMillis() - startTime;
 
   if (dbUpdate && connection)
-    logSearchResults(connection, result.normalizedSearch, extend, result.matches.length, requestIp.getClientIp(req)).finally();
+    logSearchResults(connection, result.normalizedSearch, extend, result.matches.length, requestIp.getClientIp(req), lang).finally();
 
   connection?.release();
 

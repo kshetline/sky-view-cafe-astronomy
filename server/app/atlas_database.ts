@@ -50,14 +50,14 @@ function logMessageAux(message: string, asWarning: boolean): void {
 }
 
 export async function hasSearchBeenDoneRecently(connection: PoolConnection, searchStr: string, extended: boolean): Promise<boolean> {
-  return await logSearchResults(connection, searchStr, extended, NO_RESULTS_YET, null, false);
+  return await logSearchResults(connection, searchStr, extended, NO_RESULTS_YET, null, null, false);
 }
 
 const timersByIp = new Map<string, NodeJS.Timeout>();
 
 export function logSearchResults(connection: PoolConnection, searchStr: string, extended: boolean, matchCount: number,
-                                       ip?: string, dbUpdate = true): Promise<boolean> {
-  const logIt = (): Promise<boolean> => logSearchResultsImpl(connection, searchStr, extended, matchCount, ip, dbUpdate);
+                                       ip?: string, lang?: string, dbUpdate = true): Promise<boolean> {
+  const logIt = (): Promise<boolean> => logSearchResultsImpl(connection, searchStr, extended, matchCount, ip, lang, dbUpdate);
 
   if (ip) {
     let timer = timersByIp.get(ip);
@@ -76,7 +76,7 @@ export function logSearchResults(connection: PoolConnection, searchStr: string, 
 }
 
 async function logSearchResultsImpl(connection: PoolConnection, searchStr: string, extended: boolean, matchCount: number,
-                                       ip?: string, dbUpdate = true): Promise<boolean> {
+                                       ip?: string, lang?: string, dbUpdate = true): Promise<boolean> {
   let dbHits = 0;
   let ageMonths = -1;
   let found = false;
@@ -107,12 +107,12 @@ async function logSearchResultsImpl(connection: PoolConnection, searchStr: strin
     let values: any[];
 
     if (!found && ageMonths < 0) {
-      query = 'INSERT INTO gazetteer_searchs (search_string, extended, hits, matches) VALUES (?, ?, 1, ?)';
-      values = [searchStr, extended, matchCount];
+      query = 'INSERT INTO gazetteer_searchs (search_string, extended, hits, ip, lang, matches) VALUES (?, ?, 1, ?, ?, ?)';
+      values = [searchStr, extended, ip || '', lang || '', matchCount];
     }
     else {
-      query = 'UPDATE gazetteer_searchs SET hits = ?, extended = ? WHERE search_string = ?';
-      values = [++dbHits, extended && dbUpdate, searchStr];
+      query = 'UPDATE gazetteer_searchs SET hits = ?, extended = ?, ip = ?, lang = ? WHERE search_string = ?';
+      values = [++dbHits, extended && dbUpdate, ip || '', lang || '', searchStr];
     }
 
     await pool.queryResults(query, values);
