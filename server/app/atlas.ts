@@ -204,6 +204,10 @@ const MATCH_ADM  = /^A\.ADM/i;
 const MATCH_PPL  = /^P\.PPL/i;
 const MATCH_PPLX = /^P\.PPL\w/i;
 
+function isCity(placeType: string): boolean {
+  return !placeType || /^[AP]/i.test(placeType);
+}
+
 function eliminateDuplicatesAndSort(mergedMatches: LocationArrayMap, limit: number): AtlasLocation[] {
   const keys = mergedMatches.keys.sort();
 
@@ -222,10 +226,10 @@ function eliminateDuplicatesAndSort(mergedMatches: LocationArrayMap, limit: numb
       const country1    = location1.country;
       const latitude1   = location1.latitude;
       const longitude1  = location1.longitude;
-      let zone1       = location1.zone;
+      let zone1         = location1.zone;
       const zip1        = location1.zip;
       const rank1       = location1.rank;
-      let placeType1  = location1.placeType;
+      let placeType1    = location1.placeType;
       const source1     = location1.source;
       const geonamesID1 = location1.geonamesID;
 
@@ -303,7 +307,8 @@ function eliminateDuplicatesAndSort(mergedMatches: LocationArrayMap, limit: numb
         else if (distance < 10 && placeType1 === 'T.PK' && placeType2 === 'T.MT') {
           locations[j] = undefined;
         }
-        else if (placeType1 !== placeType2) {
+        else if (isCity(placeType1) !== isCity(placeType2) ||
+                 (!isCity(placeType1) && !isCity(placeType2) && placeType1 !== placeType2)) {
           // Do nothing - differing place types of non-city items will be noted.
         }
         else if (state1 !== state2) {

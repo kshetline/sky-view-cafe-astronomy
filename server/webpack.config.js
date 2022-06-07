@@ -33,11 +33,11 @@ module.exports = {
     ]
   },
   optimization: {
-    // TODO: Minification breaks mysql. How to exclude mysql from minification, but include in output?
-    minimize: false, // mode === 'production',
+    minimize: mode === 'production',
     minimizer: [new TerserPlugin({
-      exclude: /node_modules\/mysql/,
+      extractComments: false,
       terserOptions: {
+        mangle: false, // Mangling turned off because it breaks mysql.
         output: { max_line_len: 511 },
       }
     })],

@@ -60,6 +60,7 @@ export class AtlasLocation {
     let cityQualifier = '';
     let displayState;
     let stateQualifier = '';
+    let placeQualifier = '';
     let showState = this.showState;
 
     if (this.country === 'USA' || this.country === 'CAN' && this.placeType !== 'A.ADM0') {
@@ -86,43 +87,43 @@ export class AtlasLocation {
         stateQualifier = addParenthetical(this.longCountry);
     }
 
-    if (county && this.showCounty)
+    if (county && this.showCounty && !showState)
       cityQualifier = addParenthetical(county);
 
     if (this.state && showState)
-      stateQualifier += addParenthetical(this.state);
+      cityQualifier += addParenthetical(this.state);
 
     if (this.placeType === 'T.CAPE')
-      stateQualifier += ' (cape)';
+      placeQualifier += ' (cape)';
     else if (this.placeType === 'H.LK')
-      stateQualifier += ' (lake)';
+      placeQualifier += ' (lake)';
     else if (this.placeType === 'L.PRK')
-      stateQualifier += ' (park)';
+      placeQualifier += ' (park)';
     else if (this.placeType === 'T.PK')
-      stateQualifier += ' (peak)';
+      placeQualifier += ' (peak)';
     else if (this.placeType === 'L.MILB')
-      stateQualifier += ' (military base)';
+      placeQualifier += ' (military base)';
     else if (this.placeType === 'A.ADM2') {
       if (/ (Borough|Census Area|County|Division|Parish)/i.test(city)) {
-        stateQualifier += ' (county)';
+        placeQualifier += ' (county)';
       }
     }
     else if (this.placeType === 'T.ISL')
-      stateQualifier += ' (island)';
+      placeQualifier += ' (island)';
     else if (this.placeType === 'S.ASTR' || this.placeType === 'T.POLE')
-      stateQualifier += ' (geographic point)';
+      placeQualifier += ' (geographic point)';
     else if (this.placeType === 'T.MT')
-      stateQualifier += ' (mountain)';
+      placeQualifier += ' (mountain)';
     else if (this.placeType === 'A.ADM0')
-      stateQualifier += ' (nation)';
+      placeQualifier += ' (nation)';
     else if (this.placeType === 'S.OBS')
-      stateQualifier += ' (observatory)';
+      placeQualifier += ' (observatory)';
     else if (this.placeType === 'A.ADM1' && this.country === 'CAN')
-      stateQualifier += ' (province)';
+      placeQualifier += ' (province)';
     else if (this.placeType === 'A.ADM1' && this.country === 'USA')
-      stateQualifier += ' (state)';
+      placeQualifier += ' (state)';
 
-    return city + cityQualifier + (displayState ? ', ' + displayState : '') + stateQualifier;
+    return city + cityQualifier + (displayState ? ', ' + displayState : '') + stateQualifier + placeQualifier;
   }
 
   set displayName(s: string) { /* Allow but ignore so this can be set via JSON without causing an error. */ }

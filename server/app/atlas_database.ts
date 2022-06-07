@@ -238,7 +238,7 @@ export async function doDataBaseSearch(connection: PoolConnection, parsed: Parse
               gRow.longitude = row.longitude;
             }
           }
-          else if (!/(\d+-)|(\b(avenue|drive|escuela|kilometro|kilómetro|lane|lorong|lote|street|way) \d+)|(\b(markaz|sección|sector)$)|(\b(&amp;|box#|cpo-po|office|zone)\b)|(\b\d+\/\d+\b)|(^(chak|\w\d))/i.test(row.name)) {
+          else {
             if (/[/()]/.test(name) || isAllUppercaseWords(name))
               row.name = toMixedCase(name.replace(/[/()].*$/, '').trim());
 
@@ -246,16 +246,19 @@ export async function doDataBaseSearch(connection: PoolConnection, parsed: Parse
               admin1: row.admin1?.length > 1 ? row.admin1 : '',
               admin2: '',
               country: code2ToCode3[row.country] || row.country,
-              id: -row.id,
+              feature_code: 'P.PPL',
+              geonames_id: -row.id,
               latitude: row.latitude,
               longitude: row.longitude,
               name: row.name,
               rank: ZIP_SUPPLEMENT_RANK,
               source: row.source,
-              zone: row.timezone
+              timezone: row.timezone
             };
-            const match = addOns.find(ao => ao.country === addOn.country && ao.admin1 === addOn.admin1 && ao.zone === addOn.zone &&
-              abs(ao.latitude - addOn.latitude) < 0.1 && abs(ao.longitude - addOn.longitude) < 0.1 && ntn(ao.name) === ntn(addOn.name));
+
+            const match = addOns.find(ao => ao.country === addOn.country && ao.admin1 === addOn.admin1 &&
+              ao.timezone === addOn.timezone && abs(ao.latitude - addOn.latitude) < 0.1 &&
+              abs(ao.longitude - addOn.longitude) < 0.1 && ntn(ao.name) === ntn(addOn.name));
 
             if (match)
               match.name = ntn(match.name);
