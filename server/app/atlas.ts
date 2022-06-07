@@ -72,6 +72,7 @@ router.get('/', asyncHandler(async (req: Request, res: Response) => {
   const limit = Math.min(toInt(req.query.limit, DEFAULT_MATCH_LIMIT), MAX_MATCH_LIMIT);
   const noTrace = toBoolean(req.query.notrace, false, true) || remoteMode === 'only';
   const dbUpdate = DB_UPDATE && !noTrace;
+  const ip = requestIp.getClientIp(req);
 
   const parsed = parseSearchString(q, version < 3 ? 'loose' : 'strict');
   const result = new SearchResult(q, parsed.normalizedSearch);
@@ -163,12 +164,12 @@ router.get('/', asyncHandler(async (req: Request, res: Response) => {
   const log = createCompactLogSummary(result, remoteResults, dbMatches ? dbMatches.size : 0, dbError, startTime,
     client, version, celestial, suggestions);
 
-  logMessage(log, noTrace);
+  logMessage(log, lang, ip, noTrace);
 
   result.time = processMillis() - startTime;
 
   if (dbUpdate && connection)
-    logSearchResults(connection, result.normalizedSearch, extend, result.matches.length, requestIp.getClientIp(req), lang).finally();
+    logSearchResults(connection, result.normalizedSearch, extend, result.matches.length, ip, lang).finally();
 
   connection?.release();
 

@@ -24,27 +24,28 @@ const MAX_MONTHS_BEFORE_REDOING_EXTENDED_SEARCH = 12;
 const ZIP_RANK = 9;
 const ZIP_SUPPLEMENT_RANK = 1;
 
-export function logMessage(message: string, noTrace = false): void {
+export function logMessage(message: string, lang?: string, ip?: string, noTrace = false): void {
   svcApiConsole.info(message);
 
   if (!noTrace)
-    logMessageAux(message, false);
+    logMessageAux(message, lang, ip, false);
 }
 
 export function logWarning(message: string, noTrace = false): void {
   svcApiConsole.warn(message);
 
   if (!noTrace)
-    logMessageAux(message, true);
+    logMessageAux(message, null, null, true);
 }
 
-function logMessageAux(message: string, asWarning: boolean): void {
+function logMessageAux(message: string, lang: string, ip: string, asWarning: boolean): void {
   setTimeout(async () => {
     try {
-      await pool.queryResults('INSERT INTO atlas_log (warning, message) VALUES (?, ?)', [asWarning, message]);
+      await pool.queryResults('INSERT INTO gazetteer_log (warning, message, lang, ip) VALUES (?, ?, ?, ?)',
+        [asWarning, message, lang || '', ip || '']);
     }
     catch (err) {
-      console.error('Writing to atlas_log failed.');
+      console.error('Writing to gazetteer_log failed.');
     }
   });
 }

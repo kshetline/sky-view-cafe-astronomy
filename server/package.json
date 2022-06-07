@@ -7,7 +7,7 @@
   "scripts": {
     "tsc": "tsc",
     "dev": "ts-node-dev --respawn --transpile-only ./app/app.ts",
-    "build": "rimraf dist && webpack && copyfiles -u 1 \"./app/data/*\" \"./dist\" && chmod +x ./dist/app.js",
+    "build": "rimraf dist && webpack && copyfiles -u 1 \"./app/data/*\" \"./dist\" && (chmod +x ./dist/app.js || echo \"\")",
     "start": "tsc && node -r dotenv/config dist/app.js",
     "lint": "eslint \"**/*.ts\""
   },

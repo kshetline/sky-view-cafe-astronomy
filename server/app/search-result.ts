@@ -20,7 +20,7 @@ export class SearchResult {
     return this.matches ? this.matches.length : 0;
   }
 
-  set count(newValue: number) { /* Allow but ignore so this can be set via JSON without causing an error. */ }
+  set count(_newValue: number) { /* Allow but ignore so this can be set via JSON without causing an error. */ }
 
   appendInfoLine(line: string): void {
     if (this.info)
