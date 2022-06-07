@@ -249,6 +249,7 @@ export async function doDataBaseSearch(connection: PoolConnection, parsed: Parse
               country: code2ToCode3[row.country] || row.country,
               feature_code: 'P.PPL',
               geonames_id: -row.id,
+              id: -row.id,
               latitude: row.latitude,
               longitude: row.longitude,
               name: row.name,
