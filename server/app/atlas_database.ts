@@ -83,7 +83,7 @@ async function logSearchResultsImpl(connection: PoolConnection, searchStr: strin
   let wasExtended = false;
   let matches = 0;
 
-  const results = await connection.queryResults('SELECT extended, hits, matches, TIMESTAMPDIFF(MONTH, time_stamp, NOW()) as months FROM gazetteer_searchs WHERE search_string = ?',
+  const results = await connection.queryResults('SELECT extended, hits, matches, TIMESTAMPDIFF(MONTH, time_stamp, NOW()) as months FROM gazetteer_searches WHERE search_string = ?',
     [searchStr]);
 
   if (results && results.length > 0) {
@@ -107,11 +107,11 @@ async function logSearchResultsImpl(connection: PoolConnection, searchStr: strin
     let values: any[];
 
     if (!found && ageMonths < 0) {
-      query = 'INSERT INTO gazetteer_searchs (search_string, extended, hits, ip, lang, matches) VALUES (?, ?, 1, ?, ?, ?)';
+      query = 'INSERT INTO gazetteer_searches (search_string, extended, hits, ip, lang, matches) VALUES (?, ?, 1, ?, ?, ?)';
       values = [searchStr, extended, ip || '', lang || '', matchCount];
     }
     else {
-      query = 'UPDATE gazetteer_searchs SET hits = ?, extended = ?, ip = ?, lang = ? WHERE search_string = ?';
+      query = 'UPDATE gazetteer_searches SET hits = ?, extended = ?, ip = ?, lang = ? WHERE search_string = ?';
       values = [++dbHits, extended && dbUpdate, ip || '', lang || '', searchStr];
     }
 

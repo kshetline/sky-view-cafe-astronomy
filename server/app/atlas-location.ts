@@ -158,7 +158,7 @@ export class AtlasLocation {
     copy.displayName = this.displayName;
     copy.zoneOffset = this.getZoneOffset();
     copy.zoneDst = this.getZoneDst();
-    delete copy.geonameID;
+    delete copy.geonamesID;
     delete copy.useAsUpdate;
 
     return copy;

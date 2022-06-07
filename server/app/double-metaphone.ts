@@ -1,5 +1,6 @@
 // noinspection CommaExpressionJS
 /* Adapted from https://github.com/words/double-metaphone. */
+/* cspell:disable */
 
 // Match vowels (including `Y`).
 
