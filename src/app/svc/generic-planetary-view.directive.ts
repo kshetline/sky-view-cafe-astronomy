@@ -5,10 +5,10 @@ import {
   SolarSystem, SUN, TOPOCENTRIC, UNKNOWN_MAGNITUDE, URANUS
 } from '@tubular/astronomy';
 import {
-  abs, Angle, cos_deg, floor, FMT_MINS, FMT_SECS, intersects, max, min, mod2, Point, Rectangle, round, sin_deg, SphericalPosition,
-  SphericalPosition3D, sqrt, TWO_PI, union
+  abs, Angle, cos_deg, floor, FMT_MINS, FMT_SECS, intersects, max, min, mod2, PI, Point, Rectangle, round, SphericalPosition,
+  SphericalPosition3D, sqrt, to_radian, TWO_PI, union
 } from '@tubular/math';
-import { blendColors, getTextWidth, toDefaultLocaleFixed } from '@tubular/util';
+import { blendColors, fillCircle, getTextWidth, toDefaultLocaleFixed } from '@tubular/util';
 import { AppService, CurrentTab, PROPERTY_NORTH_AZIMUTH, UserSetting, VIEW_APP } from '../app.service';
 import { DrawingContext, GenericViewDirective } from './generic-view.directive';
 
@@ -85,11 +85,10 @@ export const    MARQUEE_KM        = 1;
 export const    MARQUEE_MILES     = 2;
 
 // These color specifications are left incomplete so that the alpha value can be varied.
-const SHADED_MOON            = 'rgba(102,153,204';
-const INTERMEDIATE_MOON      = 'rgba(178,204,229';
-const ILLUMINATED_MOON       = 'rgba(255,255,255';
-const ILLUMINATED_MOON_PRINT = 'rgba(221,221,187';
-const ECLIPSED_MOON          = '#850E';
+const SHADED_MOON            = '#69C';
+const ILLUMINATED_MOON       = 'white';
+const ILLUMINATED_MOON_PRINT = '#DDB';
+const ECLIPSED_MOON          = '#850';
 
 export interface DrawingContextPlanetary extends DrawingContext {
   size: number;
@@ -302,70 +301,45 @@ export abstract class GenericPlanetaryViewDirective extends GenericViewDirective
     else
       color = cometColor;
 
-    const r0 = floor(size / 2);
+    let r0 = floor(size / 2);
 
     if (planet === MOON) {
       const phase = dc.ss.getLunarPhase(dc.jde);
-      const coverage = (cos_deg(phase) + 1.0) / 2.0;
+      let coverage = (cos_deg(phase) + 1.0) / 2.0;
       const shadeAngle = this.getMoonShadingOrientation(dc);
-      const sin_sa = sin_deg(shadeAngle);
-      const cos_sa = cos_deg(shadeAngle);
-      const r02 = r0 * r0;
-      let calcColor = false;
 
       if (abs(mod2(phase, 360)) < 20.0)
         color = SHADED_MOON;
-      else if (abs(phase - 180.0) < 20.0) {
+      else {
         color = (dc.inkSaver ? ILLUMINATED_MOON_PRINT : ILLUMINATED_MOON);
 
         if (abs(phase - 180.0) < 3.0) {
           const ei = dc.ss.getLunarEclipseInfo(dc.jde);
 
           if (ei.inUmbra)
-            color = blendColors(ECLIPSED_MOON, color + ',0.93)', ei.totality).replace(/,[^,]+\)/, '');
+            color = blendColors(ECLIPSED_MOON, color, ei.totality);
         }
+
+        if (abs(phase - 180.0) < 20.0)
+          coverage = -1;
       }
-      else
-        calcColor = true;
 
-      for (let dy = -r0 - 1; dy <= r0 + 1; ++dy) {
-        for (let dx = -r0 - 1; dx <= r0 + 1; ++dx) {
-          const rot_x = dx * cos_sa + dy * sin_sa;
-          const rot_y = dy * cos_sa - dx * sin_sa;
-          const r = sqrt(rot_x * rot_x + rot_y * rot_y);
+      dc.context.save();
+      dc.context.translate(x, y);
+      dc.context.rotate(to_radian(shadeAngle));
+      dc.context.fillStyle = color;
+      fillCircle(dc.context, 0, 0, r0);
 
-          if (r <= r0 + 1) {
-            let alpha = 1.0;
-
-            if (r > r0)
-              alpha = 1.0 - r + r0;
-
-            if (calcColor) {
-              const lineWidth = 2 * sqrt(max(r02 - rot_y * rot_y, 0.0)) + 1.0;
-              const inset = rot_x + (lineWidth - 1.0) / 2;
-              const shadowWidth = coverage * lineWidth;
-              let leftSpan: number;
-
-              if (phase <= 180.0)
-                leftSpan = shadowWidth - 0.5;
-              else
-                leftSpan = lineWidth - shadowWidth - 0.5;
-
-              if ((phase <= 180.0 && inset < leftSpan + 0.25) ||
-                  (phase  > 180.0 && inset > leftSpan + 0.25))
-                color = SHADED_MOON;
-              else if (abs(inset - leftSpan) <= 0.5) {
-                color = INTERMEDIATE_MOON;
-              }
-              else
-                color = (dc.inkSaver ? ILLUMINATED_MOON_PRINT : ILLUMINATED_MOON);
-            }
-
-            dc.context.fillStyle = `${color},${alpha}`;
-            dc.context.fillRect(x + dx, y + dy, 1, 1);
-          }
-        }
+      if (coverage > 0) {
+        r0 *= 1.01;
+        dc.context.beginPath();
+        dc.context.fillStyle = SHADED_MOON;
+        dc.context.ellipse(0, 0, r0, r0, 0, PI / 2, PI * 3 / 2, phase > 180);
+        dc.context.ellipse(0, 0, r0 * abs(1 - coverage * 2), r0, 0, PI * 3 / 2, PI * 5 / 2, !!(floor(phase / 90) % 2));
+        dc.context.fill();
       }
+
+      dc.context.restore();
     }
     else {
       // If scaled drawing is being done, draw potentially bright planets as stars before drawing them in the
