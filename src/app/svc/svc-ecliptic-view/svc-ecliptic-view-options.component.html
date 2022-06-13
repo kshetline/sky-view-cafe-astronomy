@@ -1,19 +1,19 @@
-<div class="flex-container" fxLayout="column" fxLayoutAlign="start stretch" fxLayoutGap="4px">
-  <ks-dropdown fxFlex="0 0 auto" [options]="spans" [(ngModel)]="span25"></ks-dropdown>
-  <ks-dropdown fxFlex="0 0 auto" [options]="orientations" [(ngModel)]="northOutward"></ks-dropdown>
-  <p-dropdown fxFlex="0 0 auto" [options]="additionals" [(ngModel)]="additional" [filter]="true" filterBy="search"
+<div>
+  <ks-dropdown style="flex: 0 0 auto" [options]="spans" [(ngModel)]="span25"></ks-dropdown>
+  <ks-dropdown style="flex: 0 0 auto" [options]="orientations" [(ngModel)]="northOutward"></ks-dropdown>
+  <p-dropdown style="flex: 0 0 auto" [options]="additionals" [(ngModel)]="additional" [filter]="true" filterBy="search"
     [resetFilterOnHide]="true" emptyFilterMessage="No match"
     [disabled]="!asteroidsReady" class="constrained-dropdown" [autoDisplayFirst]="false"></p-dropdown>
-  <ks-checkbox fxFlex="0 0 auto" [(ngModel)]="ecliptic" binary="true" label="Ecliptic grid"></ks-checkbox>
-  <ks-checkbox fxFlex="0 0 auto" [(ngModel)]="celestial" binary="true" label="Celestial equator"></ks-checkbox>
-  <ks-checkbox fxFlex="0 0 auto" [(ngModel)]="showConstellations" binary="true" label="Constellations"></ks-checkbox>
-  <ks-checkbox fxFlex="0 0 auto" [(ngModel)]="localHorizon" binary="true" label="Local horizon"></ks-checkbox>
-  <div fxFlex="0 0 auto">
+  <ks-checkbox style="flex: 0 0 auto" [(ngModel)]="ecliptic" binary="true" label="Ecliptic grid"></ks-checkbox>
+  <ks-checkbox style="flex: 0 0 auto" [(ngModel)]="celestial" binary="true" label="Celestial equator"></ks-checkbox>
+  <ks-checkbox style="flex: 0 0 auto" [(ngModel)]="showConstellations" binary="true" label="Constellations"></ks-checkbox>
+  <ks-checkbox style="flex: 0 0 auto" [(ngModel)]="localHorizon" binary="true" label="Local horizon"></ks-checkbox>
+  <div style="flex: 0 0 auto">
     <ks-checkbox [(ngModel)]="showStars" binary="true" label="Stars"></ks-checkbox>&nbsp;&nbsp;
     <ks-checkbox [(ngModel)]="brightenStars" binary="true" [disabled]="!showStars" label="Brighten stars"></ks-checkbox>
   </div>
-  <ks-checkbox fxFlex="0 0 auto" [(ngModel)]="topocentricMoon" binary="true" label="Topocentric Moon"></ks-checkbox>
-  <ks-checkbox fxFlex="0 0 auto" [(ngModel)]="enlargeSunMoon" binary="true" label="Enlarge Sun/Moon"></ks-checkbox>
+  <ks-checkbox style="flex: 0 0 auto" [(ngModel)]="topocentricMoon" binary="true" label="Topocentric Moon"></ks-checkbox>
+  <ks-checkbox style="flex: 0 0 auto" [(ngModel)]="enlargeSunMoon" binary="true" label="Enlarge Sun/Moon"></ks-checkbox>
 </div>
 <p-menu #menu popup="popup" [model]="namesCategories"></p-menu>
 <br>

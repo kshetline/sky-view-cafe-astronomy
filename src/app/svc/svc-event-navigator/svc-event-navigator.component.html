@@ -1,4 +1,4 @@
-<div class="flex-container" fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="4px">
+<div>
   <button pButton type="button" icon="fas fa-chevron-left" [disabled]="disabled || !eventFinderReady"
           (touchstart)="onTouchStart($event, true)" (touchend)="onTouchEnd($event)"
           (mousedown)="onMouseDown(true, $event)" (mouseup)="onMouseUp()" (mouseleave)="stopClickTimer()"></button>

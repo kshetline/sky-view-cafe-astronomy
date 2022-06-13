@@ -1,5 +1,12 @@
 @import "../../../styles";
 
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  max-width: 100%;
+}
+
 hr {
   width: 12em;
   border: 1px #D8D8D8 solid;
@@ -8,7 +15,9 @@ hr {
 }
 
 .inc-dec-panel {
+  align-self: center;
   display: table;
+  flex: 0 0 auto;
 }
 
 .inc-dec-pair {
