@@ -44,9 +44,9 @@
       <div class="settings-label">
         <label for="twilightInput">Twilight begin/end events:</label>
       </div>
-      <div class="settings-value flex-container" fxLayout="row" fxLayoutAlign="space-between center">
-        <ks-dropdown [options]="twilightOptions" [(ngModel)]="twilightByDegrees" ksSizer="27em" fxFlex="0 0 auto"></ks-dropdown>
-        <input type="text" [(ngModel)]="twilightValue" pInputText class="twilight-input form-control" fxFlex="0 0 auto"
+      <div class="settings-value twilight">
+        <ks-dropdown [options]="twilightOptions" [(ngModel)]="twilightByDegrees" ksSizer="27em"></ks-dropdown>
+        <input type="text" [(ngModel)]="twilightValue" pInputText class="twilight-input form-control"
                id="twilightInput" required minlength="1" maxlength="3" pattern="\d{1,3}" (input)="onTwilightChange($event.target)"/>
       </div>
     </div>
@@ -60,15 +60,14 @@
       <div class="settings-label">
         Calendar:
       </div>
-      <div class="settings-value flex-container" fxLayout="row" fxLayoutAlign="space-between center">
-        <ks-dropdown [options]="calendarOptions" [(ngModel)]="calendarOption" ksSizer="23em" fxFlex="0 0 auto"></ks-dropdown>
+      <div class="calendar">
+        <ks-dropdown [options]="calendarOptions" [(ngModel)]="calendarOption" ksSizer="23em"></ks-dropdown>
         <tbw-time-editor
-          options="iso_date"
+          [options]="'iso_date'"
           timezone="UTC"
           gregorianChangeDate="G"
           min="300"
           max="3900"
-          fxFlex="0 0 auto"
           [disabled]="gcdDisabled"
           [blank]="!gcdVisible"
           [(date)]="gcdValue"></tbw-time-editor>

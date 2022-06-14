@@ -1,5 +1,16 @@
 @import "../../../styles";
 
+:host > div {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  max-width: 100%;
+
+  ks-checkbox {
+    flex: 0 0 auto;
+  }
+}
+
 .zoom-caption {
   @extend .small-caption;
   display: table-cell;
@@ -16,4 +27,20 @@ p-slider {
   top: 2px;
   padding: 3px !important;
   width: 1.75em;
+}
+
+.grs, .zoom {
+  align-content: center;
+  align-items: center;
+  display: flex;
+  flex: 0 0 auto;
+  gap: 4px;
+
+  button {
+    flex: 0 0 auto;
+  }
+
+  p-slider {
+    flex: 1 0 auto;
+  }
 }

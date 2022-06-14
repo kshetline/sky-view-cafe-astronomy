@@ -1,8 +1,19 @@
+:host > div {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  max-width: 100%;
+
+  div, ks-dropdown {
+    flex: 0 0 auto;
+  }
+}
+
 hr {
   width: 12em;
   border: 1px #D8D8D8 solid;
-  margin-top: 2px !important;
-  margin-bottom: 6px !important;
+  margin-top: 3px !important;
+  margin-bottom: 3px !important;
 }
 
 .marker-legend {

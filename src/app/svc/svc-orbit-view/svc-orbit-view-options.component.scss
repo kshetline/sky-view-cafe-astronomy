@@ -1,5 +1,16 @@
 @import "../../../styles";
 
+:host > div {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  max-width: 100%;
+
+  & > * {
+    flex: 0 0 auto;
+  }
+}
+
 .zoom-caption {
   @extend .small-caption;
   display: table-cell;
@@ -26,6 +37,13 @@ p-dropdown ::ng-deep .p-dropdown {
 
 .faded {
   opacity: 0.33;
+}
+
+.anaglyph {
+  align-content: center;
+  align-items: center;
+  display: flex;
+  gap: 4px;
 }
 
 .anaglyph-radio {
