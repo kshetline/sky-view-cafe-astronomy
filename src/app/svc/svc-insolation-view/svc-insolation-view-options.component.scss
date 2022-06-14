@@ -3,6 +3,10 @@
   flex-direction: column;
   gap: 4px;
   max-width: 100%;
+
+  div, ks-checkbox, ks-dropdown {
+    flex: 0 0 auto;
+  }
 }
 
 .twilight-legend, .moonlight-legend {

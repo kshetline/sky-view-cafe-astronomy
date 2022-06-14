@@ -14,7 +14,7 @@
     <svc-zone-selector [(ngModel)]="zone"></svc-zone-selector>
     <hr>
     <ks-dropdown [options]="locationNames" [(ngModel)]="locationName" class="constrained-dropdown"></ks-dropdown>
-    <div fxLayout="row" fxLayoutGap="4px">
+    <div class="find-save">
       <button pButton type="button" label="Find" (click)="openFindDialog()"></button>
       <button pButton type="button" label="Save" (click)="openSaveDialog()"></button>
       <button pButton type="button" label="Delete" (click)="openDeleteDialog()"></button>
@@ -36,7 +36,7 @@
   </p-dialog>
   <p-dialog header="Delete Location" [modal]="true" [(visible)]="showDeleteDialog" ksSizer="350">
     <div style="height: 35px;">
-      <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="4px">
+      <div class="delete">
         <span>Location to delete:&nbsp;</span>
         <ks-dropdown #deleteNameDropdown [(ngModel)]="selectedName" [options]="deleteDialogNames" ksSizer="200"></ks-dropdown>
       </div>

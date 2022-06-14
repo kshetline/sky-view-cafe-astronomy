@@ -1,0 +1,10 @@
+:host > div {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  max-width: 100%;
+
+  > ks-dropdown {
+    flex: 0 0 auto
+  }
+}
