@@ -48,7 +48,7 @@ function initGoogleMaps(callback) { // eslint-disable-line @typescript-eslint/no
   let realWorld = true;
   let $ = /^(http(?:s?)):\/\/([^/]+)/.exec(location);
 
-  if ($ && !/:(3000|8080)\b/.test($[2])) {
+  if ($ && !/:(3000|4200)\b/.test($[2])) {
     protocol = $[1];
     host = $[2];
   }

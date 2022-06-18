@@ -83,7 +83,7 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
             "browserTarget": "svc-ng:build",
-            "port": 8080
+            "port": 4200
           },
           "configurations": {
             "production": {

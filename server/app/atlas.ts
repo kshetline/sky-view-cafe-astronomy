@@ -563,8 +563,8 @@ function createCompactLogSummary(result: SearchResult, remoteResults: RemoteSear
   log.push('[');
   log.push(formatVariablePrecision((processMillis() - startTime) / 1000) + 's');
 
-  if (client === 'sa')
-    log.push(';sa');
+  if (client)
+    log.push(';' + client);
 
   if (version >= 3) {
     log.push(';v');
