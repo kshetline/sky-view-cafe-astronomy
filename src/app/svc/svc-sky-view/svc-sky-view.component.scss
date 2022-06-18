@@ -8,21 +8,26 @@
   align-items: stretch;
 }
 
-.skyControls {
+.sky-controls {
+  align-content: center;
+  align-items: center;
+  display: flex;
   flex-grow: 0;
+  gap: 8px;
+  justify-content: center;
   padding: 4px;
   text-align: center;
   @include selectable(none);
 }
 
-.canvasWrapper {
+.canvas-wrapper {
   flex-grow: 1;
   min-width: 250px;
   min-height: 250px;
   background-color: #069;
 }
 
-.canvasAnchor {
+.canvas-anchor {
   position: relative;
   min-width: 250px;
   min-height: 250px;

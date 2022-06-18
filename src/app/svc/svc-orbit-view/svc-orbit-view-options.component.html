@@ -1,16 +1,16 @@
 <!--suppress CheckImageSize -->
-<div class="flex-container" fxLayout="column" fxLayoutAlign="start stretch" fxLayoutGap="4px">
-  <ks-dropdown fxFlex="0 0 auto" [options]="extents" [(ngModel)]="extent"></ks-dropdown>
-  <ks-dropdown fxFlex="0 0 auto" [options]="centering" [(ngModel)]="centerEarth"></ks-dropdown>
-  <ks-dropdown fxFlex="0 0 auto" [options]="unitsChoices" [(ngModel)]="marqueeUnits"></ks-dropdown>
-  <p-dropdown fxFlex="0 0 auto" [options]="additionals" [(ngModel)]="additional" [filter]="true" filterBy="search"
+<div>
+  <ks-dropdown [options]="extents" [(ngModel)]="extent"></ks-dropdown>
+  <ks-dropdown [options]="centering" [(ngModel)]="centerEarth"></ks-dropdown>
+  <ks-dropdown [options]="unitsChoices" [(ngModel)]="marqueeUnits"></ks-dropdown>
+  <p-dropdown [options]="additionals" [(ngModel)]="additional" [filter]="true" filterBy="search"
     [resetFilterOnHide]="true" emptyFilterMessage="No match"
     [disabled]="!asteroidsReady" class="constrained-dropdown" [autoDisplayFirst]="false"></p-dropdown>
-  <ks-checkbox fxFlex="0 0 auto" [(ngModel)]="showPaths" binary="true" label="Mean orbits"></ks-checkbox>
-  <ks-checkbox fxFlex="0 0 auto" [(ngModel)]="showMarkers" binary="true" label="Orbital markers"></ks-checkbox>
-  <div fxFlex="0 0 auto" class="flex-container" fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="4px">
-    <ks-checkbox fxFlex="0 0 auto" [(ngModel)]="anaglyph3d" binary="true" label="Anaglyph 3-D"></ks-checkbox>
-    <div fxFlex="0 0 auto" class="anaglyph-radio">
+  <ks-checkbox [(ngModel)]="showPaths" binary="true" label="Mean orbits"></ks-checkbox>
+  <ks-checkbox [(ngModel)]="showMarkers" binary="true" label="Orbital markers"></ks-checkbox>
+  <div class="anaglyph">
+    <ks-checkbox [(ngModel)]="anaglyph3d" binary="true" label="Anaglyph 3-D"></ks-checkbox>
+    <div class="anaglyph-radio">
       <p-radioButton name="anaglyphColors" [value]="true" [(ngModel)]="anaglyphRC" [disabled]="!anaglyph3d"></p-radioButton>
       <img src="/assets/resources/anaglyph-rc.png" width="38" height="14" alt="anaglyph red-cyan" class="glasses-3d"
            [ngClass]="{'faded': !anaglyph3d}" (click)="anaglyph3d && setAnaglyphRC(true)"><br>
@@ -19,11 +19,11 @@
            [ngClass]="{'faded': !anaglyph3d}" (click)="anaglyph3d && setAnaglyphRC(false)">
     </div>
   </div>
-  <ks-checkbox fxFlex="0 0 auto" [(ngModel)]="grayOrbits" binary="true" label="Gray orbits below horizon" [disabled]="anaglyph3d"></ks-checkbox>
-  <ks-checkbox fxFlex="0 0 auto" [(ngModel)]="showNames" binary="true" label="Planet names"></ks-checkbox>
-  <p-slider fxFlex="0 0 auto" [(ngModel)]="reverseZoom" [min]="0" [max]="200"></p-slider>
-  <div fxFlex="0 0 auto" class="zoom-caption">zoom</div>
-  <div fxFlex="0 0 auto" [hidden]="!showMarkers" class="marker-legend">
+  <ks-checkbox [(ngModel)]="grayOrbits" binary="true" label="Gray orbits below horizon" [disabled]="anaglyph3d"></ks-checkbox>
+  <ks-checkbox [(ngModel)]="showNames" binary="true" label="Planet names"></ks-checkbox>
+  <p-slider [(ngModel)]="reverseZoom" [min]="0" [max]="200"></p-slider>
+  <div class="zoom-caption">zoom</div>
+  <div [hidden]="!showMarkers" class="marker-legend">
     &#x00D7; Perihelion<br>
     + Aphelion<br>
     &#x25CB; Ascending node<br>

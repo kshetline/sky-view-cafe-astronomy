@@ -42,3 +42,20 @@
   position: absolute;
   bottom: 0.75em;
 }
+
+.calendar, .twilight {
+  align-content: center;
+  align-items: center;
+  display: flex;
+  justify-content: space-between;
+
+  & > * {
+    flex: 0 0 auto;
+  }
+}
+
+.calendar {
+  height: 26px;
+  position: relative;
+  top: -2px;
+}

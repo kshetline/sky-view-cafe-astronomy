@@ -21,12 +21,24 @@
 }
 
 .all-panels {
+  display: flex;
+  gap: 4px;
   height: 100%;
+  max-height: 100%;
+}
+
+.main-app-panel {
+  display: flex;
+  flex: 1 0 auto;
+  flex-direction: column;
+  gap: 4px;
+  max-width: 100%
 }
 
 .time-panel {
   display: inline-table;
   border-spacing: 4px 0;
+  flex: 0 0 auto;
 }
 
 .time-panel-row {
@@ -50,8 +62,32 @@ tbw-time-editor {
   text-align: center;
 }
 
+.more-popup {
+  flex: 0 0 auto;
+}
+
 .lower-panel {
+  display: flex;
+  flex: 100%;
+  gap: 4px;
   height: 100%;
+  max-height: 100%;
+}
+
+.tabs {
+  flex: 1 0 auto;
+}
+
+#locationAndOptions {
+  display: flex;
+  flex: 0 0 auto;
+  flex-direction: column;
+  gap: 4px;
+  max-width: 100%;
+}
+
+#quickTips {
+  flex: 0 0 auto;
 }
 
 svc-location-settings {
@@ -76,17 +112,22 @@ p-dialog.about-dialog ::ng-deep .p-dialog-header {
   //noinspection CssUnknownTarget
   background-image: url(/assets/img/banner_stripes.gif);
   background-repeat: repeat-x;
+  display: flex;
+  flex: 0 0 auto;
+  justify-content: center;
+  max-height: 100%;
 }
 
 .banner {
-  width: 640px;
-  height: 42px;
   //noinspection CssUnknownTarget
   background-image: url(/assets/img/svc_banner.jpg);
   background-size: 640px 42px;
   background-repeat: no-repeat;
-  text-align: right;
+  flex: 0 0 auto;
+  height: 42px;
   padding: 2px 8px;
+  text-align: right;
+  width: 640px;
 }
 
 .banner div {
@@ -107,6 +148,13 @@ p-dialog.about-dialog ::ng-deep .p-dialog-header {
 
 .banner i {
   font-size: 24px;
+}
+
+.top-panel {
+  display: flex;
+  flex: 0 0 auto;
+  justify-content: space-between;
+  max-height: 100%;
 }
 
 .help-panel {

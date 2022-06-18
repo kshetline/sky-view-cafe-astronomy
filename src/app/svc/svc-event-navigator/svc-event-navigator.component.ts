@@ -20,6 +20,7 @@ const CLICK_REPEAT_RATE  = 100;
 @Component({
   selector: 'svc-event-navigator',
   providers: [MessageService],
+  styleUrls: ['./svc-event-navigator.component.scss'],
   templateUrl: './svc-event-navigator.component.html'
 })
 export class SvcEventNavigatorComponent implements AfterViewInit, OnDestroy {

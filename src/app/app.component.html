@@ -4,16 +4,16 @@
   <div class="about-dialog">
     <img src="/assets/resources/svc_lunar_eclipse.png" alt="lunar eclipse" width="64" height="64">
     <h2>Sky View Café NP</h2>
-    Version 1.15.1<br><br>
+    Version 1.15.2<br><br>
     Copyright © 2016-2022 Kerry Shetline.
   </div>
 </p-dialog>
 <svc-native-date-time-dialog [(visible)]="app.showNativeInputDialog"></svc-native-date-time-dialog>
 <svc-preferences-dialog [(visible)]="displayPreferences"></svc-preferences-dialog>
-<div class="flex-container all-panels" fxLayout="row" fxLayoutAlign="start stretch" fxLayoutGap="4px">
-  <div class="flex-container" fxLayout="column" fxLayoutAlign="start stretch" fxLayoutGap="4px" fxFlex="1 0 auto">
-    <div fxLayout="row" fxLayoutAlign="center stretch" fxFlex="0 0 auto" class="banner-backdrop">
-      <div class="banner" fxFlex="0 0 auto">
+<div class="all-panels">
+  <div class="main-app-panel">
+    <div class="banner-backdrop">
+      <div class="banner">
         <div><a href="/assets/help/" target="_blank"><i class="fas fa-question-circle"></i><br>help</a></div>
         <div><a href="/assets/about.html" target="_blank"><i class="fas fa-info-circle"></i><br>about</a></div>
         <div><a href="https://www.facebook.com/groups/152276391475378/" target="_blank"><i class="fab fa-facebook"></i><br>discuss</a></div>
@@ -21,8 +21,8 @@
         <div><a href="/assets/donate.html" target="_blank"><i class="fas fa-money-check-alt"></i><br>donate</a></div>
       </div>
     </div>
-    <div class="flex-container" fxLayout="row" fxLayoutAlign="space-between stretch" fxFlex="0 0 auto">
-      <div class="time-panel" fxFlex="0 0 auto">
+    <div class="top-panel">
+      <div class="time-panel">
         <div class="time-panel-row">
           <div class="time-panel-item">
             <button pButton type="button" (click)="setToNow()" [disabled]="trackTime" label="Now"></button>
@@ -87,13 +87,13 @@
           <div class="time-panel-caption">previous/next event</div>
         </div>
       </div>
-      <div fxFlex="0 0 auto">
+      <div class="more-popup">
         <p-menu #moremenu popup="popup" [model]="moreItems"></p-menu>
         <button type="button" pButton icon="fas fa-list" label="More..." (click)="moremenu.toggle($event)"></button>
       </div>
     </div>
-    <div class="lower-panel flex-container" fxFlex="100%" fxLayout="row" fxLayoutAlign="start stretch" fxLayoutGap="4px">
-      <ks-tab-view fxFlex="1 0 auto" (change)="tabChanged($event)" [activeTab]="selectedTab">
+    <div class="lower-panel">
+      <ks-tab-view class="tabs" (change)="tabChanged($event)" [activeTab]="selectedTab">
         <ks-tab header="Sky">
           <svc-sky-view></svc-sky-view>
         </ks-tab>
@@ -122,13 +122,13 @@
           <svc-table-view></svc-table-view>
         </ks-tab>
       </ks-tab-view>
-      <div id="locationAndOptions" fxFlex="0 0 auto" class="flex-container" fxLayoutAlign="start stretch" fxLayout="column" fxLayoutGap="4px">
-        <svc-location-settings fxFlex="0 0 auto"></svc-location-settings>
-        <svc-options-panel fxFlex="100%"></svc-options-panel>
+      <div id="locationAndOptions">
+        <svc-location-settings style="flex: 0 0 auto"></svc-location-settings>
+        <svc-options-panel style="flex: 100%"></svc-options-panel>
       </div>
     </div>
   </div>
-  <div id="quickTips" class="help-panel" fxFlex="0 0 auto">
+  <div id="quickTips" class="help-panel">
     <h3>Quick Tips</h3>
     <p>Please read the <a href="/assets/help/" target="_blank">Help</a> page. There's plenty of useful information there, and a
       lot that <em>Sky View Café</em> can do that you'll discover.</p>

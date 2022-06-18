@@ -24,40 +24,41 @@ const MAX_MONTHS_BEFORE_REDOING_EXTENDED_SEARCH = 12;
 const ZIP_RANK = 9;
 const ZIP_SUPPLEMENT_RANK = 1;
 
-export function logMessage(message: string, noTrace = false): void {
+export function logMessage(message: string, lang?: string, ip?: string, noTrace = false): void {
   svcApiConsole.info(message);
 
   if (!noTrace)
-    logMessageAux(message, false);
+    logMessageAux(message, lang, ip, false);
 }
 
 export function logWarning(message: string, noTrace = false): void {
   svcApiConsole.warn(message);
 
   if (!noTrace)
-    logMessageAux(message, true);
+    logMessageAux(message, null, null, true);
 }
 
-function logMessageAux(message: string, asWarning: boolean): void {
+function logMessageAux(message: string, lang: string, ip: string, asWarning: boolean): void {
   setTimeout(async () => {
     try {
-      await pool.queryResults('INSERT INTO atlas_log (warning, message) VALUES (?, ?)', [asWarning, message]);
+      await pool.queryResults('INSERT INTO gazetteer_log (warning, message, lang, ip) VALUES (?, ?, ?, ?)',
+        [asWarning, message, lang || '', ip || '']);
     }
     catch (err) {
-      console.error('Writing to atlas_log failed.');
+      console.error('Writing to gazetteer_log failed.');
     }
   });
 }
 
 export async function hasSearchBeenDoneRecently(connection: PoolConnection, searchStr: string, extended: boolean): Promise<boolean> {
-  return await logSearchResults(connection, searchStr, extended, NO_RESULTS_YET, null, false);
+  return await logSearchResults(connection, searchStr, extended, NO_RESULTS_YET, null, null, false);
 }
 
 const timersByIp = new Map<string, NodeJS.Timeout>();
 
 export function logSearchResults(connection: PoolConnection, searchStr: string, extended: boolean, matchCount: number,
-                                       ip?: string, dbUpdate = true): Promise<boolean> {
-  const logIt = (): Promise<boolean> => logSearchResultsImpl(connection, searchStr, extended, matchCount, ip, dbUpdate);
+                                       ip?: string, lang?: string, dbUpdate = true): Promise<boolean> {
+  const logIt = (): Promise<boolean> => logSearchResultsImpl(connection, searchStr, extended, matchCount, ip, lang, dbUpdate);
 
   if (ip) {
     let timer = timersByIp.get(ip);
@@ -76,14 +77,14 @@ export function logSearchResults(connection: PoolConnection, searchStr: string, 
 }
 
 async function logSearchResultsImpl(connection: PoolConnection, searchStr: string, extended: boolean, matchCount: number,
-                                       ip?: string, dbUpdate = true): Promise<boolean> {
+                                       ip?: string, lang?: string, dbUpdate = true): Promise<boolean> {
   let dbHits = 0;
   let ageMonths = -1;
   let found = false;
   let wasExtended = false;
   let matches = 0;
 
-  const results = await connection.queryResults('SELECT extended, hits, matches, TIMESTAMPDIFF(MONTH, time_stamp, NOW()) as months FROM gazetteer_searchs WHERE search_string = ?',
+  const results = await connection.queryResults('SELECT extended, hits, matches, TIMESTAMPDIFF(MONTH, time_stamp, NOW()) as months FROM gazetteer_searches WHERE search_string = ?',
     [searchStr]);
 
   if (results && results.length > 0) {
@@ -107,12 +108,12 @@ async function logSearchResultsImpl(connection: PoolConnection, searchStr: strin
     let values: any[];
 
     if (!found && ageMonths < 0) {
-      query = 'INSERT INTO gazetteer_searchs (search_string, extended, hits, matches) VALUES (?, ?, 1, ?)';
-      values = [searchStr, extended, matchCount];
+      query = 'INSERT INTO gazetteer_searches (search_string, extended, hits, ip, lang, matches) VALUES (?, ?, 1, ?, ?, ?)';
+      values = [searchStr, extended, ip || '', lang || '', matchCount];
     }
     else {
-      query = 'UPDATE gazetteer_searchs SET hits = ?, extended = ? WHERE search_string = ?';
-      values = [++dbHits, extended && dbUpdate, searchStr];
+      query = 'UPDATE gazetteer_searches SET hits = ?, extended = ?, ip = ?, lang = ? WHERE search_string = ?';
+      values = [++dbHits, extended && dbUpdate, ip || '', lang || '', searchStr];
     }
 
     await pool.queryResults(query, values);
@@ -238,7 +239,7 @@ export async function doDataBaseSearch(connection: PoolConnection, parsed: Parse
               gRow.longitude = row.longitude;
             }
           }
-          else if (!/(\d+-)|(\b(avenue|drive|escuela|kilometro|kilómetro|lane|lorong|lote|street|way) \d+)|(\b(markaz|sección|sector)$)|(\b(&amp;|box#|cpo-po|office|zone)\b)|(\b\d+\/\d+\b)|(^(chak|\w\d))/i.test(row.name)) {
+          else {
             if (/[/()]/.test(name) || isAllUppercaseWords(name))
               row.name = toMixedCase(name.replace(/[/()].*$/, '').trim());
 
@@ -246,16 +247,20 @@ export async function doDataBaseSearch(connection: PoolConnection, parsed: Parse
               admin1: row.admin1?.length > 1 ? row.admin1 : '',
               admin2: '',
               country: code2ToCode3[row.country] || row.country,
+              feature_code: 'P.PPL',
+              geonames_id: -row.id,
               id: -row.id,
               latitude: row.latitude,
               longitude: row.longitude,
               name: row.name,
               rank: ZIP_SUPPLEMENT_RANK,
               source: row.source,
-              zone: row.timezone
+              timezone: row.timezone
             };
-            const match = addOns.find(ao => ao.country === addOn.country && ao.admin1 === addOn.admin1 && ao.zone === addOn.zone &&
-              abs(ao.latitude - addOn.latitude) < 0.1 && abs(ao.longitude - addOn.longitude) < 0.1 && ntn(ao.name) === ntn(addOn.name));
+
+            const match = addOns.find(ao => ao.country === addOn.country && ao.admin1 === addOn.admin1 &&
+              ao.timezone === addOn.timezone && abs(ao.latitude - addOn.latitude) < 0.1 &&
+              abs(ao.longitude - addOn.longitude) < 0.1 && ntn(ao.name) === ntn(addOn.name));
 
             if (match)
               match.name = ntn(match.name);

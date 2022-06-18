@@ -10,9 +10,17 @@
   }
 }
 
-.latlong {
-  display: table;
-  border-spacing: 4px 0;
+.lat-lon-zone {
+  align-content: center;
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+
+  .lat-lon {
+    display: table;
+    border-spacing: 4px 0;
+  }
 }
 
 .latlong-values, .latlong-captions {
@@ -33,8 +41,8 @@ tbw-angle-editor {
 hr {
   width: 12em;
   border: 1px #D8D8D8 solid;
-  margin-top: 0;
-  margin-bottom: 6px !important;
+  margin-top: -3px;
+  margin-bottom: 4px !important;
 }
 
 svc-zone-selector,
@@ -44,4 +52,16 @@ ks-dropdown {
   ::ng-deep .p-dropdown {
     width: 100%;
   }
+}
+
+.find-save {
+  display: flex;
+  gap: 4px;
+}
+
+.delete {
+  align-content: center;
+  align-items: center;
+  display: flex;
+  gap: 4px;
 }

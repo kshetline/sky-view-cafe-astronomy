@@ -9,7 +9,7 @@
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "noImplicitAny": true,
-    "target": "es2018",
+    "target": "es2020",
     "allowSyntheticDefaultImports": true,
     "typeRoots": [
       "node_modules/@types"

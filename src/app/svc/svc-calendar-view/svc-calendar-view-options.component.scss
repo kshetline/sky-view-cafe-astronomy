@@ -1,14 +1,23 @@
 @import "../../../styles";
 
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  max-width: 100%;
+}
+
 hr {
   width: 12em;
   border: 1px #D8D8D8 solid;
-  margin-top: 2px !important;
-  margin-bottom: 6px !important;
+  margin-top: -1px !important;
+  margin-bottom: 4px !important;
 }
 
 .inc-dec-panel {
+  align-self: center;
   display: table;
+  flex: 0 0 auto;
 }
 
 .inc-dec-pair {
@@ -29,4 +38,8 @@ hr {
 .first-day-caption {
   @extend .small-caption;
   text-align: center;
+}
+
+ks-checkbox, ks-dropdown {
+  flex: 0 0 auto;
 }

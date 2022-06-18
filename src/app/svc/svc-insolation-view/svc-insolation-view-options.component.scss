@@ -1,3 +1,14 @@
+:host > div {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  max-width: 100%;
+
+  div, ks-checkbox, ks-dropdown {
+    flex: 0 0 auto;
+  }
+}
+
 .twilight-legend, .moonlight-legend {
   background-color: #EEEEEE;
   padding: 0.5em;

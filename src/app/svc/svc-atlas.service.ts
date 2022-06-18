@@ -57,7 +57,7 @@ export class SvcAtlasService {
 
   search(q: string, extend?: boolean): Promise<AtlasResults> {
     const params = urlEncodeParams({
-      client: 'web',
+      client: 'svc',
       notrace: this.localTesting ? 'true' : null,
       pt: 'false',
       q,

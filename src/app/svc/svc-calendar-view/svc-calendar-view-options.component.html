@@ -1,6 +1,5 @@
-<!--suppress AngularUndefinedBinding --> <!-- suppression needed because `touchstart` is not recognized -->
-<div class="flex-container" fxLayout="column" fxLayoutAlign="start stretch" fxLayoutGap="4px">
-  <div fxFlex="0 0 auto" fxFlexAlign="center" class="inc-dec-panel">
+<div class="wrapper">
+  <div class="inc-dec-panel">
     <div class="inc-dec-pair">
       <button pButton type="button" icon="fas fa-chevron-left" (click)="changeMonth(-1)"
         (touchstart)="onTouchStart($event, -1)" (touchend)="stopClickTimer()"
@@ -21,12 +20,12 @@
     </div>
   </div>
   <hr>
-  <ks-dropdown fxFlex="0 0 auto" [options]="firstDays" [(ngModel)]="firstDay"></ks-dropdown>
+  <ks-dropdown [options]="firstDays" [(ngModel)]="firstDay"></ks-dropdown>
   <div class="first-day-caption">first day of week</div>
-  <ks-checkbox fxFlex="0 0 auto" [(ngModel)]="keyMoonPhases" binary="true" label="Key Moon phases"></ks-checkbox>
-  <ks-checkbox fxFlex="0 0 auto" [(ngModel)]="equisolstice" binary="true" label="Equinox/Solstice"></ks-checkbox>
-  <ks-checkbox fxFlex="0 0 auto" [(ngModel)]="dailyDaylight" binary="true" label="Daily daylight"></ks-checkbox>
-  <ks-checkbox fxFlex="0 0 auto" [(ngModel)]="dailyMoonPhase" binary="true" label="Daily Moon phase"></ks-checkbox>
-  <ks-dropdown fxFlex="0 0 auto" [options]="eventTypes" [(ngModel)]="eventType" scrollHeight="264px"></ks-dropdown>
-  <ks-checkbox fxFlex="0 0 auto" [(ngModel)]="includeTransits" binary="true" label="Include transit time"></ks-checkbox>
+  <ks-checkbox [(ngModel)]="keyMoonPhases" binary="true" label="Key Moon phases"></ks-checkbox>
+  <ks-checkbox [(ngModel)]="equisolstice" binary="true" label="Equinox/Solstice"></ks-checkbox>
+  <ks-checkbox [(ngModel)]="dailyDaylight" binary="true" label="Daily daylight"></ks-checkbox>
+  <ks-checkbox [(ngModel)]="dailyMoonPhase" binary="true" label="Daily Moon phase"></ks-checkbox>
+  <ks-dropdown [options]="eventTypes" [(ngModel)]="eventType" scrollHeight="264px"></ks-dropdown>
+  <ks-checkbox [(ngModel)]="includeTransits" binary="true" label="Include transit time"></ks-checkbox>
 </div>
