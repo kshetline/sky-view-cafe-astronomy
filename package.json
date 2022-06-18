@@ -6,8 +6,8 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
-    "build": "rimraf dist && ng build --configuration production --sourceMap=true && cd server && npm run build && cd .. && copyfiles -u 2 \"server/dist/**/*\" \"dist\"",
-    "build-debug": "ng build --sourceMap=true",
+    "build": "rimraf dist && ng build --configuration production --source-map=true && cd server && npm run build && cd .. && copyfiles -u 2 \"server/dist/**/*\" \"dist\"",
+    "build-debug": "ng build --source-map=true",
     "test": "ng test",
     "lint": "eslint \"src/**/*.ts\"",
     "e2e": "ng e2e"
