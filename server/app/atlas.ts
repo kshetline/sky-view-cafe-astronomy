@@ -2,7 +2,7 @@ import { max } from '@tubular/math';
 import { Request, Response, Router } from 'express';
 
 import { asyncHandler, notFoundForEverythingElse, formatVariablePrecision } from './common';
-import { doDataBaseSearch, hasSearchBeenDoneRecently, logMessage, logSearchResults, pool } from './atlas_database';
+import { doDataBaseSearch, hasSearchBeenDoneRecently, logMessage, logSearchResults, pool } from './atlas-database';
 import {
   celestialNames, initGazetteer, LocationMap, ParsedSearchString, parseSearchString,
   roughDistanceBetweenLocationsInKm

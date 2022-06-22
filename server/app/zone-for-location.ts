@@ -2,7 +2,7 @@ import { Request, Response, Router } from 'express';
 import { processMillis, toBoolean, toNumber } from '@tubular/util';
 import { asyncHandler } from './common';
 import { requestJson } from 'by-request';
-import { pool } from './atlas_database';
+import { pool } from './atlas-database';
 import { PoolConnection } from './mysql-await-async';
 import { Timezone } from '@tubular/time';
 

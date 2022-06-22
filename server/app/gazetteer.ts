@@ -4,7 +4,7 @@ import { eqci, getFileContents } from './common';
 import { AtlasLocation } from './atlas-location';
 import { decode } from 'html-entities';
 import { MapClass } from './map-class';
-import { logWarning, pool } from './atlas_database';
+import { logWarning, pool } from './atlas-database';
 import { acos, cos_deg, PI, sin_deg } from '@tubular/math';
 import { join as pathJoin } from 'path';
 import { PoolConnection } from './mysql-await-async';
@@ -689,6 +689,9 @@ export function parseSearchString(q: string, mode: ParseMode): ParsedSearchStrin
     parsed.normalizedSearch += ', ' + targetState;
   else if (postalCode && targetCity)
     parsed.normalizedSearch = targetCity + ', ' + postalCode;
+
+  if (targetState === 'UK')
+    parsed.targetState = 'GBR';
 
   return parsed;
 }

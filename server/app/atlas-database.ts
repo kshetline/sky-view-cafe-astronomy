@@ -132,6 +132,7 @@ export async function doDataBaseSearch(connection: PoolConnection, parsed: Parse
   const matches = new LocationMap();
   const postal = !!parsed.postalCode;
   let altParseMatches = 0;
+  let passRankAdj = 0;
 
   for (let pass = 0; pass < 2; ++pass) {
     const altParse = (pass > 0 && !!parsed.altCity);
@@ -139,14 +140,20 @@ export async function doDataBaseSearch(connection: PoolConnection, parsed: Parse
     const targetState = (altParse ? parsed.altState : parsed.targetState);
     const simplifiedCity = simplify(city);
     const condition = (pass === 0 ? ' AND rank > 0' : '');
+    let soundMatches = 0;
 
     examined.clear();
 
     for (let matchType: number = MatchType.EXACT_MATCH; matchType <= MatchType.SOUNDS_LIKE; ++matchType) {
-      let rankAdjust = 0;
+      if (lang && lang !== 'en' && matchType === MatchType.SOUNDS_LIKE)
+        continue;
+
+      let rankAdjust = -passRankAdj;
       let query: string;
       let values: any[];
       let fromAlt = false;
+
+      passRankAdj = 0;
 
       switch (matchType) {
         case MatchType.EXACT_MATCH:
@@ -347,8 +354,10 @@ export async function doDataBaseSearch(connection: PoolConnection, parsed: Parse
 
         if (matchType === MatchType.EXACT_MATCH_ALT)
           location.matchedByAlternateName = true;
-        else if (matchType === MatchType.SOUNDS_LIKE)
+        else if (matchType === MatchType.SOUNDS_LIKE) {
+          ++soundMatches;
           location.matchedBySound = true;
+        }
 
         const key = makeLocationKey(city, state, country, matches);
 
@@ -364,8 +373,25 @@ export async function doDataBaseSearch(connection: PoolConnection, parsed: Parse
         break;
     }
 
-    if (postal)
+    let postalOnce = postal;
+
+    if (postal && parsed.postalCode.includes(' ')) {
+      parsed.postalCode = parsed.postalCode.replace(/\s+\S.*$/, '');
+      postalOnce = false;
+    }
+
+    if (postalOnce)
       break;
+    else if (lang && lang !== 'en') {
+      --pass;
+      lang = '';
+      passRankAdj = (matches.size > 0 ? 2 : 0);
+    }
+    else if (pass === 0 && (matches.size === 0 || matches.size === soundMatches) &&
+             parsed.targetState && simplifiedCity === simplify(parsed.targetState)) {
+      --pass;
+      parsed.targetState = '';
+    }
   }
 
   if (altParseMatches === 0) {
