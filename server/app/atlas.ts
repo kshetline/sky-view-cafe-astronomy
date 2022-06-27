@@ -68,7 +68,7 @@ router.get('/', asyncHandler(async (req: Request, res: Response) => {
   const withoutDB = /only|geonames|getty/i.test(remoteMode);
   const extend = (remoteMode === 'extend' || remoteMode === 'only' || remoteMode === 'forced');
   const client = (req.query.client ? req.query.client.toString().toLowerCase() : '');
-  const svc = (!client || client === 'sa' || client === 'web');
+  const svc = (!client || /^(sa|svc|web)$/.test(client));
   const limit = Math.min(toInt(req.query.limit, DEFAULT_MATCH_LIMIT), MAX_MATCH_LIMIT);
   const noTrace = toBoolean(req.query.notrace, false, true) || remoteMode === 'only';
   const dbUpdate = DB_UPDATE && !noTrace;

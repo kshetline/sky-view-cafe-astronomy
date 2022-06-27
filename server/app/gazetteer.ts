@@ -95,7 +95,8 @@ interface GazetteerEntry {
 }
 
 export function makeKey(name: string): string {
-  return unidecode(name || '', { german: true }).toUpperCase().replace(/[^A-Z\d]+/g, '').substring(0, 40);
+  return unidecode((name || '').trim().replace(/^['’][st][- ]\s*/i, ''), // Remove 's- and 't- prefixes,
+    { german: true }).toUpperCase().replace(/[^A-Z\d]+/g, '').replace(/^0+([1-9])/, '$1').substring(0, 40);
 }
 
 export async function initGazetteer(): Promise<void> {
@@ -249,7 +250,7 @@ async function initFlagCodes(): Promise<void> {
   catch (err) { /* Ignore error, proceed to remote retrieval. */ }
 
   try {
-    const lines = (await requestText('https://skyviewcafe.com/assets/resources/flags/')).split(/\r\n|\n|\r/);
+    const lines = asLines(await requestText('https://skyviewcafe.com/assets/resources/flags/'));
 
     lines.forEach(line => {
       const $ = />(\w+)\.png</.exec(line);

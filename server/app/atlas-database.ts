@@ -24,11 +24,25 @@ const MAX_MONTHS_BEFORE_REDOING_EXTENDED_SEARCH = 12;
 const ZIP_RANK = 9;
 const ZIP_SUPPLEMENT_RANK = 1;
 
+const logTimersByIp = new Map<string, NodeJS.Timeout>();
+
 export function logMessage(message: string, lang?: string, ip?: string, noTrace = false): void {
   svcApiConsole.info(message);
 
-  if (!noTrace)
-    logMessageAux(message, lang, ip, false);
+  if (!noTrace) {
+    if (!ip)
+      logMessageAux(message, lang, '', false);
+    else {
+      let timer = logTimersByIp.get(ip);
+
+      if (timer)
+        clearTimeout(timer);
+
+      timer = setTimeout(() => { logTimersByIp.delete(ip); logMessageAux(message, lang, ip, false); }, 3000);
+      timer.unref();
+      logTimersByIp.set(ip, timer);
+    }
+  }
 }
 
 export function logWarning(message: string, noTrace = false): void {
