@@ -3,7 +3,7 @@ import { doubleMetaphone } from './double-metaphone';
 import { Pool, PoolConnection } from './mysql-await-async';
 import {
   closeMatchForState, code3ToName, countyStateCleanUp, getFlagCode, LocationMap, makeLocationKey,
-  ParsedSearchString, simplify, closeMatchForCity, code3ToNameByLang, admin1ToNameByLang, admin1s, code2ToCode3, admin2s
+  ParsedSearchString, simplify, closeMatchForCity, code3ToNameByLang, admin1ToNameByLang, admin1s, code2ToCode3, admin2s, admin1Abbreviations
 } from './gazetteer';
 import { AtlasLocation } from './atlas-location';
 import { MIN_EXTERNAL_SOURCE } from './common';
@@ -359,11 +359,17 @@ export async function doDataBaseSearch(connection: PoolConnection, parsed: Parse
         location.source = source;
         location.geonamesID = geonamesID;
 
-        if (/^\d+$/.test(location.state) || (country !== 'USA' && country !== 'CAN' && /^[A-Z]{3,}$/.test(location.state))) {
-          const key = country + '.' + location.state;
+        const numericState = /^\d+$/.test(location.state);
 
-          location.state = (admin1ToNameByLang[key] || {})[lang || 'en'] || (admin1ToNameByLang[key] || {})[''] ||
-            admin1s[key] || location.state;
+        if (numericState || (country !== 'USA' && country !== 'CAN' && /^[A-Z]{3,}$/.test(location.state))) {
+          const key = country + '.' + location.state;
+          const abbr = admin1Abbreviations[key];
+
+          if (numericState && abbr)
+            location.state = abbr;
+          else
+            location.state = (admin1ToNameByLang[key] || {})[lang || 'en'] || (admin1ToNameByLang[key] || {})[''] ||
+              admin1s[key] || location.state;
         }
 
         if (matchType === MatchType.EXACT_MATCH_ALT)

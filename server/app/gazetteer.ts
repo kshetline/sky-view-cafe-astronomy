@@ -1,4 +1,5 @@
 import { readdirSync } from 'fs';
+import { readFile } from 'fs/promises';
 import unidecode from 'unidecode-plus';
 import { eqci, getFileContents } from './common';
 import { AtlasLocation } from './atlas-location';
@@ -48,6 +49,7 @@ interface ProcessedNames {
 export class LocationMap extends MapClass<string, AtlasLocation> { }
 
 export const longStates: Record<string, string> = {};
+export const admin1Abbreviations: Record<string, string> = {};
 export const stateAbbreviations: Record<string, string> = {};
 export const altFormToStd: Record<string, string> = {};
 export const code3ToName: Record<string, string> = {};
@@ -219,9 +221,23 @@ export async function initGazetteer(): Promise<void> {
 
     usCounties.add('Washington, DC');
 
-    const lines = asLines(await getFileContents('data/celestial.txt', 'utf8'));
+    let lines = asLines(await getFileContents('app/data/celestial.txt', 'utf8'));
 
     lines.forEach(line => celestialNames.add(makePlainASCII_UC(line.trim())));
+
+    lines = asLines(await readFile('app/data/postal-admin1-conversions.txt', 'utf8'));
+
+    lines.forEach(line => {
+      const [key, code] = line.split(':');
+      const [country, abbr] = key.split('.');
+
+      if (abbr.length < 2)
+        return;
+
+      const newKey = (code2ToCode3[country] || country) + '.' + code;
+
+      admin1Abbreviations[newKey] = abbr;
+    });
   }
   catch (err) {
     svcApiConsole.error('Gazetteer init error: ' + err);
@@ -349,9 +365,12 @@ export function closeMatchForState(target: string, state: string, country: strin
     return true;
 
   const stateKey = `${country}.${state}`;
-  const longState   = lang ? (admin1ToNameByLang[stateKey] || {})[lang] || longStates[state] : longStates[state];
+  const longState   = ((lang && admin1ToNameByLang[stateKey]) || {})[lang] || admin1s[stateKey] || longStates[state];
   const longCountry = code3ToName[country];
   const code2       = code3ToCode2[country];
+
+  if (/^\d+$/.test(state))
+    state = admin1Abbreviations[stateKey] || state;
 
   return (startsWithICND(state, target) ||
           startsWithICND(country, target) ||

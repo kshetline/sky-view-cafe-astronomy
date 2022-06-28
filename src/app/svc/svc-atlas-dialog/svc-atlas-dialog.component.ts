@@ -1,4 +1,4 @@
-import { Component, ElementRef, EventEmitter, Input, Output, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 // noinspection ES6UnusedImports
 import { } from 'googlemaps'; // Produces "unused import" warning, but is actually needed, and `import 'googlemaps'` won't do.
 import { Timezone } from '@tubular/time';
@@ -26,7 +26,7 @@ interface LocationInfo {
   styleUrls: ['./svc-atlas-dialog.component.scss'],
   providers: [MessageService]
 })
-export class SvcAtlasDialogComponent {
+export class SvcAtlasDialogComponent implements OnInit {
   private _extended: boolean;
   private _visible = false;
   private _selection: LocationInfo;
@@ -40,6 +40,7 @@ export class SvcAtlasDialogComponent {
   city = '';
   emptyMessage = '';
   searching = false;
+  searchInputDisabled = false;
   becomingVisible = false;
   states = [''];
   maskDisplay = 'visible';
@@ -79,6 +80,7 @@ export class SvcAtlasDialogComponent {
         this.emptyMessage = '';
         ++this.searchId;
         this.searching = false;
+        this.searchInputDisabled = false;
         this.becomingVisible = true; // Hack for Chrome to trigger re-layout of search fields.
         this.busy = null;
 
@@ -109,6 +111,7 @@ export class SvcAtlasDialogComponent {
     if (this._state !== newState) {
       const state = (newState && (newState === '\xA0' || newState.includes('---')) ? '' : newState);
       this._state = state;
+      this.searchChanged();
 
       if (state !== newState)
         setTimeout(() => (document.querySelector('#state-select input.p-inputtext') as HTMLInputElement).value = state);
@@ -143,13 +146,17 @@ export class SvcAtlasDialogComponent {
   }
 
   constructor(private appService: AppService, private atlasService: SvcAtlasService,
-              private messageService: MessageService) {
-    atlasService.getStates()
+              private messageService: MessageService, private ref: ChangeDetectorRef) {}
+
+  ngOnInit(): void {
+    this.atlasService.getStates()
       .then((states: string[]) => {
         this.states = states;
 
         if (this.states[0] === '')
           this.states[0] = '\xA0';
+
+        this.ref.detectChanges();
       })
       .catch(() => this.states = ['']);
   }
@@ -172,7 +179,14 @@ export class SvcAtlasDialogComponent {
     this.searchInFocus = inFocus;
   }
 
-  search(): void {
+  searchChanged(): void {
+    if (!this.extended && this.city.length > 3) {
+      ++this.searchId;
+      this.search(true);
+    }
+  }
+
+  search(liveSearch = false): void {
     if (!this.city)
       return;
 
@@ -190,9 +204,13 @@ export class SvcAtlasDialogComponent {
     this.locations = [];
     this.emptyMessage = 'Searching...';
     this.searching = true;
+    this.searchInputDisabled = !liveSearch;
     this.obscureMap();
 
     const searchWithID = (id: number): void => {
+      if (this.busyTimer)
+        clearTimeout(this.busyTimer);
+
       this.busyTimer = setTimeout(() => {
         this.busyTimer = undefined;
         this.busy = true;
@@ -206,6 +224,7 @@ export class SvcAtlasDialogComponent {
         this.atlasService.ping();
         this.emptyMessage = (!results.matches || results.matches.length === 0 ? 'No matches' : '');
         this.searching = false;
+        this.searchInputDisabled = false;
 
         if (results.error)
           this.messageService.add({ key: 'general', severity: 'error', detail: results.error });
@@ -234,6 +253,7 @@ export class SvcAtlasDialogComponent {
         this.emptyMessage = '';
         this.messageService.add({ key: 'general', severity: 'error', detail: 'Search failed. Please try again later.' });
         this.searching = false;
+        this.searchInputDisabled = false;
       }).finally(() => {
         if (this.busyTimer) {
           clearTimeout(this.busyTimer);
