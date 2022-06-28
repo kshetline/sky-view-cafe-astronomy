@@ -1,4 +1,5 @@
 import { ChangeDetectorRef, Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
+import { min } from '@tubular/math';
 // noinspection ES6UnusedImports
 import { } from 'googlemaps'; // Produces "unused import" warning, but is actually needed, and `import 'googlemaps'` won't do.
 import { Timezone } from '@tubular/time';
@@ -180,9 +181,15 @@ export class SvcAtlasDialogComponent implements OnInit {
   }
 
   searchChanged(): void {
-    if (!this.extended && this.city.length > 3) {
-      ++this.searchId;
-      this.search(true);
+    if (!this.extended) {
+      if (this.city.length + min(this.state.length, 1) > 3) {
+        ++this.searchId;
+        this.search(true);
+      }
+      else {
+        this.locations = [];
+        this.obscureMap();
+      }
     }
   }
 

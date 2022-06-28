@@ -1,5 +1,5 @@
-import { readdirSync } from 'fs';
-import { readFile } from 'fs/promises';
+import { readdirSync, StatOptions, Stats } from 'fs';
+import { readFile, stat } from 'fs/promises';
 import unidecode from 'unidecode-plus';
 import { eqci, getFileContents } from './common';
 import { AtlasLocation } from './atlas-location';
@@ -94,6 +94,15 @@ interface GazetteerEntry {
   admin1: string;
   country: string;
   geonames_id: number;
+}
+
+async function safeStat(path: string, opts?: StatOptions & { bigint?: false }): Promise<Stats> {
+  try {
+    return await stat(path, opts);
+  }
+  catch {}
+
+  return null;
 }
 
 export function makeKey(name: string): string {
@@ -221,11 +230,12 @@ export async function initGazetteer(): Promise<void> {
 
     usCounties.add('Washington, DC');
 
-    let lines = asLines(await getFileContents('app/data/celestial.txt', 'utf8'));
+    const dataRoot = (await safeStat('data') != null) ? 'data/' : 'app/data/';
+    let lines = asLines(await getFileContents(dataRoot + 'celestial.txt', 'utf8'));
 
     lines.forEach(line => celestialNames.add(makePlainASCII_UC(line.trim())));
 
-    lines = asLines(await readFile('app/data/postal-admin1-conversions.txt', 'utf8'));
+    lines = asLines(await readFile(dataRoot + 'postal-admin1-conversions.txt', 'utf8'));
 
     lines.forEach(line => {
       const [key, code] = line.split(':');
