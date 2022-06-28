@@ -19,7 +19,7 @@
         <span>Required</span><span>(Optional)</span><span></span>
       </div>
       <p-checkbox [(ngModel)]="extended" class="ext-search" binary="true" label="Extended search (slower, possibly more matches)"></p-checkbox>
-      <div class="busy" [style.display]="busy ? 'flex' : 'none'">
+      <div class="busy" [style.display]="busy ? 'flex' : 'none'" [class.live-search]="!searchInputDisabled">
         <div><i class="fas fa-spinner fa-pulse fa-2x fa-fw"></i><span>&nbsp;&nbsp;&nbsp;Searching...</span></div>
       </div>
     </div>

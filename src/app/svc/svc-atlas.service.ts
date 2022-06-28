@@ -55,13 +55,13 @@ export class SvcAtlasService {
     this.localTesting = (this.hostname === 'localhost' || this.hostname === '127.0.0.1' || this.port === 3000);
   }
 
-  search(q: string, extend?: boolean): Promise<AtlasResults> {
+  search(q: string, extend?: boolean, fast = false): Promise<AtlasResults> {
     const params = urlEncodeParams({
       client: 'svc',
       notrace: this.localTesting ? 'true' : null,
       pt: 'false',
       q,
-      remote: extend ? 'extend' : null
+      remote: extend ? 'extend' : fast ? 'skip' : null
     });
 
     if (this.hostname === '127.0.0.1')

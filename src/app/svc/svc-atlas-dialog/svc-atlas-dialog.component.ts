@@ -28,6 +28,8 @@ interface LocationInfo {
   providers: [MessageService]
 })
 export class SvcAtlasDialogComponent implements OnInit {
+  private busyTimer: any;
+  private clearBusyTimer: any;
   private _extended: boolean;
   private _visible = false;
   private _selection: LocationInfo;
@@ -47,7 +49,6 @@ export class SvcAtlasDialogComponent implements OnInit {
   maskDisplay = 'visible';
   busy = false;
   busyStart = 0;
-  busyTimer: any;
 
   @ViewChild('searchField', { static: true }) private searchField: ElementRef;
   @ViewChild('atlasMap', { static: true }) private atlasMap: ElementRef;
@@ -218,13 +219,18 @@ export class SvcAtlasDialogComponent implements OnInit {
       if (this.busyTimer)
         clearTimeout(this.busyTimer);
 
+      if (this.clearBusyTimer) {
+        clearTimeout(this.clearBusyTimer);
+        this.clearBusyTimer = undefined;
+      }
+
       this.busyTimer = setTimeout(() => {
         this.busyTimer = undefined;
         this.busy = true;
         this.busyStart = processMillis();
       }, 500);
 
-      this.atlasService.search(query, this._extended).then((results: AtlasResults) => {
+      this.atlasService.search(query, this._extended, liveSearch).then((results: AtlasResults) => {
         if (this.searchId !== id) // Bail out if this is an old, abandoned search.
           return;
 
@@ -262,6 +268,9 @@ export class SvcAtlasDialogComponent implements OnInit {
         this.searching = false;
         this.searchInputDisabled = false;
       }).finally(() => {
+        if (this.searchId !== id) // Bail out if this is an old, abandoned search.
+          return;
+
         if (this.busyTimer) {
           clearTimeout(this.busyTimer);
           this.busyTimer = undefined;
@@ -272,7 +281,10 @@ export class SvcAtlasDialogComponent implements OnInit {
         if (now > this.busyStart + 250)
           this.busy = false;
         else
-          setTimeout(() => this.busy = false, 250 - now + this.busyStart);
+          this.clearBusyTimer = setTimeout(() => {
+            this.busy = false;
+            this.clearBusyTimer = undefined;
+          }, 250 - now + this.busyStart);
       });
     };
 
