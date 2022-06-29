@@ -303,7 +303,6 @@ export class SvcAtlasDialogComponent implements OnInit {
     };
 
     this.searchStart = now;
-    console.log(query, now);
     searchWithID(this.searchId);
   }
 
