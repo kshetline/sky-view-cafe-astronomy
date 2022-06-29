@@ -36,6 +36,7 @@ export class SvcAtlasDialogComponent implements OnInit {
   private _state = '';
   private searchId = 0;
   private searchInFocus = false;
+  private searchStart = 0;
   private map: google.maps.Map;
   private marker: google.maps.Marker;
 
@@ -183,7 +184,7 @@ export class SvcAtlasDialogComponent implements OnInit {
 
   searchChanged(): void {
     if (!this.extended) {
-      if (this.city.length + min(this.state.length, 1) > 3) {
+      if ((this.city?.length || 0) + min(this.state?.length || 0, 1) > 3) {
         ++this.searchId;
         this.search(true);
       }
@@ -197,6 +198,19 @@ export class SvcAtlasDialogComponent implements OnInit {
   search(liveSearch = false): void {
     if (!this.city)
       return;
+
+    const now = processMillis();
+
+    if (liveSearch && now < this.searchStart + 1000) {
+      const id = this.searchId;
+
+      setTimeout(() => {
+        if (this.searchId === id)
+          this.search(true);
+      }, this.searchStart + 1010 - now);
+
+      return;
+    }
 
     let query = this.city;
 
@@ -288,6 +302,8 @@ export class SvcAtlasDialogComponent implements OnInit {
       });
     };
 
+    this.searchStart = now;
+    console.log(query, now);
     searchWithID(this.searchId);
   }
 
