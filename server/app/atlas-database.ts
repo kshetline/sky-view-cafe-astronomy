@@ -153,8 +153,6 @@ export async function doDataBaseSearch(connection: PoolConnection, parsed: Parse
     const city = (altParse ? parsed.altCity : parsed.targetCity);
     const targetState = (altParse ? parsed.altState : parsed.targetState);
     const simplifiedCity = simplify(city);
-    const condition = (pass === 0 ? ' AND rank > 0' : '');
-    let soundMatches = 0;
 
     examined.clear();
 
@@ -186,7 +184,7 @@ export async function doDataBaseSearch(connection: PoolConnection, parsed: Parse
               query = `SELECT * FROM gazetteer_alt_names WHERE key_name = ? AND lang = ? AND type = 'P' AND colloquial = 0 AND historic = 0`;
             }
             else
-              query = 'SELECT * FROM gazetteer WHERE key_name = ?' + condition;
+              query = 'SELECT * FROM gazetteer WHERE key_name = ?';
           }
           break;
 
@@ -205,7 +203,7 @@ export async function doDataBaseSearch(connection: PoolConnection, parsed: Parse
             fromAlt = true;
           }
           else
-            query = 'SELECT * FROM gazetteer WHERE key_name >= ? AND key_name < ? ' + condition;
+            query = 'SELECT * FROM gazetteer WHERE key_name >= ? AND key_name < ? ';
 
           break;
 
@@ -214,7 +212,7 @@ export async function doDataBaseSearch(connection: PoolConnection, parsed: Parse
             continue;
 
           rankAdjust = -1;
-          query = 'SELECT * FROM gazetteer WHERE mphone1 = ? OR mphone2 = ?' + condition;
+          query = 'SELECT * FROM gazetteer WHERE mphone1 = ? OR mphone2 = ?';
           values = doubleMetaphone(parsed.targetCity);
           break;
       }
@@ -232,7 +230,7 @@ export async function doDataBaseSearch(connection: PoolConnection, parsed: Parse
         values = [results.map((row: any) => row.gazetteer_id).filter((id: number) => id !== 0).join(', ')];
 
         if (values[0]) {
-          query = `SELECT * FROM gazetteer WHERE id IN (${values[0]})` + condition;
+          query = `SELECT * FROM gazetteer WHERE id IN (${values[0]})`;
           results = (await connection.queryResults(query)) || [];
         }
         else
@@ -374,10 +372,8 @@ export async function doDataBaseSearch(connection: PoolConnection, parsed: Parse
 
         if (matchType === MatchType.EXACT_MATCH_ALT)
           location.matchedByAlternateName = true;
-        else if (matchType === MatchType.SOUNDS_LIKE) {
-          ++soundMatches;
+        else if (matchType === MatchType.SOUNDS_LIKE)
           location.matchedBySound = true;
-        }
 
         const key = makeLocationKey(city, state, country, matches);
 
@@ -407,7 +403,7 @@ export async function doDataBaseSearch(connection: PoolConnection, parsed: Parse
       lang = '';
       passRankAdj = (matches.size > 0 ? 2 : 0);
     }
-    else if (pass === 0 && (matches.size === 0 || matches.size === soundMatches) &&
+    else if (pass === 0 && matches.size === 0 &&
              parsed.targetState && simplifiedCity === simplify(parsed.targetState)) {
       --pass;
       parsed.targetState = '';
