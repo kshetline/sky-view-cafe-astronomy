@@ -1,6 +1,6 @@
 {
   "name": "svc-ng",
-  "version": "1.15.3",
+  "version": "1.15.4",
   "license": "MIT AND GPL-3.0-or-later",
   "author": "Kerry Shetline <kerry@shetline.com>",
   "scripts": {
@@ -34,7 +34,7 @@
     "detect-resize": "^0.1.5",
     "lodash-es": "^4.17.21",
     "primeicons": "^5.0.0",
-    "primeng": "^13.4.1",
+    "primeng": "^14.0.0-rc.1",
     "rxjs": "^6.6.7",
     "three": "^0.140.2",
     "zone.js": "~0.11.5"

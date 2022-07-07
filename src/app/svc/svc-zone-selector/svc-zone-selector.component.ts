@@ -424,6 +424,12 @@ export class SvcZoneSelectorComponent implements ControlValueAccessor, OnInit {
 
       if (doChangeCallback)
         this.onChangeCallback(this._value);
+
+      if (!this._region)
+        setTimeout(() => {
+          if (this._value)
+            this.updateValue(this._value);
+        }, 250);
     }
   }
 }
