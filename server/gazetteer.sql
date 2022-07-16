@@ -12,6 +12,7 @@ create table gazetteer
     elevation    smallint                  default 0                 not null,
     population   int(10)                                             not null,
     timezone     varchar(40) charset ascii default '0'               not null,
+    tzu          tinyint(1)                default 0                 not null,
     `rank`       tinyint                   default 0                 not null,
     feature_code char(8) charset ascii                               not null,
     mphone1      varchar(16) charset ascii                           null,
