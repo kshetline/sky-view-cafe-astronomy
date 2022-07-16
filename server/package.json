@@ -23,6 +23,7 @@
     "emitter": "0.0.2",
     "express": "^4.17.3",
     "follow-redirects": "^1.14.9",
+    "geo-tz": "^7.0.2",
     "html-entities": "^2.3.3",
     "iconv-lite": "^0.6.3",
     "lodash": "^4.17.21",
