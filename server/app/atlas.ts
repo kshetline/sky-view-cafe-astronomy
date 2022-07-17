@@ -180,7 +180,7 @@ router.get('/', asyncHandler(async (req: Request, res: Response) => {
   else if (callback)
     res.jsonp(result);
   else
-    res.send(result);
+    res.json(result);
 }));
 
 function copyAndMergeLocations(destination: LocationArrayMap, source: LocationMap): void {

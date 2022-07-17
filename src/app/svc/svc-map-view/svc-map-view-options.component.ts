@@ -1,6 +1,7 @@
 import { AfterViewInit, Component } from '@angular/core';
 import { SelectItem } from 'primeng/api';
 import { AppEvent, AppService, UserSetting } from '../../app.service';
+import { SvcAtlasService } from '../svc-atlas.service';
 import {
   EVENT_MAP_ACTIVE_ECLIPSE, EVENT_MAP_ACTIVE_ECLIPSE_REQUEST, EVENT_MAP_GO_TO_ECLIPSE_CENTER, EVENT_MAP_GO_TO_SUBSOLAR_POINT, MapType,
   PROPERTY_BLINK_LOCATION_MARKERS, PROPERTY_MAP_TYPE, PROPERTY_SHOW_DAY_NIGHT, PROPERTY_SHOW_ECLIPSE_SHADOWS, PROPERTY_SHOW_LOCATION_MARKERS,
@@ -26,7 +27,10 @@ export class SvcMapViewOptionsComponent implements AfterViewInit {
     { label: 'Political map', value: MapType.POLITICAL }
   ];
 
-  constructor(private appService: AppService) {
+  constructor(
+    private appService: AppService,
+    private atlasService: SvcAtlasService
+  ) {
     appService.getUserSettingUpdates((setting: UserSetting) => {
       if (setting.view === VIEW_MAP && setting.source !== this) {
         if (setting.property === PROPERTY_MAP_TYPE)
@@ -52,6 +56,7 @@ export class SvcMapViewOptionsComponent implements AfterViewInit {
 
   ngAfterViewInit(): void {
     setTimeout(() => this.appService.requestViewSettings(VIEW_MAP));
+    this.atlasService.getTimezoneMapUrl().then(img => console.log(img));
   }
 
   get mapType(): MapType { return this._mapType; }

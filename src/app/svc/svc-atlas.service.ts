@@ -52,7 +52,7 @@ export class SvcAtlasService {
   constructor(private httpClient: HttpClient) {
     this.hostname = document.location.hostname;
     this.port = parseInt(document.location.port, 10);
-    this.localTesting = (this.hostname === 'localhost' || this.hostname === '127.0.0.1' || this.port === 3000);
+    this.localTesting = (this.hostname === 'localhost' || this.hostname === '127.0.0.1' || this.port === 4200);
   }
 
   search(q: string, extend?: boolean, fast = false): Promise<AtlasResults> {
@@ -64,12 +64,7 @@ export class SvcAtlasService {
       remote: extend ? 'extend' : fast ? 'skip' : null
     });
 
-    if (this.hostname === '127.0.0.1')
-      return this.httpClient.jsonp<AtlasResults>('https://localhost:8088/atlas/?' + params, 'callback').toPromise();
-    else if (this.localTesting)
-      return this.httpClient.jsonp<AtlasResults>('https://test.skyviewcafe.com/atlas/?' + params, 'callback').toPromise();
-    else
-      return this.httpClient.get<AtlasResults>('/atlas/?' + params).toPromise();
+    return this.httpClient.get<AtlasResults>('api/atlas/?' + params).toPromise();
   }
 
   getStates(): Promise<string[]> {
@@ -78,22 +73,11 @@ export class SvcAtlasService {
     else if (SvcAtlasService.statesPromise)
       return SvcAtlasService.statesPromise;
 
-    if (this.localTesting) {
-      const apiHost = (this.hostname === '127.0.0.1' ? 'http://localhost:8088/states/' : 'https://test.skyviewcafe.com/states/');
+    SvcAtlasService.statesPromise = this.httpClient.get<string[]>('api/states/').toPromise().then(data => {
+      SvcAtlasService.states = data;
 
-      SvcAtlasService.statesPromise = this.httpClient.jsonp<string[]>(apiHost, 'callback').toPromise().then(data => {
-        SvcAtlasService.states = data;
-
-        return data;
-      }, reason => { console.log(reason); return []; });
-    }
-    else {
-      SvcAtlasService.statesPromise = this.httpClient.get<string[]>('/states/').toPromise().then(data => {
-        SvcAtlasService.states = data;
-
-        return data;
-      });
-    }
+      return data;
+    });
 
     return SvcAtlasService.statesPromise;
   }
@@ -101,12 +85,11 @@ export class SvcAtlasService {
   ping(): void {
     if (performance.now() > this.lastPing + PING_INTERVAL) {
       // We don't care about nor need to return these results.
-      if (this.localTesting) {
-        this.httpClient.jsonp('https://test.skyviewcafe.com/maps/ping/', 'callback').subscribe(() => this.lastPing = performance.now());
-      }
-      else {
-        this.httpClient.get('/maps/ping').subscribe(() => this.lastPing = performance.now());
-      }
+      this.httpClient.get('/api/maps/ping').subscribe(() => this.lastPing = performance.now());
     }
+  }
+
+  async getTimezoneMapUrl(): Promise<string> {
+    return await this.httpClient.get<string>('/api/zonemap').toPromise();
   }
 }

@@ -7,6 +7,7 @@ import { router as stateRouter } from './states';
 import { router as ipToLocationRouter } from './ip-to-location';
 import { router as logRouter } from './log-access';
 import { router as zoneRouter } from './zone-for-location';
+import { router as zoneMapRouter } from './zone-map-url';
 import { router as mapsRouter } from './maps-api';
 import { router as directoryRouter } from './directory-listing';
 import { initTimezoneLargeAlt } from '@tubular/time';
@@ -41,14 +42,21 @@ app.use(morgan((tokens, req, res) => {
 }));
 
 app.use('/atlas/', atlasRouter);
+app.use('/api/atlas/', atlasRouter);
 app.use('/atlasdb/atlas/', atlasRouter); // Legacy Tomcat path
 app.use('/states/', stateRouter);
+app.use('/api/states/', stateRouter);
 app.use('/atlasdb/states/', stateRouter); // Legacy Tomcat path
 app.use('/ip/', ipToLocationRouter);
+app.use('/api/ip/', ipToLocationRouter);
 app.use('/log/', logRouter);
+app.use('/api/log/', logRouter);
 app.use('/zoneloc/', zoneRouter);
+app.use('/api/zoneloc/', zoneRouter);
 app.use('/timeservices/zoneloc/', zoneRouter); // Legacy Tomcat path
+app.use('/api/zonemap/', zoneMapRouter);
 app.use('/maps/', mapsRouter);
+app.use('/api/maps/', mapsRouter);
 // Make the flags folder browsable.
 app.use('/assets/resources/flags/', directoryRouter);
 app.use(express.static(pathJoin(__dirname, 'public')));

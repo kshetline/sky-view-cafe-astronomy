@@ -5,7 +5,7 @@
   "author": "Kerry Shetline <kerry@shetline.com>",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve",
+    "start": "ng serve --proxy-config proxy.conf.json",
     "build": "rimraf dist && ng build --configuration production --source-map=true && cd server && npm run build && cd .. && copyfiles -u 2 \"server/dist/**/*\" \"dist\"",
     "build-debug": "ng build --source-map=true",
     "test": "ng test",

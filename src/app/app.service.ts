@@ -136,7 +136,6 @@ export class AppService {
   private _warningNativeDateTime = false;
   private readonly hostname: string;
   private readonly port: number;
-  private readonly localTesting: boolean;
 
   mapsReady = false;
 
@@ -148,7 +147,6 @@ export class AppService {
   ) {
     this.hostname = document.location.hostname;
     this.port = parseInt(document.location.port, 10);
-    this.localTesting = (this.hostname === 'localhost' || this.hostname === '127.0.0.1' || this.port === 3000);
 
     const savedLocationsString = localStorage.getItem('locations');
 
@@ -512,20 +510,11 @@ export class AppService {
   }
 
   private getLocationFromIp(): void {
-    if (this.localTesting) {
-      this.httpClient.jsonp('https://skyviewcafe.com/ip/json/', 'callback').subscribe((location: IpLocation) => {
-        this.setLocationFromIpLocation(location);
-      }, () => {
-        this.getLocationFromGeoLocation();
-      });
-    }
-    else {
-      this.httpClient.get('/ip/json/').subscribe((location: IpLocation) => {
-        this.setLocationFromIpLocation(location);
-      }, () => {
-        this.getLocationFromGeoLocation();
-      });
-    }
+    this.httpClient.get('/api/ip/json/').subscribe((location: IpLocation) => {
+      this.setLocationFromIpLocation(location);
+    }, () => {
+      this.getLocationFromGeoLocation();
+    });
   }
 
   private setLocationFromIpLocation(location: IpLocation): void {

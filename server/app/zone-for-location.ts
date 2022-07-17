@@ -121,5 +121,5 @@ router.get('/', asyncHandler(async (req: Request, res: Response) => {
   else if (req.query.callback)
     res.jsonp(data);
   else
-    res.send(data);
+    res.json(data);
 }));
