@@ -7,6 +7,9 @@
             (click)="onClick($event)"
             [style.cursor]="cursor"
     ></canvas>
+    <div [style.display]="showTimezones ? 'block' : 'none'">
+      <img #zoneOverlay [src]="zoneImageUrl" alt="timezone map">
+    </div>
   </div>
 </div>
 <ks-marquee class="marquee" [text]="'\u00A0' + marqueeText"></ks-marquee>

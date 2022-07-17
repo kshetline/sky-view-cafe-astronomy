@@ -8,7 +8,7 @@ export const router = Router();
 router.get('/', asyncHandler(async (req: Request, res: Response) => {
   const plainText = toBoolean(req.query.pt, false, true);
   const homePage = await requestText('https://github.com/evansiroky/timezone-boundary-builder/');
-  let data = (/<img.*src="([^>]+\d{4}[a-z]{1,2}\.png)/i.exec(homePage) || [])[1];
+  let data = (/<img.*src="([^>]+\d{4}[a-z]{1,3}\.png)/i.exec(homePage) || [])[1];
 
   if (data)
     data = 'https://github.com' + data;

@@ -228,7 +228,7 @@ export abstract class GenericViewDirective implements AfterViewInit {
     this.throttledResize();
   }
 
-  private doResize(forceFullDraw = false): void {
+  protected doResize(forceFullDraw = false): void {
     if (this.wrapper.clientWidth === 0 || this.wrapper.clientHeight === 0)
       return;
 

@@ -13,7 +13,9 @@ export const    PROPERTY_MAP_TYPE = 'map_type';
 export const    PROPERTY_SHOW_DAY_NIGHT = 'show_day_night';
 export const    PROPERTY_SHOW_ECLIPSE_SHADOWS = 'show_eclipse_shadows';
 export const    PROPERTY_SHOW_LOCATION_MARKERS = 'show_location_markers';
+export const    PROPERTY_SHOW_TIMEZONES = 'show_timezones';
 export const    PROPERTY_BLINK_LOCATION_MARKERS = 'blink_location_markers';
+export const    PROPERTY_ZONE_IMAGE_URL = 'zone_image_url';
 
 export const EVENT_MAP_GO_TO_SUBSOLAR_POINT = 'event_map_go_to_subsolar_point';
 export const EVENT_MAP_GO_TO_ECLIPSE_CENTER = 'event_map_go_to_eclipse_center';
@@ -53,6 +55,7 @@ export class SvcMapViewComponent extends GenericViewDirective implements AfterVi
   private nightMap: HTMLImageElement;
   private politicalMap: HTMLImageElement;
   private politicalNightMap: HTMLCanvasElement;
+  private zoneOverlay: HTMLImageElement;
 
   private blink = true;
   private blinkPhase = 0;
@@ -75,11 +78,14 @@ export class SvcMapViewComponent extends GenericViewDirective implements AfterVi
 
   @ViewChild('canvasWrapper', { static: true }) private wrapperRef: ElementRef;
   @ViewChild('mapCanvas', { static: true }) private canvasRef: ElementRef;
+  @ViewChild('zoneOverlay', { static: true }) private zoneOverlayRef: ElementRef;
 
   showLocationDialog = false;
+  showTimezones = false;
   latitude: number;
   longitude: number;
   timezone: string;
+  zoneImageUrl = '';
 
   private static getImagePromise(path: string): Promise<HTMLImageElement> {
     return new Promise<HTMLImageElement>((resolve, reject) => {
@@ -111,6 +117,10 @@ export class SvcMapViewComponent extends GenericViewDirective implements AfterVi
           this.showEclipseShadows = setting.value as boolean;
         else if (setting.property === PROPERTY_SHOW_LOCATION_MARKERS)
           this.showMarkers = setting.value as boolean;
+        else if (setting.property === PROPERTY_SHOW_TIMEZONES)
+          this.showTimezones = setting.value as boolean;
+        else if (setting.property === PROPERTY_ZONE_IMAGE_URL)
+          this.zoneImageUrl = setting.value as string;
         else if (setting.property === PROPERTY_BLINK_LOCATION_MARKERS)
           this.blink = setting.value as boolean;
 
@@ -131,6 +141,7 @@ export class SvcMapViewComponent extends GenericViewDirective implements AfterVi
   ngAfterViewInit(): void {
     this.wrapper = this.wrapperRef.nativeElement;
     this.canvas = this.canvasRef.nativeElement;
+    this.zoneOverlay = this.zoneOverlayRef.nativeElement;
 
     setTimeout(() => this.appService.requestViewSettings(VIEW_MAP));
 
@@ -167,6 +178,18 @@ export class SvcMapViewComponent extends GenericViewDirective implements AfterVi
     });
 
     super.ngAfterViewInit();
+  }
+
+  protected doResize(forceFullDraw = false): void {
+    super.doResize(forceFullDraw);
+
+    if (this.wrapper.clientWidth === 0 || this.wrapper.clientHeight === 0)
+      return;
+
+    this.zoneOverlay.width = this.width;
+    this.zoneOverlay.height = floor(this.width / 2) + 4;
+    this.zoneOverlay.parentElement.style.width = this.width + 'px';
+    this.zoneOverlay.parentElement.style.height = floor(this.width / 2) + 'px';
   }
 
   protected drawView(dc: DrawingContext): void {

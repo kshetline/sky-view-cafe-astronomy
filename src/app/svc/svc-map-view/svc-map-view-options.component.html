@@ -5,6 +5,7 @@
   <hr>
   <ks-dropdown [options]="mapTypes" [(ngModel)]="mapType"></ks-dropdown>
   <ks-checkbox [(ngModel)]="showDayNight" binary="true" label="Show day/night"></ks-checkbox>
+  <ks-checkbox [(ngModel)]="showTimezones" binary="true" label="Show timezones{{zonesVersion}}" [disabled]="timezonesDisabled"></ks-checkbox>
   <ks-checkbox [(ngModel)]="showEclipseShadows" binary="true" label="Show eclipse shadows"></ks-checkbox>
   <ks-checkbox [(ngModel)]="showMarkers" binary="true" label="Show location markers"></ks-checkbox>
   <ks-checkbox [(ngModel)]="blink" binary="true" label="Blink location markers" [disabled]="!showMarkers"></ks-checkbox>
