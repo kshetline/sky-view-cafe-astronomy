@@ -1,4 +1,5 @@
-import { Component, ElementRef, EventEmitter, Input, Output, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
+import { min } from '@tubular/math';
 // noinspection ES6UnusedImports
 import { } from 'googlemaps'; // Produces "unused import" warning, but is actually needed, and `import 'googlemaps'` won't do.
 import { Timezone } from '@tubular/time';
@@ -26,13 +27,16 @@ interface LocationInfo {
   styleUrls: ['./svc-atlas-dialog.component.scss'],
   providers: [MessageService]
 })
-export class SvcAtlasDialogComponent {
+export class SvcAtlasDialogComponent implements OnInit {
+  private busyTimer: any;
+  private clearBusyTimer: any;
   private _extended: boolean;
   private _visible = false;
   private _selection: LocationInfo;
   private _state = '';
   private searchId = 0;
   private searchInFocus = false;
+  private searchStart = 0;
   private map: google.maps.Map;
   private marker: google.maps.Marker;
 
@@ -40,12 +44,12 @@ export class SvcAtlasDialogComponent {
   city = '';
   emptyMessage = '';
   searching = false;
+  searchInputDisabled = false;
   becomingVisible = false;
   states = [''];
   maskDisplay = 'visible';
   busy = false;
   busyStart = 0;
-  busyTimer: any;
 
   @ViewChild('searchField', { static: true }) private searchField: ElementRef;
   @ViewChild('atlasMap', { static: true }) private atlasMap: ElementRef;
@@ -79,6 +83,7 @@ export class SvcAtlasDialogComponent {
         this.emptyMessage = '';
         ++this.searchId;
         this.searching = false;
+        this.searchInputDisabled = false;
         this.becomingVisible = true; // Hack for Chrome to trigger re-layout of search fields.
         this.busy = null;
 
@@ -109,6 +114,7 @@ export class SvcAtlasDialogComponent {
     if (this._state !== newState) {
       const state = (newState && (newState === '\xA0' || newState.includes('---')) ? '' : newState);
       this._state = state;
+      this.searchChanged();
 
       if (state !== newState)
         setTimeout(() => (document.querySelector('#state-select input.p-inputtext') as HTMLInputElement).value = state);
@@ -143,13 +149,17 @@ export class SvcAtlasDialogComponent {
   }
 
   constructor(private appService: AppService, private atlasService: SvcAtlasService,
-              private messageService: MessageService) {
-    atlasService.getStates()
+              private messageService: MessageService, private ref: ChangeDetectorRef) {}
+
+  ngOnInit(): void {
+    this.atlasService.getStates()
       .then((states: string[]) => {
         this.states = states;
 
         if (this.states[0] === '')
           this.states[0] = '\xA0';
+
+        this.ref.detectChanges();
       })
       .catch(() => this.states = ['']);
   }
@@ -172,9 +182,35 @@ export class SvcAtlasDialogComponent {
     this.searchInFocus = inFocus;
   }
 
-  search(): void {
+  searchChanged(): void {
+    if (!this.extended) {
+      if ((this.city?.length || 0) + min(this.state?.length || 0, 1) > 3) {
+        ++this.searchId;
+        this.search(true);
+      }
+      else {
+        this.locations = [];
+        this.obscureMap();
+      }
+    }
+  }
+
+  search(liveSearch = false): void {
     if (!this.city)
       return;
+
+    const now = processMillis();
+
+    if (liveSearch && now < this.searchStart + 1000) {
+      const id = this.searchId;
+
+      setTimeout(() => {
+        if (this.searchId === id)
+          this.search(true);
+      }, this.searchStart + 1010 - now);
+
+      return;
+    }
 
     let query = this.city;
 
@@ -190,22 +226,32 @@ export class SvcAtlasDialogComponent {
     this.locations = [];
     this.emptyMessage = 'Searching...';
     this.searching = true;
+    this.searchInputDisabled = !liveSearch;
     this.obscureMap();
 
     const searchWithID = (id: number): void => {
+      if (this.busyTimer)
+        clearTimeout(this.busyTimer);
+
+      if (this.clearBusyTimer) {
+        clearTimeout(this.clearBusyTimer);
+        this.clearBusyTimer = undefined;
+      }
+
       this.busyTimer = setTimeout(() => {
         this.busyTimer = undefined;
         this.busy = true;
         this.busyStart = processMillis();
       }, 500);
 
-      this.atlasService.search(query, this._extended).then((results: AtlasResults) => {
+      this.atlasService.search(query, this._extended, liveSearch).then((results: AtlasResults) => {
         if (this.searchId !== id) // Bail out if this is an old, abandoned search.
           return;
 
         this.atlasService.ping();
         this.emptyMessage = (!results.matches || results.matches.length === 0 ? 'No matches' : '');
         this.searching = false;
+        this.searchInputDisabled = false;
 
         if (results.error)
           this.messageService.add({ key: 'general', severity: 'error', detail: results.error });
@@ -234,7 +280,11 @@ export class SvcAtlasDialogComponent {
         this.emptyMessage = '';
         this.messageService.add({ key: 'general', severity: 'error', detail: 'Search failed. Please try again later.' });
         this.searching = false;
+        this.searchInputDisabled = false;
       }).finally(() => {
+        if (this.searchId !== id) // Bail out if this is an old, abandoned search.
+          return;
+
         if (this.busyTimer) {
           clearTimeout(this.busyTimer);
           this.busyTimer = undefined;
@@ -245,10 +295,14 @@ export class SvcAtlasDialogComponent {
         if (now > this.busyStart + 250)
           this.busy = false;
         else
-          setTimeout(() => this.busy = false, 250 - now + this.busyStart);
+          this.clearBusyTimer = setTimeout(() => {
+            this.busy = false;
+            this.clearBusyTimer = undefined;
+          }, 250 - now + this.busyStart);
       });
     };
 
+    this.searchStart = now;
     searchWithID(this.searchId);
   }
 
@@ -257,7 +311,7 @@ export class SvcAtlasDialogComponent {
 
     this.visible = false;
     this.appService.location = new Location('(' + SvcAtlasDialogComponent.stripNameQualifiers(loc.name) + ')',
-      loc.atlasLocation.latitude, loc.atlasLocation.longitude, loc.zone);
+      loc.atlasLocation.latitude, loc.atlasLocation.longitude, loc.zone, false, true);
   }
 
   // noinspection JSMethodCanBeStatic

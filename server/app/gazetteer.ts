@@ -1,10 +1,11 @@
-import { readdirSync } from 'fs';
+import { readdirSync, StatOptions, Stats } from 'fs';
+import { readFile, stat } from 'fs/promises';
 import unidecode from 'unidecode-plus';
 import { eqci, getFileContents } from './common';
 import { AtlasLocation } from './atlas-location';
 import { decode } from 'html-entities';
 import { MapClass } from './map-class';
-import { logWarning, pool } from './atlas_database';
+import { logWarning, pool } from './atlas-database';
 import { acos, cos_deg, PI, sin_deg } from '@tubular/math';
 import { join as pathJoin } from 'path';
 import { PoolConnection } from './mysql-await-async';
@@ -48,6 +49,7 @@ interface ProcessedNames {
 export class LocationMap extends MapClass<string, AtlasLocation> { }
 
 export const longStates: Record<string, string> = {};
+export const admin1Abbreviations: Record<string, string> = {};
 export const stateAbbreviations: Record<string, string> = {};
 export const altFormToStd: Record<string, string> = {};
 export const code3ToName: Record<string, string> = {};
@@ -94,8 +96,18 @@ interface GazetteerEntry {
   geonames_id: number;
 }
 
+async function safeStat(path: string, opts?: StatOptions & { bigint?: false }): Promise<Stats> {
+  try {
+    return await stat(path, opts);
+  }
+  catch {}
+
+  return null;
+}
+
 export function makeKey(name: string): string {
-  return unidecode(name || '', { german: true }).toUpperCase().replace(/[^A-Z\d]+/g, '').substring(0, 40);
+  return unidecode((name || '').trim().replace(/^['’][st][- ]\s*/i, ''), // Remove 's- and 't- prefixes,
+    { german: true }).toUpperCase().replace(/[^A-Z\d]+/g, '').replace(/^0+([1-9])/, '$1').substring(0, 40);
 }
 
 export async function initGazetteer(): Promise<void> {
@@ -218,9 +230,24 @@ export async function initGazetteer(): Promise<void> {
 
     usCounties.add('Washington, DC');
 
-    const lines = asLines(await getFileContents('data/celestial.txt', 'utf8'));
+    const dataRoot = (await safeStat('data') != null) ? 'data/' : 'app/data/';
+    let lines = asLines(await getFileContents(dataRoot + 'celestial.txt', 'utf8'));
 
     lines.forEach(line => celestialNames.add(makePlainASCII_UC(line.trim())));
+
+    lines = asLines(await readFile(dataRoot + 'postal-admin1-conversions.txt', 'utf8'));
+
+    lines.forEach(line => {
+      const [key, code] = line.split(':');
+      const [country, abbr] = key.split('.');
+
+      if (abbr.length < 2)
+        return;
+
+      const newKey = (code2ToCode3[country] || country) + '.' + code;
+
+      admin1Abbreviations[newKey] = abbr;
+    });
   }
   catch (err) {
     svcApiConsole.error('Gazetteer init error: ' + err);
@@ -249,7 +276,7 @@ async function initFlagCodes(): Promise<void> {
   catch (err) { /* Ignore error, proceed to remote retrieval. */ }
 
   try {
-    const lines = (await requestText('https://skyviewcafe.com/assets/resources/flags/')).split(/\r\n|\n|\r/);
+    const lines = asLines(await requestText('https://skyviewcafe.com/assets/resources/flags/'));
 
     lines.forEach(line => {
       const $ = />(\w+)\.png</.exec(line);
@@ -348,9 +375,12 @@ export function closeMatchForState(target: string, state: string, country: strin
     return true;
 
   const stateKey = `${country}.${state}`;
-  const longState   = lang ? (admin1ToNameByLang[stateKey] || {})[lang] || longStates[state] : longStates[state];
+  const longState   = ((lang && admin1ToNameByLang[stateKey]) || {})[lang] || admin1s[stateKey] || longStates[state];
   const longCountry = code3ToName[country];
   const code2       = code3ToCode2[country];
+
+  if (/^\d+$/.test(state))
+    state = admin1Abbreviations[stateKey] || state;
 
   return (startsWithICND(state, target) ||
           startsWithICND(country, target) ||
@@ -689,6 +719,9 @@ export function parseSearchString(q: string, mode: ParseMode): ParsedSearchStrin
     parsed.normalizedSearch += ', ' + targetState;
   else if (postalCode && targetCity)
     parsed.normalizedSearch = targetCity + ', ' + postalCode;
+
+  if (targetState === 'UK')
+    parsed.targetState = 'GBR';
 
   return parsed;
 }

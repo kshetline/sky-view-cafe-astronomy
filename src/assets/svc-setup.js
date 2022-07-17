@@ -42,20 +42,7 @@ function initGoogleMaps(callback) { // eslint-disable-line @typescript-eslint/no
     metaViewport.setAttribute('content', 'width=' + width + ', height=' + height + ', initial-scale=' + scale);
   }
 
-  const location = document.location && document.location.href || window.location.href;
-  let protocol = 'https';
-  let host = 'test.skyviewcafe.com';
-  let realWorld = true;
-  let $ = /^(http(?:s?)):\/\/([^/]+)/.exec(location);
-
-  if ($ && !/:(3000|4200)\b/.test($[2])) {
-    protocol = $[1];
-    host = $[2];
-  }
-  else
-    realWorld = false;
-
-  const base = (realWorld ? '' : protocol + '://' + host);
+  const base = location.origin;
   const oldAppendChild = document.head.appendChild;
 
   // noinspection JSValidateTypes

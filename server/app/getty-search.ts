@@ -64,11 +64,11 @@ async function gettySearchAux(targetCity: string, targetState: string, metrics: 
         goodFormat = true;
         ++retrieved;
       }
-      else if (pending && ($ = /Lat:\s*([-.0-9]+).*decimal degrees</.exec(line))) {
+      else if (pending && ($ = /Lat:\s*([-.\d]+).*decimal degrees</.exec(line))) {
         latitude = toNumber($[1]);
         gotLat = true;
       }
-      else if (pending && ($ = /Long:\s*([-.0-9]+).*decimal degrees</.exec(line))) {
+      else if (pending && ($ = /Long:\s*([-.\d]+).*decimal degrees</.exec(line))) {
         longitude = toNumber($[1]);
         gotLong = true;
       }

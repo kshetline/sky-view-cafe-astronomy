@@ -20,6 +20,7 @@ export class SvcLocationSettingsComponent {
   showSaveDialog = false;
   showDeleteDialog = false;
   showFindDialog = false;
+  showSaveHint = false;
   saveDialogNames: string[] = [];
   deleteDialogNames: string[] = [];
   makeDefault = false;
@@ -36,6 +37,11 @@ export class SvcLocationSettingsComponent {
       this.mapsReady = true;
     else
       (window as any).initGoogleMaps(() => this.mapsReady = app.mapsReady = true);
+
+    app.getLocationUpdates(newLocation => {
+      if (newLocation.fromDialog && this.app.locations.length === 0)
+        this.displaySaveHint();
+    });
   }
 
   get latitudeStyle(): AngleEditorOptions {
@@ -152,6 +158,21 @@ export class SvcLocationSettingsComponent {
     this.app.locations.forEach((location: Location) => {
       this.locationNames.push(location.name);
       this.savedLocationNames.push(location.name);
+    });
+  }
+
+  private displaySaveHint(): void {
+    const saveBtn = document.querySelector('#save-button');
+
+    this.showSaveHint = true;
+    setTimeout(() => {
+      saveBtn.classList.add('pulse');
+      saveBtn.dispatchEvent(new MouseEvent('mouseenter', { view: window, bubbles: true, cancelable: true }));
+      setTimeout(() => {
+        saveBtn.classList.remove('pulse');
+        saveBtn.dispatchEvent(new MouseEvent('mouseleave', { view: window, bubbles: true, cancelable: true }));
+        this.showSaveHint = false;
+      }, 9000);
     });
   }
 }

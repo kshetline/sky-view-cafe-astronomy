@@ -3,7 +3,7 @@ import { doubleMetaphone } from './double-metaphone';
 import { Pool, PoolConnection } from './mysql-await-async';
 import {
   closeMatchForState, code3ToName, countyStateCleanUp, getFlagCode, LocationMap, makeLocationKey,
-  ParsedSearchString, simplify, closeMatchForCity, code3ToNameByLang, admin1ToNameByLang, admin1s, code2ToCode3, admin2s
+  ParsedSearchString, simplify, closeMatchForCity, code3ToNameByLang, admin1ToNameByLang, admin1s, code2ToCode3, admin2s, admin1Abbreviations
 } from './gazetteer';
 import { AtlasLocation } from './atlas-location';
 import { MIN_EXTERNAL_SOURCE } from './common';
@@ -24,11 +24,25 @@ const MAX_MONTHS_BEFORE_REDOING_EXTENDED_SEARCH = 12;
 const ZIP_RANK = 9;
 const ZIP_SUPPLEMENT_RANK = 1;
 
+const logTimersByIp = new Map<string, NodeJS.Timeout>();
+
 export function logMessage(message: string, lang?: string, ip?: string, noTrace = false): void {
   svcApiConsole.info(message);
 
-  if (!noTrace)
-    logMessageAux(message, lang, ip, false);
+  if (!noTrace) {
+    if (!ip)
+      logMessageAux(message, lang, '', false);
+    else {
+      let timer = logTimersByIp.get(ip);
+
+      if (timer)
+        clearTimeout(timer);
+
+      timer = setTimeout(() => { logTimersByIp.delete(ip); logMessageAux(message, lang, ip, false); }, 3000);
+      timer.unref();
+      logTimersByIp.set(ip, timer);
+    }
+  }
 }
 
 export function logWarning(message: string, noTrace = false): void {
@@ -132,21 +146,26 @@ export async function doDataBaseSearch(connection: PoolConnection, parsed: Parse
   const matches = new LocationMap();
   const postal = !!parsed.postalCode;
   let altParseMatches = 0;
+  let passRankAdj = 0;
 
   for (let pass = 0; pass < 2; ++pass) {
     const altParse = (pass > 0 && !!parsed.altCity);
     const city = (altParse ? parsed.altCity : parsed.targetCity);
     const targetState = (altParse ? parsed.altState : parsed.targetState);
     const simplifiedCity = simplify(city);
-    const condition = (pass === 0 ? ' AND rank > 0' : '');
 
     examined.clear();
 
     for (let matchType: number = MatchType.EXACT_MATCH; matchType <= MatchType.SOUNDS_LIKE; ++matchType) {
-      let rankAdjust = 0;
+      if (lang && lang !== 'en' && matchType === MatchType.SOUNDS_LIKE)
+        continue;
+
+      let rankAdjust = -passRankAdj;
       let query: string;
       let values: any[];
       let fromAlt = false;
+
+      passRankAdj = 0;
 
       switch (matchType) {
         case MatchType.EXACT_MATCH:
@@ -165,7 +184,7 @@ export async function doDataBaseSearch(connection: PoolConnection, parsed: Parse
               query = `SELECT * FROM gazetteer_alt_names WHERE key_name = ? AND lang = ? AND type = 'P' AND colloquial = 0 AND historic = 0`;
             }
             else
-              query = 'SELECT * FROM gazetteer WHERE key_name = ?' + condition;
+              query = 'SELECT * FROM gazetteer WHERE key_name = ?';
           }
           break;
 
@@ -184,7 +203,7 @@ export async function doDataBaseSearch(connection: PoolConnection, parsed: Parse
             fromAlt = true;
           }
           else
-            query = 'SELECT * FROM gazetteer WHERE key_name >= ? AND key_name < ? ' + condition;
+            query = 'SELECT * FROM gazetteer WHERE key_name >= ? AND key_name < ? ';
 
           break;
 
@@ -193,7 +212,7 @@ export async function doDataBaseSearch(connection: PoolConnection, parsed: Parse
             continue;
 
           rankAdjust = -1;
-          query = 'SELECT * FROM gazetteer WHERE mphone1 = ? OR mphone2 = ?' + condition;
+          query = 'SELECT * FROM gazetteer WHERE mphone1 = ? OR mphone2 = ?';
           values = doubleMetaphone(parsed.targetCity);
           break;
       }
@@ -211,7 +230,7 @@ export async function doDataBaseSearch(connection: PoolConnection, parsed: Parse
         values = [results.map((row: any) => row.gazetteer_id).filter((id: number) => id !== 0).join(', ')];
 
         if (values[0]) {
-          query = `SELECT * FROM gazetteer WHERE id IN (${values[0]})` + condition;
+          query = `SELECT * FROM gazetteer WHERE id IN (${values[0]})`;
           results = (await connection.queryResults(query)) || [];
         }
         else
@@ -338,11 +357,17 @@ export async function doDataBaseSearch(connection: PoolConnection, parsed: Parse
         location.source = source;
         location.geonamesID = geonamesID;
 
-        if (/^\d+$/.test(location.state) || (country !== 'USA' && country !== 'CAN' && /^[A-Z]{3,}$/.test(location.state))) {
-          const key = country + '.' + location.state;
+        const numericState = /^\d+$/.test(location.state);
 
-          location.state = (admin1ToNameByLang[key] || {})[lang || 'en'] || (admin1ToNameByLang[key] || {})[''] ||
-            admin1s[key] || location.state;
+        if (numericState || (country !== 'USA' && country !== 'CAN' && /^[A-Z]{3,}$/.test(location.state))) {
+          const key = country + '.' + location.state;
+          const abbr = admin1Abbreviations[key];
+
+          if (numericState && abbr)
+            location.state = abbr;
+          else
+            location.state = (admin1ToNameByLang[key] || {})[lang || 'en'] || (admin1ToNameByLang[key] || {})[''] ||
+              admin1s[key] || location.state;
         }
 
         if (matchType === MatchType.EXACT_MATCH_ALT)
@@ -364,8 +389,25 @@ export async function doDataBaseSearch(connection: PoolConnection, parsed: Parse
         break;
     }
 
-    if (postal)
+    let postalOnce = postal;
+
+    if (postal && parsed.postalCode.includes(' ')) {
+      parsed.postalCode = parsed.postalCode.replace(/\s+\S.*$/, '');
+      postalOnce = false;
+    }
+
+    if (postalOnce)
       break;
+    else if (lang && lang !== 'en') {
+      --pass;
+      lang = '';
+      passRankAdj = (matches.size > 0 ? 2 : 0);
+    }
+    else if (pass === 0 && matches.size === 0 &&
+             parsed.targetState && simplifiedCity === simplify(parsed.targetState)) {
+      --pass;
+      parsed.targetState = '';
+    }
   }
 
   if (altParseMatches === 0) {

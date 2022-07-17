@@ -1,4 +1,4 @@
-import { Component, EventEmitter, forwardRef, OnInit, Output } from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, forwardRef, OnInit, Output } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { noop } from '@tubular/util';
 import { Timezone, RegionAndSubzones } from '@tubular/time';
@@ -116,7 +116,7 @@ export class SvcZoneSelectorComponent implements ControlValueAccessor, OnInit {
   @Output() focus: EventEmitter<any> = new EventEmitter();
   @Output() blur: EventEmitter<any> = new EventEmitter();
 
-  constructor(private appService: AppService) {
+  constructor(private appService: AppService, private ref: ChangeDetectorRef) {
     this.lastSubzones[this._region] = this._subzone;
     this.subzonesByRegion[this._region] = this.subzones;
   }
@@ -152,7 +152,7 @@ export class SvcZoneSelectorComponent implements ControlValueAccessor, OnInit {
       return;
     }
 
-    const groups: string[] = /^(America\/Argentina\/|America\/Indiana\/|SystemV\/\w+|\w+\/|[-+:0-9A-Za-z]+)(.+)?$/.exec(newZone);
+    const groups: string[] = /^(America\/Argentina\/|America\/Indiana\/|SystemV\/\w+|\w+\/|[-+:\dA-Za-z]+)(.+)?$/.exec(newZone);
 
     if (groups) {
       let g1 = groups[1];
@@ -356,6 +356,8 @@ export class SvcZoneSelectorComponent implements ControlValueAccessor, OnInit {
       for (const zone of offset.zones)
         this.offsetByZone.set(toCanonicalZone(zone), offset.offset);
     }
+
+    this.ref.detectChanges();
   }
 
   private setOffset(newOffset: string, doChangeCallback?: boolean): void {
@@ -422,6 +424,12 @@ export class SvcZoneSelectorComponent implements ControlValueAccessor, OnInit {
 
       if (doChangeCallback)
         this.onChangeCallback(this._value);
+
+      if (!this._region)
+        setTimeout(() => {
+          if (this._value)
+            this.updateValue(this._value);
+        }, 250);
     }
   }
 }

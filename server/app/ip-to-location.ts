@@ -22,7 +22,7 @@ router.get('/json/*', (req: Request, res: Response) => {
       if (params.callback)
         res.jsonp({ message: 'busy', status: 'fail' });
       else
-        res.send({ message: 'busy', status: 'fail' });
+        res.json({ message: 'busy', status: 'fail' });
     }
     else {
       times.push(now);

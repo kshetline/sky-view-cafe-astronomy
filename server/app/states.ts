@@ -24,5 +24,5 @@ router.get('/', (req: Request, res: Response) => {
   else if (req.query.callback)
     res.jsonp(response);
   else
-    res.send(response);
+    res.json(response);
 });

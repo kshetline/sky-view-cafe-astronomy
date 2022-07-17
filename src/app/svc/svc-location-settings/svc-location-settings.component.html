@@ -16,7 +16,9 @@
     <ks-dropdown [options]="locationNames" [(ngModel)]="locationName" class="constrained-dropdown"></ks-dropdown>
     <div class="find-save">
       <button pButton type="button" label="Find" (click)="openFindDialog()"></button>
-      <button pButton type="button" label="Save" (click)="openSaveDialog()"></button>
+      <button pButton id="save-button" type="button" label="Save" (click)="openSaveDialog()"
+          pTooltip="You can save newly found locations for future use." tooltipPosition="bottom"
+          [tooltipDisabled]="!showSaveHint" tooltipStyleClass="save-tooltip" [life]="8000"></button>
       <button pButton type="button" label="Delete" (click)="openDeleteDialog()"></button>
     </div>
   </div>

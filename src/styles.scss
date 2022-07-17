@@ -68,3 +68,28 @@ body {
   max-width: 143px;
   text-overflow: ellipsis;
 }
+
+.save-tooltip {
+  .p-tooltip-arrow {
+    border-bottom-color: green !important;
+  }
+
+  .p-tooltip-text {
+    background-color: green;
+    color: white;
+    text-align: center;
+  }
+}
+
+.pulse {
+  animation: pulse-animation 2s infinite;
+}
+
+@keyframes pulse-animation {
+  0% {
+    box-shadow: 0 0 0 0 rgba(#007AD9, 0.6);
+  }
+  100% {
+    box-shadow: 0 0 0 20px rgba(#007AD9, 0);
+  }
+}

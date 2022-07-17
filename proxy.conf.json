@@ -1,0 +1,8 @@
+{
+  "/api/*": {
+    "target": "http://localhost:4201"
+  },
+  "/maps/*": {
+    "target": "http://localhost:4201"
+  }
+}

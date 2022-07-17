@@ -1,4 +1,4 @@
-import { pool } from './atlas_database';
+import { pool } from './atlas-database';
 import { AtlasLocation } from './atlas-location';
 import { simplify } from './gazetteer';
 

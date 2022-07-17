@@ -8,8 +8,8 @@
         <span></span>
       </div>
       <div class="search-row">
-        <span><input #searchField type="text" pInputText class="city-field" [(ngModel)]="city" [disabled]="searching"
-                 (focus)="searchFocus(true)" (blur)="searchFocus(false)"
+        <span><input #searchField type="text" pInputText class="city-field" [(ngModel)]="city" [disabled]="searchInputDisabled"
+                 (focus)="searchFocus(true)" (blur)="searchFocus(false)" (input)="searchChanged()"
                  autocorrect="off" autocapitalize="off" autocomplete="off"/></span>
         <span><ks-dropdown id="state-select" [(ngModel)]="state" [options]="states" [editable]="true" ksSizer="19em"></ks-dropdown></span>
         <span><button type="button" pButton icon="fas fa-search" (click)="search()" label="Search" [disabled]="searching || becomingVisible"
@@ -19,7 +19,7 @@
         <span>Required</span><span>(Optional)</span><span></span>
       </div>
       <p-checkbox [(ngModel)]="extended" class="ext-search" binary="true" label="Extended search (slower, possibly more matches)"></p-checkbox>
-      <div class="busy" [style.display]="busy ? 'flex' : 'none'">
+      <div class="busy" [style.display]="busy ? 'flex' : 'none'" [class.live-search]="!searchInputDisabled">
         <div><i class="fas fa-spinner fa-pulse fa-2x fa-fw"></i><span>&nbsp;&nbsp;&nbsp;Searching...</span></div>
       </div>
     </div>
