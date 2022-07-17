@@ -9,10 +9,11 @@
 }
 
 .canvasWrapper {
+  background-color: #096;
   flex-grow: 1;
   min-width: 250px;
   min-height: 250px;
-  background-color: #096;
+  overflow: hidden;
 
   .canvasAnchor {
     background-color: #096;
@@ -40,6 +41,11 @@
       pointer-events: none;
       top: 50%;
       transform: translateX(-50%) translateY(-50%);
+
+      img {
+        position: relative;
+        top: -2px;
+      }
     }
   }
 }

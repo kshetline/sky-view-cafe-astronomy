@@ -50,7 +50,7 @@ export class Location {
   isDefault?: boolean;
 
   constructor(public name: string, public latitude: number, public longitude: number,
-              public zone: string, isDefault?: boolean) {
+              public zone: string, isDefault?: boolean, public fromDialog?: boolean) {
     this.isDefault = !!isDefault;
   }
 

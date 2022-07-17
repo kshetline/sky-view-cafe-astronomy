@@ -311,7 +311,7 @@ export class SvcAtlasDialogComponent implements OnInit {
 
     this.visible = false;
     this.appService.location = new Location('(' + SvcAtlasDialogComponent.stripNameQualifiers(loc.name) + ')',
-      loc.atlasLocation.latitude, loc.atlasLocation.longitude, loc.zone);
+      loc.atlasLocation.latitude, loc.atlasLocation.longitude, loc.zone, false, true);
   }
 
   // noinspection JSMethodCanBeStatic

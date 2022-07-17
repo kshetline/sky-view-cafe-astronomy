@@ -70,6 +70,7 @@ export class SvcMapViewComponent extends GenericViewDirective implements AfterVi
   private mapWidth: number;
   private mapHeight: number;
   private moonShadowPts: number[];
+  private lastLineHeight = 13;
   private lastSunLatitude = 0;
   private lastSunLongitude = 0;
   private lastEclipseCenterLatitude = 0;
@@ -186,10 +187,20 @@ export class SvcMapViewComponent extends GenericViewDirective implements AfterVi
     if (this.wrapper.clientWidth === 0 || this.wrapper.clientHeight === 0)
       return;
 
-    this.zoneOverlay.width = this.width;
-    this.zoneOverlay.height = floor(this.width / 2) + 4;
-    this.zoneOverlay.parentElement.style.width = this.width + 'px';
-    this.zoneOverlay.parentElement.style.height = floor(this.width / 2) + 'px';
+    const innerHeight = this.height - this.lastLineHeight * 2;
+    let width = this.width;
+    let halfWidth = floor(this.width / 2);
+
+    if (halfWidth > innerHeight) {
+      width = innerHeight * 2;
+      // noinspection JSSuspiciousNameCombination
+      halfWidth = innerHeight;
+    }
+
+    this.zoneOverlay.width = width;
+    this.zoneOverlay.height = halfWidth + 4;
+    this.zoneOverlay.parentElement.style.width = width + 'px';
+    this.zoneOverlay.parentElement.style.height = halfWidth + 'px';
   }
 
   protected drawView(dc: DrawingContext): void {
@@ -202,7 +213,7 @@ export class SvcMapViewComponent extends GenericViewDirective implements AfterVi
       return;
 
     const ascent = dc.mediumLabelFm.ascent;
-    const lineHeight = dc.mediumLabelFm.lineHeight;
+    const lineHeight = this.lastLineHeight = dc.mediumLabelFm.lineHeight;
 
     dc.context.font = this.mediumLabelFont;
     this.mapWidth = max(dc.w, 200);
