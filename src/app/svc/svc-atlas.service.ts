@@ -56,9 +56,16 @@ export class SvcAtlasService {
   }
 
   search(q: string, extend?: boolean, fast = false): Promise<AtlasResults> {
+    let notrace = this.localTesting ? 'true' : null;
+
+    if (q.startsWith('!')) {
+      notrace = 'true';
+      q = q.substring(1);
+    }
+
     const params = urlEncodeParams({
       client: 'svc',
-      notrace: this.localTesting ? 'true' : null,
+      notrace,
       pt: 'false',
       q,
       remote: extend ? 'extend' : fast ? 'skip' : null
