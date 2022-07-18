@@ -366,8 +366,8 @@ export async function doDataBaseSearch(connection: PoolConnection, parsed: Parse
           if (numericState && abbr)
             location.state = abbr;
           else
-            location.state = (admin1ToNameByLang[key] || {})[lang || 'en'] || (admin1ToNameByLang[key] || {})[''] ||
-              admin1s[key] || location.state;
+            location.state = (admin1ToNameByLang[key] || {})[lang || 'en'] || admin1s[key] ||
+              (admin1ToNameByLang[key] || {})[''] || location.state;
         }
 
         if (matchType === MatchType.EXACT_MATCH_ALT)
