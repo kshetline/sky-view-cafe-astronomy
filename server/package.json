@@ -1,13 +1,13 @@
 {
   "name": "svc-api",
-  "version": "1.10.1",
+  "version": "1.10.2",
   "description": "SVC API",
   "main": "app.js",
   "private": true,
   "scripts": {
     "tsc": "tsc",
     "dev": "ts-node-dev --respawn --transpile-only ./app/app.ts",
-    "build": "rimraf dist && webpack && copyfiles -u 1 \"./app/data/*\" \"./dist\" && (chmod +x ./dist/app.js || echo \"\")",
+    "build": "rimraf dist && webpack && copyfiles -u 1 \"./app/data/*\" \"./dist\" && copyfiles -u 3 \"./node_modules/@tubular/geo-tz/data/geo.dat\" \"./dist\" && (chmod +x ./dist/app.js || echo \"\")",
     "start": "tsc && node -r dotenv/config dist/app.js",
     "lint": "eslint \"**/*.ts\""
   },
@@ -24,7 +24,7 @@
     "emitter": "0.0.2",
     "express": "^4.17.3",
     "follow-redirects": "^1.14.9",
-    "geo-tz": "^7.0.2",
+    "@tubular/geo-tz": "^7.1.0",
     "html-entities": "^2.3.3",
     "iconv-lite": "^0.6.3",
     "lodash": "^4.17.21",
