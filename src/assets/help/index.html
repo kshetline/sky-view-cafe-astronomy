@@ -7,9 +7,37 @@
 <style type="text/css">
 
 body, p, a, li, td {
-  font-family: Times New Roman, Times, serif;
-  font-size: 15px;
-  width: 640px;
+  font: 15px "Times New Roman", Times, serif;
+}
+
+body {
+  background-color: white;
+}
+
+a {
+  color: #0000FF;
+}
+
+a:active {
+  color: #FF00FF;
+}
+
+a:visited {
+  color: #0000FF;
+}
+
+.main {
+  left: 50%;
+  max-width: 800px;
+  padding: 1em;
+  position: relative;
+  transform: translateX(-50%);
+}
+
+.center {
+  left: 50%;
+  position: relative;
+  transform: translateX(-50%);
 }
 
 .gui {
@@ -48,6 +76,10 @@ ul {
   font-size: 18px;
 }
 
+a.header {
+  color: unset;
+}
+
 .fine-print {
   font-family: Arial, Helvetica, sans-serif;
   font-size: 11px;
@@ -84,8 +116,8 @@ sup {
 
 </style>
 </head>
-<body bgcolor=white link="#0000FF" alink="#FF00FF" vlink="#0000FF"><a name="top"><!--null--></a>
-<img src="../img/svc_banner.jpg" width="640" height="42" alt="SVC Banner">
+<body><div class="main"><a name="top"><!--null--></a>
+<img class="center" src="../img/svc_banner.jpg" width="640" height="42" alt="SVC Banner">
 <ul>
 <li><a href="#start">Getting Started</a></li>
 <li><a href="#time">Setting the Time</a></li>
@@ -138,7 +170,7 @@ sup {
 
 <p>Alternatively, you can click on the calendar icon and choose a date from the pop-up calendar. Hours and minutes will still have to be set separately.</p>
 
-<center><img src="calendar_up.png" border=0 width=148 height=132 alt="calendar pop-up"></center>
+<img class="center" src="calendar_up.png" border=0 width=148 height=132 alt="calendar pop-up">
 
 <p>SVC uses the convention of marking times during Daylight Saving Time (DST) with the <b class=gui>&sect;</b> symbol. 21:40&sect; means the same thing as 9:40 PM DST, which is the same as 8:40 PM Standard Time (ST). For those rare cases where DST isn't an exact one hour change from ST, <b class=gui>^</b> signifies a half-hour DST adjustment, and <b class=gui>#</b> signifies a two-hour change. There is even negative DST, indicated using the <b class=gui>&#x2744;</b> symbol, for when summer time is considered Standard Time and clocks are turned back to DST instead of forward to DST. Any other positive DST is marked using the <b class=gui>~</b> symbol.</p>
 
@@ -150,7 +182,7 @@ sup {
 
 <p>SVC defaults to using the same timezone setting that your computer is set up with. If you'd like to use a different timezone, however, you can select the zone by using the <b class=gui2>timezone region/category</b> and <b class=gui2>specific timezone</b> menus (see the <b class=gui>Location Settings</b> panel below). Most of the available timezones relate to a key city (like Europe/Paris), but some are general regions (such as US/Central) and some are simple fixed hour offsets from Universal Time.</p>
 
-<p>These timezones come from the <a href="http://en.wikipedia.org/wiki/Tz_database" target="_blank">tz database</a>, also known as the zoneinfo database or Olson database. This timezone system automatically takes care of Daylight Saving Time where applicable. Going back to 1970, and in some cases much further, historical changes in timezones and rules for DST are also included. Current DST rules are projected forward as far as the year 2500, after which all times are reckoned in Standard Time.</p>
+<p>These timezones come from the <a href="https://en.wikipedia.org/wiki/Tz_database" target="_blank">tz database</a>, also known as the zoneinfo database or Olson database. This timezone system automatically takes care of Daylight Saving Time where applicable. Going back to 1970, and in some cases much further, historical changes in timezones and rules for DST are also included. Current DST rules are projected forward as far as the year 2500, after which all times are reckoned in Standard Time.</p>
 
 <p>At a small expense to historical accuracy the timezone data has been modified for a few timezones to eliminate what might be called "calendar rollback" &mdash; moments in time when not only is the clock turned backward, but the calendar date as well. For example, using the America/Phoenix timezone in its original form, on New Year's Eve of 1943, when midnight is reached the date becomes 1944 for just a single minute. After that, the clock <i>and</i> the calendar turn back to 1943 for 59 minutes. Only after that does it then finally become 1944 again for good. As this sort of thing can be very confusing for mapping astronomical events into dates on calendars and in tables, SVC modifies this America/Phoenix transition by one minute so that 1944 never bounces back to 1943.</p>
 
@@ -174,7 +206,7 @@ sup {
 <tr><td class="td-search">Montr&eacute;al</td><td class="td-search">QC</td><td>City, abbreviated Canadian province</td></tr>
 <tr><td class="td-search">Tokyo</td><td class="td-search">Japan</td><td>City, Country</td></tr>
 <tr><td class="td-search">Quito</td><td class="td-search">ECU</td><td>City, abbreviated Country</td></tr>
-<tr><td class="td-search">03062</td><td>&nbsp;</td><td>US ZIP Code - no city, no state</td></tr>
+<tr><td class="td-search">03062</td><td>&nbsp;</td><td>ZIP code/postal code - no city, no state, or country</td></tr>
 <tr><td class="td-search">Greenw</td><td>&nbsp;</td><td>Partial city - matches "Greenway", "Greenwich", etc.</td></tr>
 <tr><td class="td-search">Kitt Peak</td><td>&nbsp;</td><td>Geographic features (a few such features are available)</td></tr>
 </table>
@@ -269,7 +301,7 @@ sup {
 
 <h3><br><a name="views" class=header>More Than One Way of Looking at Things</a></h3>
 
-<center><img src="tabs.png" border=0 width=534 height=32 alt="Sky View Tabs"></center>
+<img class="center" src="tabs.png" border=0 width=534 height=32 alt="Sky View Tabs">
 
 <p>SVC has a number of different viewing modes which you can access by clicking on the various tabs you see above.</p>
 
@@ -315,12 +347,12 @@ name="back4"><sup>4</sup></a> orbit in nearly the same plane around the Sun, mos
 occasionally occur within the Arctic or Antarctic circles (where the ecliptic can run along the horizon) you'll never see more than half of the ecliptic at the same time. The Ecliptic view, where you get to see
 the full ecliptic at a glance, is much more of an abstraction than a realistic representation of the sky compared to what you see with the various Sky view options.</p>
 
-<center><img src="form_ecliptic.gif" border=0 width=565 height=162 alt="Ecliptic view formation diagram"><br>
+<div class="center"><img src="form_ecliptic.gif" border=0 width=565 height=162 alt="Ecliptic view formation diagram"><br>
 <table border=0 cellpadding=5 cellspacing=0 width="90%"><tr>
    <td class=fine-print>Imagine the Earth at the center of a sphere surrounding the Earth at a great distance, with the stars and planets projected upon the sphere's surface. The green line represents the ecliptic, and the blue and red lines represent circles some distance north and south of the ecliptic. This band of the celestial sphere is what SVC shows in the Ecliptic view, removed from the whole of the celestial sphere and flattened out as shown in the illustration above.</td>
-</tr></table></center>
+</tr></table></div>
 
-<p>SVC draws a dark green line to represent where your local horizon intersects the ecliptic band, along with a dotted green line showing the portion of the band which is above the horizon. The dark blue grid lines show geocentric latitude in steps of 5&deg;, and geocentric longitude in steps of 15&deg;. (For a more complete explanation of celestial and ecliptic coordinates, see Sky and Telescopes's <a href="http://skyandtelescope.com/howto/basics/article_562_1.asp">Understanding Celestial Coordinates</a>.)</p>
+<p>SVC draws a dark green line to represent where your local horizon intersects the ecliptic band, along with a dotted green line showing the portion of the band which is above the horizon. The dark blue grid lines show geocentric latitude in steps of 5&deg;, and geocentric longitude in steps of 15&deg;. (For a more complete explanation of celestial and ecliptic coordinates, see Sky and Telescopes's <a href="https://skyandtelescope.org/astronomy-resources/right-ascension-declination-celestial-coordinates/">Right Ascension & Declination: Celestial Coordinates for Beginners</a>.)</p>
 
 <p>Using <a href="#animation">animation</a> with the Ecliptic view is a great way to see the motions of the planets against the background of the stars, and to see events like retrograde motion, maximum elongations, and conjunctions and oppositions of the planets. Switch off <b class=gui>Show Local Horizon</b> for faster animation, and when the background of the stars is not desired, switching off <b class=gui>Show Stars</b> will give an even greater boost to animation performance.</p>
 
@@ -337,20 +369,20 @@ field of view.</p>
 
 <h3><a name="moons" class=header>Moons/GRS View</a></h3>
 
-<p>The Moons/GRS view shows the four major moons of Jupiter (often referred to as the Galilean moons, after Galileo Galilei, who discovered them), Jupiter's <a href="http://en.wikipedia.org/wiki/Great_Red_Spot">Great Red Spot</a> (GRS), and eight of the moons of Saturn. The image of Saturn also displays the orientation of the rings of Saturn as seen from Earth.</p>
+<p>The Moons/GRS view shows the four major moons of Jupiter (often referred to as the Galilean moons, after Galileo Galilei, who discovered them), Jupiter's <a href="https://en.wikipedia.org/wiki/Great_Red_Spot">Great Red Spot</a> (GRS), and eight of the moons of Saturn. The image of Saturn also displays the orientation of the rings of Saturn as seen from Earth.</p>
 
 <p>The default view shows planetary north at the top of the view, and celestial east to the left. Checking and unchecking the <b class=gui>North on top</b> and <b class=gui>Celestial east on left</b> checkboxes in the <b class=gui>Options</b> panel can help you match the displayed view to what you might see using binoculars or various kinds of telescopes. When only one of the two checkboxes is checked, the image shown is a mirror image (as seen in many telescopes). When both checkboxes are on, or both are off, the image is a direct image. The <b class=gui>Zoom In</b> and <b class=gui>Zoom Out</b> buttons allow you to select differing levels of magnification.</p>
 
-<p>The <span class=gui>Photographic planets</span> option is mostly decorative &mdash; the images shown shouldn't be taken too literally as accurate depictions of Jupiter and Saturn at any particular moment in time. Both planets are essentially gigantic balls of swirling gas, and Jupiter in particular undergoes a great deal of change in appearance as various atmospheric phenomena change dynamically over time. Both planets also undergo <a href="http://en.wikipedia.org/wiki/Differential_rotation">differential rotation</a>, meaning that different parts rotate at different speeds. SVC makes no attempt to model or display any of this behavior.</p>
+<p>The <span class=gui>Photographic planets</span> option is mostly decorative &mdash; the images shown shouldn't be taken too literally as accurate depictions of Jupiter and Saturn at any particular moment in time. Both planets are essentially gigantic balls of swirling gas, and Jupiter in particular undergoes a great deal of change in appearance as various atmospheric phenomena change dynamically over time. Both planets also undergo <a href="https://en.wikipedia.org/wiki/Differential_rotation">differential rotation</a>, meaning that different parts rotate at different speeds. SVC makes no attempt to model or display any of this behavior.</p>
 
 <p>An effort <i>is</i> made to show Jupiter's Great Red Spot in an approximately correct position. It should be noted, however, that the GRS is simply a great big storm &mdash; it is <i>weather</i>. While much more stable and much longer lasting than any storm on Earth (the GRS has been raging for close to 200 years at a minimum, perhaps even for 300 years or more), the behavior of the GRS is erratic and ultimately unpredictable. It's possible, perhaps even likely, that one these days the Great Red Spot will simply disappear.</p>
 
-<p>Derived from data which can be found at <a href="http://jupos.org">jupos.org</a>, SVC contains a table of GRS longitudes covering the time span (as of the moment that I'm writing this) from April 1969 to
+<p>Derived from data which can be found at <a href="http://jupos.privat.t-online.de/">JUPOS</a>, SVC contains a table of GRS longitudes covering the time span (as of the moment that I'm writing this) from April 1969 to
 January 2017. These longitudes are based on curve fitting numerous individual telescopic observations of the GRS. During the time span covered by this table, and for a short period of time before and after the
 tabular data, SVC's positioning of the GRS <i>should be</i> (I must emphasize that I'm not totally certain of the degree of accuracy I've attained, since my work is based on very "noisy" observational data)
 within 2-3 degrees of the correct real position, and SVC's GRS transit times should be correct within 3-5 minutes. An effort will be made to keep the GRS data reasonably up-to-date, beyond the January 2017 date mentioned above.</p>
 
-<p>The display of the GRS's <a href="http://en.wikipedia.org/wiki/Jupiter_%28planet%29#Orbit_and_rotation"> System II</a> longitude seen in the Moons/GRS view will be <span style="color: #00FF00; background: #000000">&ensp;green&ensp;</span> for times within the coverage of the longitude table, as well as for times within one year of that coverage, <span style="color: #FFFF00; background: #000000">&ensp;yellow&ensp;</span> for times from one to two years outside of the table, and <span style="color: #FF3399; background: #000000">&ensp;red&ensp;</span> all other times, as an indication of the likely validity and accuracy of the data.</p>
+<p>The display of the GRS's <a href="https://en.wikipedia.org/wiki/Jupiter_%28planet%29#Orbit_and_rotation"> System II</a> longitude seen in the Moons/GRS view will be <span style="color: #00FF00; background: #000000">&ensp;green&ensp;</span> for times within the coverage of the longitude table, as well as for times within one year of that coverage, <span style="color: #FFFF00; background: #000000">&ensp;yellow&ensp;</span> for times from one to two years outside of the table, and <span style="color: #FF3399; background: #000000">&ensp;red&ensp;</span> all other times, as an indication of the likely validity and accuracy of the data.</p>
 
 <h3><a name="insolation" class=header>Insolation View</a></h3>
 
@@ -442,11 +474,11 @@ patterns of daylight and twilight, especially as the latitude approaches the nor
 
 <p>There is an option to display SVC's clock with seconds, but please keep in mind <i>that most of the data is not that precise</i>! Being able to step one second at a time, however, is useful, and reasonably accurate, when examining eclipse circumstances for eclipses over a range of about one century. Since latitude and longitude can only be set with a precision of one arc-minute, or in decimal mode, one hundredth of a degree, the one-second accuracy of the clock is more important for seeing the duration of an eclipse, not its precise starting and ending time.</p>
 
-<p><a name="timesys"><!--null--></a>The accuracy of the methods mentioned above depends on a very accurate time scale, even more accurate than the Earth itself keeps as it spins about its axis. This kind of time used by astronomers is known as Dynamical Time, and the particular form of Dynamical Time used here is Barycentric Dynamic Time, or TDB. TDB's uniform scale means that it is not in perfect sync with Universal Time (UT), which is periodically adjusted to keep pace with the uneven rotation of the Earth. Our civil time is based on Coordinated Universal Time (UTC), which is maintained within 0.9 seconds of UT, and gets adjusted to keep pace with UT a full second at a time &mdash; these are the "leap seconds" you often hear about, especially on New Year's Eve. (For more information, see the <a href="http://tycho.usno.navy.mil/systime.html">Systems of Time</a> web page provided by the U.S. Naval Observatory.)</p>
+<p><a name="timesys"><!--null--></a>The accuracy of the methods mentioned above depends on a very accurate time scale, even more accurate than the Earth itself keeps as it spins about its axis. This kind of time used by astronomers is known as Dynamical Time, and the particular form of Dynamical Time used here is Barycentric Dynamic Time, or TDB. TDB's uniform scale means that it is not in perfect sync with Universal Time (UT), which is periodically adjusted to keep pace with the uneven rotation of the Earth. Our civil time is based on Coordinated Universal Time (UTC), which is maintained within 0.9 seconds of UT, and gets adjusted to keep pace with UT a full second at a time &mdash; these are the "leap seconds" you often hear about, especially on New Year's Eve. (For more information, see the <a href="https://www.cnmoc.usff.navy.mil/Organization/United-States-Naval-Observatory/Precise-Time-Department/The-USNO-Master-Clock/Definitions-of-Systems-of-Time/">Systems of Time</a> web page provided by the U.S. Naval Observatory.)</p>
 
 <p>What you enter into SVC's clock is UT, so there are no leap seconds. Except when the difference of a single second is important, you can consider UT to be essentially the same thing as the UTC (adjusted locally for your timezone) that we set our watches and clocks by. Enough astronomical data has been gathered historically to create a tabular conversion of UT to TDB which covers the years 1620 to the present, accurate within a few seconds &mdash; fractions of a second for the past century. From -500 to 1600, historical records of events such as solar eclipses have provided enough information for rough estimates of UT over that period. Earlier than -500 may never be known with great accuracy, and accuracy beyond the current year depends on measurements which won't be taken until each new year is upon us. For times before the year -500, or after the current year, approximation formulae are used which become more and more inaccurate the further outside of this range you go. When setting the year of SVC's clock to its past and future limits, the years -6000 and 9999, the inaccuracy of UT may amount to several minutes, or even several hours.</p>
 
-<p><a name="gregorian"><!--null--></a>Having brought up the subject of setting the year, it should be mentioned that back <a href="http://en.wikipedia.org/wiki/Pope_Gregory_XIII#The_Gregorian_Calendar">in 1582
+<p><a name="gregorian"><!--null--></a>Having brought up the subject of setting the year, it should be mentioned that back <a href="https://en.wikipedia.org/wiki/Pope_Gregory_XIII#The_Gregorian_calendar">in 1582
 a curious thing happened to the calendar</a>. The calendar system in use throughout the Western world before the year 1582, called the Julian calendar (after Julius Caesar), had drifted ten days off from the
 seasons &mdash; the first day of Spring was occurring around March 11 instead of March 21. Pope Gregory XIII, with the aid of astronomical advice from Christopher Clavius, introduced an ingenious modification
 to the rules about leap years, creating a system which would be accurate to within one day every 3000 years. Under the new calendar there would be a leap year every four years, just like in the old Julian
@@ -480,15 +512,15 @@ of your local times.</p>
 
 <p>If you're a current user of SVC and have already entered and saved your location, your saved location will be used instead of an IP look-up. New users may want to refine the location that's automatically generated by the geolocation server &mdash; occasionally it can be fairly far off: for example, you might get internet service through Verizon, and rather than getting your own home location by automatic look-up, you'll get the location of a major Verizon office hundreds of miles away. Sometimes there will be no match for your IP address at all, or the geolocation service will be offline and unavailable, making manual entry of your location necessary.</p>
 
-<p>You can access the geolocation service currently used by SVC here : <a href="http://ip-api.com/" target="_blank">http://ip-api.com/</a></p>
+<p>You can access the geolocation service currently used by SVC here : <a href="https://ip-api.com/" target="_blank">https://ip-api.com/</a></p>
 
 <h3><a name="credits" class=header>Where Credit is Due</a></h3>
 
 <p>A great deal of credit must go to Jean Meeus and his excellent book <i>Astronomical Algorithms</i> (Second English Edition, 1998, Willmann-Bell). Through his book, credit is further due to P. Bretagnon and G. Francou for their work on VSOP87, to Michelle Chapront-Touze and Jean Chapront for their ELP-2000 Lunar Theory, to Aldo Vitagliano for his work on Pluto, to Jay Lieske for his E5 theory of the Jovian moons, to Gérard Dourneau for his methods for the moons of Saturn, and to many others.</p>
 
-<p>Paul Schlyter's web page <a href="http://www.stjarnhimlen.se/comp/ppcomp.html">Computing Planetary Positions</a> was very helpful in my work, as well as some direct personal help from Paul himself provided through the sci.astro.amateur newsgroup. NASA and the United States Naval Observatory provide online data sources that I found quite useful in both generating and confirming my calculations, such as NASA's <a href="http://adc.gsfc.nasa.gov">Astronomical Data Center</a> and USNO's <a href="http://aa.usno.navy.mil/AA/data/">Data Services</a>.</p>
+<p>Paul Schlyter's web page <a href="https://stjarnhimlen.se/comp/ppcomp.html">How to compute planetary positions</a> was very helpful in my work, as well as some direct personal help from Paul himself provided through the sci.astro.amateur newsgroup. NASA and the United States Naval Observatory provide online data sources that I found quite useful in both generating and confirming my calculations (at websites which are unfortunately now no longer available).</p>
 
-<p>John Walker's <a href="http://www.fourmilab.ch/yoursky/">Your Sky</a> web site was an inspiration and a touchstone for SVC. <i>Your Sky</i> is less interactive than SVC, but by keeping its computing resources on a web server it is able to hold a richer data set of stars and deep sky objects &mdash; enough data to provide a useful "virtual telescope" feature. <i>Your Sky</i> is also more compatible with a wider range of web browsers.</p>
+<p>John Walker's <a href="https://www.fourmilab.ch/yoursky/">Your Sky</a> web site was an inspiration and a touchstone for SVC. <i>Your Sky</i> is less interactive than SVC, but by keeping its computing resources on a web server it is able to hold a richer data set of stars and deep sky objects &mdash; enough data to provide a useful "virtual telescope" feature. <i>Your Sky</i> is also more compatible with a wider range of web browsers.</p>
 
 <p>The Map view uses a world map created from satellite photography, obtained from NASA's <a href="https://visibleearth.nasa.gov/view_cat.php?categoryID=1484">Visible Earth</a> collection.</p>
 
@@ -510,8 +542,8 @@ of your local times.</p>
 
 <p class=fine-print><a name="transit" class=fine-print>8.</a> Imagine a line running along the sky from north to south, directly overhead. A celestial object is said to be at transit at your location when, as it moves from east to west across the sky, it crosses this line. This is when the object is highest in the sky during the course of a day. The planets are <i>typically</i> directly south at transit for Northern Hemisphere observers, and directly north for Southern Hemisphere observers &mdash; as you move closer to the equator, however, and the planet strays further from the celestial equator, the latter is not always true. <a href="#back8" class=fine-print>[back]</a></p>
 
-<center><a href="#top"><font face="Arial,Helvetica,SansSerif" size=-1>BACK TO TOP</font></a></center><br>
+<a class="center" href="#top" style="font: 0.8em Arial, Helvetica, sans-serif">BACK TO TOP</a><br>
 
 <br>
-</body>
+</div></body>
 </html>

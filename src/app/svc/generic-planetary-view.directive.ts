@@ -17,9 +17,9 @@ export interface SortablePlanet {
   pos: SphericalPosition3D;
 }
 
-export enum LABEL_CLASS {MINOR, STAR_OR_PLANET, CONSTELLATION}
-export enum LABEL_TYPE {STAR, DSO, PLANET, CONSTELLATION, SOLE_CONSTELLATION, MOON, HIDDEN_MOON}
-export enum SELECTION_TYPE {NONE, STAR, PLANET, DSO, MOON, MOON_SHADOW, CONSTELLATION, PRIORITY_DSO}
+export enum LABEL_CLASS { MINOR, STAR_OR_PLANET, CONSTELLATION }
+export enum LABEL_TYPE { STAR, DSO, PLANET, CONSTELLATION, SOLE_CONSTELLATION, MOON, HIDDEN_MOON }
+export enum SELECTION_TYPE { NONE, STAR, PLANET, DSO, MOON, MOON_SHADOW, CONSTELLATION, PRIORITY_DSO }
 
 export interface LabelInfo {
   name: string;
@@ -116,7 +116,7 @@ export interface DrawingContextPlanetary extends DrawingContext {
   starLevelRange: number;
 }
 
-export enum NONPLANET {DEFAULT = -1, CONSTELLATIONS = -2, STARS = -3, MOONSHADE = -4}
+export enum NONPLANET { DEFAULT = -1, CONSTELLATIONS = -2, STARS = -3, MOONSHADE = -4 }
 export type SUBJECT = NONPLANET | number;
 export const OUTER_LABEL_GAP = 2;
 const STAR_LABEL_GAP    = 3;

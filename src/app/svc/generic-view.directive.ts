@@ -14,7 +14,7 @@ import { getXYForTouchEvent } from '../util/ks-touch-events';
 import { KsMarqueeComponent } from '../widgets/ks-marquee/ks-marquee.component';
 
 export const PROPERTY_ADDITIONALS = 'additionals';
-export enum    ADDITIONALS {NONE, ALL_ASTEROIDS, ALL_COMETS, ALL}
+export enum ADDITIONALS { NONE, ALL_ASTEROIDS, ALL_COMETS, ALL }
 
 const FLICK_REJECTION_THRESHOLD = 250;
 const SLOW_DRAWING_THRESHOLD = 125;

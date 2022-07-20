@@ -46,9 +46,9 @@ export class SvcLocationSettingsComponent {
 
   get latitudeStyle(): AngleEditorOptions {
     if (this.app.latLongStyle === LatLongStyle.DEGREES_AND_MINUTES)
-      return { angleStyle: AngleStyle.DD_MM, compass: true };
+      return { angleStyle: AngleStyle.DD_MM, compass: true, copyDecimal: true };
     else
-      return { angleStyle: AngleStyle.DD, decimalPrecision: 2, compass: true };
+      return { angleStyle: AngleStyle.DD, decimalPrecision: 2, compass: true, copyDecimal: true };
   }
 
   get latitude(): number { return this.app.latitude; }
@@ -59,9 +59,9 @@ export class SvcLocationSettingsComponent {
 
   get longitudeStyle(): AngleEditorOptions {
     if (this.app.latLongStyle === LatLongStyle.DEGREES_AND_MINUTES)
-      return { angleStyle: AngleStyle.DDD_MM, compass: true };
+      return { angleStyle: AngleStyle.DDD_MM, compass: true, copyDecimal: true };
     else
-      return { angleStyle: AngleStyle.DDD, decimalPrecision: 2, compass: true };
+      return { angleStyle: AngleStyle.DDD, decimalPrecision: 2, compass: true, copyDecimal: true };
   }
 
   get longitude(): number { return this.app.longitude; }

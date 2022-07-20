@@ -22,7 +22,7 @@ export const EVENT_MAP_GO_TO_ECLIPSE_CENTER = 'event_map_go_to_eclipse_center';
 export const EVENT_MAP_ACTIVE_ECLIPSE = 'event_map_active_eclipse';
 export const EVENT_MAP_ACTIVE_ECLIPSE_REQUEST = 'event_map_active_eclipse_request';
 
-export enum MapType {TERRAIN, POLITICAL}
+export enum MapType { TERRAIN, POLITICAL }
 
 const MIN_ECLIPSE_MAGNITUDE = 0.8;  // Portion of full eclipse (1.0)
 const MIN_SEARCH_MAGNITUDE  = 0.9;  // Portion of full eclipse (1.0)

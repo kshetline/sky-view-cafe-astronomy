@@ -25,13 +25,13 @@ import { MoonDrawer } from '../moon-drawer';
 
 export const  VIEW_SKY = 'sky';
 export const    PROPERTY_VIEW_TYPE = 'view_type';
-export enum       VIEW_TYPE {FULL_SKY_FLAT, FULL_SKY_DOME,
-                             HORIZON_45, HORIZON_90, HORIZON_120, HORIZON_TO_ZENITH,
-                             ZENITH_100,
-                             MOON_CLOSEUP_2, MOON_CLOSEUP_4, MOON_CLOSEUP_8, MOON_CLOSEUP_16,
-                             SUN_CLOSEUP_2, SUN_CLOSEUP_4, SUN_CLOSEUP_8, SUN_CLOSEUP_16}
+export enum       VIEW_TYPE { FULL_SKY_FLAT, FULL_SKY_DOME,
+                              HORIZON_45, HORIZON_90, HORIZON_120, HORIZON_TO_ZENITH,
+                              ZENITH_100,
+                              MOON_CLOSEUP_2, MOON_CLOSEUP_4, MOON_CLOSEUP_8, MOON_CLOSEUP_16,
+                              SUN_CLOSEUP_2, SUN_CLOSEUP_4, SUN_CLOSEUP_8, SUN_CLOSEUP_16 }
 export const    PROPERTY_SKY_COLOR = 'sky_color';
-export enum       SKY_COLOR {BLACK, BASIC, MULTI}
+export enum       SKY_COLOR { BLACK, BASIC, MULTI }
 export const    PROPERTY_REFRACTION = 'refraction';
 export const    PROPERTY_CELESTIAL_GRID = 'celestial_grid';
 export const    PROPERTY_ECLIPTIC_GRID = 'ecliptic_grid';
@@ -50,7 +50,7 @@ export const    PROPERTY_FACING = 'facing';
 export const    PROPERTY_TRACK_SUN = 'track_sun';
 export const    PROPERTY_PARALLEL_TO_ECLIPTIC = 'parallel_to_ecliptic';
 
-enum VIEW_MODE {FULL_SKY, HORIZON, ZENITH, MOON_CLOSEUP, SUN_CLOSEUP}
+enum VIEW_MODE { FULL_SKY, HORIZON, ZENITH, MOON_CLOSEUP, SUN_CLOSEUP }
 
 const COMPASS_POINTS = ['S', 'SSW', 'SW', 'WSW', 'W', 'WNW', 'NW', 'NNW',
                         'N', 'NNE', 'NE', 'ENE', 'E', 'ESE', 'SE', 'SSE'];
