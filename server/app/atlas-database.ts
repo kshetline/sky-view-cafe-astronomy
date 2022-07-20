@@ -8,11 +8,11 @@ import {
 import { AtlasLocation } from './atlas-location';
 import { MIN_EXTERNAL_SOURCE } from './common';
 import { svcApiConsole } from './svc-api-logger';
-import { isAllUppercaseWords, toBoolean, toMixedCase } from '@tubular/util';
+import { isAllUppercaseWords, toMixedCase } from '@tubular/util';
 
 export const pool = new Pool({
-  host: (toBoolean(process.env.DB_REMOTE) ? 'skyviewcafe.com' : '127.0.0.1'),
-  user: 'skyview',
+  host: process.env.DB_HOST || '127.0.0.1',
+  user: process.env.DB_USER,
   password: process.env.DB_PWD,
   database: 'skyviewcafe'
 });
