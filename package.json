@@ -28,7 +28,7 @@
     "@tubular/astronomy": "^3.3.0",
     "@tubular/math": "^3.1.0",
     "@tubular/ng-widgets": "^2.2.1",
-    "@tubular/time": "^3.8.4",
+    "@tubular/time": "^3.8.6",
     "@tubular/util": "^4.12.0",
     "core-js": "^2.6.12",
     "detect-resize": "^0.1.5",
