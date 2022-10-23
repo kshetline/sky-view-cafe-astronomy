@@ -1,7 +1,7 @@
 import { AfterViewInit, Directive, ElementRef, ViewChild } from '@angular/core';
 import { SafeStyle } from '@angular/platform-browser';
 import {
-  ASTEROID_BASE, COMET_BASE, EARTH, FIRST_PLANET, HALF_MINUTE, ISkyObserver, LAST_PLANET, NO_MATCH, SkyObserver, SolarSystem,
+  ASTEROID_BASE, COMET_BASE, EARTH, FIRST_PLANET, HALF_MINUTE, HALF_SECOND, ISkyObserver, LAST_PLANET, NO_MATCH, SkyObserver, SolarSystem,
   StarCatalog
 } from '@tubular/astronomy';
 import { DateTime, utToTdt } from '@tubular/time';
@@ -14,7 +14,7 @@ import { getXYForTouchEvent } from '../util/ks-touch-events';
 import { KsMarqueeComponent } from '../widgets/ks-marquee/ks-marquee.component';
 
 export const PROPERTY_ADDITIONALS = 'additionals';
-export enum    ADDITIONALS {NONE, ALL_ASTEROIDS, ALL_COMETS, ALL}
+export enum ADDITIONALS { NONE, ALL_ASTEROIDS, ALL_COMETS, ALL }
 
 const FLICK_REJECTION_THRESHOLD = 250;
 const SLOW_DRAWING_THRESHOLD = 125;
@@ -438,7 +438,7 @@ export abstract class GenericViewDirective implements AfterViewInit {
     dc.ss = this.appService.solarSystem;
     dc.skyObserver = new SkyObserver(this.appService.longitude, this.appService.latitude);
     // Bias time half a minute ahead of the clock time for rounding to the middle of the selected minute.
-    dc.jdu = DateTime.julianDay(this.time) + HALF_MINUTE;
+    dc.jdu = DateTime.julianDay(this.time) + (this.appService.showingSeconds ? HALF_SECOND : HALF_MINUTE);
     dc.jde = utToTdt(dc.jdu);
     dc.inkSaver = GenericViewDirective.printing && this.appService.inkSaver;
 

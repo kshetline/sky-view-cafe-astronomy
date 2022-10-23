@@ -53,7 +53,7 @@ export class MoonDrawer {
       this.setUpRenderer();
 
     if (size === 0)
-      size = MAX_LUNAR_ANGULAR_DIAMETER * pixelsPerArcSec * 60;
+      size = MAX_LUNAR_ANGULAR_DIAMETER * pixelsPerArcSec * 60 * 1.021;
 
     const targetSize = size;
 

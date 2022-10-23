@@ -9,7 +9,7 @@ import { SelectItem } from 'primeng/api';
 import { AppService, CurrentTab, Location, UserSetting } from '../../app.service';
 import { AstroDataService } from '../../astronomy/astro-data.service';
 
-export enum TableType {NONE, EPHEMERIS, EPHEMERIS_TBD, RISE_SET_TIMES, LUNAR_PHASES, EQUINOX_SOLSTICE, GALILEAN_MOONS}
+export enum TableType { NONE, EPHEMERIS, EPHEMERIS_TBD, RISE_SET_TIMES, LUNAR_PHASES, EQUINOX_SOLSTICE, GALILEAN_MOONS }
 
 export const  VIEW_TABLES = 'tables';
 export const    PROPERTY_PLANET_CHOICE = 'planet_choice';

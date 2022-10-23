@@ -6,7 +6,7 @@ import { pool } from './atlas-database';
 import { code2ToCode3 } from './gazetteer';
 import { PoolConnection } from './mysql-await-async';
 import { Timezone } from '@tubular/time';
-import { find } from 'geo-tz';
+import { find } from '@tubular/geo-tz';
 import booleanPointInPolygon from '@turf/boolean-point-in-polygon';
 
 export const router = Router();

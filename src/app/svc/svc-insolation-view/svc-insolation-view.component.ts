@@ -19,7 +19,7 @@ const MARK_LENGTH = 5;
 
 const ABBR_MONTH_NAMES = ['', 'JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'];
 
-const enum RefreshMode {NEVER_REFRESH, REFRESH_ON_CHANGED_YEAR, ALWAYS_REFRESH}
+const enum RefreshMode { NEVER_REFRESH, REFRESH_ON_CHANGED_YEAR, ALWAYS_REFRESH }
 
 const crosshairColor        = 'green';
 const crosshairOutlineColor = 'white';

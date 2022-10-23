@@ -30,6 +30,7 @@ const MAX_CLOCK_EFFECTIVE_WIDTH = 600;
   providers: [AppService, MessageService]
 })
 export class AppComponent implements AfterViewInit, OnDestroy {
+  Timezone = Timezone;
   SVC_MIN_YEAR = SVC_MIN_YEAR.toString();
   SVC_MAX_YEAR = SVC_MAX_YEAR.toString();
 

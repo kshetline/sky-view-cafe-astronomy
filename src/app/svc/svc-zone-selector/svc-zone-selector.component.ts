@@ -46,7 +46,7 @@ function toCanonicalOffset(offset: string): string { // ([§#~^\u2744])
 }
 
 function toCanonicalZone(zone: string): string {
-  return zone?.replace(/ /g, '_').replace(/\bKyiv\b/, 'Kiev');
+  return zone?.replace(/ /g, '_');
 }
 
 function toDisplayOffset(offset: string): string {
@@ -77,7 +77,7 @@ function toDisplayOffset(offset: string): string {
 }
 
 function toDisplayZone(zone: string): string {
-  return zone?.replace(/_/g, ' ').replace(/\bKiev\b/, 'Kyiv');
+  return zone?.replace(/_/g, ' ');
 }
 
 @Component({

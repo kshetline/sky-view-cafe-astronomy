@@ -1,10 +1,10 @@
-import { AfterViewInit, Component, Input, OnDestroy } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, Input, OnDestroy } from '@angular/core';
 import {
   APHELION, EARTH, EclipseInfo, EventFinder, FALL_EQUINOX, FIRST_QUARTER, FULL_MOON, GALILEAN_MOON_EVENT, GREATEST_ELONGATION,
   GRS_TRANSIT_EVENT, INFERIOR_CONJUNCTION, JUPITER, JupiterInfo, LAST_QUARTER, LUNAR_ECLIPSE, MARS, MERCURY, MOON, NEPTUNE, NEW_MOON,
   OPPOSITION, PERIHELION, PLUTO, QUADRATURE, RISE_EVENT, RISE_SET_EVENT_BASE, SATURN, SET_EVENT, SET_EVENT_MINUS_1_MIN, SkyObserver,
-  SOLAR_ECLIPSE, SPRING_EQUINOX, SUMMER_SOLSTICE, SUN, SUPERIOR_CONJUNCTION, TRANSIT_EVENT, TWILIGHT_BEGINS, TWILIGHT_ENDS, URANUS,
-  VENUS, WINTER_SOLSTICE
+  SOLAR_ECLIPSE, SOLAR_ECLIPSE_LOCAL, SPRING_EQUINOX, SUMMER_SOLSTICE, SUN, SUPERIOR_CONJUNCTION, TRANSIT_EVENT, TWILIGHT_BEGINS,
+  TWILIGHT_ENDS, URANUS, VENUS, WINTER_SOLSTICE
 } from '@tubular/astronomy';
 import { DateTime, Timezone } from '@tubular/time';
 import { isString } from '@tubular/util';
@@ -27,6 +27,7 @@ export class SvcEventNavigatorComponent implements AfterViewInit, OnDestroy {
   private _selectedEvent = RISE_EVENT;
   private _selectedPlanet = SUN;
   private clickTimer: Subscription;
+  private initDone = false;
   private lastGoBack = false;
   private waitingForEvent = false;
   private eventFinder: EventFinder;
@@ -55,6 +56,7 @@ export class SvcEventNavigatorComponent implements AfterViewInit, OnDestroy {
     { label: '-', value: -1 },
     { label: 'Lunar eclipse',           value: LUNAR_ECLIPSE },
     { label: 'Solar eclipse',           value: SOLAR_ECLIPSE },
+    { label: 'Local solar eclipse',     value: SOLAR_ECLIPSE_LOCAL },
     { label: '-', value: -1 },
     { label: 'Opposition',              value: OPPOSITION },
     { label: 'Superior conjunction',    value: SUPERIOR_CONJUNCTION },
@@ -88,7 +90,12 @@ export class SvcEventNavigatorComponent implements AfterViewInit, OnDestroy {
   eventFinderReady = false;
   planets: SelectItem[] = this.planetChoices;
 
-  constructor(private app: AppService, dataService: AstroDataService, private messageService: MessageService) {
+  constructor(
+    private app: AppService,
+    dataService: AstroDataService,
+    private messageService: MessageService,
+    private ref: ChangeDetectorRef
+  ) {
     this.updatePlanets(this._selectedEvent);
 
     JupiterInfo.getJupiterInfo(dataService).then((jupiterInfo: JupiterInfo) => {
@@ -124,6 +131,7 @@ export class SvcEventNavigatorComponent implements AfterViewInit, OnDestroy {
 
   ngAfterViewInit(): void {
     setTimeout(() => this.app.requestViewSettings(VIEW_MOONS));
+    this.initDone = true;
   }
 
   ngOnDestroy(): void {
@@ -233,6 +241,9 @@ export class SvcEventNavigatorComponent implements AfterViewInit, OnDestroy {
       this.selectedPlanet = firstIncluded;
 
     this.noPlanets = (firstIncluded < 0);
+
+    if (this.initDone)
+      this.ref.detectChanges();
   }
 
   private getEvent(goBack: boolean): void {

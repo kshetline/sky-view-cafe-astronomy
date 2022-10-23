@@ -1,0 +1,31 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Launch server",
+      "request": "launch",
+      "cwd": "${workspaceFolder}/server",
+      "runtimeArgs": [
+        "start"
+      ],
+      "runtimeExecutable": "npm",
+      "skipFiles": [
+        "<node_internals>/**"
+      ],
+      "type": "node",
+      "envFile": "${workspaceFolder}/.vscode/.env"
+    },
+    {
+      "name": "Launch client",
+      "request": "launch",
+      "runtimeArgs": [
+        "start"
+      ],
+      "runtimeExecutable": "npm",
+      "skipFiles": [
+        "<node_internals>/**"
+      ],
+      "type": "node"
+    }
+  ]
+}
