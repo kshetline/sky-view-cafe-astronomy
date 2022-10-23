@@ -477,6 +477,7 @@ export class SvcSkyViewComponent extends GenericSkyViewDirective implements Afte
     const hInset = ceil(dc.context.measureText('MMMM').width);
     const showMilkyWay = (this.milkyWay && this.showMilkyWay && this.trackingPlanet === NO_SELECTION);
     const multiColor = (this.skyColor === SKY_COLOR.MULTI && !dc.inkSaver);
+    console.log(dc.ss.getLocalSolarEclipseTotality(dc.jde, dc.skyObserver, true));
 
     dc.x_ul = dc.y_ul = 0;
     dc.plotWidth = dc.w;

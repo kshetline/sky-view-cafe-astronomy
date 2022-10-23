@@ -15,6 +15,6 @@
   <ks-checkbox [(ngModel)]="topocentricMoon" binary="true" label="Topocentric Moon"></ks-checkbox>
   <ks-checkbox [(ngModel)]="enlargeSunMoon" binary="true" label="Enlarge Sun/Moon"></ks-checkbox>
 </div>
-<p-menu #menu popup="popup" [model]="namesCategories"></p-menu>
+<p-menu #menu [popup]="true" [model]="namesCategories"></p-menu>
 <br>
 <button type="button" pButton icon="fas fa-list" label="Show Names..." (click)="menu.toggle($event)"></button>

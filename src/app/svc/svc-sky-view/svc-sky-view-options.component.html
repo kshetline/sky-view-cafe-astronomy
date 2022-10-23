@@ -19,6 +19,6 @@
   <ks-checkbox [(ngModel)]="showMilkyWay" binary="true" label="Milky Way"
     [disabled]="viewType > 6"></ks-checkbox>
 </div>
-<p-menu #menu popup="popup" [model]="namesCategories"></p-menu>
+<p-menu #menu [popup]="true" [model]="namesCategories"></p-menu>
 <br>
 <button type="button" pButton icon="fas fa-list" label="Show Names..." (click)="menu.toggle($event)"></button>
