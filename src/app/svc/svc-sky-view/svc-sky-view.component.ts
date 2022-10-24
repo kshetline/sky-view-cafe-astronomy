@@ -8,7 +8,7 @@ import {
   abs, Angle, asin_deg, atan2_deg, ceil, cos, cos_deg, floor, interpolate, limitNeg1to1, max, min, mod, mod2, PI, Point, round, sin,
   sin_deg, SphericalPosition, SphericalPosition3D, sqrt, tan, tan_deg, TWO_PI, Unit
 } from '@tubular/math';
-import { colorFromRGB, drawOutlinedText, padLeft, parseColor, replaceAlpha, strokeLine } from '@tubular/util';
+import { colorFromRGB, drawOutlinedText, parseColor, replaceAlpha, strokeLine } from '@tubular/util';
 import { AppService, CurrentTab, PROPERTY_NORTH_AZIMUTH, UserSetting, VIEW_APP } from '../../app.service';
 import {
   asteroidColor, cometColor, DrawingContextPlanetary, FAR_AWAY, LabelInfo, MARQUEE_EQUATORIAL, MARQUEE_HORIZONTAL, MARQUEE_ILLUMINATION,
@@ -174,7 +174,7 @@ export class SvcSkyViewComponent extends GenericSkyViewDirective implements Afte
       this.facingOrigin = 'W of S';
     }
 
-    this.formattedFacing = padLeft(facing.toFixed(1), 5, '0');
+    this.formattedFacing = facing.toFixed(1).padStart(5, '0');
   }
 
   constructor(appService: AppService) {
@@ -477,7 +477,6 @@ export class SvcSkyViewComponent extends GenericSkyViewDirective implements Afte
     const hInset = ceil(dc.context.measureText('MMMM').width);
     const showMilkyWay = (this.milkyWay && this.showMilkyWay && this.trackingPlanet === NO_SELECTION);
     const multiColor = (this.skyColor === SKY_COLOR.MULTI && !dc.inkSaver);
-    console.log(dc.ss.getLocalSolarEclipseTotality(dc.jde, dc.skyObserver, true));
 
     dc.x_ul = dc.y_ul = 0;
     dc.plotWidth = dc.w;
@@ -678,7 +677,7 @@ export class SvcSkyViewComponent extends GenericSkyViewDirective implements Afte
       dc.planetSizes[planet] = pSize;
 
     if (planet === MOON && this.moonDrawer)
-      this.moonDrawer.drawMoon(dc.context, dc.ss, dc.jde, cx, cy, 0, dc.pixelsPerArcSec, this.canvasScaling, dc.parallacticAngle,
+      this.moonDrawer.drawMoon(dc.context, dc.ss, dc.jde, cx, cy, pSize, 0, this.canvasScaling, dc.parallacticAngle,
                                dc.skyObserver, true);
     else {
       if (this.trackingPlanet !== NO_SELECTION && planet !== SUN) {

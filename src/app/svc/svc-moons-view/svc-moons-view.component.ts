@@ -5,7 +5,7 @@ import {
   NAUTICAL_TWILIGHT, PlanetaryMoons, REFRACTION_AT_HORIZON, SATURN, SATURN_FLATTENING, SaturnMoons, SUN
 } from '@tubular/astronomy';
 import { floor, log10, max, min, PI, Point, pow, round, sin_deg, sqrt } from '@tubular/math';
-import { extendDelimited, fillEllipse, getFontMetrics, padLeft, strokeEllipse } from '@tubular/util';
+import { extendDelimited, fillEllipse, getFontMetrics, strokeEllipse } from '@tubular/util';
 import { AppService, CurrentTab, UserSetting } from '../../app.service';
 import { AstroDataService } from '../../astronomy/astro-data.service';
 import { DrawingContextPlanetary, GenericPlanetaryViewDirective, LABEL_TYPE, SELECTION_TYPE, SUBJECT } from '../generic-planetary-view.directive';
@@ -416,10 +416,10 @@ export class SvcMoonsViewComponent extends GenericPlanetaryViewDirective impleme
       const sys2      = this.jupiterInfo.getSystemIILongitude(dc.jde).degrees;
       const grs       = this.jupiterInfo.getGRSLongitude(dc.jde).degrees;
       const grsOffset = this.jupiterInfo.getGRSCMOffset(dc.jde).degrees;
-      const sys1Text      = padLeft(sys1.toFixed(1), 6) + '\u00B0 '; // degree sign
-      const sys2Text      = padLeft(sys2.toFixed(1), 6) + '\u00B0 ';
-      const grsText       = padLeft(grs.toFixed(1), 6) + '\u00B0 ';
-      const grsOffsetText = padLeft(grsOffset.toFixed(1), 6) + '\u00B0 ';
+      const sys1Text      = sys1.toFixed(1).padStart(6) + '\u00B0 '; // degree sign
+      const sys2Text      = sys2.toFixed(1).padStart(6) + '\u00B0 ';
+      const grsText       = grs.toFixed(1).padStart(6) + '\u00B0 ';
+      const grsOffsetText = grsOffset.toFixed(1).padStart(6) + '\u00B0 ';
       const sys1Label      = 'Central meridian (Sys I): ';
       const sys2Label      = 'Central meridian (Sys II): ';
       const grsLabel       = (this.jupiterInfo.getFixedGRSLongitude() ?

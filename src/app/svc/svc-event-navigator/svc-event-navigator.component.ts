@@ -12,10 +12,14 @@ import { MessageService, SelectItem } from 'primeng/api';
 import { Subscription, timer } from 'rxjs';
 import { AppService, UserSetting } from '../../app.service';
 import { AstroDataService } from '../../astronomy/astro-data.service';
-import { PROPERTY_FIXED_GRS, PROPERTY_GRS_OVERRIDE, VIEW_MOONS } from '../svc-moons-view/svc-moons-view.component';
+import { PROPERTY_EAST_ON_LEFT, PROPERTY_FIXED_GRS, PROPERTY_GRS_OVERRIDE, PROPERTY_NORTH_ON_TOP, VIEW_MOONS } from '../svc-moons-view/svc-moons-view.component';
 
 const CLICK_REPEAT_DELAY = 500;
 const CLICK_REPEAT_RATE  = 100;
+
+export const  VIEW_EVENT_NAV = 'event_nav';
+export const    PROPERTY_EVENT_BODY = 'event_body';
+export const    PROPERTY_EVENT_TYPE = 'event_type';
 
 @Component({
   selector: 'svc-event-navigator',
@@ -110,6 +114,13 @@ export class SvcEventNavigatorComponent implements AfterViewInit, OnDestroy {
     });
 
     app.getUserSettingUpdates((setting: UserSetting) => {
+      if (setting.view === VIEW_EVENT_NAV && setting.source !== this) {
+        if (setting.property === PROPERTY_EVENT_BODY)
+          this.selectedPlanet = setting.value as number;
+        else if (setting.property === PROPERTY_EVENT_TYPE)
+          this.selectedEvent = setting.value as number;
+      }
+
       if (setting.view === VIEW_MOONS && this.jupiterInfo) {
         if (setting.property === PROPERTY_GRS_OVERRIDE) {
           this.lastGrsOverride = setting.value as boolean;
@@ -130,7 +141,10 @@ export class SvcEventNavigatorComponent implements AfterViewInit, OnDestroy {
   }
 
   ngAfterViewInit(): void {
-    setTimeout(() => this.app.requestViewSettings(VIEW_MOONS));
+    setTimeout(() => {
+      this.app.requestViewSettings(VIEW_EVENT_NAV);
+      this.app.requestViewSettings(VIEW_MOONS);
+    });
     this.initDone = true;
   }
 
@@ -156,8 +170,10 @@ export class SvcEventNavigatorComponent implements AfterViewInit, OnDestroy {
           this.selectedEvent = lastEvent;
         });
       }
-      else
+      else {
+        this.app.updateUserSetting({ view: VIEW_EVENT_NAV, property: PROPERTY_EVENT_TYPE, value: newEvent, source: this });
         this.updatePlanets(newEvent);
+      }
     }
   }
 
@@ -172,6 +188,8 @@ export class SvcEventNavigatorComponent implements AfterViewInit, OnDestroy {
           this.selectedPlanet = lastPlanet;
         });
       }
+      else
+        this.app.updateUserSetting({ view: VIEW_EVENT_NAV, property: PROPERTY_EVENT_BODY, value: newPlanet, source: this });
     }
   }
 

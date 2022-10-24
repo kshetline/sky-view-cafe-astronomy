@@ -6,7 +6,7 @@ import {
 } from '@tubular/astronomy';
 import { DateTime, utToTdt } from '@tubular/time';
 import { ceil, max, round, sqrt } from '@tubular/math';
-import { clone, FontMetrics, getFontMetrics, isSafari, isString, padLeft } from '@tubular/util';
+import { clone, FontMetrics, getFontMetrics, isSafari, isString } from '@tubular/util';
 import { debounce, throttle } from 'lodash-es';
 import { BehaviorSubject, Observable, Subscription } from 'rxjs';
 import { AppService, CurrentTab } from '../app.service';
@@ -470,11 +470,11 @@ export abstract class GenericViewDirective implements AfterViewInit {
     if (this.showMetrics) {
       const interval = max(startTime - this.lastDrawStart, 1);
 
-      this.marqueeText = padLeft(drawingTime.toFixed(1), 6, '\u2007') + (dc.fullDraw ? 'F' : 'Q') + ', ' +
-        padLeft(interval.toFixed(1), 6, '\u2007');
+      this.marqueeText = drawingTime.toFixed(1).padStart(6, '\u2007') + (dc.fullDraw ? 'F' : 'Q') + ', ' +
+        interval.toFixed(1).padStart(6, '\u2007');
 
       if (!dc.fullDraw)
-        this.marqueeText += ', ' + padLeft(this.lastFullDrawTime.toFixed(1), 6, '\u2007') + 'F';
+        this.marqueeText += ', ' + this.lastFullDrawTime.toFixed(1).padStart(6, '\u2007') + 'F';
     }
 
     this.lastDrawStart = startTime;
