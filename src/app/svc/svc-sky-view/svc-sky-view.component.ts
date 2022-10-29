@@ -666,9 +666,7 @@ export class SvcSkyViewComponent extends GenericSkyViewDirective implements Afte
   protected drawScaledPlanet(planet: number, pt: Point, dc: DrawingContextSky, _colorOverride?: string): void {
     const cx = pt.x;
     const cy = pt.y;
-    let pSize = this.scaledRound(dc.ss.getAngularDiameter(planet, dc.jde, dc.skyObserver) * dc.pixelsPerArcSec);
-
-    pSize += (pSize + 1) % 2;
+    let pSize = dc.ss.getAngularDiameter(planet, dc.jde, dc.skyObserver) * dc.pixelsPerArcSec;
 
     if (pSize < 3)
       pSize = 3;
@@ -677,7 +675,7 @@ export class SvcSkyViewComponent extends GenericSkyViewDirective implements Afte
       dc.planetSizes[planet] = pSize;
 
     if (planet === MOON && this.moonDrawer)
-      this.moonDrawer.drawMoon(dc.context, dc.ss, dc.jde, cx, cy, pSize, 0, this.canvasScaling, dc.parallacticAngle,
+      this.moonDrawer.drawMoon(dc.context, dc.ss, dc.jde, cx, cy, 0, dc.pixelsPerArcSec, this.canvasScaling, dc.parallacticAngle,
                                dc.skyObserver, true);
     else {
       if (this.trackingPlanet !== NO_SELECTION && planet !== SUN) {
@@ -693,6 +691,9 @@ export class SvcSkyViewComponent extends GenericSkyViewDirective implements Afte
         dc.context.fillStyle = asteroidColor;
       else
         dc.context.fillStyle = cometColor;
+
+      if (planet === SUN && dc.totality > 0.8 && dc.totality < 1.0)
+        pSize += this.canvasScaling * (dc.totality - 0.8) / 0.2;
 
       dc.context.beginPath();
       dc.context.arc(cx, cy, pSize / 2, 0, TWO_PI);

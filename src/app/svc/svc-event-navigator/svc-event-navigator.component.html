@@ -9,5 +9,8 @@
   <button pButton type="button" icon="fas fa-chevron-right" [disabled]="disabled || !eventFinderReady"
           (touchstart)="onTouchStart($event, false)" (touchend)="onTouchEnd($event)"
           (mousedown)="onMouseDown(false, $event)" (mouseup)="onMouseUp()" (mouseleave)="stopClickTimer()"></button>
+  <div class="busy" [style.display]="busy ? 'flex': 'none'">
+    <i class="fas fa-spinner fa-pulse fa-lg fa-fw"></i>
+  </div>
 </div>
 <p-toast key="navigator" position="center"></p-toast>

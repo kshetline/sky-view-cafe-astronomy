@@ -1,7 +1,7 @@
 import { AfterViewInit, ChangeDetectorRef, Component, Input, OnDestroy } from '@angular/core';
 import {
-  APHELION, EARTH, EclipseInfo, EventFinder, FALL_EQUINOX, FIRST_QUARTER, FULL_MOON, GALILEAN_MOON_EVENT, GREATEST_ELONGATION,
-  GRS_TRANSIT_EVENT, INFERIOR_CONJUNCTION, JUPITER, JupiterInfo, LAST_QUARTER, LUNAR_ECLIPSE, MARS, MERCURY, MOON, NEPTUNE, NEW_MOON,
+  APHELION, AstroEvent, EARTH, EclipseInfo, EventFinder, FALL_EQUINOX, FIRST_QUARTER, FULL_MOON, GALILEAN_MOON_EVENT, GREATEST_ELONGATION,
+  GRS_TRANSIT_EVENT, INFERIOR_CONJUNCTION, JUPITER, JupiterInfo, LAST_QUARTER, LocalEclipseCircumstances, LUNAR_ECLIPSE, LUNAR_ECLIPSE_LOCAL, MARS, MERCURY, MOON, NEPTUNE, NEW_MOON,
   OPPOSITION, PERIHELION, PLUTO, QUADRATURE, RISE_EVENT, RISE_SET_EVENT_BASE, SATURN, SET_EVENT, SET_EVENT_MINUS_1_MIN, SkyObserver,
   SOLAR_ECLIPSE, SOLAR_ECLIPSE_LOCAL, SPRING_EQUINOX, SUMMER_SOLSTICE, SUN, SUPERIOR_CONJUNCTION, TRANSIT_EVENT, TWILIGHT_BEGINS,
   TWILIGHT_ENDS, URANUS, VENUS, WINTER_SOLSTICE
@@ -12,7 +12,7 @@ import { MessageService, SelectItem } from 'primeng/api';
 import { Subscription, timer } from 'rxjs';
 import { AppService, UserSetting } from '../../app.service';
 import { AstroDataService } from '../../astronomy/astro-data.service';
-import { PROPERTY_EAST_ON_LEFT, PROPERTY_FIXED_GRS, PROPERTY_GRS_OVERRIDE, PROPERTY_NORTH_ON_TOP, VIEW_MOONS } from '../svc-moons-view/svc-moons-view.component';
+import { PROPERTY_FIXED_GRS, PROPERTY_GRS_OVERRIDE, VIEW_MOONS } from '../svc-moons-view/svc-moons-view.component';
 
 const CLICK_REPEAT_DELAY = 500;
 const CLICK_REPEAT_RATE  = 100;
@@ -28,16 +28,16 @@ export const    PROPERTY_EVENT_TYPE = 'event_type';
   templateUrl: './svc-event-navigator.component.html'
 })
 export class SvcEventNavigatorComponent implements AfterViewInit, OnDestroy {
+  private clickTimer: Subscription;
+  private eventFinder: EventFinder;
+  private initDone = false;
+  private jupiterInfo: JupiterInfo;
+  private lastGoBack = false;
+  private lastGrsLongitude = JupiterInfo.DEFAULT_GRS_LONG.degrees;
+  private lastGrsOverride = false;
   private _selectedEvent = RISE_EVENT;
   private _selectedPlanet = SUN;
-  private clickTimer: Subscription;
-  private initDone = false;
-  private lastGoBack = false;
   private waitingForEvent = false;
-  private eventFinder: EventFinder;
-  private jupiterInfo: JupiterInfo;
-  private lastGrsOverride = false;
-  private lastGrsLongitude = JupiterInfo.DEFAULT_GRS_LONG.degrees;
 
   events: SelectItem[] = [
     { label: 'Rising',                  value: RISE_EVENT },
@@ -90,8 +90,11 @@ export class SvcEventNavigatorComponent implements AfterViewInit, OnDestroy {
   ];
 
   @Input() disabled = false;
-  noPlanets = false;
+
+  busy = false;
+  busyTimer: any;
   eventFinderReady = false;
+  noPlanets = false;
   planets: SelectItem[] = this.planetChoices;
 
   constructor(
@@ -183,7 +186,7 @@ export class SvcEventNavigatorComponent implements AfterViewInit, OnDestroy {
       const lastPlanet = this._selectedPlanet;
       this._selectedPlanet = newPlanet;
 
-      if (newPlanet < 0) {
+      if (newPlanet == null || newPlanet < 0) {
         timer(0).subscribe(() => {
           this.selectedPlanet = lastPlanet;
         });
@@ -194,7 +197,9 @@ export class SvcEventNavigatorComponent implements AfterViewInit, OnDestroy {
   }
 
   onTouchStart(evt: TouchEvent, goBack: boolean): void {
-    if (evt.cancelable) evt.preventDefault();
+    if (evt.cancelable)
+      evt.preventDefault();
+
     this.onMouseDown(goBack);
   }
 
@@ -255,7 +260,7 @@ export class SvcEventNavigatorComponent implements AfterViewInit, OnDestroy {
         this.planets.push({ label: '\u00A0', value: badValue-- });
     }
 
-    if (firstIncluded >= 0 && this.planets[this._selectedPlanet].value < 0)
+    if (firstIncluded >= 0 && (!this._selectedPlanet || this.planets[this._selectedPlanet].value < 0))
       this.selectedPlanet = firstIncluded;
 
     this.noPlanets = (firstIncluded < 0);
@@ -281,13 +286,47 @@ export class SvcEventNavigatorComponent implements AfterViewInit, OnDestroy {
     }
 
     const timezone = Timezone.getTimezone(this.app.location.zone, this.app.location.longitude);
-    const event = this.eventFinder.findEvent(this._selectedPlanet, this._selectedEvent, DateTime.julianDay(this.app.time),
-                    observer, timezone, this.app.gregorianChangeDate, goBack, altMins);
 
+    this.busyTimer = setTimeout(() => {
+      if (this.waitingForEvent)
+        this.busy = true;
+
+      this.busyTimer = undefined;
+    }, 500);
+
+    setTimeout(() => this.eventFinder.findEventAsync(this._selectedPlanet, this._selectedEvent,
+        DateTime.julianDay(this.app.time), observer, timezone, this.app.gregorianChangeDate, goBack, altMins)
+      .then(event => this.gotEvent(event))
+      .catch(err => {
+        console.error(err);
+        this.gotEvent(null);
+      }));
+  }
+
+  private gotEvent(event: AstroEvent): void {
     this.waitingForEvent = false;
+
+    if (this.busyTimer) {
+      clearTimeout(this.busyTimer);
+      this.busyTimer = undefined;
+    }
+
+    this.busy = false;
 
     if (event) {
       this.app.time = event.eventTime.utcTimeMillis;
+      if (event.eventType === SOLAR_ECLIPSE_LOCAL) {
+        const lec = event.miscInfo as LocalEclipseCircumstances;
+        console.log(lec);
+        if (lec.annular)
+          console.log('Annular');
+        console.log(new DateTime({ jdu: lec.firstContact }, this.app.timezone).toIsoString());
+        if (lec.peakDuration) {
+          console.log('   ', new DateTime({ jdu: lec.peakStarts }, this.app.timezone).toIsoString());
+          console.log('   ', new DateTime({ jdu: lec.peakEnds }, this.app.timezone).toIsoString());
+        }
+        console.log(new DateTime({ jdu: lec.lastContact }, this.app.timezone).toIsoString());
+      }
 
       let message: string;
 
@@ -295,6 +334,7 @@ export class SvcEventNavigatorComponent implements AfterViewInit, OnDestroy {
         message = event.miscInfo as string;
       else if (event.eventType === LUNAR_ECLIPSE || event.eventType === SOLAR_ECLIPSE) {
         const ei = event.miscInfo as EclipseInfo;
+        console.log(ei);
 
         if (ei.total)
           message = 'Total';
@@ -306,6 +346,18 @@ export class SvcEventNavigatorComponent implements AfterViewInit, OnDestroy {
           message = 'Partial';
 
         message += ' eclipse of the ' + (event.eventType === LUNAR_ECLIPSE ? 'Moon' : 'Sun');
+      }
+      else if (event.eventType === LUNAR_ECLIPSE_LOCAL || event.eventType === SOLAR_ECLIPSE_LOCAL) {
+        const lec = event.miscInfo as LocalEclipseCircumstances;
+
+        if (lec.maxEclipse >= 100)
+          message = 'Total';
+        else if (lec.annular)
+          message = 'Annular';
+        else
+          message = 'Partial';
+
+        message += ' eclipse of the ' + (event.eventType === LUNAR_ECLIPSE_LOCAL ? 'Moon' : 'Sun');
       }
 
       if (message) {
