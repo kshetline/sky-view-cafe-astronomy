@@ -692,8 +692,12 @@ export class SvcSkyViewComponent extends GenericSkyViewDirective implements Afte
       else
         dc.context.fillStyle = cometColor;
 
-      if (planet === SUN && dc.totality > 0.8 && dc.totality < 1.0)
-        pSize += this.canvasScaling * (dc.totality - 0.8) / 0.2;
+      if (planet === SUN) {
+        if (dc.totality > 0.8 && dc.totality < 1.0)
+          pSize += this.canvasScaling * (dc.totality - 0.8) / 0.2;
+        else if (dc.totality >=1)
+          pSize -= 1;
+      }
 
       dc.context.beginPath();
       dc.context.arc(cx, cy, pSize / 2, 0, TWO_PI);

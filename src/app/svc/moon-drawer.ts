@@ -117,17 +117,17 @@ export class MoonDrawer {
         // Umbra
         context2.fillStyle = '#664533';
         context2.filter = `blur(${size / 125}px)`;
-        fillCircle(context2, sx, sy, uRadius);
+        fillCircle(context2, sx, sy, uRadius + size / 200);
         // Mask off penumbra and umbra beyond edge of moon
         context2.filter = 'blur(1px)';
         context2.strokeStyle = 'white';
         context2.lineWidth = r;
-        strokeCircle(context2, r, r, moonR + r / 2 + 2 * pixelRatio);
+        strokeCircle(context2, r, r, moonR + r / 2 + 4 * pixelRatio);
 
         context.globalCompositeOperation = 'multiply';
         context.drawImage(this.shadowCanvas, cx - targetSize / 2, cy - targetSize / 2, targetSize, targetSize);
 
-        if (ei.totality > 0.8) {
+        if (0.8 < ei.totality && ei.totality < 1) {
           // Brighten remaining illuminated portion of moon to increase contrast with shadowed part.
           context2.clearRect(0, 0, size, size);
           context2.filter = '';

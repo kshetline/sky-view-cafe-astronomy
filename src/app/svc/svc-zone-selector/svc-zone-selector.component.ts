@@ -22,6 +22,9 @@ const OS   = 'OS';
 const LMT  = 'LMT';
 
 function toCanonicalOffset(offset: string): string { // ([§#~^\u2744])
+  if (offset === 'UTC')
+    return '+00:00';
+
   let off = offset;
   let dst = '';
   const $ = /([-+]\d+(?::\d+)?)(.+)?/.exec(offset);
@@ -61,7 +64,9 @@ function toDisplayOffset(offset: string): string {
     off = $[1];
     dst = $[2] ?? '';
 
-    if (dst === '§')
+    if (!dst && off.substring(1) === '00:00')
+      return 'UTC';
+    else if (dst === '§')
       dst = ' DST';
     else if (dst === '#')
       dst = ' two-hour DST';

@@ -60,6 +60,7 @@ export class SvcEventNavigatorComponent implements AfterViewInit, OnDestroy {
     { label: '-', value: -1 },
     { label: 'Lunar eclipse',           value: LUNAR_ECLIPSE },
     { label: 'Solar eclipse',           value: SOLAR_ECLIPSE },
+    { label: 'Local lunar eclipse',     value: LUNAR_ECLIPSE_LOCAL },
     { label: 'Local solar eclipse',     value: SOLAR_ECLIPSE_LOCAL },
     { label: '-', value: -1 },
     { label: 'Opposition',              value: OPPOSITION },
@@ -315,17 +316,21 @@ export class SvcEventNavigatorComponent implements AfterViewInit, OnDestroy {
 
     if (event) {
       this.app.time = event.eventTime.utcTimeMillis;
-      if (event.eventType === SOLAR_ECLIPSE_LOCAL) {
+      if (event.eventType === LUNAR_ECLIPSE_LOCAL || event.eventType === SOLAR_ECLIPSE_LOCAL) {
         const lec = event.miscInfo as LocalEclipseCircumstances;
         console.log(lec);
         if (lec.annular)
           console.log('Annular');
+        if (lec.penumbralFirstContact != null)
+          console.log(new DateTime({ jdu: lec.penumbralFirstContact }, this.app.timezone).toIsoString());
         console.log(new DateTime({ jdu: lec.firstContact }, this.app.timezone).toIsoString());
         if (lec.peakDuration) {
           console.log('   ', new DateTime({ jdu: lec.peakStarts }, this.app.timezone).toIsoString());
           console.log('   ', new DateTime({ jdu: lec.peakEnds }, this.app.timezone).toIsoString());
         }
         console.log(new DateTime({ jdu: lec.lastContact }, this.app.timezone).toIsoString());
+        if (lec.penumbralLastContact != null)
+          console.log(new DateTime({ jdu: lec.penumbralLastContact }, this.app.timezone).toIsoString());
       }
 
       let message: string;
