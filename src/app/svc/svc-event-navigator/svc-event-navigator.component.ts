@@ -1,10 +1,11 @@
 import { AfterViewInit, ChangeDetectorRef, Component, Input, OnDestroy } from '@angular/core';
 import {
-  APHELION, AstroEvent, EARTH, EclipseInfo, EventFinder, FALL_EQUINOX, FIRST_QUARTER, FULL_MOON, GALILEAN_MOON_EVENT, GREATEST_ELONGATION,
-  GRS_TRANSIT_EVENT, INFERIOR_CONJUNCTION, JUPITER, JupiterInfo, LAST_QUARTER, LocalEclipseCircumstances, LUNAR_ECLIPSE, LUNAR_ECLIPSE_LOCAL, MARS, MERCURY, MOON, NEPTUNE, NEW_MOON,
-  OPPOSITION, PERIHELION, PLUTO, QUADRATURE, RISE_EVENT, RISE_SET_EVENT_BASE, SATURN, SET_EVENT, SET_EVENT_MINUS_1_MIN, SkyObserver,
-  SOLAR_ECLIPSE, SOLAR_ECLIPSE_LOCAL, SPRING_EQUINOX, SUMMER_SOLSTICE, SUN, SUPERIOR_CONJUNCTION, TRANSIT_EVENT, TWILIGHT_BEGINS,
-  TWILIGHT_ENDS, URANUS, VENUS, WINTER_SOLSTICE
+  APHELION, AstroEvent, EARTH, EclipseCircumstances, EclipseInfo, EventFinder, FALL_EQUINOX, FIRST_QUARTER, FULL_MOON,
+  GALILEAN_MOON_EVENT, GREATEST_ELONGATION, GRS_TRANSIT_EVENT, INFERIOR_CONJUNCTION, JUPITER, JupiterInfo,
+  LAST_QUARTER, LUNAR_ECLIPSE, LUNAR_ECLIPSE_LOCAL, MARS, MERCURY, MOON, NEPTUNE, NEW_MOON, OPPOSITION, PERIHELION,
+  PLUTO, QUADRATURE, RISE_EVENT, RISE_SET_EVENT_BASE, SATURN, SET_EVENT, SET_EVENT_MINUS_1_MIN, SkyObserver,
+  SOLAR_ECLIPSE, SOLAR_ECLIPSE_LOCAL, SPRING_EQUINOX, SUMMER_SOLSTICE, SUN, SUPERIOR_CONJUNCTION, TRANSIT_EVENT,
+  TWILIGHT_BEGINS, TWILIGHT_ENDS, URANUS, VENUS, WINTER_SOLSTICE
 } from '@tubular/astronomy';
 import { DateTime, Timezone } from '@tubular/time';
 import { isString } from '@tubular/util';
@@ -316,22 +317,6 @@ export class SvcEventNavigatorComponent implements AfterViewInit, OnDestroy {
 
     if (event) {
       this.app.time = event.eventTime.utcTimeMillis;
-      if (event.eventType === LUNAR_ECLIPSE_LOCAL || event.eventType === SOLAR_ECLIPSE_LOCAL) {
-        const lec = event.miscInfo as LocalEclipseCircumstances;
-        console.log(lec);
-        if (lec.annular)
-          console.log('Annular');
-        if (lec.penumbralFirstContact != null)
-          console.log(new DateTime({ jdu: lec.penumbralFirstContact }, this.app.timezone).toIsoString());
-        console.log(new DateTime({ jdu: lec.firstContact }, this.app.timezone).toIsoString());
-        if (lec.peakDuration) {
-          console.log('   ', new DateTime({ jdu: lec.peakStarts }, this.app.timezone).toIsoString());
-          console.log('   ', new DateTime({ jdu: lec.peakEnds }, this.app.timezone).toIsoString());
-        }
-        console.log(new DateTime({ jdu: lec.lastContact }, this.app.timezone).toIsoString());
-        if (lec.penumbralLastContact != null)
-          console.log(new DateTime({ jdu: lec.penumbralLastContact }, this.app.timezone).toIsoString());
-      }
 
       let message: string;
 
@@ -339,7 +324,6 @@ export class SvcEventNavigatorComponent implements AfterViewInit, OnDestroy {
         message = event.miscInfo as string;
       else if (event.eventType === LUNAR_ECLIPSE || event.eventType === SOLAR_ECLIPSE) {
         const ei = event.miscInfo as EclipseInfo;
-        console.log(ei);
 
         if (ei.total)
           message = 'Total';
@@ -353,7 +337,7 @@ export class SvcEventNavigatorComponent implements AfterViewInit, OnDestroy {
         message += ' eclipse of the ' + (event.eventType === LUNAR_ECLIPSE ? 'Moon' : 'Sun');
       }
       else if (event.eventType === LUNAR_ECLIPSE_LOCAL || event.eventType === SOLAR_ECLIPSE_LOCAL) {
-        const lec = event.miscInfo as LocalEclipseCircumstances;
+        const lec = event.miscInfo as EclipseCircumstances;
 
         if (lec.maxEclipse >= 100)
           message = 'Total';

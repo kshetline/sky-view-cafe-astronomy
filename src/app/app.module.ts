@@ -36,6 +36,7 @@ import { SvcAtlasService } from './svc/svc-atlas.service';
 import { SvcCalendarViewOptionsComponent } from './svc/svc-calendar-view/svc-calendar-view-options.component';
 import { SvcCalendarViewComponent } from './svc/svc-calendar-view/svc-calendar-view.component';
 import { SvcChangeLocationDialogComponent } from './svc/svc-change-location-dialog/svc-change-location-dialog.component';
+import { SvcEclipseCircumstancesComponent } from './svc/svc-eclipse-circumstances/svc-eclipse-circumstances.component';
 import { SvcEclipticViewOptionsComponent } from './svc/svc-ecliptic-view/svc-ecliptic-view-options.component';
 import { SvcEclipticViewComponent } from './svc/svc-ecliptic-view/svc-ecliptic-view.component';
 import { SvcEventNavigatorComponent } from './svc/svc-event-navigator/svc-event-navigator.component';
@@ -109,6 +110,7 @@ import { AppRoutingModule } from './app-routing.module';
     SvcCalendarViewComponent,
     SvcCalendarViewOptionsComponent,
     SvcChangeLocationDialogComponent,
+    SvcEclipseCircumstancesComponent,
     SvcEclipticViewComponent,
     SvcEclipticViewOptionsComponent,
     SvcEventNavigatorComponent,
