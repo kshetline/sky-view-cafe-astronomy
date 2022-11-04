@@ -7,7 +7,7 @@ import {
 } from 'three';
 
 const MAX_LUNAR_ANGULAR_DIAMETER = 34; // In arc-minutes, rounded up from 33.66.
-// const RENDERER_FILL_DISTANCE = 351350; // km
+const RENDERER_FILL_DISTANCE = 351350; // km
 
 export class MoonDrawer {
   private camera: PerspectiveCamera;
@@ -58,6 +58,7 @@ export class MoonDrawer {
     const targetSize = size;
     const libration = solarSystem.getLunarLibration(time_JDE, observer);
     const distance = libration.D * KM_PER_AU;
+    const moonScaling = RENDERER_FILL_DISTANCE / distance;
 
     if (!pixelsPerArcSec)
       pixelsPerArcSec = size / MAX_LUNAR_ANGULAR_DIAMETER / 60;
@@ -70,7 +71,8 @@ export class MoonDrawer {
       this.webGlRendererSize = size;
     }
 
-    const r = size / 2;
+    const ctr = size / 2;
+    const targetCtr = targetSize / 2;
     const saveCompOp = context.globalCompositeOperation;
     const phase = solarSystem.getLunarPhase(time_JDE);
 
@@ -83,7 +85,7 @@ export class MoonDrawer {
     this.earthShine.intensity = 0.025 + cos_deg(phase) * 0.0125;
     this.renderer.render(this.scene, this.camera);
     context.globalCompositeOperation = 'source-over';
-    context.drawImage(this.renderer.domElement, cx - targetSize / 2, cy - targetSize / 2, targetSize, targetSize);
+    context.drawImage(this.renderer.domElement, cx - targetCtr, cy - targetCtr, targetSize, targetSize);
 
     // If we're near a full moon, it's worth checking for a lunar eclipse, but not otherwise.
     if (showEclipses && abs(phase - 180.0) < 3.0) {
@@ -94,11 +96,11 @@ export class MoonDrawer {
         const dLat = ei.shadowPos.latitude.subtract(ei.pos.latitude).getAngle(Unit.ARC_SECONDS);
         const sin_pa = parallacticAngle ? parallacticAngle.sin : 0;
         const cos_pa = parallacticAngle ? parallacticAngle.cos : 1;
-        const sx = (dLon * cos_pa - dLat * sin_pa) * -pixelsPerArcSec + r;
-        const sy = (dLon * sin_pa + dLat * cos_pa) * -pixelsPerArcSec + r;
+        const sx = (dLon * cos_pa - dLat * sin_pa) * -pixelsPerArcSec + ctr;
+        const sy = (dLon * sin_pa + dLat * cos_pa) * -pixelsPerArcSec + ctr;
         const uRadius = ei.umbraRadius * pixelsPerArcSec + 2;
         const pRadius = ei.penumbraRadius * pixelsPerArcSec + 2;
-        const moonR = ei.radius * pixelsPerArcSec;
+        const moonR = size * moonScaling / 2; // ei.radius * pixelsPerArcSec;
 
         if (!this.shadowCanvas) // Turns out that rendering eclipse shadows with 2D graphics works better than using WebGL.
           this.shadowCanvas = document.createElement('canvas');
@@ -121,23 +123,23 @@ export class MoonDrawer {
         // Mask off penumbra and umbra beyond edge of moon
         context2.filter = 'blur(1px)';
         context2.strokeStyle = 'white';
-        context2.lineWidth = r;
-        strokeCircle(context2, r, r, moonR + r / 2 + 4 * pixelRatio);
+        context2.lineWidth = ctr;
+        strokeCircle(context2, ctr, ctr, moonR + ctr / 2);
 
         context.globalCompositeOperation = 'multiply';
-        context.drawImage(this.shadowCanvas, cx - targetSize / 2, cy - targetSize / 2, targetSize, targetSize);
+        context.drawImage(this.shadowCanvas, cx - targetCtr, cy - targetCtr, targetSize, targetSize);
 
         if (0.8 < ei.totality && ei.totality < 1) {
           // Brighten remaining illuminated portion of moon to increase contrast with shadowed part.
           context2.clearRect(0, 0, size, size);
           context2.filter = '';
           context2.fillStyle = `rgba(255, 255, 255, ${(ei.totality - 0.8) / 0.25})`;
-          fillCircle(context2, r, r, moonR);
+          fillCircle(context2, ctr, ctr, moonR);
           context2.fillStyle = 'black';
           context2.filter = `blur(${size / 125}px)`;
           fillCircle(context2, sx, sy, uRadius);
           context.globalCompositeOperation = 'lighten';
-          context.drawImage(this.shadowCanvas, cx - targetSize / 2, cy - targetSize / 2, targetSize, targetSize);
+          context.drawImage(this.shadowCanvas, cx - targetCtr, cy - targetCtr, targetSize, targetSize);
         }
       }
     }
