@@ -1,8 +1,15 @@
 <div class="content" [style.display]="eclipseTime != null ? 'flex' : 'none'">
   <div class="title">{{eventTitle}}</div>
+  <div class="subtitle">{{subtitle}}</div>
+  <div class="subtitle">{{subtitle2}}</div>
   <div class="times">
-    <span>{{p1}}</span><span>{{penumbralDuration}}</span><span>{{p4}}</span>
-    <span>{{u1}}</span><span>{{duration}}</span><span>{{u4}}</span>
-    <span>{{u2}}</span><span>{{totalityDuration}}</span><span>{{u3}}</span>
+    <div>&nbsp;</div><div class="column-header">Start</div><div class="column-header">Duration</div><div class="column-header">End</div>
+    <span class="row-label">{{penLabel}}</span>
+      <span>{{p1}}</span><span>{{penumbralDuration}}</span><span>{{p4}}</span>
+    <span class="row-label">{{partialLabel}}</span>
+      <span>{{u1}}</span><span>{{duration}}</span><span>{{u4}}</span>
+    <span class="row-label">{{peakLabel}}</span>
+      <span>{{u2}}</span><span>{{totalityDuration}}</span><span>{{u3}}</span>
   </div>
+  <div class="footnote">{{footNote}}</div>
 </div>

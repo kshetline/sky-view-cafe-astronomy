@@ -1,15 +1,17 @@
 import { Component, OnInit } from '@angular/core';
-import { AstroEvent, EclipseCircumstances, EventFinder, LUNAR_ECLIPSE_LOCAL, MOON, SkyObserver, SOLAR_ECLIPSE_LOCAL, SUN } from '@tubular/astronomy';
+import {
+  AstroEvent, EclipseCircumstances, EclipseInfo, EventFinder, LUNAR_ECLIPSE, LUNAR_ECLIPSE_LOCAL, MOON, SkyObserver, SOLAR_ECLIPSE,
+  SOLAR_ECLIPSE_LOCAL, SUN
+} from '@tubular/astronomy';
 import { abs, floor, round } from '@tubular/math';
 import ttime, { DateTime, Timezone, utToTdt } from '@tubular/time';
 import { padLeft } from '@tubular/util';
-// import { Timezone } from '@tubular/time';
-import { AppService, Location } from '../../app.service';
+import { AppService, ClockStyle, Location, PROPERTY_CLOCK_STYLE, UserSetting, VIEW_APP } from '../../app.service';
 import julianDay = ttime.julianDay;
 
 const eventFinder = new EventFinder();
 
-const UPDATE_DELAY = 2500;
+const UPDATE_DELAY = 1500;
 
 function toDuration(secs: number): string {
   let result = '';
@@ -46,8 +48,11 @@ export class SvcEclipseCircumstancesComponent implements OnInit {
   private location: Location;
   private updateTimer: any;
 
+  footNote = '';
   eclipseTime: number;
   eventTitle = '';
+  subtitle = '';
+  subtitle2 = '';
 
   p1: string;
   u1: string;
@@ -56,6 +61,10 @@ export class SvcEclipseCircumstancesComponent implements OnInit {
   u4: string;
   p4: string;
 
+  penLabel: string;
+  partialLabel: string;
+  peakLabel: string;
+
   penumbralDuration: string;
   duration: string;
   totalityDuration: string;
@@ -63,6 +72,12 @@ export class SvcEclipseCircumstancesComponent implements OnInit {
   constructor(private app: AppService) {
     app.getTimeUpdates(t => this.update(t, app.location));
     app.getLocationUpdates(loc => this.update(app.time, loc));
+    app.getUserSettingUpdates((setting: UserSetting) => {
+      if (setting.view === VIEW_APP && setting.property === PROPERTY_CLOCK_STYLE) {
+        this.eclipseTime = undefined;
+        this.update(app.time, app.location);
+      }
+    });
   }
 
   ngOnInit(): void {
@@ -70,8 +85,10 @@ export class SvcEclipseCircumstancesComponent implements OnInit {
   }
 
   private update(millis: number, location: Location): void {
-    if (this.updateTimer)
+    if (this.updateTimer) {
       clearTimeout(this.updateTimer);
+      this.updateTimer = undefined;
+    }
 
     const jdu = julianDay(millis);
 
@@ -101,13 +118,20 @@ export class SvcEclipseCircumstancesComponent implements OnInit {
 
         if (event && event.ut < jdu + 0.5) {
           const ec = event.miscInfo as EclipseCircumstances;
+          const localStyle = (this.app.clockStyle === ClockStyle.LOCAL || this.app.clockStyle === ClockStyle.LOCAL_SEC);
+          const mainEvent = eventFinder.findEvent(this.isSolar ? SUN : MOON, this.isSolar ? SOLAR_ECLIPSE : LUNAR_ECLIPSE,
+            jdu - 1, observer, zone, gcd).miscInfo as EclipseInfo;
+
+          function formatTime(t: number): string {
+            return new DateTime({ jdu: t }, zone).format(localStyle ? 'LTS' : 'HH:mm:ss');
+          }
 
           this.eclipseTime = event.ut;
           this.eventTitle = (this.isSolar ? 'Solar' : 'Lunar') + ' Eclipse, ';
-
-          function formatTime(t: number): string {
-            return new DateTime({ jdu: t}, zone).format('HH:mm:ss');
-          }
+          this.subtitle = (this.isSolar ? 'Local m' : 'M') + 'aximum eclipse: ' +
+            new DateTime({ jdu: ec.maxTime }, zone).format(localStyle ? 'LLL' : 'y-MM-DD HH:mm:ss');
+          this.subtitle2 = (ec.maxEclipse <= 0 ? '' :
+            `${(this.isSolar ? 'Local p' : 'P')}eak magnitude: ${ec.maxEclipse.toFixed(1)}%`);
 
           if (ec.annular)
             this.eventTitle += 'Annular';
@@ -118,30 +142,47 @@ export class SvcEclipseCircumstancesComponent implements OnInit {
           else
             this.eventTitle += 'Partial';
 
+          this.footNote = '';
+
+          if (ec.annular && (mainEvent.hybrid || mainEvent.total))
+            this.footNote = '*Locally annular, but will be a total eclipse elsewhere.';
+          else if (ec.maxEclipse < 100 && mainEvent.total)
+            this.footNote = '*Locally partial, but will be a total eclipse elsewhere.';
+          else if (ec.maxEclipse < 100 && mainEvent.hybrid)
+            this.footNote = '*Locally partial, but will be an annular or total eclipse elsewhere.';
+          else if (ec.maxEclipse < 100 && mainEvent.annular)
+            this.footNote = '*Locally partial, but will be an annular eclipse elsewhere.';
+
+          if (this.footNote)
+            this.eventTitle += '*';
+
           if (ec.penumbralDuration) {
+            this.penLabel = 'In penumbra:';
             this.p1 = formatTime(ec.penumbralFirstContact);
             this.p4 = formatTime(ec.penumbralLastContact);
             this.penumbralDuration = toDuration(ec.penumbralDuration);
           }
           else
-            this.p1 = this.p4 = this.penumbralDuration = '';
+            this.penLabel = this.p1 = this.p4 = this.penumbralDuration = '';
 
           if (ec.duration) {
+            this.partialLabel = 'Partial:';
             this.u1 = formatTime(ec.firstContact);
             this.u4 = formatTime(ec.lastContact);
             this.duration = toDuration(ec.duration);
           }
           else
-            this.u1 = this.u4 = this.duration = '';
+            this.partialLabel = this.u1 = this.u4 = this.duration = '';
 
           if (ec.peakDuration) {
+            this.peakLabel = (ec.annular ? 'Annularity:' : 'Totality:');
             this.u2 = formatTime(ec.peakStarts);
             this.u3 = formatTime(ec.peakEnds);
             this.totalityDuration = toDuration(ec.peakDuration);
           }
           else
-            this.u2 = this.u3 = this.totalityDuration = '';
-       }
+            this.peakLabel = this.u2 = this.u3 = this.totalityDuration = '';
+        }
       }, UPDATE_DELAY);
     }
   }

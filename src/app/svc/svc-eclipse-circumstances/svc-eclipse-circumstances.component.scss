@@ -9,7 +9,7 @@
   top: calc(1em + 37px);
 
   .content {
-    align-items: center;
+    align-items: stretch;
     background-color: orange;
     display: flex;
     flex-direction: column;
@@ -18,14 +18,36 @@
 
     .title {
       font-weight: bold;
-      padding-bottom: 0.25em;
+      text-align: center;
+    }
+
+    .subtitle {
+      text-align: center;
+    }
+
+    .footnote {
+      font-size: 0.75em;
+      font-style: italic;
+      padding-top: 0.25em;
     }
 
     .times {
       column-gap: 1em;
       display: grid;
-      grid-template-columns: repeat(3, auto);
-      place-items: center;
+      grid-template-columns: repeat(4, auto);
+      justify-items: stretch;
+
+      .column-header {
+        font-size: 0.75em;
+        font-weight: bold;
+        padding-top: 0.33em;
+        text-align: center;
+        text-transform: uppercase;
+      }
+
+      .row-label {
+        text-align: right;
+      }
     }
   }
 }
