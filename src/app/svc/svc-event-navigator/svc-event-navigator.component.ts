@@ -7,13 +7,14 @@ import {
   SOLAR_ECLIPSE, SOLAR_ECLIPSE_LOCAL, SPRING_EQUINOX, SUMMER_SOLSTICE, SUN, SUPERIOR_CONJUNCTION, TRANSIT_EVENT,
   TWILIGHT_BEGINS, TWILIGHT_ENDS, URANUS, VENUS, WINTER_SOLSTICE
 } from '@tubular/astronomy';
-import { DateTime, Timezone } from '@tubular/time';
+import { DateTime, Timezone, ttime } from '@tubular/time';
 import { isString } from '@tubular/util';
 import { MessageService, SelectItem } from 'primeng/api';
 import { Subscription, timer } from 'rxjs';
 import { AppService, UserSetting } from '../../app.service';
 import { AstroDataService } from '../../astronomy/astro-data.service';
 import { PROPERTY_FIXED_GRS, PROPERTY_GRS_OVERRIDE, VIEW_MOONS } from '../svc-moons-view/svc-moons-view.component';
+import millisFromJulianDay = ttime.millisFromJulianDay;
 
 const CLICK_REPEAT_DELAY = 500;
 const CLICK_REPEAT_RATE  = 100;
@@ -316,42 +317,59 @@ export class SvcEventNavigatorComponent implements AfterViewInit, OnDestroy {
     this.busy = false;
 
     if (event) {
-      this.app.time = event.eventTime.utcTimeMillis;
+      this.app.time = (this.app.showingSeconds ? millisFromJulianDay(event.jdu) : event.eventTime.utcTimeMillis);
 
-      let message: string;
+      let summary: string;
+      let detail: string;
 
       if (isString(event.miscInfo))
-        message = event.miscInfo as string;
+        summary = event.miscInfo as string;
       else if (event.eventType === LUNAR_ECLIPSE || event.eventType === SOLAR_ECLIPSE) {
         const ei = event.miscInfo as EclipseInfo;
+        const isSolar = (event.eventType === SOLAR_ECLIPSE);
 
         if (ei.total)
-          message = 'Total';
+          summary = 'Total';
         else if (ei.hybrid)
-          message = 'Hybrid';
+          summary = 'Hybrid';
         else if (ei.annular)
-          message = 'Annular';
+          summary = 'Annular';
         else
-          message = 'Partial';
+          summary = 'Partial';
 
-        message += ' eclipse of the ' + (event.eventType === LUNAR_ECLIPSE ? 'Moon' : 'Sun');
+        summary += ' eclipse of the ' + (isSolar ? 'Sun' : 'Moon');
+
+        const gcd = this.app.gregorianChangeDate;
+        const observer = new SkyObserver(this.app.location.longitude, this.app.location.latitude);
+        const zone = Timezone.getTimezone(this.app.timezone);
+        const localEvent = this.eventFinder.findEvent(isSolar ? SUN : MOON, isSolar ? SOLAR_ECLIPSE_LOCAL : LUNAR_ECLIPSE_LOCAL,
+            event.ut - 1, observer, zone, gcd, false, null, 1)?.miscInfo as EclipseCircumstances;
+
+        if (!localEvent)
+          detail = 'This eclipse is not visible locally.';
+        else if (ei.hybrid && localEvent.annular)
+          detail = 'This eclipse is annular locally.';
+        else if (ei.hybrid && !localEvent.annular)
+          detail = 'This eclipse is total locally.';
+        else if ((ei.total || ei.hybrid || ei.annular) && !localEvent.peakDuration)
+          detail = 'This eclipse is only partial locally.';
       }
       else if (event.eventType === LUNAR_ECLIPSE_LOCAL || event.eventType === SOLAR_ECLIPSE_LOCAL) {
         const lec = event.miscInfo as EclipseCircumstances;
 
         if (lec.maxEclipse >= 100)
-          message = 'Total';
+          summary = 'Total';
         else if (lec.annular)
-          message = 'Annular';
+          summary = 'Annular';
         else
-          message = 'Partial';
+          summary = 'Partial';
 
-        message += ' eclipse of the ' + (event.eventType === LUNAR_ECLIPSE_LOCAL ? 'Moon' : 'Sun');
+        summary += ' eclipse of the ' + (event.eventType === LUNAR_ECLIPSE_LOCAL ? 'Moon' : 'Sun');
       }
 
-      if (message) {
+      if (summary) {
         this.messageService.clear('navigator');
-        this.messageService.add({ key: 'navigator', severity: 'info', summary: '', detail: message, life: 6000 });
+        this.messageService.add({ key: 'navigator', severity: 'info', summary, detail, life: 6000 });
       }
     }
   }

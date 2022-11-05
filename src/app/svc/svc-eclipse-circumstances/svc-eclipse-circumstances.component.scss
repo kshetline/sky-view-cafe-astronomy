@@ -13,6 +13,7 @@
     background-color: orange;
     display: flex;
     flex-direction: column;
+    min-width: 330px;
     padding: 0.5em;
     pointer-events: auto;
 
@@ -23,6 +24,16 @@
 
     .subtitle {
       text-align: center;
+    }
+
+    .time-link {
+      color: #00C;
+      cursor: pointer;
+      text-decoration: underline;
+
+      &:hover {
+        color: #37F;
+      }
     }
 
     .footnote {

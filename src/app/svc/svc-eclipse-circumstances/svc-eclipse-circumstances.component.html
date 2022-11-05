@@ -1,7 +1,7 @@
 <div class="content" [style.display]="eclipseTime != null ? 'flex' : 'none'">
   <div class="title">{{eventTitle}}</div>
-  <div class="subtitle">{{subtitle}}</div>
-  <div class="subtitle">{{subtitle2}}</div>
+  <div class="subtitle">{{subtitle}} <span class="time-link" (click)="setMaxTime()">{{subtitleTime}}</span></div>
+  <div *ngIf="subtitle2" class="subtitle">{{subtitle2}}, current: {{currentMag}}%</div>
   <div class="times">
     <div>&nbsp;</div><div class="column-header">Start</div><div class="column-header">Duration</div><div class="column-header">End</div>
     <span class="row-label">{{penLabel}}</span>

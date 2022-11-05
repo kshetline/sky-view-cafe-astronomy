@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 import { NavigationEnd, Router } from '@angular/router';
 import { SolarSystem, StarCatalog } from '@tubular/astronomy';
-import { min, Point } from '@tubular/math';
+import { min, Point, round } from '@tubular/math';
 import { addZonesUpdateListener, Calendar, pollForTimezoneUpdates, zonePollerBrowser } from '@tubular/time';
 import { clone, forEach, isEqual, isString } from '@tubular/util';
 import { compact, debounce, sortedIndexBy } from 'lodash-es';
@@ -233,11 +233,15 @@ export class AppService {
 
   get time(): number { return this._time.getValue(); }
   set time(newTime: number) {
+    newTime = round(newTime, 1000);
+
     if (this._time.getValue() !== newTime)
       this._time.next(newTime);
   }
 
   get showingSeconds(): boolean { return this._clockStyle === ClockStyle.ISO_SEC || this._clockStyle === ClockStyle.LOCAL_SEC; }
+
+  get localTimeFormat(): boolean { return this._clockStyle === ClockStyle.LOCAL || this._clockStyle === ClockStyle.LOCAL_SEC; }
 
   getTimeUpdates(callback: (time: number) => void): Subscription {
     return this.timeObserver.subscribe(callback);

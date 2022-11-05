@@ -137,7 +137,7 @@ export class AppComponent implements AfterViewInit, OnDestroy {
   get clockOptions(): string | TimeEditorOptions | (string | TimeEditorOptions)[]  {
     const showSeconds = (this.app.clockStyle === ClockStyle.ISO_SEC || this.app.clockStyle === ClockStyle.LOCAL_SEC);
 
-    if (this.app.clockStyle === ClockStyle.ISO || this.app.clockStyle === ClockStyle.ISO_SEC) {
+    if (!this.app.localTimeFormat) {
       this.clockCaption = '±YYYY-MM-DD HH:mm' + (showSeconds ? ':ss' : '');
 
       return ['iso', { showDstSymbol: true, showOccurrence: true, showSeconds, showUtcOffset: true,

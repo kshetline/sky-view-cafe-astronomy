@@ -8,6 +8,7 @@ import ttime, { DateTime, Timezone, utToTdt } from '@tubular/time';
 import { padLeft } from '@tubular/util';
 import { AppService, ClockStyle, Location, PROPERTY_CLOCK_STYLE, UserSetting, VIEW_APP } from '../../app.service';
 import julianDay = ttime.julianDay;
+import millisFromJulianDay = ttime.millisFromJulianDay;
 
 const eventFinder = new EventFinder();
 
@@ -45,14 +46,18 @@ function toDuration(secs: number): string {
 })
 export class SvcEclipseCircumstancesComponent implements OnInit {
   private isSolar: boolean;
+  private lastTime: number;
   private location: Location;
+  private observer: SkyObserver;
   private updateTimer: any;
 
+  currentMag = '';
   footNote = '';
   eclipseTime: number;
   eventTitle = '';
   subtitle = '';
   subtitle2 = '';
+  subtitleTime = '';
 
   p1: string;
   u1: string;
@@ -84,6 +89,11 @@ export class SvcEclipseCircumstancesComponent implements OnInit {
     this.update(this.app.time, this.app.location);
   }
 
+  setMaxTime(): void {
+    if (this.eclipseTime != null)
+      this.app.time = millisFromJulianDay(this.eclipseTime);
+  }
+
   private update(millis: number, location: Location): void {
     if (this.updateTimer) {
       clearTimeout(this.updateTimer);
@@ -96,42 +106,43 @@ export class SvcEclipseCircumstancesComponent implements OnInit {
         jdu < this.eclipseTime - 0.5 || jdu > this.eclipseTime + 0.5) {
       this.eclipseTime = undefined;
       this.location = location;
+      this.observer = new SkyObserver(location.longitude, location.latitude);
 
       this.updateTimer = setTimeout(() => {
         this.updateTimer = undefined;
 
         const jde = utToTdt(jdu);
         const gcd = this.app.gregorianChangeDate;
-        const observer = new SkyObserver(location.longitude, location.latitude);
         const zone = Timezone.getTimezone(this.app.timezone);
-        const elongation = this.app.solarSystem.getSolarElongation(MOON, jde, observer);
+        const elongation = this.app.solarSystem.getSolarElongation(MOON, jde, this.observer);
         let event: AstroEvent;
 
         if (abs(elongation) < 15) {
           this.isSolar = true;
-          event = eventFinder.findEvent(SUN, SOLAR_ECLIPSE_LOCAL, jdu - 0.55, observer, zone, gcd, false, null, 1);
+          event = eventFinder.findEvent(SUN, SOLAR_ECLIPSE_LOCAL, jdu - 0.55, this.observer, zone, gcd, false, null, 1);
         }
         else if (abs(elongation - 180) < 15) {
           this.isSolar = false;
-          event = eventFinder.findEvent(MOON, LUNAR_ECLIPSE_LOCAL, jdu - 0.55, observer, zone, gcd, false, null, 1);
+          event = eventFinder.findEvent(MOON, LUNAR_ECLIPSE_LOCAL, jdu - 0.55, this.observer, zone, gcd, false, null, 1);
         }
 
         if (event && event.ut < jdu + 0.5) {
           const ec = event.miscInfo as EclipseCircumstances;
           const localStyle = (this.app.clockStyle === ClockStyle.LOCAL || this.app.clockStyle === ClockStyle.LOCAL_SEC);
           const mainEvent = eventFinder.findEvent(this.isSolar ? SUN : MOON, this.isSolar ? SOLAR_ECLIPSE : LUNAR_ECLIPSE,
-            jdu - 1, observer, zone, gcd).miscInfo as EclipseInfo;
+            jdu - 1, this.observer, zone, gcd).miscInfo as EclipseInfo;
 
           function formatTime(t: number): string {
             return new DateTime({ jdu: t }, zone).format(localStyle ? 'LTS' : 'HH:mm:ss');
           }
 
-          this.eclipseTime = event.ut;
+          this.eclipseTime = (this.app.showingSeconds ? event.jdu : event.ut);
           this.eventTitle = (this.isSolar ? 'Solar' : 'Lunar') + ' Eclipse, ';
-          this.subtitle = (this.isSolar ? 'Local m' : 'M') + 'aximum eclipse: ' +
-            new DateTime({ jdu: ec.maxTime }, zone).format(localStyle ? 'LLL' : 'y-MM-DD HH:mm:ss');
+          this.subtitle = (this.isSolar ? 'Local m' : 'M') + 'aximum eclipse:';
+          this.subtitleTime = new DateTime({ jdu: ec.maxTime }, zone).format(localStyle ? 'LLL' : 'y-MM-DD HH:mm:ss');
+          this.currentMag = ec.maxEclipse.toFixed(2);
           this.subtitle2 = (ec.maxEclipse <= 0 ? '' :
-            `${(this.isSolar ? 'Local p' : 'P')}eak magnitude: ${ec.maxEclipse.toFixed(1)}%`);
+            `${(this.isSolar ? 'Local p' : 'P')}eak magnitude: ${this.currentMag}%`);
 
           if (ec.annular)
             this.eventTitle += 'Annular';
@@ -145,7 +156,9 @@ export class SvcEclipseCircumstancesComponent implements OnInit {
           this.footNote = '';
 
           if (ec.annular && (mainEvent.hybrid || mainEvent.total))
-            this.footNote = '*Locally annular, but will be a total eclipse elsewhere.';
+            this.footNote = '*Locally annular, but can be a total eclipse elsewhere.';
+          else if (ec.maxEclipse >= 100 && mainEvent.hybrid)
+            this.footNote = '*Locally total, but can be an annular eclipse elsewhere.';
           else if (ec.maxEclipse < 100 && mainEvent.total)
             this.footNote = '*Locally partial, but will be a total eclipse elsewhere.';
           else if (ec.maxEclipse < 100 && mainEvent.hybrid)
@@ -182,8 +195,21 @@ export class SvcEclipseCircumstancesComponent implements OnInit {
           }
           else
             this.peakLabel = this.u2 = this.u3 = this.totalityDuration = '';
+
+          setTimeout(() => this.updateCurrentMagnitude(this.lastTime));
         }
       }, UPDATE_DELAY);
+    }
+
+    this.updateCurrentMagnitude(jdu);
+  }
+
+  private updateCurrentMagnitude(jdu: number): void {
+    if (this.lastTime !== jdu) {
+      this.lastTime = jdu;
+
+      if (this.eclipseTime != null && this.eclipseTime - 0.5 <= jdu && jdu <= this.eclipseTime + 0.5)
+        this.currentMag = (this.app.solarSystem.getLocalSolarEclipseTotality(utToTdt(jdu), this.observer) * 100).toFixed(2);
     }
   }
 }
