@@ -279,14 +279,16 @@ export class SvcEventNavigatorComponent implements AfterViewInit, OnDestroy {
     this.waitingForEvent = true;
 
     const observer = new SkyObserver(this.app.location.longitude, this.app.location.latitude);
-    let altMins: number;
+    let argument: any;
 
     if (this._selectedEvent === TWILIGHT_BEGINS || this._selectedEvent === TWILIGHT_ENDS) {
       if (this.app.twilightByDegrees)
-        altMins = -this.app.twilightDegrees;
+        argument = -this.app.twilightDegrees;
       else
-        altMins = this.app.twilightMinutes;
+        argument = this.app.twilightMinutes;
     }
+    else if (this._selectedEvent === LUNAR_ECLIPSE || this._selectedEvent === SOLAR_ECLIPSE)
+      argument = this.app.showingSeconds;
 
     const timezone = Timezone.getTimezone(this.app.location.zone, this.app.location.longitude);
 
@@ -298,7 +300,7 @@ export class SvcEventNavigatorComponent implements AfterViewInit, OnDestroy {
     }, 500);
 
     setTimeout(() => this.eventFinder.findEventAsync(this._selectedPlanet, this._selectedEvent,
-        DateTime.julianDay(this.app.time), observer, timezone, this.app.gregorianChangeDate, goBack, altMins)
+        DateTime.julianDay(this.app.time), observer, timezone, this.app.gregorianChangeDate, goBack, argument)
       .then(event => this.gotEvent(event))
       .catch(err => {
         console.error(err);

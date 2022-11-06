@@ -1,12 +1,14 @@
-import { Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnInit } from '@angular/core';
 import {
-  AstroEvent, EclipseCircumstances, EclipseInfo, EventFinder, LUNAR_ECLIPSE, LUNAR_ECLIPSE_LOCAL, MOON, SkyObserver, SOLAR_ECLIPSE,
-  SOLAR_ECLIPSE_LOCAL, SUN
+  AstroEvent, EclipseCircumstances, EclipseInfo, EventFinder, LUNAR_ECLIPSE, LUNAR_ECLIPSE_LOCAL, MOON, SkyObserver,
+  SOLAR_ECLIPSE, SOLAR_ECLIPSE_LOCAL, SUN
 } from '@tubular/astronomy';
-import { abs, floor, round } from '@tubular/math';
+import { abs, floor, max, round } from '@tubular/math';
 import ttime, { DateTime, Timezone, utToTdt } from '@tubular/time';
 import { padLeft } from '@tubular/util';
-import { AppService, ClockStyle, Location, PROPERTY_CLOCK_STYLE, UserSetting, VIEW_APP } from '../../app.service';
+import {
+  AppService, ClockStyle, Location, PROPERTY_CLOCK_STYLE, PROPERTY_ECLIPSE_INFO_COLLAPSED, UserSetting, VIEW_APP
+} from '../../app.service';
 import julianDay = ttime.julianDay;
 import millisFromJulianDay = ttime.millisFromJulianDay;
 
@@ -44,13 +46,15 @@ function toDuration(secs: number): string {
   templateUrl: './svc-eclipse-circumstances.component.html',
   styleUrls: ['./svc-eclipse-circumstances.component.scss']
 })
-export class SvcEclipseCircumstancesComponent implements OnInit {
+export class SvcEclipseCircumstancesComponent implements AfterViewInit, OnInit {
+  private _collapsed = false;
   private isSolar: boolean;
   private lastTime: number;
   private location: Location;
   private observer: SkyObserver;
   private updateTimer: any;
 
+  collapsedTitle = '';
   currentMag = '';
   footNote = '';
   eclipseTime: number;
@@ -78,9 +82,13 @@ export class SvcEclipseCircumstancesComponent implements OnInit {
     app.getTimeUpdates(t => this.update(t, app.location));
     app.getLocationUpdates(loc => this.update(app.time, loc));
     app.getUserSettingUpdates((setting: UserSetting) => {
-      if (setting.view === VIEW_APP && setting.property === PROPERTY_CLOCK_STYLE) {
-        this.eclipseTime = undefined;
-        this.update(app.time, app.location);
+      if (setting.view === VIEW_APP) {
+        if (setting.property === PROPERTY_CLOCK_STYLE) {
+          this.eclipseTime = undefined;
+          this.update(app.time, app.location);
+        }
+        else if (setting.property === PROPERTY_ECLIPSE_INFO_COLLAPSED)
+          this.collapsed = setting.value as boolean;
       }
     });
   }
@@ -89,9 +97,21 @@ export class SvcEclipseCircumstancesComponent implements OnInit {
     this.update(this.app.time, this.app.location);
   }
 
+  ngAfterViewInit(): void {
+    setTimeout(() => this.app.requestViewSettings(VIEW_APP));
+  }
+
   setMaxTime(): void {
     if (this.eclipseTime != null)
       this.app.time = millisFromJulianDay(this.eclipseTime);
+  }
+
+  get collapsed(): boolean { return this._collapsed; }
+  set collapsed(newValue: boolean) {
+    if (this._collapsed !== newValue) {
+      this._collapsed = newValue;
+      this.app.updateUserSetting({ view: VIEW_APP, property: PROPERTY_ECLIPSE_INFO_COLLAPSED, value: newValue, source: this })
+    }
   }
 
   private update(millis: number, location: Location): void {
@@ -131,6 +151,7 @@ export class SvcEclipseCircumstancesComponent implements OnInit {
           const localStyle = (this.app.clockStyle === ClockStyle.LOCAL || this.app.clockStyle === ClockStyle.LOCAL_SEC);
           const mainEvent = eventFinder.findEvent(this.isSolar ? SUN : MOON, this.isSolar ? SOLAR_ECLIPSE : LUNAR_ECLIPSE,
             jdu - 1, this.observer, zone, gcd).miscInfo as EclipseInfo;
+          const dateTime = new DateTime({ jdu: ec.maxTime }, zone);
 
           function formatTime(t: number): string {
             return new DateTime({ jdu: t }, zone).format(localStyle ? 'LTS' : 'HH:mm:ss');
@@ -139,7 +160,7 @@ export class SvcEclipseCircumstancesComponent implements OnInit {
           this.eclipseTime = (this.app.showingSeconds ? event.jdu : event.ut);
           this.eventTitle = (this.isSolar ? 'Solar' : 'Lunar') + ' Eclipse, ';
           this.subtitle = (this.isSolar ? 'Local m' : 'M') + 'aximum eclipse:';
-          this.subtitleTime = new DateTime({ jdu: ec.maxTime }, zone).format(localStyle ? 'LLL' : 'y-MM-DD HH:mm:ss');
+          this.subtitleTime = dateTime.format(localStyle ? 'LLL' : 'y-MM-DD HH:mm:ss');
           this.currentMag = ec.maxEclipse.toFixed(2);
           this.subtitle2 = (ec.maxEclipse <= 0 ? '' :
             `${(this.isSolar ? 'Local p' : 'P')}eak magnitude: ${this.currentMag}%`);
@@ -153,6 +174,7 @@ export class SvcEclipseCircumstancesComponent implements OnInit {
           else
             this.eventTitle += 'Partial';
 
+          this.collapsedTitle = this.eventTitle + ' @ ' + dateTime.format(localStyle ? 'LT' : 'HH:mm');
           this.footNote = '';
 
           if (ec.annular && (mainEvent.hybrid || mainEvent.total))

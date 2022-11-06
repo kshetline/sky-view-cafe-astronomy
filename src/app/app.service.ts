@@ -17,6 +17,8 @@ export const  VIEW_APP = 'app';
 export const    PROPERTY_CLOCK_FLOATING = 'clock_floating';
 export const    PROPERTY_CLOCK_POSITION = 'clock_position';
 export const    PROPERTY_CLOCK_STYLE = 'clock_style';
+export const    PROPERTY_ECLIPSE_INFO_COLLAPSED = 'eclipse_info_collapsed';
+export const    PROPERTY_LAST_TIME = 'last_time';
 export const    PROPERTY_LAT_LONG_STYLE = 'lat_long_style';
 export const    PROPERTY_NORTH_AZIMUTH = 'north_azimuth';
 export const    PROPERTY_DEFAULT_TAB = 'default_tab';
@@ -148,10 +150,21 @@ export class AppService {
     this.hostname = document.location.hostname;
     this.port = parseInt(document.location.port, 10);
 
-    const savedLocationsString = localStorage.getItem('locations');
+    let resave = false;
+    let savedLocationsString = localStorage.getItem('svc-locations');
+
+    if (!savedLocationsString) {
+      savedLocationsString = localStorage.getItem('locations');
+      resave = !!savedLocationsString;
+    }
 
     if (savedLocationsString)
       this._locations = compact(Location.fromStringList(savedLocationsString));
+
+    if (resave && this._locations.length > 0) {
+      localStorage.setItem('svc-locations', savedLocationsString);
+      localStorage.removeItem('locations');
+    }
 
     if (this._locations.length > 0) {
       const userDefault = this._locations.findIndex(location => location.isDefault);
@@ -169,22 +182,35 @@ export class AppService {
       this._asteroidsReady.next(initialized);
     });
 
-    const savedSettings = localStorage.getItem('allSettings');
+    resave = false;
+    let savedSettings = localStorage.getItem('svc-settings');
+
+    if (!savedSettings) {
+      savedSettings = localStorage.getItem('allSettings');
+      resave = !!savedSettings;
+    }
 
     if (savedSettings) {
       try {
         this.allSettings = JSON.parse(savedSettings);
       }
-      catch {}
+      catch {
+        resave = false;
+      }
 
       const appSettings = this.allSettings[VIEW_APP];
 
       if (appSettings)
         Object.keys(appSettings).forEach(property => this.checkAppSetting(property, appSettings[property]));
+
+      if (resave) {
+        localStorage.setItem('svc-settings', savedSettings);
+        localStorage.removeItem('allSettings');
+      }
     }
 
     this.debouncedSaveSettings = debounce(() => {
-      localStorage.setItem('allSettings', JSON.stringify(this.allSettings));
+      localStorage.setItem('svc-settings', JSON.stringify(this.allSettings));
     }, 1000);
 
     router.events.subscribe(event => {
@@ -304,7 +330,7 @@ export class AppService {
     else
       this._locations.splice(sortedIndexBy(this._locations, location, 'name'), 0, location);
 
-    localStorage.setItem('locations', Location.toStringList(this._locations));
+    localStorage.setItem('svc-locations', Location.toStringList(this._locations));
   }
 
   deleteLocation(locationName: string): void {
@@ -312,7 +338,7 @@ export class AppService {
 
     if (index >= 0) {
       const deletedLocation = this._locations.splice(index, 1)[0];
-      localStorage.setItem('locations', Location.toStringList(this._locations));
+      localStorage.setItem('svc-locations', Location.toStringList(this._locations));
 
       if (this._location.getValue().name === deletedLocation.name) {
         const newLocation = clone(this._location.getValue());
@@ -329,7 +355,7 @@ export class AppService {
     if (match) {
       this._locations.forEach(loc => loc.isDefault = false);
       match.isDefault = true;
-      localStorage.setItem('locations', Location.toStringList(this._locations));
+      localStorage.setItem('svc-locations', Location.toStringList(this._locations));
     }
   }
 

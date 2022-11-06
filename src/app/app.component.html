@@ -122,7 +122,7 @@
         <ks-tab header="Tables">
           <svc-table-view></svc-table-view>
         </ks-tab>
-        <svc-eclipse-circumstances></svc-eclipse-circumstances>
+        <svc-eclipse-circumstances [style.visibility]="showEclipseCircumstances ? 'visible' : 'hidden'"></svc-eclipse-circumstances>
       </ks-tab-view>
       <div id="locationAndOptions">
         <svc-location-settings style="flex: 0 0 auto"></svc-location-settings>

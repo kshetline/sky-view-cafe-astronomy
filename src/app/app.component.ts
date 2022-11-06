@@ -64,6 +64,7 @@ export class AppComponent implements AfterViewInit, OnDestroy {
   gcDate = '1582-10-15';
   nativeDateTime = false;
   selectedTab = CurrentTab.SKY;
+  showEclipseCircumstances = true;
 
   constructor(
     public app: AppService,
@@ -99,7 +100,12 @@ export class AppComponent implements AfterViewInit, OnDestroy {
         this.firstDay = (setting.value as number) < 0 ? getStartOfWeek(defaultLocale) : setting.value as number;
     });
 
-    app.getCurrentTabUpdates(tabIndex => this.selectedTab = tabIndex);
+    app.getCurrentTabUpdates(tabIndex => {
+      this.selectedTab = tabIndex;
+      this.showEclipseCircumstances =
+        ![CurrentTab.CALENDAR, CurrentTab.INSOLATION, CurrentTab.ORBITS, CurrentTab.INSOLATION,
+          CurrentTab.MOONS_GRS, CurrentTab.TABLES, CurrentTab.TIME].includes(tabIndex);
+    });
   }
 
   ngAfterViewInit(): void {
