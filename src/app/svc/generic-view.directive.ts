@@ -1,12 +1,12 @@
 import { AfterViewInit, Directive, ElementRef, ViewChild } from '@angular/core';
 import { SafeStyle } from '@angular/platform-browser';
 import {
-  ASTEROID_BASE, COMET_BASE, EARTH, FIRST_PLANET, HALF_MINUTE, ISkyObserver, LAST_PLANET, NO_MATCH, SkyObserver, SolarSystem,
+  ASTEROID_BASE, COMET_BASE, EARTH, FIRST_PLANET, HALF_MINUTE, HALF_SECOND, ISkyObserver, LAST_PLANET, NO_MATCH, SkyObserver, SolarSystem,
   StarCatalog
 } from '@tubular/astronomy';
 import { DateTime, utToTdt } from '@tubular/time';
 import { ceil, max, round, sqrt } from '@tubular/math';
-import { clone, FontMetrics, getFontMetrics, isSafari, isString, padLeft } from '@tubular/util';
+import { clone, FontMetrics, getFontMetrics, isSafari, isString } from '@tubular/util';
 import { debounce, throttle } from 'lodash-es';
 import { BehaviorSubject, Observable, Subscription } from 'rxjs';
 import { AppService, CurrentTab } from '../app.service';
@@ -120,11 +120,11 @@ export abstract class GenericViewDirective implements AfterViewInit {
     return GenericViewDirective.printingObserver.subscribe(callback);
   }
 
-  protected constructor(protected appService: AppService, protected tabId: CurrentTab) {
+  protected constructor(protected app: AppService, protected tabId: CurrentTab) {
     this.isSafari = isSafari();
 
-    this.sanitizedHandCursor = appService.sanitizer.bypassSecurityTrustStyle('url(/assets/resources/hand_cursor.cur), auto');
-    this.sanitizedLabelCrosshair = appService.sanitizer.bypassSecurityTrustStyle('url(/assets/resources/label_crosshair.cur), auto');
+    this.sanitizedHandCursor = app.sanitizer.bypassSecurityTrustStyle('url(/assets/resources/hand_cursor.cur), auto');
+    this.sanitizedLabelCrosshair = app.sanitizer.bypassSecurityTrustStyle('url(/assets/resources/label_crosshair.cur), auto');
 
     this.updatePlanetsToDraw();
 
@@ -140,17 +140,17 @@ export abstract class GenericViewDirective implements AfterViewInit {
       this.doResize();
     }, 100);
 
-    appService.getCurrentTabUpdates((currentTab: CurrentTab) => {
+    app.getCurrentTabUpdates((currentTab: CurrentTab) => {
       if (this.tabId === currentTab)
         setTimeout(() => this.onResize());
     });
 
-    this.timeSubscription = appService.getTimeUpdates((time) => {
+    this.timeSubscription = app.getTimeUpdates((time) => {
       this.time = time;
       this.draw();
     });
 
-    this.locationSubscription = appService.getLocationUpdates(() => {
+    this.locationSubscription = app.getLocationUpdates(() => {
       this.draw();
     });
 
@@ -405,7 +405,7 @@ export abstract class GenericViewDirective implements AfterViewInit {
   }
 
   protected draw(forceFullDraw = false): void {
-    if (this.tabId !== this.appService.currentTab)
+    if (this.tabId !== this.app.currentTab)
       return;
 
     const startTime = performance.now();
@@ -434,13 +434,13 @@ export abstract class GenericViewDirective implements AfterViewInit {
     dc.largeLabelFm = getFontMetrics(this.largeLabelFont);
     dc.mediumLabelFm = getFontMetrics(this.mediumLabelFont);
     dc.smallLabelFm = getFontMetrics(this.smallLabelFont);
-    dc.sc = this.appService.starCatalog;
-    dc.ss = this.appService.solarSystem;
-    dc.skyObserver = new SkyObserver(this.appService.longitude, this.appService.latitude);
+    dc.sc = this.app.starCatalog;
+    dc.ss = this.app.solarSystem;
+    dc.skyObserver = new SkyObserver(this.app.longitude, this.app.latitude);
     // Bias time half a minute ahead of the clock time for rounding to the middle of the selected minute.
-    dc.jdu = DateTime.julianDay(this.time) + HALF_MINUTE;
+    dc.jdu = DateTime.julianDay(this.time) + (this.app.showingSeconds ? HALF_SECOND : HALF_MINUTE);
     dc.jde = utToTdt(dc.jdu);
-    dc.inkSaver = GenericViewDirective.printing && this.appService.inkSaver;
+    dc.inkSaver = GenericViewDirective.printing && this.app.inkSaver;
 
     this.additionalDrawingSetup(dc);
     this.drawView(dc);
@@ -470,11 +470,11 @@ export abstract class GenericViewDirective implements AfterViewInit {
     if (this.showMetrics) {
       const interval = max(startTime - this.lastDrawStart, 1);
 
-      this.marqueeText = padLeft(drawingTime.toFixed(1), 6, '\u2007') + (dc.fullDraw ? 'F' : 'Q') + ', ' +
-        padLeft(interval.toFixed(1), 6, '\u2007');
+      this.marqueeText = drawingTime.toFixed(1).padStart(6, '\u2007') + (dc.fullDraw ? 'F' : 'Q') + ', ' +
+        interval.toFixed(1).padStart(6, '\u2007');
 
       if (!dc.fullDraw)
-        this.marqueeText += ', ' + padLeft(this.lastFullDrawTime.toFixed(1), 6, '\u2007') + 'F';
+        this.marqueeText += ', ' + this.lastFullDrawTime.toFixed(1).padStart(6, '\u2007') + 'F';
     }
 
     this.lastDrawStart = startTime;
@@ -535,7 +535,7 @@ export abstract class GenericViewDirective implements AfterViewInit {
     }
 
     if (isString(this.additional)) {
-      const id = this.appService.solarSystem.getPlanetByName(this.additional);
+      const id = this.app.solarSystem.getPlanetByName(this.additional);
 
       if (id !== NO_MATCH)
         this.planetsToDraw.push(id);

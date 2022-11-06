@@ -63,7 +63,7 @@ export class SvcTableViewComponent implements AfterViewInit {
   tableHtml = '&nbsp;';
   planetChoiceEnabled = true;
 
-  constructor(private appService: AppService, dataService: AstroDataService) {
+  constructor(private app: AppService, dataService: AstroDataService) {
     JupiterInfo.getJupiterInfo(dataService).then((jupiterInfo: JupiterInfo) => {
       this.jupiterInfo = jupiterInfo;
       this.eventFinder = new EventFinder(jupiterInfo);
@@ -79,7 +79,7 @@ export class SvcTableViewComponent implements AfterViewInit {
       this.doResize();
     }, 100);
 
-    appService.getCurrentTabUpdates((currentTab: CurrentTab) => {
+    app.getCurrentTabUpdates((currentTab: CurrentTab) => {
       if (currentTab === CurrentTab.TABLES) {
         setTimeout(() => {
           this.throttledResize();
@@ -88,18 +88,18 @@ export class SvcTableViewComponent implements AfterViewInit {
       }
     });
 
-    appService.getTimeUpdates((time) => {
+    app.getTimeUpdates((time) => {
       this.time = time;
       this.updateView();
     });
 
-    appService.getLocationUpdates((location: Location) => {
+    app.getLocationUpdates((location: Location) => {
       this.zone = location.zone;
       this.observer = new SkyObserver(location.longitude, location.latitude);
       this.updateView();
     });
 
-    appService.getUserSettingUpdates((setting: UserSetting) => {
+    app.getUserSettingUpdates((setting: UserSetting) => {
       if (setting.view === VIEW_TABLES && setting.source !== this) {
         let forced = false;
 
@@ -127,7 +127,7 @@ export class SvcTableViewComponent implements AfterViewInit {
     this.onResize();
 
     setTimeout(() => {
-      this.appService.requestViewSettings(VIEW_TABLES);
+      this.app.requestViewSettings(VIEW_TABLES);
       this.updatePlanetChoices();
     });
   }
@@ -136,7 +136,7 @@ export class SvcTableViewComponent implements AfterViewInit {
   set tableType(value: TableType) {
     if (this._tableType !== value) {
       this._tableType = value;
-      this.appService.updateUserSetting({ view: VIEW_TABLES, property: PROPERTY_TABLE_TYPE, value, source: this });
+      this.app.updateUserSetting(VIEW_TABLES, PROPERTY_TABLE_TYPE, value, this);
       this.updatePlanetChoices();
       this.updateView();
     }
@@ -146,7 +146,7 @@ export class SvcTableViewComponent implements AfterViewInit {
   set planetChoice(value: number) {
     if (this._planetChoice !== value) {
       this._planetChoice = value;
-      this.appService.updateUserSetting({ view: VIEW_TABLES, property: PROPERTY_PLANET_CHOICE, value, source: this });
+      this.app.updateUserSetting(VIEW_TABLES, PROPERTY_PLANET_CHOICE, value, this);
       this.updateView(true);
     }
   }
@@ -163,12 +163,12 @@ export class SvcTableViewComponent implements AfterViewInit {
   }
 
   private updateView(force = false): void {
-    if (this.appService.currentTab !== CurrentTab.TABLES || !this.eventFinderReady)
+    if (this.app.currentTab !== CurrentTab.TABLES || !this.eventFinderReady)
       return;
 
     const timezone = Timezone.getTimezone(this.zone, this.observer.longitude.degrees);
 
-    this.dateTime = new DateTime(this.time, timezone, this.appService.gregorianChangeDate);
+    this.dateTime = new DateTime(this.time, timezone, this.app.gregorianChangeDate);
 
     const wt = this.wallTime = this.dateTime.wallTime;
     const lt = this.lastTableTime;
@@ -196,7 +196,7 @@ export class SvcTableViewComponent implements AfterViewInit {
     if (force ||
         this.lastTableType !== this._tableType ||
         this.lastZone !== this.zone ||
-        !isEqual(this.lastGregorianChange, this.appService.gregorianChangeDate) ||
+        !isEqual(this.lastGregorianChange, this.app.gregorianChangeDate) ||
         checkYearChanged &&  lt.y !== wt.y ||
         checkDayChanged  && (lt.y !== wt.y || lt.m !== wt.m || lt.d !== wt.d) ||
         checkTimeChanged && (lt.y !== wt.y || lt.m !== wt.m || lt.d !== wt.d || lt.hrs !== wt.hrs || lt.min !== wt.min || lt.occurrence !== wt.occurrence) ||
@@ -214,22 +214,22 @@ export class SvcTableViewComponent implements AfterViewInit {
         case TableType.RISE_SET_TIMES:
           daysInMonth = this.dateTime.getDaysInMonth(wt.y, wt.m);
           newTable = this.eventFinder.getRiseAndSetEventsAsHtml(this._planetChoice, wt.y, wt.m, wt.d, daysInMonth, this.observer, timezone,
-              this.appService.gregorianChangeDate, this.twilight, { tableClass: 'table-view' });
+              this.app.gregorianChangeDate, this.twilight, { tableClass: 'table-view' });
           break;
 
         case TableType.LUNAR_PHASES:
-          newTable = this.eventFinder.getLunarPhasesByYearAsHtml(wt.y, wt.y + 1, timezone, this.appService.gregorianChangeDate,
+          newTable = this.eventFinder.getLunarPhasesByYearAsHtml(wt.y, wt.y + 1, timezone, this.app.gregorianChangeDate,
               { tableClass: 'table-view' });
           break;
 
         case TableType.EQUINOX_SOLSTICE:
-          newTable = this.eventFinder.getEquinoxesAndSolsticesByYearAsHtml(wt.y, wt.y + 9, timezone, this.appService.gregorianChangeDate,
+          newTable = this.eventFinder.getEquinoxesAndSolsticesByYearAsHtml(wt.y, wt.y + 9, timezone, this.app.gregorianChangeDate,
               { tableClass: 'table-view' });
           break;
 
         case TableType.GALILEAN_MOONS:
           jdu = DateTime.julianDay(this.time);
-          newTable = this.eventFinder.getGalileanMoonEventsAsHtml(jdu, jdu + 3, true, timezone, this.appService.gregorianChangeDate,
+          newTable = this.eventFinder.getGalileanMoonEventsAsHtml(jdu, jdu + 3, true, timezone, this.app.gregorianChangeDate,
               { tableClass: 'table-view' });
           break;
       }
@@ -240,7 +240,7 @@ export class SvcTableViewComponent implements AfterViewInit {
         newTable.then(html => this.tableHtml = html);
     }
 
-    this.lastGregorianChange = clone(this.appService.gregorianChangeDate);
+    this.lastGregorianChange = clone(this.app.gregorianChangeDate);
     this.lastObserver = new SkyObserver(this.observer.longitude, this.observer.latitude);
     this.lastTableTime = clone(wt);
     this.lastTableType = this._tableType;

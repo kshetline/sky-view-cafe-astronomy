@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { SkyObserver } from '@tubular/astronomy';
 import ttime, { DAY_MSEC, DateTime, Timezone, utToTdt, isSafeUtcMillis } from '@tubular/time';
 import { Angle, FMT_MINS, FMT_SECS, mod2, Mode, round, Unit } from '@tubular/math';
-import { padLeft, toDefaultLocaleFixed } from '@tubular/util';
+import { toDefaultLocaleFixed } from '@tubular/util';
 import { AppService, CurrentTab, Location } from '../../app.service';
 import getDeltaTAtJulianDate = ttime.getDeltaTAtJulianDate;
 
@@ -88,11 +88,11 @@ export class SvcTimeViewComponent {
     this.formattedGast = new Angle(this.app.solarSystem.getGreenwichApparentSiderealTime(jdu),
       Unit.DEGREES, Mode.RANGE_LIMIT_NONNEGATIVE).toTimeString(angleFormat);
 
-    this.formattedJulianDate = padLeft(toDefaultLocaleFixed(jdu, 6, 6), 17, nbsp);
-    this.modifiedJulianDate = padLeft(toDefaultLocaleFixed(jdu - 2400000.5, 6, 6), 17, nbsp);
-    this.formattedEphemerisDate = padLeft(toDefaultLocaleFixed(utToTdt(jdu), 6, 6), 17, nbsp);
-    this.modifiedEphemerisDate = padLeft(toDefaultLocaleFixed(utToTdt(jdu) - 2400000.5, 6, 6), 17, nbsp);
-    this.formattedDays = padLeft(toDefaultLocaleFixed(this.time / DAY_MSEC, 6, 6), 17, nbsp);
-    this.formattedSeconds = padLeft(toDefaultLocaleFixed(this.time / 1000, 0, 0), 17, nbsp);
+    this.formattedJulianDate = toDefaultLocaleFixed(jdu, 6, 6).padStart(17, nbsp);
+    this.modifiedJulianDate = toDefaultLocaleFixed(jdu - 2400000.5, 6, 6).padStart(17, nbsp);
+    this.formattedEphemerisDate = toDefaultLocaleFixed(utToTdt(jdu), 6, 6).padStart(17, nbsp);
+    this.modifiedEphemerisDate = toDefaultLocaleFixed(utToTdt(jdu) - 2400000.5, 6, 6).padStart(17, nbsp);
+    this.formattedDays = toDefaultLocaleFixed(this.time / DAY_MSEC, 6, 6).padStart(17, nbsp);
+    this.formattedSeconds = toDefaultLocaleFixed(this.time / 1000, 0, 0).padStart(17, nbsp);
   }
 }

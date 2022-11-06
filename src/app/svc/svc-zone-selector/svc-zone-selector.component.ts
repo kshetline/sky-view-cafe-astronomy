@@ -22,6 +22,9 @@ const OS   = 'OS';
 const LMT  = 'LMT';
 
 function toCanonicalOffset(offset: string): string { // ([§#~^\u2744])
+  if (offset === 'UTC')
+    return '+00:00';
+
   let off = offset;
   let dst = '';
   const $ = /([-+]\d+(?::\d+)?)(.+)?/.exec(offset);
@@ -46,7 +49,7 @@ function toCanonicalOffset(offset: string): string { // ([§#~^\u2744])
 }
 
 function toCanonicalZone(zone: string): string {
-  return zone?.replace(/ /g, '_').replace(/\bKyiv\b/, 'Kiev');
+  return zone?.replace(/ /g, '_');
 }
 
 function toDisplayOffset(offset: string): string {
@@ -61,7 +64,9 @@ function toDisplayOffset(offset: string): string {
     off = $[1];
     dst = $[2] ?? '';
 
-    if (dst === '§')
+    if (!dst && off.substring(1) === '00:00')
+      return 'UTC';
+    else if (dst === '§')
       dst = ' DST';
     else if (dst === '#')
       dst = ' two-hour DST';
@@ -77,7 +82,7 @@ function toDisplayOffset(offset: string): string {
 }
 
 function toDisplayZone(zone: string): string {
-  return zone?.replace(/_/g, ' ').replace(/\bKiev\b/, 'Kyiv');
+  return zone?.replace(/_/g, ' ');
 }
 
 @Component({
@@ -116,7 +121,7 @@ export class SvcZoneSelectorComponent implements ControlValueAccessor, OnInit {
   @Output() focus: EventEmitter<any> = new EventEmitter();
   @Output() blur: EventEmitter<any> = new EventEmitter();
 
-  constructor(private appService: AppService, private ref: ChangeDetectorRef) {
+  constructor(private app: AppService, private ref: ChangeDetectorRef) {
     this.lastSubzones[this._region] = this._subzone;
     this.subzonesByRegion[this._region] = this.subzones;
   }
@@ -298,7 +303,7 @@ export class SvcZoneSelectorComponent implements ControlValueAccessor, OnInit {
   ngOnInit(): void {
     this.updateTimezones();
 
-    this.appService.getAppEventUpdates(evt => {
+    this.app.getAppEventUpdates(evt => {
       if (evt.name === IANA_DB_UPDATE)
         this.updateTimezones();
     });
@@ -316,7 +321,7 @@ export class SvcZoneSelectorComponent implements ControlValueAccessor, OnInit {
       });
     }
 
-    this.appService.setKnownIanaTimezones(this.knownIanaZones);
+    this.app.setKnownIanaTimezones(this.knownIanaZones);
 
     const hourOffsets: string[] = [];
 

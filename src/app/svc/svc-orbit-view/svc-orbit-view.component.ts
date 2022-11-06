@@ -128,15 +128,15 @@ export class SvcOrbitViewComponent extends GenericPlanetaryViewDirective impleme
   @ViewChild('canvasWrapper', { static: true }) private wrapperRef: ElementRef;
   @ViewChild('orbitCanvas', { static: true }) private canvasRef: ElementRef;
 
-  constructor(appService: AppService) {
-    super(appService, CurrentTab.ORBITS);
+  constructor(app: AppService) {
+    super(app, CurrentTab.ORBITS);
 
     this.marqueeFlags = MARQUEE_ECLIPTIC | MARQUEE_HELIOCENTRIC | MARQUEE_DISTANCE;
     this.marqueeUnits = MARQUEE_AU;
 
     this.canTouchZoom = true;
 
-    appService.getUserSettingUpdates((setting: UserSetting) => {
+    app.getUserSettingUpdates((setting: UserSetting) => {
       if (setting.view === VIEW_ORBITS && setting.source !== this) {
         if (setting.property === PROPERTY_EXTENT) {
           const oldZoom = this.zoom;
@@ -152,7 +152,7 @@ export class SvcOrbitViewComponent extends GenericPlanetaryViewDirective impleme
             this.zoom = SvcOrbitViewComponent.zoomToZoomSteps(scales[this.extent]);
 
             if (this.zoom !== oldZoom)
-              this.appService.updateUserSetting({ view: VIEW_ORBITS, property: PROPERTY_ZOOM, value: this.zoom, source: this });
+              this.app.updateUserSetting(VIEW_ORBITS, PROPERTY_ZOOM, this.zoom, this);
           }
         }
         else if (setting.property === PROPERTY_CENTER_EARTH)
@@ -193,7 +193,7 @@ export class SvcOrbitViewComponent extends GenericPlanetaryViewDirective impleme
     this.wrapper = this.wrapperRef.nativeElement;
     this.canvas = this.canvasRef.nativeElement;
 
-    setTimeout(() => this.appService.requestViewSettings(VIEW_ORBITS));
+    setTimeout(() => this.app.requestViewSettings(VIEW_ORBITS));
 
     super.ngAfterViewInit();
   }
@@ -598,7 +598,7 @@ export class SvcOrbitViewComponent extends GenericPlanetaryViewDirective impleme
 
     if (this.zoom !== oldZoom) {
       this.throttledRedraw();
-      this.appService.updateUserSetting({ view: VIEW_ORBITS, property: PROPERTY_ZOOM, value: this.zoom, source: this });
+      this.app.updateUserSetting(VIEW_ORBITS, PROPERTY_ZOOM, this.zoom, this);
     }
 
     if (evt.cancelable) evt.preventDefault();
@@ -617,7 +617,7 @@ export class SvcOrbitViewComponent extends GenericPlanetaryViewDirective impleme
 
     if (this.zoom !== oldZoom) {
       this.throttledRedraw();
-      this.appService.updateUserSetting({ view: VIEW_ORBITS, property: PROPERTY_ZOOM, value: this.zoom, source: this });
+      this.app.updateUserSetting(VIEW_ORBITS, PROPERTY_ZOOM, this.zoom, this);
     }
   }
 
@@ -664,8 +664,8 @@ export class SvcOrbitViewComponent extends GenericPlanetaryViewDirective impleme
   }
 
   protected debouncedRotationUpdate = debounce(() => {
-    this.appService.updateUserSetting({ view: VIEW_ORBITS, property: PROPERTY_ROTATION_XZ, value: this.rotation_xz, source: this });
-    this.appService.updateUserSetting({ view: VIEW_ORBITS, property: PROPERTY_ROTATION_YZ, value: this.rotation_yz, source: this });
+    this.app.updateUserSetting(VIEW_ORBITS, PROPERTY_ROTATION_XZ, this.rotation_xz, this);
+    this.app.updateUserSetting(VIEW_ORBITS, PROPERTY_ROTATION_YZ, this.rotation_yz, this);
   }, 500);
 
   protected static translate(mode: DrawingMode, pt: Point3D, ctr: Point3D, viewingDistance: number,

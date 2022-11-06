@@ -53,8 +53,8 @@ export abstract class GenericSkyViewDirective extends GenericPlanetaryViewDirect
   protected showConstellations = false;
   protected showDimStars = false;
 
-  protected constructor(appService: AppService, tabId: CurrentTab) {
-    super(appService, tabId);
+  protected constructor(app: AppService, tabId: CurrentTab) {
+    super(app, tabId);
   }
 
   protected drawView(dc: DrawingContextPlanetary): void {

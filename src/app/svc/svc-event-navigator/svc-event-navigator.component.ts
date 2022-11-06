@@ -1,21 +1,27 @@
-import { AfterViewInit, Component, Input, OnDestroy } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, Input, OnDestroy } from '@angular/core';
 import {
-  APHELION, EARTH, EclipseInfo, EventFinder, FALL_EQUINOX, FIRST_QUARTER, FULL_MOON, GALILEAN_MOON_EVENT, GREATEST_ELONGATION,
-  GRS_TRANSIT_EVENT, INFERIOR_CONJUNCTION, JUPITER, JupiterInfo, LAST_QUARTER, LUNAR_ECLIPSE, MARS, MERCURY, MOON, NEPTUNE, NEW_MOON,
-  OPPOSITION, PERIHELION, PLUTO, QUADRATURE, RISE_EVENT, RISE_SET_EVENT_BASE, SATURN, SET_EVENT, SET_EVENT_MINUS_1_MIN, SkyObserver,
-  SOLAR_ECLIPSE, SPRING_EQUINOX, SUMMER_SOLSTICE, SUN, SUPERIOR_CONJUNCTION, TRANSIT_EVENT, TWILIGHT_BEGINS, TWILIGHT_ENDS, URANUS,
-  VENUS, WINTER_SOLSTICE
+  APHELION, AstroEvent, EARTH, EclipseCircumstances, EclipseInfo, EventFinder, FALL_EQUINOX, FIRST_QUARTER, FULL_MOON,
+  GALILEAN_MOON_EVENT, GREATEST_ELONGATION, GRS_TRANSIT_EVENT, INFERIOR_CONJUNCTION, JUPITER, JupiterInfo,
+  LAST_QUARTER, LUNAR_ECLIPSE, LUNAR_ECLIPSE_LOCAL, MARS, MERCURY, MOON, NEPTUNE, NEW_MOON, OPPOSITION, PERIHELION,
+  PLUTO, QUADRATURE, RISE_EVENT, RISE_SET_EVENT_BASE, SATURN, SET_EVENT, SET_EVENT_MINUS_1_MIN, SkyObserver,
+  SOLAR_ECLIPSE, SOLAR_ECLIPSE_LOCAL, SPRING_EQUINOX, SUMMER_SOLSTICE, SUN, SUPERIOR_CONJUNCTION, TRANSIT_EVENT,
+  TWILIGHT_BEGINS, TWILIGHT_ENDS, URANUS, VENUS, WINTER_SOLSTICE
 } from '@tubular/astronomy';
-import { DateTime, Timezone } from '@tubular/time';
+import { DateTime, Timezone, ttime } from '@tubular/time';
 import { isString } from '@tubular/util';
 import { MessageService, SelectItem } from 'primeng/api';
 import { Subscription, timer } from 'rxjs';
 import { AppService, UserSetting } from '../../app.service';
 import { AstroDataService } from '../../astronomy/astro-data.service';
 import { PROPERTY_FIXED_GRS, PROPERTY_GRS_OVERRIDE, VIEW_MOONS } from '../svc-moons-view/svc-moons-view.component';
+import millisFromJulianDay = ttime.millisFromJulianDay;
 
 const CLICK_REPEAT_DELAY = 500;
 const CLICK_REPEAT_RATE  = 100;
+
+export const  VIEW_EVENT_NAV = 'event_nav';
+export const    PROPERTY_EVENT_BODY = 'event_body';
+export const    PROPERTY_EVENT_TYPE = 'event_type';
 
 @Component({
   selector: 'svc-event-navigator',
@@ -24,15 +30,16 @@ const CLICK_REPEAT_RATE  = 100;
   templateUrl: './svc-event-navigator.component.html'
 })
 export class SvcEventNavigatorComponent implements AfterViewInit, OnDestroy {
+  private clickTimer: Subscription;
+  private eventFinder: EventFinder;
+  private initDone = false;
+  private jupiterInfo: JupiterInfo;
+  private lastGoBack = false;
+  private lastGrsLongitude = JupiterInfo.DEFAULT_GRS_LONG.degrees;
+  private lastGrsOverride = false;
   private _selectedEvent = RISE_EVENT;
   private _selectedPlanet = SUN;
-  private clickTimer: Subscription;
-  private lastGoBack = false;
   private waitingForEvent = false;
-  private eventFinder: EventFinder;
-  private jupiterInfo: JupiterInfo;
-  private lastGrsOverride = false;
-  private lastGrsLongitude = JupiterInfo.DEFAULT_GRS_LONG.degrees;
 
   events: SelectItem[] = [
     { label: 'Rising',                  value: RISE_EVENT },
@@ -55,6 +62,8 @@ export class SvcEventNavigatorComponent implements AfterViewInit, OnDestroy {
     { label: '-', value: -1 },
     { label: 'Lunar eclipse',           value: LUNAR_ECLIPSE },
     { label: 'Solar eclipse',           value: SOLAR_ECLIPSE },
+    { label: 'Local lunar eclipse',     value: LUNAR_ECLIPSE_LOCAL },
+    { label: 'Local solar eclipse',     value: SOLAR_ECLIPSE_LOCAL },
     { label: '-', value: -1 },
     { label: 'Opposition',              value: OPPOSITION },
     { label: 'Superior conjunction',    value: SUPERIOR_CONJUNCTION },
@@ -84,11 +93,19 @@ export class SvcEventNavigatorComponent implements AfterViewInit, OnDestroy {
   ];
 
   @Input() disabled = false;
-  noPlanets = false;
+
+  busy = false;
+  busyTimer: any;
   eventFinderReady = false;
+  noPlanets = false;
   planets: SelectItem[] = this.planetChoices;
 
-  constructor(private app: AppService, dataService: AstroDataService, private messageService: MessageService) {
+  constructor(
+    private app: AppService,
+    dataService: AstroDataService,
+    private messageService: MessageService,
+    private ref: ChangeDetectorRef
+  ) {
     this.updatePlanets(this._selectedEvent);
 
     JupiterInfo.getJupiterInfo(dataService).then((jupiterInfo: JupiterInfo) => {
@@ -103,6 +120,13 @@ export class SvcEventNavigatorComponent implements AfterViewInit, OnDestroy {
     });
 
     app.getUserSettingUpdates((setting: UserSetting) => {
+      if (setting.view === VIEW_EVENT_NAV && setting.source !== this) {
+        if (setting.property === PROPERTY_EVENT_BODY)
+          this.selectedPlanet = setting.value as number;
+        else if (setting.property === PROPERTY_EVENT_TYPE)
+          this.selectedEvent = setting.value as number;
+      }
+
       if (setting.view === VIEW_MOONS && this.jupiterInfo) {
         if (setting.property === PROPERTY_GRS_OVERRIDE) {
           this.lastGrsOverride = setting.value as boolean;
@@ -123,7 +147,11 @@ export class SvcEventNavigatorComponent implements AfterViewInit, OnDestroy {
   }
 
   ngAfterViewInit(): void {
-    setTimeout(() => this.app.requestViewSettings(VIEW_MOONS));
+    setTimeout(() => {
+      this.app.requestViewSettings(VIEW_EVENT_NAV);
+      this.app.requestViewSettings(VIEW_MOONS);
+    });
+    this.initDone = true;
   }
 
   ngOnDestroy(): void {
@@ -148,8 +176,10 @@ export class SvcEventNavigatorComponent implements AfterViewInit, OnDestroy {
           this.selectedEvent = lastEvent;
         });
       }
-      else
+      else {
+        this.app.updateUserSetting(VIEW_EVENT_NAV, PROPERTY_EVENT_TYPE, newEvent, this);
         this.updatePlanets(newEvent);
+      }
     }
   }
 
@@ -159,16 +189,20 @@ export class SvcEventNavigatorComponent implements AfterViewInit, OnDestroy {
       const lastPlanet = this._selectedPlanet;
       this._selectedPlanet = newPlanet;
 
-      if (newPlanet < 0) {
+      if (newPlanet == null || newPlanet < 0) {
         timer(0).subscribe(() => {
           this.selectedPlanet = lastPlanet;
         });
       }
+      else
+        this.app.updateUserSetting(VIEW_EVENT_NAV, PROPERTY_EVENT_BODY, newPlanet, this);
     }
   }
 
   onTouchStart(evt: TouchEvent, goBack: boolean): void {
-    if (evt.cancelable) evt.preventDefault();
+    if (evt.cancelable)
+      evt.preventDefault();
+
     this.onMouseDown(goBack);
   }
 
@@ -229,10 +263,13 @@ export class SvcEventNavigatorComponent implements AfterViewInit, OnDestroy {
         this.planets.push({ label: '\u00A0', value: badValue-- });
     }
 
-    if (firstIncluded >= 0 && this.planets[this._selectedPlanet].value < 0)
+    if (firstIncluded >= 0 && (!this._selectedPlanet || this.planets[this._selectedPlanet].value < 0))
       this.selectedPlanet = firstIncluded;
 
     this.noPlanets = (firstIncluded < 0);
+
+    if (this.initDone)
+      this.ref.detectChanges();
   }
 
   private getEvent(goBack: boolean): void {
@@ -242,46 +279,99 @@ export class SvcEventNavigatorComponent implements AfterViewInit, OnDestroy {
     this.waitingForEvent = true;
 
     const observer = new SkyObserver(this.app.location.longitude, this.app.location.latitude);
-    let altMins: number;
+    let argument: any;
 
     if (this._selectedEvent === TWILIGHT_BEGINS || this._selectedEvent === TWILIGHT_ENDS) {
       if (this.app.twilightByDegrees)
-        altMins = -this.app.twilightDegrees;
+        argument = -this.app.twilightDegrees;
       else
-        altMins = this.app.twilightMinutes;
+        argument = this.app.twilightMinutes;
     }
+    else if (this._selectedEvent === LUNAR_ECLIPSE || this._selectedEvent === SOLAR_ECLIPSE)
+      argument = this.app.showingSeconds;
 
     const timezone = Timezone.getTimezone(this.app.location.zone, this.app.location.longitude);
-    const event = this.eventFinder.findEvent(this._selectedPlanet, this._selectedEvent, DateTime.julianDay(this.app.time),
-                    observer, timezone, this.app.gregorianChangeDate, goBack, altMins);
 
+    this.busyTimer = setTimeout(() => {
+      if (this.waitingForEvent)
+        this.busy = true;
+
+      this.busyTimer = undefined;
+    }, 500);
+
+    setTimeout(() => this.eventFinder.findEventAsync(this._selectedPlanet, this._selectedEvent,
+        DateTime.julianDay(this.app.time), observer, timezone, this.app.gregorianChangeDate, goBack, argument)
+      .then(event => this.gotEvent(event))
+      .catch(err => {
+        console.error(err);
+        this.gotEvent(null);
+      }));
+  }
+
+  private gotEvent(event: AstroEvent): void {
     this.waitingForEvent = false;
 
-    if (event) {
-      this.app.time = event.eventTime.utcTimeMillis;
+    if (this.busyTimer) {
+      clearTimeout(this.busyTimer);
+      this.busyTimer = undefined;
+    }
 
-      let message: string;
+    this.busy = false;
+
+    if (event) {
+      this.app.time = (this.app.showingSeconds ? millisFromJulianDay(event.jdu) : event.eventTime.utcTimeMillis);
+
+      let summary: string;
+      let detail: string;
 
       if (isString(event.miscInfo))
-        message = event.miscInfo as string;
+        summary = event.miscInfo as string;
       else if (event.eventType === LUNAR_ECLIPSE || event.eventType === SOLAR_ECLIPSE) {
         const ei = event.miscInfo as EclipseInfo;
+        const isSolar = (event.eventType === SOLAR_ECLIPSE);
 
         if (ei.total)
-          message = 'Total';
+          summary = 'Total';
         else if (ei.hybrid)
-          message = 'Hybrid';
+          summary = 'Hybrid';
         else if (ei.annular)
-          message = 'Annular';
+          summary = 'Annular';
         else
-          message = 'Partial';
+          summary = 'Partial';
 
-        message += ' eclipse of the ' + (event.eventType === LUNAR_ECLIPSE ? 'Moon' : 'Sun');
+        summary += ' eclipse of the ' + (isSolar ? 'Sun' : 'Moon');
+
+        const gcd = this.app.gregorianChangeDate;
+        const observer = new SkyObserver(this.app.location.longitude, this.app.location.latitude);
+        const zone = Timezone.getTimezone(this.app.timezone);
+        const localEvent = this.eventFinder.findEvent(isSolar ? SUN : MOON, isSolar ? SOLAR_ECLIPSE_LOCAL : LUNAR_ECLIPSE_LOCAL,
+            event.ut - 1, observer, zone, gcd, false, null, 1)?.miscInfo as EclipseCircumstances;
+
+        if (!localEvent)
+          detail = 'This eclipse is not visible locally.';
+        else if (ei.hybrid && localEvent.annular)
+          detail = 'This eclipse is annular locally.';
+        else if (ei.hybrid && !localEvent.annular)
+          detail = 'This eclipse is total locally.';
+        else if ((ei.total || ei.hybrid || ei.annular) && !localEvent.peakDuration)
+          detail = 'This eclipse is only partial locally.';
+      }
+      else if (event.eventType === LUNAR_ECLIPSE_LOCAL || event.eventType === SOLAR_ECLIPSE_LOCAL) {
+        const lec = event.miscInfo as EclipseCircumstances;
+
+        if (lec.maxEclipse >= 100)
+          summary = 'Total';
+        else if (lec.annular)
+          summary = 'Annular';
+        else
+          summary = 'Partial';
+
+        summary += ' eclipse of the ' + (event.eventType === LUNAR_ECLIPSE_LOCAL ? 'Moon' : 'Sun');
       }
 
-      if (message) {
+      if (summary) {
         this.messageService.clear('navigator');
-        this.messageService.add({ key: 'navigator', severity: 'info', summary: '', detail: message, life: 6000 });
+        this.messageService.add({ key: 'navigator', severity: 'info', summary, detail, life: 6000 });
       }
     }
   }

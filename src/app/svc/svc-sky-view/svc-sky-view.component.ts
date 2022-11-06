@@ -8,7 +8,7 @@ import {
   abs, Angle, asin_deg, atan2_deg, ceil, cos, cos_deg, floor, interpolate, limitNeg1to1, max, min, mod, mod2, PI, Point, round, sin,
   sin_deg, SphericalPosition, SphericalPosition3D, sqrt, tan, tan_deg, TWO_PI, Unit
 } from '@tubular/math';
-import { colorFromRGB, drawOutlinedText, padLeft, parseColor, replaceAlpha, strokeLine } from '@tubular/util';
+import { colorFromRGB, drawOutlinedText, parseColor, replaceAlpha, strokeLine } from '@tubular/util';
 import { AppService, CurrentTab, PROPERTY_NORTH_AZIMUTH, UserSetting, VIEW_APP } from '../../app.service';
 import {
   asteroidColor, cometColor, DrawingContextPlanetary, FAR_AWAY, LabelInfo, MARQUEE_EQUATORIAL, MARQUEE_HORIZONTAL, MARQUEE_ILLUMINATION,
@@ -155,7 +155,7 @@ export class SvcSkyViewComponent extends GenericSkyViewDirective implements Afte
       this.formatFacing();
 
       if (!this._trackSun)
-        this.appService.updateUserSetting({ view: VIEW_SKY, property: PROPERTY_FACING, value: newFacing, source: this });
+        this.app.updateUserSetting(VIEW_SKY, PROPERTY_FACING, newFacing, this);
 
       if (redraw)
         this.draw();
@@ -174,11 +174,11 @@ export class SvcSkyViewComponent extends GenericSkyViewDirective implements Afte
       this.facingOrigin = 'W of S';
     }
 
-    this.formattedFacing = padLeft(facing.toFixed(1), 5, '0');
+    this.formattedFacing = facing.toFixed(1).padStart(5, '0');
   }
 
-  constructor(appService: AppService) {
-    super(appService, CurrentTab.SKY);
+  constructor(app: AppService) {
+    super(app, CurrentTab.SKY);
 
     this.marqueeFlags = MARQUEE_EQUATORIAL   | MARQUEE_HORIZONTAL | MARQUEE_MAGNITUDE |
                         MARQUEE_ILLUMINATION | MARQUEE_SIZE;
@@ -200,7 +200,7 @@ export class SvcSkyViewComponent extends GenericSkyViewDirective implements Afte
     (reason) => console.error(reason))
       .catch((reason) => console.error(reason));
 
-    appService.getUserSettingUpdates((setting: UserSetting) => {
+    app.getUserSettingUpdates((setting: UserSetting) => {
       if (setting.view === VIEW_SKY && setting.source !== this) {
         if (setting.property === PROPERTY_VIEW_TYPE)
           this.viewType = setting.value as VIEW_TYPE;
@@ -260,7 +260,7 @@ export class SvcSkyViewComponent extends GenericSkyViewDirective implements Afte
     this.wrapper = this.wrapperRef.nativeElement;
     this.canvas = this.canvasRef.nativeElement;
 
-    setTimeout(() => this.appService.requestViewSettings(VIEW_SKY));
+    setTimeout(() => this.app.requestViewSettings(VIEW_SKY));
 
     super.ngAfterViewInit();
   }
@@ -391,7 +391,7 @@ export class SvcSkyViewComponent extends GenericSkyViewDirective implements Afte
 
       this.onResize();
       this.draw();
-      this.appService.updateUserSetting({ view: VIEW_SKY, property: PROPERTY_VIEW_TYPE, value, source: this });
+      this.app.updateUserSetting(VIEW_SKY, PROPERTY_VIEW_TYPE, value, this);
     }
   }
 
@@ -405,7 +405,7 @@ export class SvcSkyViewComponent extends GenericSkyViewDirective implements Afte
   set trackSun(value: boolean) {
     if (this._trackSun !== value) {
       this._trackSun = value;
-      this.appService.updateUserSetting({ view: VIEW_SKY, property: PROPERTY_TRACK_SUN, value, source: this });
+      this.app.updateUserSetting(VIEW_SKY, PROPERTY_TRACK_SUN, value, this);
       this.draw();
     }
   }
@@ -414,7 +414,7 @@ export class SvcSkyViewComponent extends GenericSkyViewDirective implements Afte
   set parallelToEcliptic(value: boolean) {
     if (this._parallelToEcliptic !== value) {
       this._parallelToEcliptic = value;
-      this.appService.updateUserSetting({ view: VIEW_SKY, property: PROPERTY_PARALLEL_TO_ECLIPTIC, value, source: this });
+      this.app.updateUserSetting(VIEW_SKY, PROPERTY_PARALLEL_TO_ECLIPTIC, value, this);
       this.draw();
     }
   }
@@ -666,9 +666,7 @@ export class SvcSkyViewComponent extends GenericSkyViewDirective implements Afte
   protected drawScaledPlanet(planet: number, pt: Point, dc: DrawingContextSky, _colorOverride?: string): void {
     const cx = pt.x;
     const cy = pt.y;
-    let pSize = this.scaledRound(dc.ss.getAngularDiameter(planet, dc.jde, dc.skyObserver) * dc.pixelsPerArcSec);
-
-    pSize += (pSize + 1) % 2;
+    let pSize = dc.ss.getAngularDiameter(planet, dc.jde, dc.skyObserver) * dc.pixelsPerArcSec;
 
     if (pSize < 3)
       pSize = 3;
@@ -693,6 +691,13 @@ export class SvcSkyViewComponent extends GenericSkyViewDirective implements Afte
         dc.context.fillStyle = asteroidColor;
       else
         dc.context.fillStyle = cometColor;
+
+      if (planet === SUN) {
+        if (dc.totality > 0.8 && dc.totality < 1.0)
+          pSize += this.canvasScaling * (dc.totality - 0.8) / 0.2;
+        else if (dc.totality >= 1)
+          pSize -= 1;
+      }
 
       dc.context.beginPath();
       dc.context.arc(cx, cy, pSize / 2, 0, TWO_PI);

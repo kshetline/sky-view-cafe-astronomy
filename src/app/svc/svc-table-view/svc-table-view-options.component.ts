@@ -24,8 +24,8 @@ export class SvcTableViewOptionsComponent implements AfterViewInit {
 
   twilightDisabled = false;
 
-  constructor(private appService: AppService) {
-    appService.getUserSettingUpdates((setting: UserSetting) => {
+  constructor(private app: AppService) {
+    app.getUserSettingUpdates((setting: UserSetting) => {
       if (setting.view === VIEW_TABLES && setting.source !== this) {
         if (setting.property === PROPERTY_PLANET_CHOICE)
           this.planetChoice = setting.value as number;
@@ -40,14 +40,14 @@ export class SvcTableViewOptionsComponent implements AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-    setTimeout(() => this.appService.requestViewSettings(VIEW_TABLES));
+    setTimeout(() => this.app.requestViewSettings(VIEW_TABLES));
   }
 
   get twilight(): number { return this._twilight; }
   set twilight(value: number) {
     if (this._twilight !== value) {
       this._twilight = value;
-      this.appService.updateUserSetting({ view: VIEW_TABLES, property: PROPERTY_TWILIGHT, value, source: this });
+      this.app.updateUserSetting(VIEW_TABLES, PROPERTY_TWILIGHT, value, this);
     }
   }
 }

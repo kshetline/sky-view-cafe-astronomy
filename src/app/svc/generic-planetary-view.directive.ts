@@ -156,15 +156,15 @@ export abstract class GenericPlanetaryViewDirective extends GenericViewDirective
   protected topocentricMoon = false;
   protected northAzimuth = false;
 
-  protected constructor(protected appService: AppService, protected tabId: CurrentTab) {
-    super(appService, tabId);
+  protected constructor(protected app: AppService, protected tabId: CurrentTab) {
+    super(app, tabId);
 
     this.brightenStars(false);
-    this.starsReady = appService.starsReady;
-    this.asteroidsReady = appService.asteroidsReady;
+    this.starsReady = app.starsReady;
+    this.asteroidsReady = app.asteroidsReady;
 
     if (!this.starsReady) {
-      appService.getStarsReadyUpdate((initialized) => {
+      app.getStarsReadyUpdate((initialized) => {
         this.starsReady = initialized;
 
         if (initialized)
@@ -173,7 +173,7 @@ export abstract class GenericPlanetaryViewDirective extends GenericViewDirective
     }
 
     if (!this.asteroidsReady) {
-      appService.getAsteroidsReadyUpdate((initialized) => {
+      app.getAsteroidsReadyUpdate((initialized) => {
         this.asteroidsReady = initialized;
 
         if (initialized) {
@@ -185,7 +185,7 @@ export abstract class GenericPlanetaryViewDirective extends GenericViewDirective
     else
       this.updatePlanetsToDraw();
 
-    appService.getUserSettingUpdates((setting: UserSetting) => {
+    app.getUserSettingUpdates((setting: UserSetting) => {
       if (setting.view === VIEW_APP) {
         if (setting.property === PROPERTY_NORTH_AZIMUTH) {
           if (this.northAzimuth !== setting.value) {

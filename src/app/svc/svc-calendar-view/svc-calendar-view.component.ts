@@ -123,7 +123,7 @@ export class SvcCalendarViewComponent implements AfterViewInit {
   isFirefox = false;
   isEdgeOrIE = false;
 
-  constructor(private appService: AppService, private datePipe: DatePipe) {
+  constructor(private app: AppService, private datePipe: DatePipe) {
     this.isFirefox = isFirefox();
     this.isEdgeOrIE = isEdge();
     // TODO: Call method below whenever first day of week changes.
@@ -133,7 +133,7 @@ export class SvcCalendarViewComponent implements AfterViewInit {
       this.doResize();
     }, 100);
 
-    appService.getCurrentTabUpdates((currentTab: CurrentTab) => {
+    app.getCurrentTabUpdates((currentTab: CurrentTab) => {
       if (currentTab === CurrentTab.CALENDAR) {
         setTimeout(() => {
           this.onResize();
@@ -142,18 +142,18 @@ export class SvcCalendarViewComponent implements AfterViewInit {
       }
     });
 
-    appService.getTimeUpdates((time) => {
+    app.getTimeUpdates((time) => {
       this.time = time;
       this.updateView();
     });
 
-    appService.getLocationUpdates((location: Location) => {
+    app.getLocationUpdates((location: Location) => {
       this.zone = location.zone;
       this.observer = new SkyObserver(location.longitude, location.latitude);
       this.updateView(true);
     });
 
-    appService.getUserSettingUpdates((setting: UserSetting) => {
+    app.getUserSettingUpdates((setting: UserSetting) => {
       if (setting.view === VIEW_CALENDAR && setting.source !== this) {
         if (setting.property === PROPERTY_KEY_MOON_PHASES)
           this.keyMoonPhases = setting.value as boolean;
@@ -175,7 +175,7 @@ export class SvcCalendarViewComponent implements AfterViewInit {
         this.updateView(true);
       }
       else if (setting.view === VIEW_APP && setting.property === PROPERTY_GREGORIAN_CHANGE_DATE) {
-        appService.applyCalendarType(this.dateTime);
+        app.applyCalendarType(this.dateTime);
         this.updateView(true);
       }
     });
@@ -197,7 +197,7 @@ export class SvcCalendarViewComponent implements AfterViewInit {
     this.canvasScaling = window.devicePixelRatio || 1;
     this.onResize();
 
-    setTimeout(() => this.appService.requestViewSettings(VIEW_CALENDAR));
+    setTimeout(() => this.app.requestViewSettings(VIEW_CALENDAR));
 
     GenericViewDirective.getPrintingUpdate(_printing => {
       this.doResize();
@@ -224,11 +224,11 @@ export class SvcCalendarViewComponent implements AfterViewInit {
   }
 
   private draw(): void {
-    if (CurrentTab.CALENDAR !== this.appService.currentTab)
+    if (CurrentTab.CALENDAR !== this.app.currentTab)
       return;
 
     const printing = GenericViewDirective.printing;
-    const inkSaver = printing && this.appService.inkSaver;
+    const inkSaver = printing && this.app.inkSaver;
     const context = this.canvas.getContext('2d');
     const rowHeight = (this.height - this.dayTop) / this.calendar.length;
     const colWidth = this.width / 7;
@@ -255,7 +255,7 @@ export class SvcCalendarViewComponent implements AfterViewInit {
 
         if (this.dailyMoonPhase && this.moonDrawer && !date.otherMonth && !date.voidDay) {
           const jde = date.jdeNoon;
-          this.moonDrawer.drawMoon(context, this.appService.solarSystem, jde, cx, cy, imageSize, 0, this.canvasScaling);
+          this.moonDrawer.drawMoon(context, this.app.solarSystem, jde, cx, cy, imageSize, 0, this.canvasScaling);
         }
       }
     }
@@ -275,12 +275,12 @@ export class SvcCalendarViewComponent implements AfterViewInit {
     if (forceUpdate)
       this.month = -1;
 
-    if (this.appService.currentTab !== CurrentTab.CALENDAR)
+    if (this.app.currentTab !== CurrentTab.CALENDAR)
       return;
 
     const timezone = Timezone.getTimezone(this.zone, this.observer.longitude.degrees);
 
-    this.dateTime = new DateTime(this.time, timezone, this.appService.gregorianChangeDate);
+    this.dateTime = new DateTime(this.time, timezone, this.app.gregorianChangeDate);
     this.wallTime = this.dateTime.wallTime;
 
     if (this.year !== this.wallTime.y || this.month !== this.wallTime.m) {
@@ -296,7 +296,7 @@ export class SvcCalendarViewComponent implements AfterViewInit {
         const dayLength = this.dateTime.getMinutesInDay(date.y, date.m, Math.abs(date.d));
         const row = Math.floor(index / 7);
         const col = index % 7;
-        const noon = new DateTime({ y: date.y, m: date.m, d: Math.abs(date.d), hrs: 12, min: 0, sec: 0 }, timezone, this.appService.gregorianChangeDate);
+        const noon = new DateTime({ y: date.y, m: date.m, d: Math.abs(date.d), hrs: 12, min: 0, sec: 0 }, timezone, this.app.gregorianChangeDate);
 
         date.dayLength = dayLength;
         date.jdeNoon = utToTdt(DateTime.julianDay(noon.utcTimeMillis));
@@ -322,7 +322,7 @@ export class SvcCalendarViewComponent implements AfterViewInit {
         }
 
         if (this.dailyDaylight && !date.otherMonth && !date.voidDay) {
-          const daylight = this.eventFinder.getMinutesOfDaylight(date.y, date.m, date.d, this.observer, timezone, this.appService.gregorianChangeDate);
+          const daylight = this.eventFinder.getMinutesOfDaylight(date.y, date.m, date.d, this.observer, timezone, this.app.gregorianChangeDate);
           const mins = daylight % 60;
           const hours = (daylight - mins) / 60;
 
@@ -340,7 +340,7 @@ export class SvcCalendarViewComponent implements AfterViewInit {
       const planet = this.eventTypes[this.eventType].planet;
       const altitude = this.eventTypes[this.eventType].altitude;
 
-      this.events = this.eventFinder.getMonthOfEvents(planet, this.year, this.month, this.observer, timezone, this.appService.gregorianChangeDate,
+      this.events = this.eventFinder.getMonthOfEvents(planet, this.year, this.month, this.observer, timezone, this.app.gregorianChangeDate,
         altitude || undefined);
       this.updateViewTime();
     }
@@ -365,14 +365,14 @@ export class SvcCalendarViewComponent implements AfterViewInit {
         date.phaseImage = '/assets/resources/blank.svg';
 
         if (!date.otherMonth && this.eventTypes[this.eventType].planet !== SUN)
-          date.planet = this.appService.solarSystem.getPlanetSymbol(this.eventTypes[this.eventType].planet);
+          date.planet = this.app.solarSystem.getPlanetSymbol(this.eventTypes[this.eventType].planet);
 
         if (date.otherMonth)
           continue;
 
         while (eventIndex < this.events.length) {
           const event = this.events[eventIndex];
-          const eventDate = new DateTime(event.eventTime.utcTimeMillis, this.dateTime.timezone, this.appService.gregorianChangeDate);
+          const eventDate = new DateTime(event.eventTime.utcTimeMillis, this.dateTime.timezone, this.app.gregorianChangeDate);
 
           if (eventDate.wallTime.d === date.d) {
             let eventTime = eventDate.toHoursAndMinutesString(true);
@@ -427,10 +427,10 @@ export class SvcCalendarViewComponent implements AfterViewInit {
 
   onClick(yearOrMillis: number, month?: number, day?: number): void {
     if (month === undefined)
-      this.appService.time = yearOrMillis;
+      this.app.time = yearOrMillis;
     else {
-      const newDate = new DateTime({ y: yearOrMillis, m: month, d: day, hrs: 12, min: 0, sec: 0 }, this.dateTime.timezone, this.appService.gregorianChangeDate);
-      this.appService.time = newDate.utcTimeMillis;
+      const newDate = new DateTime({ y: yearOrMillis, m: month, d: day, hrs: 12, min: 0, sec: 0 }, this.dateTime.timezone, this.app.gregorianChangeDate);
+      this.app.time = newDate.utcTimeMillis;
     }
   }
 }

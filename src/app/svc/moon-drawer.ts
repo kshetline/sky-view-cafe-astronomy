@@ -1,4 +1,4 @@
-import { ISkyObserver, KM_PER_AU, SolarSystem } from '@tubular/astronomy';
+import { ISkyObserver, KM_PER_AU, MOON_RADIUS_KM, SolarSystem } from '@tubular/astronomy';
 import { abs, Angle, cos_deg, PI, sin_deg, to_radian, Unit } from '@tubular/math';
 import { fillCircle, strokeCircle } from '@tubular/util';
 import {
@@ -7,7 +7,7 @@ import {
 } from 'three';
 
 const MAX_LUNAR_ANGULAR_DIAMETER = 34; // In arc-minutes, rounded up from 33.66.
-const MOON_RADIUS = 1737.4; // km
+const RENDERER_FILL_DISTANCE = 351350; // km
 
 export class MoonDrawer {
   private camera: PerspectiveCamera;
@@ -56,6 +56,9 @@ export class MoonDrawer {
       size = MAX_LUNAR_ANGULAR_DIAMETER * pixelsPerArcSec * 60;
 
     const targetSize = size;
+    const libration = solarSystem.getLunarLibration(time_JDE, observer);
+    const distance = libration.D * KM_PER_AU;
+    const moonScaling = RENDERER_FILL_DISTANCE / distance;
 
     if (!pixelsPerArcSec)
       pixelsPerArcSec = size / MAX_LUNAR_ANGULAR_DIAMETER / 60;
@@ -68,21 +71,21 @@ export class MoonDrawer {
       this.webGlRendererSize = size;
     }
 
-    const r = size / 2;
+    const ctr = size / 2;
+    const targetCtr = targetSize / 2;
     const saveCompOp = context.globalCompositeOperation;
     const phase = solarSystem.getLunarPhase(time_JDE);
-    const libration = solarSystem.getLunarLibration(time_JDE, observer);
 
-    this.camera.position.z = libration.D * KM_PER_AU;
+    this.camera.position.z = distance;
     this.camera.rotation.z = (parallacticAngle ? parallacticAngle.radians : 0);
     this.moonMesh.rotation.y = to_radian(-libration.l);
     this.moonMesh.rotation.x = to_radian(libration.b);
-    this.sun.position.x = 150000000 * sin_deg(phase); // Very approximate, but good enough.
-    this.sun.position.z = -150000000 * cos_deg(phase);
+    this.sun.position.x = 1.5E8 * sin_deg(phase); // Very approximate, but good enough.
+    this.sun.position.z = -1.5E8 * cos_deg(phase);
     this.earthShine.intensity = 0.025 + cos_deg(phase) * 0.0125;
     this.renderer.render(this.scene, this.camera);
     context.globalCompositeOperation = 'source-over';
-    context.drawImage(this.renderer.domElement, cx - targetSize / 2, cy - targetSize / 2, targetSize, targetSize);
+    context.drawImage(this.renderer.domElement, cx - targetCtr, cy - targetCtr, targetSize, targetSize);
 
     // If we're near a full moon, it's worth checking for a lunar eclipse, but not otherwise.
     if (showEclipses && abs(phase - 180.0) < 3.0) {
@@ -93,11 +96,11 @@ export class MoonDrawer {
         const dLat = ei.shadowPos.latitude.subtract(ei.pos.latitude).getAngle(Unit.ARC_SECONDS);
         const sin_pa = parallacticAngle ? parallacticAngle.sin : 0;
         const cos_pa = parallacticAngle ? parallacticAngle.cos : 1;
-        const sx = (dLon * cos_pa - dLat * sin_pa) * -pixelsPerArcSec + r;
-        const sy = (dLon * sin_pa + dLat * cos_pa) * -pixelsPerArcSec + r;
+        const sx = (dLon * cos_pa - dLat * sin_pa) * -pixelsPerArcSec + ctr;
+        const sy = (dLon * sin_pa + dLat * cos_pa) * -pixelsPerArcSec + ctr;
         const uRadius = ei.umbraRadius * pixelsPerArcSec + 2;
         const pRadius = ei.penumbraRadius * pixelsPerArcSec + 2;
-        const moonR = ei.radius * pixelsPerArcSec;
+        const moonR = size * moonScaling / 2; // ei.radius * pixelsPerArcSec;
 
         if (!this.shadowCanvas) // Turns out that rendering eclipse shadows with 2D graphics works better than using WebGL.
           this.shadowCanvas = document.createElement('canvas');
@@ -107,7 +110,7 @@ export class MoonDrawer {
 
         const context2 = this.shadowCanvas.getContext('2d');
 
-        context2.fillStyle = '#FFFFFF';
+        context2.fillStyle = 'white';
         context2.fillRect(0, 0, size, size);
         // Penumbra
         context2.fillStyle = `hsl(36deg ${100 - ei.totality * 100}% 75%)`;
@@ -116,27 +119,27 @@ export class MoonDrawer {
         // Umbra
         context2.fillStyle = '#664533';
         context2.filter = `blur(${size / 125}px)`;
-        fillCircle(context2, sx, sy, uRadius);
+        fillCircle(context2, sx, sy, uRadius + size / 200);
         // Mask off penumbra and umbra beyond edge of moon
         context2.filter = 'blur(1px)';
         context2.strokeStyle = 'white';
-        context2.lineWidth = r;
-        strokeCircle(context2, r, r, moonR + r / 2);
+        context2.lineWidth = ctr;
+        strokeCircle(context2, ctr, ctr, moonR + ctr / 2);
 
         context.globalCompositeOperation = 'multiply';
-        context.drawImage(this.shadowCanvas, cx - targetSize / 2, cy - targetSize / 2, targetSize, targetSize);
+        context.drawImage(this.shadowCanvas, cx - targetCtr, cy - targetCtr, targetSize, targetSize);
 
-        if (ei.totality > 0.8) {
+        if (0.8 < ei.totality && ei.totality < 1) {
           // Brighten remaining illuminated portion of moon to increase contrast with shadowed part.
           context2.clearRect(0, 0, size, size);
           context2.filter = '';
           context2.fillStyle = `rgba(255, 255, 255, ${(ei.totality - 0.8) / 0.25})`;
-          fillCircle(context2, r, r, moonR);
+          fillCircle(context2, ctr, ctr, moonR);
           context2.fillStyle = 'black';
           context2.filter = `blur(${size / 125}px)`;
           fillCircle(context2, sx, sy, uRadius);
           context.globalCompositeOperation = 'lighten';
-          context.drawImage(this.shadowCanvas, cx - targetSize / 2, cy - targetSize / 2, targetSize, targetSize);
+          context.drawImage(this.shadowCanvas, cx - targetCtr, cy - targetCtr, targetSize, targetSize);
         }
       }
     }
@@ -145,7 +148,7 @@ export class MoonDrawer {
   }
 
   private setUpRenderer(): void {
-    const moon = new SphereGeometry(MOON_RADIUS, 50, 50);
+    const moon = new SphereGeometry(MOON_RADIUS_KM, 50, 50);
 
     moon.rotateY(-PI / 2);
     this.camera = new PerspectiveCamera(MAX_LUNAR_ANGULAR_DIAMETER / 60, 1, 100, 500000);

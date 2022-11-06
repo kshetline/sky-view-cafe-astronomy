@@ -2,6 +2,14 @@
   <div class="settings-grid">
     <div class="settings-row">
       <div class="settings-label">
+        Start up:
+      </div>
+      <div class="settings-value">
+        <ks-dropdown [options]="startUpOptions" [(ngModel)]="startUpOption"></ks-dropdown>
+      </div>
+    </div>
+    <div class="settings-row">
+      <div class="settings-label">
         Default location:
       </div>
       <div class="settings-value">

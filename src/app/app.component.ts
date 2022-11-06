@@ -11,7 +11,7 @@ import { MenuItem, MessageService } from 'primeng/api';
 import { Subscription, timer } from 'rxjs';
 import {
   AppService, ClockStyle, currentMinuteMillis, CurrentTab, PROPERTY_CLOCK_FLOATING, PROPERTY_CLOCK_POSITION,
-  PROPERTY_GREGORIAN_CHANGE_DATE, PROPERTY_NATIVE_DATE_TIME, SVC_MAX_YEAR, SVC_MIN_YEAR, UserSetting, VIEW_APP
+  PROPERTY_GREGORIAN_CHANGE_DATE, PROPERTY_LAST_TRACKING, PROPERTY_NATIVE_DATE_TIME, PROPERTY_RESTORE_LAST_STATE, SVC_MAX_YEAR, SVC_MIN_YEAR, UserSetting, VIEW_APP
 } from './app.service';
 import { SvcAtlasService } from './svc/svc-atlas.service';
 import { addResizeListener, removeResizeListener } from 'detect-resize';
@@ -30,6 +30,7 @@ const MAX_CLOCK_EFFECTIVE_WIDTH = 600;
   providers: [AppService, MessageService]
 })
 export class AppComponent implements AfterViewInit, OnDestroy {
+  Timezone = Timezone;
   SVC_MIN_YEAR = SVC_MIN_YEAR.toString();
   SVC_MAX_YEAR = SVC_MAX_YEAR.toString();
 
@@ -63,6 +64,7 @@ export class AppComponent implements AfterViewInit, OnDestroy {
   gcDate = '1582-10-15';
   nativeDateTime = false;
   selectedTab = CurrentTab.SKY;
+  showEclipseCircumstances = true;
 
   constructor(
     public app: AppService,
@@ -93,12 +95,19 @@ export class AppComponent implements AfterViewInit, OnDestroy {
         }
         else if (setting.property === PROPERTY_NATIVE_DATE_TIME)
           this.nativeDateTime = setting.value as boolean;
+        else if (setting.property === PROPERTY_LAST_TRACKING && this.app.getUserSetting(VIEW_APP, PROPERTY_RESTORE_LAST_STATE))
+          this.trackTime = setting.value as boolean;
       }
       else if (setting.view === VIEW_CALENDAR && setting.property === PROPERTY_FIRST_DAY_OF_WEEK)
         this.firstDay = (setting.value as number) < 0 ? getStartOfWeek(defaultLocale) : setting.value as number;
     });
 
-    app.getCurrentTabUpdates(tabIndex => this.selectedTab = tabIndex);
+    app.getCurrentTabUpdates(tabIndex => {
+      this.selectedTab = tabIndex;
+      this.showEclipseCircumstances =
+        ![CurrentTab.CALENDAR, CurrentTab.INSOLATION, CurrentTab.ORBITS, CurrentTab.INSOLATION,
+          CurrentTab.MOONS_GRS, CurrentTab.TABLES, CurrentTab.TIME].includes(tabIndex);
+    });
   }
 
   ngAfterViewInit(): void {
@@ -136,7 +145,7 @@ export class AppComponent implements AfterViewInit, OnDestroy {
   get clockOptions(): string | TimeEditorOptions | (string | TimeEditorOptions)[]  {
     const showSeconds = (this.app.clockStyle === ClockStyle.ISO_SEC || this.app.clockStyle === ClockStyle.LOCAL_SEC);
 
-    if (this.app.clockStyle === ClockStyle.ISO || this.app.clockStyle === ClockStyle.ISO_SEC) {
+    if (!this.app.localTimeFormat) {
       this.clockCaption = '±YYYY-MM-DD HH:mm' + (showSeconds ? ':ss' : '');
 
       return ['iso', { showDstSymbol: true, showOccurrence: true, showSeconds, showUtcOffset: true,
@@ -215,6 +224,9 @@ export class AppComponent implements AfterViewInit, OnDestroy {
     if (this._trackTime !== state) {
       this._trackTime = state;
 
+      if (this.app.getUserSetting(VIEW_APP, PROPERTY_RESTORE_LAST_STATE))
+        this.app.updateUserSetting(VIEW_APP, PROPERTY_LAST_TRACKING, state, this);
+
       if (state) {
         this.timer = timer(250, 250).subscribe(() => {
           this.time = currentMinuteMillis();
@@ -244,7 +256,7 @@ export class AppComponent implements AfterViewInit, OnDestroy {
   }
 
   private toggleFloatingClock(value = !this.app.clockFloating): void {
-    this.app.updateUserSetting({ view: VIEW_APP, property: PROPERTY_CLOCK_FLOATING, value, source: this });
+    this.app.updateUserSetting(VIEW_APP, PROPERTY_CLOCK_FLOATING, value, this);
   }
 
   closeFloatingClock(): void {
@@ -259,7 +271,7 @@ export class AppComponent implements AfterViewInit, OnDestroy {
       if (!this.clockPositionDebounce) {
         this.clockPositionDebounce = debounce(() =>
           this.app.updateUserSetting(
-            { view: VIEW_APP, property: PROPERTY_CLOCK_POSITION, value: JSON.stringify(this._clockPosition), source: this }), 500);
+            VIEW_APP, PROPERTY_CLOCK_POSITION, JSON.stringify(this._clockPosition), this), 500);
       }
 
       this.clockPositionDebounce();

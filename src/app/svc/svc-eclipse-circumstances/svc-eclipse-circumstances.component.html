@@ -1,0 +1,20 @@
+<div class="content" [style.display]="eclipseTime != null ? 'flex' : 'none'" [class.collapsed]="collapsed">
+  <i class="pi pi-chevron-down" (click)="collapsed = !collapsed" [class.collapsed]="collapsed"></i>
+  <div class="collapsed-title" [class.collapsed]="collapsed">{{collapsedTitle}}</div>
+  <div class="squeezable" [class.collapsed]="collapsed">
+    <div class="title" [class.collapsed]="collapsed">{{eventTitle}}</div>
+    <div class="subtitle" [class.collapsed]="collapsed">{{subtitle}} <span class="time-link"
+        (click)="setMaxTime()">{{subtitleTime}}</span></div>
+    <div *ngIf="subtitle2" class="subtitle">{{subtitle2}}, current: {{currentMag}}%</div>
+    <div class="times">
+      <div>&nbsp;</div><div class="column-header">Start</div><div class="column-header">Duration</div><div class="column-header">End</div>
+      <span class="row-label">{{penLabel}}</span>
+        <span>{{p1}}</span><span class="duration">{{penumbralDuration}}</span><span>{{p4}}</span>
+      <span class="row-label">{{partialLabel}}</span>
+        <span>{{u1}}</span><span class="duration">{{duration}}</span><span>{{u4}}</span>
+      <span class="row-label">{{peakLabel}}</span>
+        <span>{{u2}}</span><span class="duration">{{totalityDuration}}</span><span>{{u3}}</span>
+    </div>
+    <div class="footnote">{{footNote}}</div>
+  </div>
+</div>
