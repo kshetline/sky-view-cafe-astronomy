@@ -62,14 +62,14 @@ export class SvcInsolationViewComponent extends GenericViewDirective implements 
   skyColor = 'black';
   moonColor = 'black';
 
-  constructor(appService: AppService) {
-    super(appService, CurrentTab.INSOLATION);
+  constructor(app: AppService) {
+    super(app, CurrentTab.INSOLATION);
 
-    this.sanitizedOpenCrosshair = appService.sanitizer.bypassSecurityTrustStyle('url(/assets/resources/open_crosshair.cur), auto');
+    this.sanitizedOpenCrosshair = app.sanitizer.bypassSecurityTrustStyle('url(/assets/resources/open_crosshair.cur), auto');
     this.cursor = this.sanitizedOpenCrosshair;
     this.canDrag = false;
 
-    appService.getUserSettingUpdates((setting: UserSetting) => {
+    app.getUserSettingUpdates((setting: UserSetting) => {
       if (setting.view === VIEW_INSOLATION && setting.source !== this) {
         if (setting.property === PROPERTY_CENTER_MIDNIGHT)
           this.centerMidnight = setting.value as boolean;
@@ -82,20 +82,20 @@ export class SvcInsolationViewComponent extends GenericViewDirective implements 
     });
 
     this.locationSubscription.unsubscribe();
-    this.locationSubscription = appService.getLocationUpdates((location: Location) => {
+    this.locationSubscription = app.getLocationUpdates((location: Location) => {
       this.location = location;
       this.updateView(RefreshMode.ALWAYS_REFRESH);
     });
 
-    this.location = appService.location;
+    this.location = app.location;
 
     this.timeSubscription.unsubscribe();
-    this.timeSubscription = appService.getTimeUpdates((time) => {
+    this.timeSubscription = app.getTimeUpdates((time) => {
       this.time = time;
       this.updateView(RefreshMode.REFRESH_ON_CHANGED_YEAR);
     });
 
-    this.time = appService.time;
+    this.time = app.time;
     this.updateView(RefreshMode.NEVER_REFRESH);
   }
 
@@ -103,7 +103,7 @@ export class SvcInsolationViewComponent extends GenericViewDirective implements 
     this.wrapper = this.wrapperRef.nativeElement;
     this.canvas = this.canvasRef.nativeElement;
 
-    setTimeout(() => this.appService.requestViewSettings(VIEW_INSOLATION));
+    setTimeout(() => this.app.requestViewSettings(VIEW_INSOLATION));
 
     super.ngAfterViewInit();
   }
@@ -111,7 +111,7 @@ export class SvcInsolationViewComponent extends GenericViewDirective implements 
   protected updateView(redrawMode: RefreshMode): void {
     const zone = Timezone.getTimezone(this.location.zone, this.location.longitude);
 
-    this.dateTime = new DateTime(this.time, zone, this.appService.gregorianChangeDate);
+    this.dateTime = new DateTime(this.time, zone, this.app.gregorianChangeDate);
 
     if (redrawMode === RefreshMode.ALWAYS_REFRESH ||
         (redrawMode === RefreshMode.REFRESH_ON_CHANGED_YEAR && this.dateTime.wallTime.y !== this.currentYear)) {

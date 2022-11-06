@@ -68,13 +68,13 @@ export class SvcChangeLocationDialogComponent {
 
   @Output() timezoneChange: EventEmitter<any> = new EventEmitter();
 
-  constructor(private appService: AppService) {
-    appService.getLocationUpdates((observer: Location) => {
+  constructor(private app: AppService) {
+    app.getLocationUpdates((observer: Location) => {
       this.currentZone = observer.zone;
       this.updateZoneChoice();
     });
 
-    this.currentZone = appService.timezone;
+    this.currentZone = app.timezone;
     this.updateZoneChoice();
   }
 
@@ -103,7 +103,7 @@ export class SvcChangeLocationDialogComponent {
       default:  newZone = this.currentZone;
     }
 
-    this.appService.location = new Location('(new location)', this.latitude, this.longitude, newZone);
+    this.app.location = new Location('(new location)', this.latitude, this.longitude, newZone);
   }
 
   private static longitudeToHourOffset(lon: number): number {

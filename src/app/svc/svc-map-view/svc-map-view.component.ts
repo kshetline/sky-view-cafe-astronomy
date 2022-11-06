@@ -103,12 +103,12 @@ export class SvcMapViewComponent extends GenericViewDirective implements AfterVi
     });
   }
 
-  constructor(appService: AppService, private timeService: KsTimeService) {
-    super(appService, CurrentTab.MAP);
+  constructor(app: AppService, private timeService: KsTimeService) {
+    super(app, CurrentTab.MAP);
     this.cursor = 'crosshair';
     this.canDrag = false;
 
-    appService.getUserSettingUpdates((setting: UserSetting) => {
+    app.getUserSettingUpdates((setting: UserSetting) => {
       if (setting.view === VIEW_MAP && setting.source !== this) {
         if (setting.property === PROPERTY_MAP_TYPE)
           this.mapType = setting.value as MapType;
@@ -129,13 +129,13 @@ export class SvcMapViewComponent extends GenericViewDirective implements AfterVi
       }
     });
 
-    appService.getAppEventUpdates((appEvent: AppEvent) => {
+    app.getAppEventUpdates((appEvent: AppEvent) => {
       if (appEvent.name === EVENT_MAP_GO_TO_SUBSOLAR_POINT)
         this.goToSubsolarPoint();
       else if (appEvent.name === EVENT_MAP_GO_TO_ECLIPSE_CENTER)
         this.goToEclipseCenter();
       else if (appEvent.name === EVENT_MAP_ACTIVE_ECLIPSE_REQUEST)
-        appService.sendAppEvent(EVENT_MAP_ACTIVE_ECLIPSE, this.activeEclipse);
+        app.sendAppEvent(EVENT_MAP_ACTIVE_ECLIPSE, this.activeEclipse);
     });
   }
 
@@ -144,7 +144,7 @@ export class SvcMapViewComponent extends GenericViewDirective implements AfterVi
     this.canvas = this.canvasRef.nativeElement;
     this.zoneOverlay = this.zoneOverlayRef.nativeElement;
 
-    setTimeout(() => this.appService.requestViewSettings(VIEW_MAP));
+    setTimeout(() => this.app.requestViewSettings(VIEW_MAP));
 
     const dayImagePromise = SvcMapViewComponent.getImagePromise('assets/resources/worldmap.jpg');
     const nightImagePromise = SvcMapViewComponent.getImagePromise('assets/resources/worldmap_night.jpg');
@@ -266,12 +266,12 @@ export class SvcMapViewComponent extends GenericViewDirective implements AfterVi
 
       if (!this.activeEclipse) {
         this.activeEclipse = true;
-        this.appService.sendAppEvent(EVENT_MAP_ACTIVE_ECLIPSE, true);
+        this.app.sendAppEvent(EVENT_MAP_ACTIVE_ECLIPSE, true);
       }
     }
     else if (this.activeEclipse) {
       this.activeEclipse = false;
-      this.appService.sendAppEvent(EVENT_MAP_ACTIVE_ECLIPSE, false);
+      this.app.sendAppEvent(EVENT_MAP_ACTIVE_ECLIPSE, false);
     }
 
     const sunPos = dc.ss.getEquatorialPosition(SUN, dc.jde, null, QUICK_SUN);
@@ -554,7 +554,7 @@ export class SvcMapViewComponent extends GenericViewDirective implements AfterVi
     this.longitude = lon;
 
     this.timeService.getZoneForLocation(this.longitude, this.latitude, null, 5000).then((zoneForLocation: ZoneForLocation) => {
-      if (zoneForLocation.status === 'OK' && this.appService.isKnownIanaTimezone(zoneForLocation.timeZoneId))
+      if (zoneForLocation.status === 'OK' && this.app.isKnownIanaTimezone(zoneForLocation.timeZoneId))
         this.timezone = zoneForLocation.timeZoneId;
       else
         this.timezone = null;

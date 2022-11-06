@@ -20,11 +20,11 @@ export class SvcGenericOptionsComponent {
     { label: 'All asteroids and comets', value: ADDITIONALS.ALL, search: 'all asteroids and comets' }
   ];
 
-  constructor(protected appService: AppService, protected viewName: string) {
-    this.asteroidsReady = appService.asteroidsReady;
+  constructor(protected app: AppService, protected viewName: string) {
+    this.asteroidsReady = app.asteroidsReady;
 
     if (!this.asteroidsReady) {
-      appService.getAsteroidsReadyUpdate((initialized) => {
+      app.getAsteroidsReadyUpdate((initialized) => {
         this.asteroidsReady = initialized;
 
         if (initialized)
@@ -56,7 +56,7 @@ export class SvcGenericOptionsComponent {
   set additional(value: ADDITIONALS | string) {
     if (this._additional !== value) {
       this._additional = value;
-      this.appService.updateUserSetting(this.viewName, PROPERTY_ADDITIONALS, value, this);
+      this.app.updateUserSetting(this.viewName, PROPERTY_ADDITIONALS, value, this);
     }
   }
 }

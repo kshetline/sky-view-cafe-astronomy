@@ -94,10 +94,10 @@ export class SvcSkyViewOptionsComponent extends SvcGenericOptionsComponent imple
       command: (event): void => { this.toggleLabels(event); }, value: ALL_DEEP_SKY }
   ];
 
-  constructor(appService: AppService) {
-    super(appService, VIEW_SKY);
+  constructor(app: AppService) {
+    super(app, VIEW_SKY);
 
-    appService.getUserSettingUpdates((setting: UserSetting) => {
+    app.getUserSettingUpdates((setting: UserSetting) => {
       if (setting.view === VIEW_SKY && setting.source !== this) {
         if (setting.property === PROPERTY_VIEW_TYPE)
           this.viewType = setting.value as VIEW_TYPE;
@@ -137,14 +137,14 @@ export class SvcSkyViewOptionsComponent extends SvcGenericOptionsComponent imple
   }
 
   ngAfterViewInit(): void {
-    setTimeout(() => this.appService.requestViewSettings(VIEW_SKY));
+    setTimeout(() => this.app.requestViewSettings(VIEW_SKY));
   }
 
   get viewType(): VIEW_TYPE { return this._viewType; }
   set viewType(value: VIEW_TYPE) {
     if (this._viewType !== value) {
       this._viewType = value;
-      this.appService.updateUserSetting(VIEW_SKY, PROPERTY_VIEW_TYPE, value, this);
+      this.app.updateUserSetting(VIEW_SKY, PROPERTY_VIEW_TYPE, value, this);
     }
   }
 
@@ -152,7 +152,7 @@ export class SvcSkyViewOptionsComponent extends SvcGenericOptionsComponent imple
   set skyColor(value: SKY_COLOR) {
     if (this._skyColor !== value) {
       this._skyColor = value;
-      this.appService.updateUserSetting(VIEW_SKY, PROPERTY_SKY_COLOR, value, this);
+      this.app.updateUserSetting(VIEW_SKY, PROPERTY_SKY_COLOR, value, this);
     }
   }
 
@@ -160,7 +160,7 @@ export class SvcSkyViewOptionsComponent extends SvcGenericOptionsComponent imple
   set refraction(value: boolean) {
     if (this._refraction !== value) {
       this._refraction = value;
-      this.appService.updateUserSetting(VIEW_SKY, PROPERTY_REFRACTION, value, this);
+      this.app.updateUserSetting(VIEW_SKY, PROPERTY_REFRACTION, value, this);
     }
   }
 
@@ -168,7 +168,7 @@ export class SvcSkyViewOptionsComponent extends SvcGenericOptionsComponent imple
   set celestial(value: boolean) {
     if (this._celestial !== value) {
       this._celestial = value;
-      this.appService.updateUserSetting(VIEW_SKY, PROPERTY_CELESTIAL_GRID, value, this);
+      this.app.updateUserSetting(VIEW_SKY, PROPERTY_CELESTIAL_GRID, value, this);
     }
   }
 
@@ -176,7 +176,7 @@ export class SvcSkyViewOptionsComponent extends SvcGenericOptionsComponent imple
   set ecliptic(value: boolean) {
     if (this._ecliptic !== value) {
       this._ecliptic = value;
-      this.appService.updateUserSetting(VIEW_SKY, PROPERTY_ECLIPTIC_GRID, value, this);
+      this.app.updateUserSetting(VIEW_SKY, PROPERTY_ECLIPTIC_GRID, value, this);
     }
   }
 
@@ -184,7 +184,7 @@ export class SvcSkyViewOptionsComponent extends SvcGenericOptionsComponent imple
   set pathOfSun(value: boolean) {
     if (this._pathOfSun !== value) {
       this._pathOfSun = value;
-      this.appService.updateUserSetting(VIEW_SKY, PROPERTY_PATH_OF_SUN, value, this);
+      this.app.updateUserSetting(VIEW_SKY, PROPERTY_PATH_OF_SUN, value, this);
     }
   }
 
@@ -192,7 +192,7 @@ export class SvcSkyViewOptionsComponent extends SvcGenericOptionsComponent imple
   set pathOfMoon(value: boolean) {
     if (this._pathOfMoon !== value) {
       this._pathOfMoon = value;
-      this.appService.updateUserSetting(VIEW_SKY, PROPERTY_PATH_OF_MOON, value, this);
+      this.app.updateUserSetting(VIEW_SKY, PROPERTY_PATH_OF_MOON, value, this);
     }
   }
 
@@ -200,7 +200,7 @@ export class SvcSkyViewOptionsComponent extends SvcGenericOptionsComponent imple
   set brightenStars(value: boolean) {
     if (this._brightenStars !== value) {
       this._brightenStars = value;
-      this.appService.updateUserSetting(VIEW_SKY, PROPERTY_BRIGHTEN_STARS, value, this);
+      this.app.updateUserSetting(VIEW_SKY, PROPERTY_BRIGHTEN_STARS, value, this);
     }
   }
 
@@ -209,7 +209,7 @@ export class SvcSkyViewOptionsComponent extends SvcGenericOptionsComponent imple
     if (this._showConstellations !== value) {
       this._showConstellations = value;
       this.namesCategories.find(cat => cat.property === PROPERTY_LABEL_CONSTELLATIONS).disabled = !value;
-      this.appService.updateUserSetting(VIEW_SKY, PROPERTY_SHOW_CONSTELLATIONS, value, this);
+      this.app.updateUserSetting(VIEW_SKY, PROPERTY_SHOW_CONSTELLATIONS, value, this);
     }
   }
 
@@ -217,7 +217,7 @@ export class SvcSkyViewOptionsComponent extends SvcGenericOptionsComponent imple
   set enlargeSunMoon(value: boolean) {
     if (this._enlargeSunMoon !== value) {
       this._enlargeSunMoon = value;
-      this.appService.updateUserSetting(VIEW_SKY, PROPERTY_ENLARGE_SUN_MOON, value, this);
+      this.app.updateUserSetting(VIEW_SKY, PROPERTY_ENLARGE_SUN_MOON, value, this);
     }
   }
 
@@ -225,7 +225,7 @@ export class SvcSkyViewOptionsComponent extends SvcGenericOptionsComponent imple
   set showMilkyWay(value: boolean) {
     if (this._showMilkyWay !== value) {
       this._showMilkyWay = value;
-      this.appService.updateUserSetting(VIEW_SKY, PROPERTY_SHOW_MILKY_WAY, value, this);
+      this.app.updateUserSetting(VIEW_SKY, PROPERTY_SHOW_MILKY_WAY, value, this);
     }
   }
 
@@ -271,13 +271,13 @@ export class SvcSkyViewOptionsComponent extends SvcGenericOptionsComponent imple
       }
 
       if (value !== undefined) {
-        this.appService.updateUserSetting(VIEW_SKY, item.property, value, this);
+        this.app.updateUserSetting(VIEW_SKY, item.property, value, this);
 
         if (property === PROPERTY_LABEL_STARS && value)
-          this.appService.updateUserSetting(VIEW_SKY, PROPERTY_LABEL_BRIGHT_STARS, false, this);
+          this.app.updateUserSetting(VIEW_SKY, PROPERTY_LABEL_BRIGHT_STARS, false, this);
 
         if (property === PROPERTY_LABEL_BRIGHT_STARS && value)
-          this.appService.updateUserSetting(VIEW_SKY, PROPERTY_LABEL_STARS, false, this);
+          this.app.updateUserSetting(VIEW_SKY, PROPERTY_LABEL_STARS, false, this);
       }
     }
 

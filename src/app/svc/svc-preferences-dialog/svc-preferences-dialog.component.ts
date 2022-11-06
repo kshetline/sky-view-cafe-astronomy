@@ -3,21 +3,9 @@ import { TimeEditorComponent } from '@tubular/ng-widgets';
 import { eventToKey } from '@tubular/util';
 import { MenuItem } from 'primeng/api';
 import {
-  AppService,
-  CalendarSetting,
-  CurrentTab,
-  ClockStyle,
-  LatLongStyle,
-  PROPERTY_DEFAULT_TAB,
-  PROPERTY_GREGORIAN_CHANGE_DATE,
-  PROPERTY_INK_SAVER,
-  PROPERTY_LAT_LONG_STYLE,
-  PROPERTY_NATIVE_DATE_TIME,
-  PROPERTY_NORTH_AZIMUTH,
-  PROPERTY_TWILIGHT_BY_DEGREES,
-  PROPERTY_TWILIGHT_DEGREES,
-  PROPERTY_TWILIGHT_MINUTES,
-  VIEW_APP, PROPERTY_CLOCK_STYLE
+  AppService, CalendarSetting, CurrentTab, ClockStyle, LatLongStyle, PROPERTY_DEFAULT_TAB, PROPERTY_GREGORIAN_CHANGE_DATE,
+  PROPERTY_INK_SAVER, PROPERTY_LAT_LONG_STYLE, PROPERTY_NATIVE_DATE_TIME, PROPERTY_NORTH_AZIMUTH, PROPERTY_TWILIGHT_BY_DEGREES,
+  PROPERTY_TWILIGHT_DEGREES, PROPERTY_TWILIGHT_MINUTES, VIEW_APP, PROPERTY_CLOCK_STYLE, PROPERTY_RESTORE_LAST_STATE
 } from '../../app.service';
 import { KsDropdownComponent } from '../../widgets/ks-dropdown/ks-dropdown.component';
 
@@ -43,6 +31,11 @@ export class SvcPreferencesDialogComponent {
   private twilightMinutes = 80;
 
   @ViewChild('defaultLocationDropdown', { static: true }) private defaultLocationDropdown: KsDropdownComponent;
+
+  startUpOptions: MenuItemPlus[] = [
+    { label: 'Current time, default location, default view', value: false },
+    { label: 'Last used time, location, and view', value: true }
+  ];
 
 // SKY, ECLIPTIC, ORBITS, MOONS_GRS, INSOLATION, MAP, CALENDAR, TIME, TABLES
   tabs: MenuItemPlus[] = [
@@ -92,7 +85,7 @@ export class SvcPreferencesDialogComponent {
   ];
 
   dateTimeOptions: MenuItemPlus[] = [
-    { label: 'Use web browser\'s own date/time input method (no years BCE)', value: true },
+    { label: "Use web browser's own date/time input method (no years BCE)", value: true },
     { label: 'Use Sky View Café date/time input method', value: false }
   ];
 
@@ -111,6 +104,7 @@ export class SvcPreferencesDialogComponent {
   inkSaver = true;
   nativeDateTime = false;
   showDateTimeOptions = TimeEditorComponent.supportsNativeDateTime;
+  startUpOption = false;
   resetWarnings = false;
 
   @Input() get visible(): boolean { return this._visible; }
@@ -120,28 +114,29 @@ export class SvcPreferencesDialogComponent {
       this.visibleChange.emit(isVisible);
 
       if (isVisible) {
-        this.clockStyle = this.appService.clockStyle;
-        this.latLongStyle = this.appService.latLongStyle;
-        this.northAzimuth = this.appService.northAzimuth;
-        this.defaultTab = this.appService.defaultTab;
-        this.twilightDegrees = this.appService.twilightDegrees;
-        this.twilightMinutes = this.appService.twilightMinutes;
-        this.twilightByDegrees = this.appService.twilightByDegrees;
+        this.startUpOption = !!this.app.getUserSetting(VIEW_APP, PROPERTY_RESTORE_LAST_STATE);
+        this.clockStyle = this.app.clockStyle;
+        this.latLongStyle = this.app.latLongStyle;
+        this.northAzimuth = this.app.northAzimuth;
+        this.defaultTab = this.app.defaultTab;
+        this.twilightDegrees = this.app.twilightDegrees;
+        this.twilightMinutes = this.app.twilightMinutes;
+        this.twilightByDegrees = this.app.twilightByDegrees;
         this.twilightValue = (this.twilightByDegrees ? this.twilightDegrees : this.twilightMinutes);
         this.invalidMessage = '';
-        this.calendarOption = this.appService.calendarType;
-        this.inkSaver = this.appService.inkSaver;
-        this.nativeDateTime = this.appService.nativeDateTime;
+        this.calendarOption = this.app.calendarType;
+        this.inkSaver = this.app.inkSaver;
+        this.nativeDateTime = this.app.nativeDateTime;
         this.resetWarnings = false;
 
-        const gcd = this.appService.gregorianChangeDate;
+        const gcd = this.app.gregorianChangeDate;
 
         if (!/[gj]/i.test(gcd))
           this.gcdValue = gcd;
 
         this.locations = [];
 
-        for (const location of this.appService.locations) {
+        for (const location of this.app.locations) {
           this.locations.push(location.name);
 
           if (!this.defaultLocation || location.isDefault)
@@ -200,8 +195,7 @@ export class SvcPreferencesDialogComponent {
 
   @Output() calendarOptionChange = new EventEmitter();
 
-  constructor(private appService: AppService) {
-  }
+  constructor(private app: AppService) {}
 
   onKey(event: KeyboardEvent): void {
     const key = eventToKey(event);
@@ -216,18 +210,19 @@ export class SvcPreferencesDialogComponent {
     if (!this.formValid)
       return;
 
-    this.appService.updateUserSetting(VIEW_APP, PROPERTY_NORTH_AZIMUTH, this.northAzimuth, this);
-    this.appService.updateUserSetting(VIEW_APP, PROPERTY_INK_SAVER, this.inkSaver, this);
-    this.appService.updateUserSetting(VIEW_APP, PROPERTY_CLOCK_STYLE, this.clockStyle, this);
-    this.appService.updateUserSetting(VIEW_APP, PROPERTY_LAT_LONG_STYLE, this.latLongStyle, this);
-    this.appService.updateUserSetting(VIEW_APP, PROPERTY_NATIVE_DATE_TIME, this.nativeDateTime, this);
-    this.appService.updateUserSetting(VIEW_APP, PROPERTY_DEFAULT_TAB, this.defaultTab, this);
-    this.appService.updateUserSetting(VIEW_APP, PROPERTY_TWILIGHT_BY_DEGREES, this.twilightByDegrees, this);
+    this.app.updateUserSetting(VIEW_APP, PROPERTY_RESTORE_LAST_STATE, this.startUpOption, this);
+    this.app.updateUserSetting(VIEW_APP, PROPERTY_NORTH_AZIMUTH, this.northAzimuth, this);
+    this.app.updateUserSetting(VIEW_APP, PROPERTY_INK_SAVER, this.inkSaver, this);
+    this.app.updateUserSetting(VIEW_APP, PROPERTY_CLOCK_STYLE, this.clockStyle, this);
+    this.app.updateUserSetting(VIEW_APP, PROPERTY_LAT_LONG_STYLE, this.latLongStyle, this);
+    this.app.updateUserSetting(VIEW_APP, PROPERTY_NATIVE_DATE_TIME, this.nativeDateTime, this);
+    this.app.updateUserSetting(VIEW_APP, PROPERTY_DEFAULT_TAB, this.defaultTab, this);
+    this.app.updateUserSetting(VIEW_APP, PROPERTY_TWILIGHT_BY_DEGREES, this.twilightByDegrees, this);
 
     if (this.twilightByDegrees)
-      this.appService.updateUserSetting(VIEW_APP, PROPERTY_TWILIGHT_DEGREES, this.twilightDegrees, this);
+      this.app.updateUserSetting(VIEW_APP, PROPERTY_TWILIGHT_DEGREES, this.twilightDegrees, this);
     else
-      this.appService.updateUserSetting(VIEW_APP, PROPERTY_TWILIGHT_MINUTES, this.twilightMinutes, this);
+      this.app.updateUserSetting(VIEW_APP, PROPERTY_TWILIGHT_MINUTES, this.twilightMinutes, this);
 
     let gcd = this.gcdValue;
 
@@ -236,13 +231,13 @@ export class SvcPreferencesDialogComponent {
     else if (this.calendarOption === CalendarSetting.PURE_JULIAN)
       gcd = 'J';
 
-    this.appService.updateUserSetting(VIEW_APP, PROPERTY_GREGORIAN_CHANGE_DATE, gcd, this);
+    this.app.updateUserSetting(VIEW_APP, PROPERTY_GREGORIAN_CHANGE_DATE, gcd, this);
 
     if (this.defaultLocation)
-      this.appService.setDefaultLocationByName(this.defaultLocation);
+      this.app.setDefaultLocationByName(this.defaultLocation);
 
     if (this.resetWarnings)
-      this.appService.resetWarnings();
+      this.app.resetWarnings();
 
     this.visible = false;
   }

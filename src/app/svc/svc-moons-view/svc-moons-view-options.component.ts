@@ -27,8 +27,8 @@ export class SvcMoonsViewOptionsComponent implements AfterViewInit {
 
   readonly zoomSteps = ZOOM_STEPS;
 
-  constructor(private appService: AppService) {
-    appService.getUserSettingUpdates((setting: UserSetting) => {
+  constructor(private app: AppService) {
+    app.getUserSettingUpdates((setting: UserSetting) => {
       if (setting.view === VIEW_MOONS && setting.source !== this) {
         if (setting.property === PROPERTY_NORTH_ON_TOP)
           this.northOnTop = setting.value as boolean;
@@ -49,14 +49,14 @@ export class SvcMoonsViewOptionsComponent implements AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-    setTimeout(() => this.appService.requestViewSettings(VIEW_MOONS));
+    setTimeout(() => this.app.requestViewSettings(VIEW_MOONS));
   }
 
   get northOnTop(): boolean { return this._northOnTop; }
   set northOnTop(value: boolean) {
     if (this._northOnTop !== value) {
       this._northOnTop = value;
-      this.appService.updateUserSetting(VIEW_MOONS, PROPERTY_NORTH_ON_TOP, value, this);
+      this.app.updateUserSetting(VIEW_MOONS, PROPERTY_NORTH_ON_TOP, value, this);
     }
   }
 
@@ -64,7 +64,7 @@ export class SvcMoonsViewOptionsComponent implements AfterViewInit {
   set eastOnLeft(value: boolean) {
     if (this._eastOnLeft !== value) {
       this._eastOnLeft = value;
-      this.appService.updateUserSetting(VIEW_MOONS, PROPERTY_EAST_ON_LEFT, value, this);
+      this.app.updateUserSetting(VIEW_MOONS, PROPERTY_EAST_ON_LEFT, value, this);
     }
   }
 
@@ -72,7 +72,7 @@ export class SvcMoonsViewOptionsComponent implements AfterViewInit {
   set moonNumbers(value: boolean) {
     if (this._moonNumbers !== value) {
       this._moonNumbers = value;
-      this.appService.updateUserSetting(VIEW_MOONS, PROPERTY_MOON_NUMBERS, value, this);
+      this.app.updateUserSetting(VIEW_MOONS, PROPERTY_MOON_NUMBERS, value, this);
     }
   }
 
@@ -80,7 +80,7 @@ export class SvcMoonsViewOptionsComponent implements AfterViewInit {
   set moonNames(value: boolean) {
     if (this._moonNames !== value) {
       this._moonNames = value;
-      this.appService.updateUserSetting(VIEW_MOONS, PROPERTY_MOON_NAMES, value, this);
+      this.app.updateUserSetting(VIEW_MOONS, PROPERTY_MOON_NAMES, value, this);
     }
   }
 
@@ -88,7 +88,7 @@ export class SvcMoonsViewOptionsComponent implements AfterViewInit {
   set photoPlanets(value: boolean) {
     if (this._photoPlanets !== value) {
       this._photoPlanets = value;
-      this.appService.updateUserSetting(VIEW_MOONS, PROPERTY_PHOTOGRAPHIC_PLANETS, value, this);
+      this.app.updateUserSetting(VIEW_MOONS, PROPERTY_PHOTOGRAPHIC_PLANETS, value, this);
     }
   }
 
@@ -96,7 +96,7 @@ export class SvcMoonsViewOptionsComponent implements AfterViewInit {
   set markGrs(value: boolean) {
     if (this._markGrs !== value) {
       this._markGrs = value;
-      this.appService.updateUserSetting(VIEW_MOONS, PROPERTY_MARK_GRS, value, this);
+      this.app.updateUserSetting(VIEW_MOONS, PROPERTY_MARK_GRS, value, this);
     }
   }
 
@@ -104,7 +104,7 @@ export class SvcMoonsViewOptionsComponent implements AfterViewInit {
   set grsOverride(value: boolean) {
     if (this._grsOverride !== value) {
       this._grsOverride = value;
-      this.appService.updateUserSetting(VIEW_MOONS, PROPERTY_GRS_OVERRIDE, value, this);
+      this.app.updateUserSetting(VIEW_MOONS, PROPERTY_GRS_OVERRIDE, value, this);
     }
   }
 
@@ -112,7 +112,7 @@ export class SvcMoonsViewOptionsComponent implements AfterViewInit {
   set fixedGrs(value: number) {
     if (this._fixedGrs !== value) {
       this._fixedGrs = value;
-      this.appService.updateUserSetting(VIEW_MOONS, PROPERTY_FIXED_GRS, value, this);
+      this.app.updateUserSetting(VIEW_MOONS, PROPERTY_FIXED_GRS, value, this);
     }
   }
 
@@ -120,7 +120,7 @@ export class SvcMoonsViewOptionsComponent implements AfterViewInit {
   set reverseZoom(value: number) {
     if (this._reverseZoom !== value) {
       this._reverseZoom = value;
-      this.appService.updateUserSetting(VIEW_MOONS, PROPERTY_ZOOM, ZOOM_STEPS - value, this);
+      this.app.updateUserSetting(VIEW_MOONS, PROPERTY_ZOOM, ZOOM_STEPS - value, this);
     }
   }
 

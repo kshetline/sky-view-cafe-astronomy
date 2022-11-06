@@ -76,10 +76,10 @@ export class SvcEclipticViewOptionsComponent extends SvcGenericOptionsComponent 
       command: (event): void => { this.toggleLabels(event); }, value: ALL_DEEP_SKY }
   ];
 
-  constructor(appService: AppService) {
-    super(appService, VIEW_ECLIPTIC);
+  constructor(app: AppService) {
+    super(app, VIEW_ECLIPTIC);
 
-    appService.getUserSettingUpdates((setting: UserSetting) => {
+    app.getUserSettingUpdates((setting: UserSetting) => {
       if (setting.view === VIEW_ECLIPTIC && setting.source !== this) {
         if (setting.property === PROPERTY_SPAN_25)
           this.span25 = setting.value as boolean;
@@ -117,14 +117,14 @@ export class SvcEclipticViewOptionsComponent extends SvcGenericOptionsComponent 
   }
 
   ngAfterViewInit(): void {
-    setTimeout(() => this.appService.requestViewSettings(VIEW_ECLIPTIC));
+    setTimeout(() => this.app.requestViewSettings(VIEW_ECLIPTIC));
   }
 
   get span25(): boolean { return this._span25; }
   set span25(value: boolean) {
     if (this._span25 !== value) {
       this._span25 = value;
-      this.appService.updateUserSetting(VIEW_ECLIPTIC, PROPERTY_SPAN_25, value, this);
+      this.app.updateUserSetting(VIEW_ECLIPTIC, PROPERTY_SPAN_25, value, this);
     }
   }
 
@@ -132,7 +132,7 @@ export class SvcEclipticViewOptionsComponent extends SvcGenericOptionsComponent 
   set northOutward(value: boolean) {
     if (this._northOutward !== value) {
       this._northOutward = value;
-      this.appService.updateUserSetting(VIEW_ECLIPTIC, PROPERTY_ORIENTATION, value, this);
+      this.app.updateUserSetting(VIEW_ECLIPTIC, PROPERTY_ORIENTATION, value, this);
     }
   }
 
@@ -140,7 +140,7 @@ export class SvcEclipticViewOptionsComponent extends SvcGenericOptionsComponent 
   set ecliptic(value: boolean) {
     if (this._ecliptic !== value) {
       this._ecliptic = value;
-      this.appService.updateUserSetting(VIEW_ECLIPTIC, PROPERTY_ECLIPTIC_GRID, value, this);
+      this.app.updateUserSetting(VIEW_ECLIPTIC, PROPERTY_ECLIPTIC_GRID, value, this);
     }
   }
 
@@ -148,7 +148,7 @@ export class SvcEclipticViewOptionsComponent extends SvcGenericOptionsComponent 
   set celestial(value: boolean) {
     if (this._celestial !== value) {
       this._celestial = value;
-      this.appService.updateUserSetting(VIEW_ECLIPTIC, PROPERTY_CELESTIAL_EQUATOR, value, this);
+      this.app.updateUserSetting(VIEW_ECLIPTIC, PROPERTY_CELESTIAL_EQUATOR, value, this);
     }
   }
 
@@ -157,7 +157,7 @@ export class SvcEclipticViewOptionsComponent extends SvcGenericOptionsComponent 
     if (this._showConstellations !== value) {
       this._showConstellations = value;
       this.namesCategories.find(cat => cat.property === PROPERTY_LABEL_CONSTELLATIONS).disabled = !value;
-      this.appService.updateUserSetting(VIEW_ECLIPTIC, PROPERTY_SHOW_CONSTELLATIONS, value, this);
+      this.app.updateUserSetting(VIEW_ECLIPTIC, PROPERTY_SHOW_CONSTELLATIONS, value, this);
     }
   }
 
@@ -165,7 +165,7 @@ export class SvcEclipticViewOptionsComponent extends SvcGenericOptionsComponent 
   set localHorizon(value: boolean) {
     if (this._localHorizon !== value) {
       this._localHorizon = value;
-      this.appService.updateUserSetting(VIEW_ECLIPTIC, PROPERTY_LOCAL_HORIZON, value, this);
+      this.app.updateUserSetting(VIEW_ECLIPTIC, PROPERTY_LOCAL_HORIZON, value, this);
     }
   }
 
@@ -173,7 +173,7 @@ export class SvcEclipticViewOptionsComponent extends SvcGenericOptionsComponent 
   set showStars(value: boolean) {
     if (this._showStars !== value) {
       this._showStars = value;
-      this.appService.updateUserSetting(VIEW_ECLIPTIC, PROPERTY_SHOW_STARS, value, this);
+      this.app.updateUserSetting(VIEW_ECLIPTIC, PROPERTY_SHOW_STARS, value, this);
     }
   }
 
@@ -181,7 +181,7 @@ export class SvcEclipticViewOptionsComponent extends SvcGenericOptionsComponent 
   set brightenStars(value: boolean) {
     if (this._brightenStars !== value) {
       this._brightenStars = value;
-      this.appService.updateUserSetting(VIEW_ECLIPTIC, PROPERTY_BRIGHTEN_STARS, value, this);
+      this.app.updateUserSetting(VIEW_ECLIPTIC, PROPERTY_BRIGHTEN_STARS, value, this);
     }
   }
 
@@ -189,7 +189,7 @@ export class SvcEclipticViewOptionsComponent extends SvcGenericOptionsComponent 
   set topocentricMoon(value: boolean) {
     if (this._topocentricMoon !== value) {
       this._topocentricMoon = value;
-      this.appService.updateUserSetting(VIEW_ECLIPTIC, PROPERTY_TOPOCENTRIC_MOON, value, this);
+      this.app.updateUserSetting(VIEW_ECLIPTIC, PROPERTY_TOPOCENTRIC_MOON, value, this);
     }
   }
 
@@ -197,7 +197,7 @@ export class SvcEclipticViewOptionsComponent extends SvcGenericOptionsComponent 
   set enlargeSunMoon(value: boolean) {
     if (this._enlargeSunMoon !== value) {
       this._enlargeSunMoon = value;
-      this.appService.updateUserSetting(VIEW_ECLIPTIC, PROPERTY_ENLARGE_SUN_MOON, value, this);
+      this.app.updateUserSetting(VIEW_ECLIPTIC, PROPERTY_ENLARGE_SUN_MOON, value, this);
     }
   }
 
@@ -243,13 +243,13 @@ export class SvcEclipticViewOptionsComponent extends SvcGenericOptionsComponent 
       }
 
       if (value !== undefined) {
-        this.appService.updateUserSetting(VIEW_ECLIPTIC, item.property, value, this);
+        this.app.updateUserSetting(VIEW_ECLIPTIC, item.property, value, this);
 
         if (property === PROPERTY_LABEL_STARS && value)
-          this.appService.updateUserSetting(VIEW_ECLIPTIC, PROPERTY_LABEL_BRIGHT_STARS, false, this);
+          this.app.updateUserSetting(VIEW_ECLIPTIC, PROPERTY_LABEL_BRIGHT_STARS, false, this);
 
         if (property === PROPERTY_LABEL_BRIGHT_STARS && value)
-          this.appService.updateUserSetting(VIEW_ECLIPTIC, PROPERTY_LABEL_STARS, false, this);
+          this.app.updateUserSetting(VIEW_ECLIPTIC, PROPERTY_LABEL_STARS, false, this);
       }
     }
 

@@ -148,7 +148,7 @@ export class SvcAtlasDialogComponent implements OnInit {
     return name;
   }
 
-  constructor(private appService: AppService, private atlasService: SvcAtlasService,
+  constructor(private app: AppService, private atlasService: SvcAtlasService,
               private messageService: MessageService, private ref: ChangeDetectorRef) {}
 
   ngOnInit(): void {
@@ -310,7 +310,7 @@ export class SvcAtlasDialogComponent implements OnInit {
     const loc = this.selection;
 
     this.visible = false;
-    this.appService.location = new Location('(' + SvcAtlasDialogComponent.stripNameQualifiers(loc.name) + ')',
+    this.app.location = new Location('(' + SvcAtlasDialogComponent.stripNameQualifiers(loc.name) + ')',
       loc.atlasLocation.latitude, loc.atlasLocation.longitude, loc.zone, false, true);
   }
 
@@ -323,7 +323,7 @@ export class SvcAtlasDialogComponent implements OnInit {
   }
 
   private showMap(): void {
-    if (!this._selection || !this.appService.mapsReady) {
+    if (!this._selection || !this.app.mapsReady) {
       this.obscureMap();
       return;
     }

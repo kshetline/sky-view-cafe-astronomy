@@ -5,7 +5,7 @@ import { NavigationEnd, Router } from '@angular/router';
 import { SolarSystem, StarCatalog } from '@tubular/astronomy';
 import { min, Point, round } from '@tubular/math';
 import { addZonesUpdateListener, Calendar, pollForTimezoneUpdates, zonePollerBrowser } from '@tubular/time';
-import { clone, forEach, isEqual, isString } from '@tubular/util';
+import { clone, forEach, isEqual, isNumber, isString } from '@tubular/util';
 import { compact, debounce, sortedIndexBy } from 'lodash-es';
 import { BehaviorSubject, Observable, Subject, Subscription } from 'rxjs';
 import { AstroDataService } from './astronomy/astro-data.service';
@@ -17,18 +17,21 @@ export const  VIEW_APP = 'app';
 export const    PROPERTY_CLOCK_FLOATING = 'clock_floating';
 export const    PROPERTY_CLOCK_POSITION = 'clock_position';
 export const    PROPERTY_CLOCK_STYLE = 'clock_style';
-export const    PROPERTY_ECLIPSE_INFO_COLLAPSED = 'eclipse_info_collapsed';
-export const    PROPERTY_LAST_LOCATION = 'last_location';
-export const    PROPERTY_LAST_TIME = 'last_time';
-export const    PROPERTY_LAT_LONG_STYLE = 'lat_long_style';
-export const    PROPERTY_NORTH_AZIMUTH = 'north_azimuth';
 export const    PROPERTY_DEFAULT_TAB = 'default_tab';
+export const    PROPERTY_ECLIPSE_INFO_COLLAPSED = 'eclipse_info_collapsed';
+export const    PROPERTY_GREGORIAN_CHANGE_DATE = 'gregorian_change_date';
+export const    PROPERTY_INK_SAVER = 'ink_saver';
+export const    PROPERTY_LAST_LOCATION = 'last_location';
+export const    PROPERTY_LAST_TAB = 'last_tab';
+export const    PROPERTY_LAST_TIME = 'last_time';
+export const    PROPERTY_LAST_TRACKING = 'last_tracking';
+export const    PROPERTY_LAT_LONG_STYLE = 'lat_long_style';
+export const    PROPERTY_NATIVE_DATE_TIME = 'native_date_time';
+export const    PROPERTY_NORTH_AZIMUTH = 'north_azimuth';
+export const    PROPERTY_RESTORE_LAST_STATE = 'restore_last_state';
 export const    PROPERTY_TWILIGHT_BY_DEGREES = 'twilight_by_degrees';
 export const    PROPERTY_TWILIGHT_DEGREES = 'twilight_degrees';
 export const    PROPERTY_TWILIGHT_MINUTES = 'twilight_minutes';
-export const    PROPERTY_GREGORIAN_CHANGE_DATE = 'gregorian_change_date';
-export const    PROPERTY_INK_SAVER = 'ink_saver';
-export const    PROPERTY_NATIVE_DATE_TIME = 'native_date_time';
 export const    PROPERTY_WARNING_NATIVE_DATE_TIME = 'WARNING_native_date_time';
 
 export const NEW_LOCATION = '(new location)';
@@ -106,6 +109,7 @@ export class AppService {
   private appEventObserver: Observable<AppEvent> = this._appEvent.asObservable();
   private _time = new BehaviorSubject<number>(currentMinuteMillis());
   private timeObserver: Observable<number> = this._time.asObservable();
+  private lastStateTimer: any;
   private defaultLocation: Location = new Location('(Greenwich Observatory)', 51.47, 0, 'UT');
   private _location = new BehaviorSubject<Location>(this.defaultLocation);
   private locationObserver: Observable<Location> = this._location.asObservable();
@@ -239,6 +243,10 @@ export class AppService {
     });
 
     pollForTimezoneUpdates(zonePollerBrowser, 'large-alt');
+    window.addEventListener('beforeunload', () => this.lastStateUpdate(true));
+    this._location.subscribe(() => this.lastStateUpdate());
+
+    this.lastStateRestore();
   }
 
   static get title(): string { return 'Sky View Café'; }
@@ -260,8 +268,60 @@ export class AppService {
   set time(newTime: number) {
     newTime = round(newTime, 1000);
 
-    if (this._time.getValue() !== newTime)
+    if (this._time.getValue() !== newTime) {
       this._time.next(newTime);
+      this.lastStateUpdate();
+    }
+  }
+
+  private lastStateUpdate(immediate = false): void {
+    if (this.lastStateTimer) {
+      clearTimeout(this.lastStateTimer);
+      this.lastStateTimer = undefined;
+    }
+
+    if (!this.getUserSetting(VIEW_APP, PROPERTY_RESTORE_LAST_STATE))
+      return;
+
+    const update = (): void => {
+      const location = clone(this._location.getValue());
+
+      delete location.isDefault;
+      this.updateUserSetting(VIEW_APP, PROPERTY_LAST_LOCATION, location, this, true);
+      this.updateUserSetting(VIEW_APP, PROPERTY_LAST_TAB, this.currentTab, this, true);
+      this.updateUserSetting(VIEW_APP, PROPERTY_LAST_TIME, this._time.getValue(), this, true);
+    };
+
+    if (immediate)
+      update();
+    else
+      this.lastStateTimer = setTimeout(() => {
+        this.lastStateTimer = undefined;
+        update();
+      }, 5000);
+  }
+
+  private lastStateRestore(): void {
+    setTimeout(() => {
+      if (!this.getUserSetting(VIEW_APP, PROPERTY_RESTORE_LAST_STATE))
+        return;
+
+      const lastLocation = this.getUserSetting(VIEW_APP, PROPERTY_LAST_LOCATION);
+
+      if (lastLocation != null)
+        this.location = lastLocation;
+
+      const lastTab = this.getUserSetting(VIEW_APP, PROPERTY_LAST_TAB);
+
+      if (lastTab != null)
+        this.currentTab = lastTab;
+
+      const lastTime = this.getUserSetting(VIEW_APP, PROPERTY_LAST_TIME);
+      const lastTracking = this.getUserSetting(VIEW_APP, PROPERTY_LAST_TRACKING);
+
+      if (!lastTracking && isNumber(lastTime))
+        this.time = lastTime;
+    });
   }
 
   get showingSeconds(): boolean { return this._clockStyle === ClockStyle.ISO_SEC || this._clockStyle === ClockStyle.LOCAL_SEC; }
@@ -362,8 +422,8 @@ export class AppService {
   set currentTab(newTab: CurrentTab) {
     if (this._currentTab.getValue() !== newTab) {
       this._currentTab.next(newTab);
-      // noinspection JSIgnoredPromiseFromCall
-      this.router.navigate(['/' + tabNames[this._currentTab.getValue()]]);
+      this.router.navigate(['/' + tabNames[this._currentTab.getValue()]]).finally();
+      this.lastStateUpdate();
     }
   }
 
@@ -371,19 +431,27 @@ export class AppService {
     return this.currentTabObserver.subscribe(callback);
   }
 
+  getUserSetting(view: string, property: string): any {
+    return (this.allSettings[view] ?? {})[property];
+  }
+
   getUserSettingUpdates(callback: (setting: UserSetting) => void): Subscription {
     return this.settingsObserver.subscribe(callback);
   }
 
-  updateUserSetting(view: string, property: string, value: any, source?: any): void;
+  updateUserSetting(view: string, property: string, value: any, source?: any, immediate?: boolean): void;
   updateUserSetting(setting: UserSetting): void;
-  updateUserSetting(settingOrView: string | UserSetting, property?: string, value?: any, source?: any): void {
+  updateUserSetting(settingOrView: string | UserSetting, propertyOrImmediate?: boolean | string,
+                    value?: any, source?: any, immediate = false): void {
     let setting: UserSetting;
 
-    if (isString(settingOrView))
-      setting = { view: settingOrView, property, value, source };
-    else
+    if (isString(settingOrView)) {
+      setting = { view: settingOrView, property: propertyOrImmediate as string, value, source };
+    }
+    else {
       setting = settingOrView;
+      immediate = !!propertyOrImmediate;
+    }
 
     let viewSettings = this.allSettings[setting.view];
 
@@ -391,7 +459,11 @@ export class AppService {
       viewSettings = this.allSettings[setting.view] = {};
 
     viewSettings[setting.property] = setting.value;
-    this.debouncedSaveSettings();
+
+    if (immediate)
+      this.saveSettings();
+    else
+      this.debouncedSaveSettings();
 
     if (setting.view === VIEW_APP)
       this.checkAppSetting(setting.property, setting.value);

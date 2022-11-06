@@ -54,8 +54,8 @@ export class SvcCalendarViewOptionsComponent implements AfterViewInit, OnDestroy
     { label: 'Astro. Twilight',  value: 12 }
   ];
 
-  constructor(private appService: AppService) {
-    appService.getUserSettingUpdates((setting: UserSetting) => {
+  constructor(private app: AppService) {
+    app.getUserSettingUpdates((setting: UserSetting) => {
       if (setting.view === VIEW_CALENDAR && setting.source !== this) {
         if (setting.property === PROPERTY_KEY_MOON_PHASES)
           this.keyMoonPhases = setting.value as boolean;
@@ -76,7 +76,7 @@ export class SvcCalendarViewOptionsComponent implements AfterViewInit, OnDestroy
   }
 
   ngAfterViewInit(): void {
-    setTimeout(() => this.appService.requestViewSettings(VIEW_CALENDAR));
+    setTimeout(() => this.app.requestViewSettings(VIEW_CALENDAR));
   }
 
   ngOnDestroy(): void {
@@ -87,7 +87,7 @@ export class SvcCalendarViewOptionsComponent implements AfterViewInit, OnDestroy
   set firstDay(value: number) {
     if (this._firstDay !== value) {
       this._firstDay = value;
-      this.appService.updateUserSetting(VIEW_CALENDAR, PROPERTY_FIRST_DAY_OF_WEEK, value, this);
+      this.app.updateUserSetting(VIEW_CALENDAR, PROPERTY_FIRST_DAY_OF_WEEK, value, this);
     }
   }
 
@@ -95,7 +95,7 @@ export class SvcCalendarViewOptionsComponent implements AfterViewInit, OnDestroy
   set eventType(value: number) {
     if (this._eventType !== value) {
       this._eventType = value;
-      this.appService.updateUserSetting(VIEW_CALENDAR, PROPERTY_EVENT_TYPE, value, this);
+      this.app.updateUserSetting(VIEW_CALENDAR, PROPERTY_EVENT_TYPE, value, this);
     }
   }
 
@@ -103,7 +103,7 @@ export class SvcCalendarViewOptionsComponent implements AfterViewInit, OnDestroy
   set keyMoonPhases(value: boolean) {
     if (this._keyMoonPhases !== value) {
       this._keyMoonPhases = value;
-      this.appService.updateUserSetting(VIEW_CALENDAR, PROPERTY_KEY_MOON_PHASES, value, this);
+      this.app.updateUserSetting(VIEW_CALENDAR, PROPERTY_KEY_MOON_PHASES, value, this);
     }
   }
 
@@ -111,7 +111,7 @@ export class SvcCalendarViewOptionsComponent implements AfterViewInit, OnDestroy
   set equisolstice(value: boolean) {
     if (this._equisolstice !== value) {
       this._equisolstice = value;
-      this.appService.updateUserSetting(VIEW_CALENDAR, PROPERTY_EQUISOLSTICE, value, this);
+      this.app.updateUserSetting(VIEW_CALENDAR, PROPERTY_EQUISOLSTICE, value, this);
     }
   }
 
@@ -119,7 +119,7 @@ export class SvcCalendarViewOptionsComponent implements AfterViewInit, OnDestroy
   set dailyDaylight(value: boolean) {
     if (this._dailyDaylight !== value) {
       this._dailyDaylight = value;
-      this.appService.updateUserSetting(VIEW_CALENDAR, PROPERTY_DAILY_DAYLIGHT, value, this);
+      this.app.updateUserSetting(VIEW_CALENDAR, PROPERTY_DAILY_DAYLIGHT, value, this);
     }
   }
 
@@ -127,7 +127,7 @@ export class SvcCalendarViewOptionsComponent implements AfterViewInit, OnDestroy
   set dailyMoonPhase(value: boolean) {
     if (this._dailyMoonPhase !== value) {
       this._dailyMoonPhase = value;
-      this.appService.updateUserSetting(VIEW_CALENDAR, PROPERTY_DAILY_MOON_PHASE, value, this);
+      this.app.updateUserSetting(VIEW_CALENDAR, PROPERTY_DAILY_MOON_PHASE, value, this);
     }
   }
 
@@ -135,7 +135,7 @@ export class SvcCalendarViewOptionsComponent implements AfterViewInit, OnDestroy
   set includeTransits(value: boolean) {
     if (this._includeTransits !== value) {
       this._includeTransits = value;
-      this.appService.updateUserSetting(VIEW_CALENDAR, PROPERTY_INCLUDE_TRANSITS, value, this);
+      this.app.updateUserSetting(VIEW_CALENDAR, PROPERTY_INCLUDE_TRANSITS, value, this);
     }
   }
 
@@ -166,12 +166,12 @@ export class SvcCalendarViewOptionsComponent implements AfterViewInit, OnDestroy
   }
 
   changeMonth(delta: number): void {
-    const zone = Timezone.getTimezone(this.appService.timezone, this.appService.longitude);
-    const currentTime = new DateTime(this.appService.time, zone);
+    const zone = Timezone.getTimezone(this.app.timezone, this.app.longitude);
+    const currentTime = new DateTime(this.app.time, zone);
 
     currentTime.add(DateTimeField.MONTH, delta);
 
     if (SVC_MIN_YEAR <= currentTime.wallTime.y && currentTime.wallTime.y <= SVC_MAX_YEAR)
-      this.appService.time = currentTime.utcTimeMillis;
+      this.app.time = currentTime.utcTimeMillis;
   }
 }

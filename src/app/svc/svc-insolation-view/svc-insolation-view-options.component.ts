@@ -19,8 +19,8 @@ export class SvcInsolationViewOptionsComponent implements AfterViewInit {
     { label: 'Center on noon', value: false }
   ];
 
-  constructor(private appService: AppService) {
-    appService.getUserSettingUpdates((setting: UserSetting) => {
+  constructor(private app: AppService) {
+    app.getUserSettingUpdates((setting: UserSetting) => {
       if (setting.view === VIEW_INSOLATION && setting.source !== this) {
         if (setting.property === PROPERTY_CENTER_MIDNIGHT)
           this.centerMidnight = setting.value as boolean;
@@ -31,14 +31,14 @@ export class SvcInsolationViewOptionsComponent implements AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-    setTimeout(() => this.appService.requestViewSettings(VIEW_INSOLATION));
+    setTimeout(() => this.app.requestViewSettings(VIEW_INSOLATION));
   }
 
   get centerMidnight(): boolean { return this._centerMidnight; }
   set centerMidnight(value: boolean) {
     if (this._centerMidnight !== value) {
       this._centerMidnight = value;
-      this.appService.updateUserSetting(VIEW_INSOLATION, PROPERTY_CENTER_MIDNIGHT, value, this);
+      this.app.updateUserSetting(VIEW_INSOLATION, PROPERTY_CENTER_MIDNIGHT, value, this);
     }
   }
 
@@ -46,7 +46,7 @@ export class SvcInsolationViewOptionsComponent implements AfterViewInit {
   set showMoonlight(value: boolean) {
     if (this._showMoonlight !== value) {
       this._showMoonlight = value;
-      this.appService.updateUserSetting(VIEW_INSOLATION, PROPERTY_SHOW_MOONLIGHT, value, this);
+      this.app.updateUserSetting(VIEW_INSOLATION, PROPERTY_SHOW_MOONLIGHT, value, this);
     }
   }
 }

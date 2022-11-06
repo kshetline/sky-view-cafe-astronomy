@@ -121,7 +121,7 @@ export class SvcZoneSelectorComponent implements ControlValueAccessor, OnInit {
   @Output() focus: EventEmitter<any> = new EventEmitter();
   @Output() blur: EventEmitter<any> = new EventEmitter();
 
-  constructor(private appService: AppService, private ref: ChangeDetectorRef) {
+  constructor(private app: AppService, private ref: ChangeDetectorRef) {
     this.lastSubzones[this._region] = this._subzone;
     this.subzonesByRegion[this._region] = this.subzones;
   }
@@ -303,7 +303,7 @@ export class SvcZoneSelectorComponent implements ControlValueAccessor, OnInit {
   ngOnInit(): void {
     this.updateTimezones();
 
-    this.appService.getAppEventUpdates(evt => {
+    this.app.getAppEventUpdates(evt => {
       if (evt.name === IANA_DB_UPDATE)
         this.updateTimezones();
     });
@@ -321,7 +321,7 @@ export class SvcZoneSelectorComponent implements ControlValueAccessor, OnInit {
       });
     }
 
-    this.appService.setKnownIanaTimezones(this.knownIanaZones);
+    this.app.setKnownIanaTimezones(this.knownIanaZones);
 
     const hourOffsets: string[] = [];
 

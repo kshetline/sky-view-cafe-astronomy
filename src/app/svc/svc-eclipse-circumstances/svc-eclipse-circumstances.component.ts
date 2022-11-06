@@ -161,9 +161,9 @@ export class SvcEclipseCircumstancesComponent implements AfterViewInit, OnInit {
           this.eventTitle = (this.isSolar ? 'Solar' : 'Lunar') + ' Eclipse, ';
           this.subtitle = (this.isSolar ? 'Local m' : 'M') + 'aximum eclipse:';
           this.subtitleTime = dateTime.format(localStyle ? 'LLL' : 'y-MM-DD HH:mm:ss');
-          this.currentMag = ec.maxEclipse.toFixed(2);
+          this.currentMag = '--.--';
           this.subtitle2 = (ec.maxEclipse <= 0 ? '' :
-            `${(this.isSolar ? 'Local p' : 'P')}eak magnitude: ${this.currentMag}%`);
+            `${(this.isSolar ? 'Local p' : 'P')}eak magnitude: ${ec.maxEclipse.toFixed(2)}%`);
 
           if (ec.annular)
             this.eventTitle += 'Annular';
@@ -218,7 +218,7 @@ export class SvcEclipseCircumstancesComponent implements AfterViewInit, OnInit {
           else
             this.peakLabel = this.u2 = this.u3 = this.totalityDuration = '';
 
-          setTimeout(() => this.updateCurrentMagnitude(this.lastTime));
+          setTimeout(() => this.updateCurrentMagnitude(this.lastTime, true));
         }
       }, UPDATE_DELAY);
     }
@@ -226,8 +226,8 @@ export class SvcEclipseCircumstancesComponent implements AfterViewInit, OnInit {
     this.updateCurrentMagnitude(jdu);
   }
 
-  private updateCurrentMagnitude(jdu: number): void {
-    if (this.lastTime !== jdu) {
+  private updateCurrentMagnitude(jdu: number, force = false): void {
+    if (force || this.lastTime !== jdu) {
       this.lastTime = jdu;
 
       if (this.eclipseTime != null && this.eclipseTime - 0.5 <= jdu && jdu <= this.eclipseTime + 0.5)

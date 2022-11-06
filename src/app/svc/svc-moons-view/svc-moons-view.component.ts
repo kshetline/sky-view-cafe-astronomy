@@ -76,12 +76,12 @@ export class SvcMoonsViewComponent extends GenericPlanetaryViewDirective impleme
   @ViewChild('canvasWrapper', { static: true }) private wrapperRef: ElementRef;
   @ViewChild('orbitCanvas', { static: true }) private canvasRef: ElementRef;
 
-  constructor(appService: AppService, private astroDataService: AstroDataService, private httpClient: HttpClient) {
-    super(appService, CurrentTab.MOONS_GRS);
+  constructor(app: AppService, private astroDataService: AstroDataService, private httpClient: HttpClient) {
+    super(app, CurrentTab.MOONS_GRS);
 
     this.canTouchZoom = true;
 
-    appService.getUserSettingUpdates((setting: UserSetting) => {
+    app.getUserSettingUpdates((setting: UserSetting) => {
       if (setting.view === VIEW_MOONS && setting.source !== this) {
         if (setting.property === PROPERTY_NORTH_ON_TOP)
           this.northOnTop = setting.value as boolean;
@@ -122,7 +122,7 @@ export class SvcMoonsViewComponent extends GenericPlanetaryViewDirective impleme
       this.throttledRedraw();
     });
 
-    setTimeout(() => this.appService.requestViewSettings(VIEW_MOONS));
+    setTimeout(() => this.app.requestViewSettings(VIEW_MOONS));
 
     super.ngAfterViewInit();
   }
@@ -499,7 +499,7 @@ export class SvcMoonsViewComponent extends GenericPlanetaryViewDirective impleme
 
     if (this.zoom !== oldZoom) {
       this.throttledRedraw();
-      this.appService.updateUserSetting(VIEW_MOONS, PROPERTY_ZOOM, this.zoom, this);
+      this.app.updateUserSetting(VIEW_MOONS, PROPERTY_ZOOM, this.zoom, this);
     }
 
     if (evt.cancelable) evt.preventDefault();
@@ -518,7 +518,7 @@ export class SvcMoonsViewComponent extends GenericPlanetaryViewDirective impleme
 
     if (this.zoom !== oldZoom) {
       this.throttledRedraw();
-      this.appService.updateUserSetting(VIEW_MOONS, PROPERTY_ZOOM, this.zoom, this);
+      this.app.updateUserSetting(VIEW_MOONS, PROPERTY_ZOOM, this.zoom, this);
     }
   }
 

@@ -155,7 +155,7 @@ export class SvcSkyViewComponent extends GenericSkyViewDirective implements Afte
       this.formatFacing();
 
       if (!this._trackSun)
-        this.appService.updateUserSetting(VIEW_SKY, PROPERTY_FACING, newFacing, this);
+        this.app.updateUserSetting(VIEW_SKY, PROPERTY_FACING, newFacing, this);
 
       if (redraw)
         this.draw();
@@ -177,8 +177,8 @@ export class SvcSkyViewComponent extends GenericSkyViewDirective implements Afte
     this.formattedFacing = facing.toFixed(1).padStart(5, '0');
   }
 
-  constructor(appService: AppService) {
-    super(appService, CurrentTab.SKY);
+  constructor(app: AppService) {
+    super(app, CurrentTab.SKY);
 
     this.marqueeFlags = MARQUEE_EQUATORIAL   | MARQUEE_HORIZONTAL | MARQUEE_MAGNITUDE |
                         MARQUEE_ILLUMINATION | MARQUEE_SIZE;
@@ -200,7 +200,7 @@ export class SvcSkyViewComponent extends GenericSkyViewDirective implements Afte
     (reason) => console.error(reason))
       .catch((reason) => console.error(reason));
 
-    appService.getUserSettingUpdates((setting: UserSetting) => {
+    app.getUserSettingUpdates((setting: UserSetting) => {
       if (setting.view === VIEW_SKY && setting.source !== this) {
         if (setting.property === PROPERTY_VIEW_TYPE)
           this.viewType = setting.value as VIEW_TYPE;
@@ -260,7 +260,7 @@ export class SvcSkyViewComponent extends GenericSkyViewDirective implements Afte
     this.wrapper = this.wrapperRef.nativeElement;
     this.canvas = this.canvasRef.nativeElement;
 
-    setTimeout(() => this.appService.requestViewSettings(VIEW_SKY));
+    setTimeout(() => this.app.requestViewSettings(VIEW_SKY));
 
     super.ngAfterViewInit();
   }
@@ -391,7 +391,7 @@ export class SvcSkyViewComponent extends GenericSkyViewDirective implements Afte
 
       this.onResize();
       this.draw();
-      this.appService.updateUserSetting(VIEW_SKY, PROPERTY_VIEW_TYPE, value, this);
+      this.app.updateUserSetting(VIEW_SKY, PROPERTY_VIEW_TYPE, value, this);
     }
   }
 
@@ -405,7 +405,7 @@ export class SvcSkyViewComponent extends GenericSkyViewDirective implements Afte
   set trackSun(value: boolean) {
     if (this._trackSun !== value) {
       this._trackSun = value;
-      this.appService.updateUserSetting(VIEW_SKY, PROPERTY_TRACK_SUN, value, this);
+      this.app.updateUserSetting(VIEW_SKY, PROPERTY_TRACK_SUN, value, this);
       this.draw();
     }
   }
@@ -414,7 +414,7 @@ export class SvcSkyViewComponent extends GenericSkyViewDirective implements Afte
   set parallelToEcliptic(value: boolean) {
     if (this._parallelToEcliptic !== value) {
       this._parallelToEcliptic = value;
-      this.appService.updateUserSetting(VIEW_SKY, PROPERTY_PARALLEL_TO_ECLIPTIC, value, this);
+      this.app.updateUserSetting(VIEW_SKY, PROPERTY_PARALLEL_TO_ECLIPTIC, value, this);
       this.draw();
     }
   }

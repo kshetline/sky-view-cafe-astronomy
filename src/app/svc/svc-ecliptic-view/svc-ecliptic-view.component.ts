@@ -57,15 +57,15 @@ export class SvcEclipticViewComponent extends GenericSkyViewDirective implements
   @ViewChild('canvasWrapper', { static: true }) private wrapperRef: ElementRef;
   @ViewChild('skyCanvas', { static: true }) private canvasRef: ElementRef;
 
-  constructor(appService: AppService) {
-    super(appService, CurrentTab.ECLIPTIC);
+  constructor(app: AppService) {
+    super(app, CurrentTab.ECLIPTIC);
 
     this.marqueeFlags = MARQUEE_ECLIPTIC | MARQUEE_EQUATORIAL | MARQUEE_MAGNITUDE |
                         MARQUEE_ILLUMINATION | MARQUEE_SIZE;
     this.topocentricMoon = true;
     this.canDrag = false;
 
-    appService.getUserSettingUpdates((setting: UserSetting) => {
+    app.getUserSettingUpdates((setting: UserSetting) => {
       if (setting.view === VIEW_ECLIPTIC && setting.source !== this) {
         if (setting.property === PROPERTY_SPAN_25)
           this.span25 = setting.value as boolean;
@@ -115,7 +115,7 @@ export class SvcEclipticViewComponent extends GenericSkyViewDirective implements
     this.wrapper = this.wrapperRef.nativeElement;
     this.canvas = this.canvasRef.nativeElement;
 
-    setTimeout(() => this.appService.requestViewSettings(VIEW_ECLIPTIC));
+    setTimeout(() => this.app.requestViewSettings(VIEW_ECLIPTIC));
 
     super.ngAfterViewInit();
   }
