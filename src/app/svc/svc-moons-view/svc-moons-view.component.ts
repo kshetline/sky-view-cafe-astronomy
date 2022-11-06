@@ -499,7 +499,7 @@ export class SvcMoonsViewComponent extends GenericPlanetaryViewDirective impleme
 
     if (this.zoom !== oldZoom) {
       this.throttledRedraw();
-      this.appService.updateUserSetting({ view: VIEW_MOONS, property: PROPERTY_ZOOM, value: this.zoom, source: this });
+      this.appService.updateUserSetting(VIEW_MOONS, PROPERTY_ZOOM, this.zoom, this);
     }
 
     if (evt.cancelable) evt.preventDefault();
@@ -518,7 +518,7 @@ export class SvcMoonsViewComponent extends GenericPlanetaryViewDirective impleme
 
     if (this.zoom !== oldZoom) {
       this.throttledRedraw();
-      this.appService.updateUserSetting({ view: VIEW_MOONS, property: PROPERTY_ZOOM, value: this.zoom, source: this });
+      this.appService.updateUserSetting(VIEW_MOONS, PROPERTY_ZOOM, this.zoom, this);
     }
   }
 

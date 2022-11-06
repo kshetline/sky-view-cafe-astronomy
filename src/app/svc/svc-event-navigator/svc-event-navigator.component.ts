@@ -177,7 +177,7 @@ export class SvcEventNavigatorComponent implements AfterViewInit, OnDestroy {
         });
       }
       else {
-        this.app.updateUserSetting({ view: VIEW_EVENT_NAV, property: PROPERTY_EVENT_TYPE, value: newEvent, source: this });
+        this.app.updateUserSetting(VIEW_EVENT_NAV, PROPERTY_EVENT_TYPE, newEvent, this);
         this.updatePlanets(newEvent);
       }
     }
@@ -195,7 +195,7 @@ export class SvcEventNavigatorComponent implements AfterViewInit, OnDestroy {
         });
       }
       else
-        this.app.updateUserSetting({ view: VIEW_EVENT_NAV, property: PROPERTY_EVENT_BODY, value: newPlanet, source: this });
+        this.app.updateUserSetting(VIEW_EVENT_NAV, PROPERTY_EVENT_BODY, newPlanet, this);
     }
   }
 

@@ -251,7 +251,7 @@ export class AppComponent implements AfterViewInit, OnDestroy {
   }
 
   private toggleFloatingClock(value = !this.app.clockFloating): void {
-    this.app.updateUserSetting({ view: VIEW_APP, property: PROPERTY_CLOCK_FLOATING, value, source: this });
+    this.app.updateUserSetting(VIEW_APP, PROPERTY_CLOCK_FLOATING, value, this);
   }
 
   closeFloatingClock(): void {
@@ -266,7 +266,7 @@ export class AppComponent implements AfterViewInit, OnDestroy {
       if (!this.clockPositionDebounce) {
         this.clockPositionDebounce = debounce(() =>
           this.app.updateUserSetting(
-            { view: VIEW_APP, property: PROPERTY_CLOCK_POSITION, value: JSON.stringify(this._clockPosition), source: this }), 500);
+            VIEW_APP, PROPERTY_CLOCK_POSITION, JSON.stringify(this._clockPosition), this), 500);
       }
 
       this.clockPositionDebounce();

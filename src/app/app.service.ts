@@ -18,6 +18,7 @@ export const    PROPERTY_CLOCK_FLOATING = 'clock_floating';
 export const    PROPERTY_CLOCK_POSITION = 'clock_position';
 export const    PROPERTY_CLOCK_STYLE = 'clock_style';
 export const    PROPERTY_ECLIPSE_INFO_COLLAPSED = 'eclipse_info_collapsed';
+export const    PROPERTY_LAST_LOCATION = 'last_location';
 export const    PROPERTY_LAST_TIME = 'last_time';
 export const    PROPERTY_LAT_LONG_STYLE = 'lat_long_style';
 export const    PROPERTY_NORTH_AZIMUTH = 'north_azimuth';
@@ -209,9 +210,7 @@ export class AppService {
       }
     }
 
-    this.debouncedSaveSettings = debounce(() => {
-      localStorage.setItem('svc-settings', JSON.stringify(this.allSettings));
-    }, 1000);
+    this.debouncedSaveSettings = debounce(() => this.saveSettings(), 1000);
 
     router.events.subscribe(event => {
       if (event instanceof NavigationEnd) {
@@ -376,7 +375,16 @@ export class AppService {
     return this.settingsObserver.subscribe(callback);
   }
 
-  updateUserSetting(setting: UserSetting): void {
+  updateUserSetting(view: string, property: string, value: any, source?: any): void;
+  updateUserSetting(setting: UserSetting): void;
+  updateUserSetting(settingOrView: string | UserSetting, property?: string, value?: any, source?: any): void {
+    let setting: UserSetting;
+
+    if (isString(settingOrView))
+      setting = { view: settingOrView, property, value, source };
+    else
+      setting = settingOrView;
+
     let viewSettings = this.allSettings[setting.view];
 
     if (!viewSettings)
@@ -581,5 +589,9 @@ export class AppService {
     }
     else
       console.log('Using default location');
+  }
+
+  private saveSettings(): void {
+    localStorage.setItem('svc-settings', JSON.stringify(this.allSettings));
   }
 }

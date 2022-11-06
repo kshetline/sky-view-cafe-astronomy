@@ -63,7 +63,7 @@ export class SvcMapViewOptionsComponent implements AfterViewInit {
     setTimeout(() => this.appService.requestViewSettings(VIEW_MAP));
     this.atlasService.getTimezoneMapUrl().then(img => {
       if (img) {
-        this.appService.updateUserSetting({ view: VIEW_MAP, property: PROPERTY_ZONE_IMAGE_URL, value: img, source: this });
+        this.appService.updateUserSetting(VIEW_MAP, PROPERTY_ZONE_IMAGE_URL, img, this);
         this.timezonesDisabled = false;
 
         const $ = /(\d{4}[a-z]+)\.png$/.exec(img);
@@ -78,7 +78,7 @@ export class SvcMapViewOptionsComponent implements AfterViewInit {
   set mapType(value: MapType) {
     if (this._mapType !== value) {
       this._mapType = value;
-      this.appService.updateUserSetting({ view: VIEW_MAP, property: PROPERTY_MAP_TYPE, value, source: this });
+      this.appService.updateUserSetting(VIEW_MAP, PROPERTY_MAP_TYPE, value, this);
     }
   }
 
@@ -86,7 +86,7 @@ export class SvcMapViewOptionsComponent implements AfterViewInit {
   set showDayNight(value: boolean) {
     if (this._showDayNight !== value) {
       this._showDayNight = value;
-      this.appService.updateUserSetting({ view: VIEW_MAP, property: PROPERTY_SHOW_DAY_NIGHT, value, source: this });
+      this.appService.updateUserSetting(VIEW_MAP, PROPERTY_SHOW_DAY_NIGHT, value, this);
     }
   }
 
@@ -94,7 +94,7 @@ export class SvcMapViewOptionsComponent implements AfterViewInit {
   set showTimezones(value: boolean) {
     if (this._showTimezones !== value) {
       this._showTimezones = value;
-      this.appService.updateUserSetting({ view: VIEW_MAP, property: PROPERTY_SHOW_TIMEZONES, value, source: this });
+      this.appService.updateUserSetting(VIEW_MAP, PROPERTY_SHOW_TIMEZONES, value, this);
     }
   }
 
@@ -102,7 +102,7 @@ export class SvcMapViewOptionsComponent implements AfterViewInit {
   set showEclipseShadows(value: boolean) {
     if (this._showEclipseShadows !== value) {
       this._showEclipseShadows = value;
-      this.appService.updateUserSetting({ view: VIEW_MAP, property: PROPERTY_SHOW_ECLIPSE_SHADOWS, value, source: this });
+      this.appService.updateUserSetting(VIEW_MAP, PROPERTY_SHOW_ECLIPSE_SHADOWS, value, this);
     }
   }
 
@@ -110,7 +110,7 @@ export class SvcMapViewOptionsComponent implements AfterViewInit {
   set showMarkers(value: boolean) {
     if (this._showMarkers !== value) {
       this._showMarkers = value;
-      this.appService.updateUserSetting({ view: VIEW_MAP, property: PROPERTY_SHOW_LOCATION_MARKERS, value, source: this });
+      this.appService.updateUserSetting(VIEW_MAP, PROPERTY_SHOW_LOCATION_MARKERS, value, this);
     }
   }
 
@@ -118,7 +118,7 @@ export class SvcMapViewOptionsComponent implements AfterViewInit {
   set blink(value: boolean) {
     if (this._blink !== value) {
       this._blink = value;
-      this.appService.updateUserSetting({ view: VIEW_MAP, property: PROPERTY_BLINK_LOCATION_MARKERS, value, source: this });
+      this.appService.updateUserSetting(VIEW_MAP, PROPERTY_BLINK_LOCATION_MARKERS, value, this);
     }
   }
 

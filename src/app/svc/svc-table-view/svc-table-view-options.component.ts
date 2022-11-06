@@ -47,7 +47,7 @@ export class SvcTableViewOptionsComponent implements AfterViewInit {
   set twilight(value: number) {
     if (this._twilight !== value) {
       this._twilight = value;
-      this.appService.updateUserSetting({ view: VIEW_TABLES, property: PROPERTY_TWILIGHT, value, source: this });
+      this.appService.updateUserSetting(VIEW_TABLES, PROPERTY_TWILIGHT, value, this);
     }
   }
 }

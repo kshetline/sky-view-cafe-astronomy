@@ -56,7 +56,7 @@ export class SvcGenericOptionsComponent {
   set additional(value: ADDITIONALS | string) {
     if (this._additional !== value) {
       this._additional = value;
-      this.appService.updateUserSetting({ view: this.viewName, property: PROPERTY_ADDITIONALS, value, source: this });
+      this.appService.updateUserSetting(this.viewName, PROPERTY_ADDITIONALS, value, this);
     }
   }
 }

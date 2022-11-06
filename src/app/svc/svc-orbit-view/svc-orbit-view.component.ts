@@ -152,7 +152,7 @@ export class SvcOrbitViewComponent extends GenericPlanetaryViewDirective impleme
             this.zoom = SvcOrbitViewComponent.zoomToZoomSteps(scales[this.extent]);
 
             if (this.zoom !== oldZoom)
-              this.appService.updateUserSetting({ view: VIEW_ORBITS, property: PROPERTY_ZOOM, value: this.zoom, source: this });
+              this.appService.updateUserSetting(VIEW_ORBITS, PROPERTY_ZOOM, this.zoom, this);
           }
         }
         else if (setting.property === PROPERTY_CENTER_EARTH)
@@ -598,7 +598,7 @@ export class SvcOrbitViewComponent extends GenericPlanetaryViewDirective impleme
 
     if (this.zoom !== oldZoom) {
       this.throttledRedraw();
-      this.appService.updateUserSetting({ view: VIEW_ORBITS, property: PROPERTY_ZOOM, value: this.zoom, source: this });
+      this.appService.updateUserSetting(VIEW_ORBITS, PROPERTY_ZOOM, this.zoom, this);
     }
 
     if (evt.cancelable) evt.preventDefault();
@@ -617,7 +617,7 @@ export class SvcOrbitViewComponent extends GenericPlanetaryViewDirective impleme
 
     if (this.zoom !== oldZoom) {
       this.throttledRedraw();
-      this.appService.updateUserSetting({ view: VIEW_ORBITS, property: PROPERTY_ZOOM, value: this.zoom, source: this });
+      this.appService.updateUserSetting(VIEW_ORBITS, PROPERTY_ZOOM, this.zoom, this);
     }
   }
 
@@ -664,8 +664,8 @@ export class SvcOrbitViewComponent extends GenericPlanetaryViewDirective impleme
   }
 
   protected debouncedRotationUpdate = debounce(() => {
-    this.appService.updateUserSetting({ view: VIEW_ORBITS, property: PROPERTY_ROTATION_XZ, value: this.rotation_xz, source: this });
-    this.appService.updateUserSetting({ view: VIEW_ORBITS, property: PROPERTY_ROTATION_YZ, value: this.rotation_yz, source: this });
+    this.appService.updateUserSetting(VIEW_ORBITS, PROPERTY_ROTATION_XZ, this.rotation_xz, this);
+    this.appService.updateUserSetting(VIEW_ORBITS, PROPERTY_ROTATION_YZ, this.rotation_yz, this);
   }, 500);
 
   protected static translate(mode: DrawingMode, pt: Point3D, ctr: Point3D, viewingDistance: number,

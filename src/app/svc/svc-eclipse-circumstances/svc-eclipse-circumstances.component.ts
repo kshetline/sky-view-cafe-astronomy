@@ -3,7 +3,7 @@ import {
   AstroEvent, EclipseCircumstances, EclipseInfo, EventFinder, LUNAR_ECLIPSE, LUNAR_ECLIPSE_LOCAL, MOON, SkyObserver,
   SOLAR_ECLIPSE, SOLAR_ECLIPSE_LOCAL, SUN
 } from '@tubular/astronomy';
-import { abs, floor, max, round } from '@tubular/math';
+import { abs, floor, round } from '@tubular/math';
 import ttime, { DateTime, Timezone, utToTdt } from '@tubular/time';
 import { padLeft } from '@tubular/util';
 import {
@@ -110,7 +110,7 @@ export class SvcEclipseCircumstancesComponent implements AfterViewInit, OnInit {
   set collapsed(newValue: boolean) {
     if (this._collapsed !== newValue) {
       this._collapsed = newValue;
-      this.app.updateUserSetting({ view: VIEW_APP, property: PROPERTY_ECLIPSE_INFO_COLLAPSED, value: newValue, source: this })
+      this.app.updateUserSetting(VIEW_APP, PROPERTY_ECLIPSE_INFO_COLLAPSED, newValue, this);
     }
   }
 

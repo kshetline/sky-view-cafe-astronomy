@@ -216,18 +216,18 @@ export class SvcPreferencesDialogComponent {
     if (!this.formValid)
       return;
 
-    this.appService.updateUserSetting({ view: VIEW_APP, property: PROPERTY_NORTH_AZIMUTH, value: this.northAzimuth, source: this });
-    this.appService.updateUserSetting({ view: VIEW_APP, property: PROPERTY_INK_SAVER, value: this.inkSaver, source: this });
-    this.appService.updateUserSetting({ view: VIEW_APP, property: PROPERTY_CLOCK_STYLE, value: this.clockStyle, source: this });
-    this.appService.updateUserSetting({ view: VIEW_APP, property: PROPERTY_LAT_LONG_STYLE, value: this.latLongStyle, source: this });
-    this.appService.updateUserSetting({ view: VIEW_APP, property: PROPERTY_NATIVE_DATE_TIME, value: this.nativeDateTime, source: this });
-    this.appService.updateUserSetting({ view: VIEW_APP, property: PROPERTY_DEFAULT_TAB, value: this.defaultTab, source: this });
-    this.appService.updateUserSetting({ view: VIEW_APP, property: PROPERTY_TWILIGHT_BY_DEGREES, value: this.twilightByDegrees, source: this });
+    this.appService.updateUserSetting(VIEW_APP, PROPERTY_NORTH_AZIMUTH, this.northAzimuth, this);
+    this.appService.updateUserSetting(VIEW_APP, PROPERTY_INK_SAVER, this.inkSaver, this);
+    this.appService.updateUserSetting(VIEW_APP, PROPERTY_CLOCK_STYLE, this.clockStyle, this);
+    this.appService.updateUserSetting(VIEW_APP, PROPERTY_LAT_LONG_STYLE, this.latLongStyle, this);
+    this.appService.updateUserSetting(VIEW_APP, PROPERTY_NATIVE_DATE_TIME, this.nativeDateTime, this);
+    this.appService.updateUserSetting(VIEW_APP, PROPERTY_DEFAULT_TAB, this.defaultTab, this);
+    this.appService.updateUserSetting(VIEW_APP, PROPERTY_TWILIGHT_BY_DEGREES, this.twilightByDegrees, this);
 
     if (this.twilightByDegrees)
-      this.appService.updateUserSetting({ view: VIEW_APP, property: PROPERTY_TWILIGHT_DEGREES, value: this.twilightDegrees, source: this });
+      this.appService.updateUserSetting(VIEW_APP, PROPERTY_TWILIGHT_DEGREES, this.twilightDegrees, this);
     else
-      this.appService.updateUserSetting({ view: VIEW_APP, property: PROPERTY_TWILIGHT_MINUTES, value: this.twilightMinutes, source: this });
+      this.appService.updateUserSetting(VIEW_APP, PROPERTY_TWILIGHT_MINUTES, this.twilightMinutes, this);
 
     let gcd = this.gcdValue;
 
@@ -236,7 +236,7 @@ export class SvcPreferencesDialogComponent {
     else if (this.calendarOption === CalendarSetting.PURE_JULIAN)
       gcd = 'J';
 
-    this.appService.updateUserSetting({ view: VIEW_APP, property: PROPERTY_GREGORIAN_CHANGE_DATE, value: gcd, source: this });
+    this.appService.updateUserSetting(VIEW_APP, PROPERTY_GREGORIAN_CHANGE_DATE, gcd, this);
 
     if (this.defaultLocation)
       this.appService.setDefaultLocationByName(this.defaultLocation);

@@ -155,7 +155,7 @@ export class SvcSkyViewComponent extends GenericSkyViewDirective implements Afte
       this.formatFacing();
 
       if (!this._trackSun)
-        this.appService.updateUserSetting({ view: VIEW_SKY, property: PROPERTY_FACING, value: newFacing, source: this });
+        this.appService.updateUserSetting(VIEW_SKY, PROPERTY_FACING, newFacing, this);
 
       if (redraw)
         this.draw();
@@ -391,7 +391,7 @@ export class SvcSkyViewComponent extends GenericSkyViewDirective implements Afte
 
       this.onResize();
       this.draw();
-      this.appService.updateUserSetting({ view: VIEW_SKY, property: PROPERTY_VIEW_TYPE, value, source: this });
+      this.appService.updateUserSetting(VIEW_SKY, PROPERTY_VIEW_TYPE, value, this);
     }
   }
 
@@ -405,7 +405,7 @@ export class SvcSkyViewComponent extends GenericSkyViewDirective implements Afte
   set trackSun(value: boolean) {
     if (this._trackSun !== value) {
       this._trackSun = value;
-      this.appService.updateUserSetting({ view: VIEW_SKY, property: PROPERTY_TRACK_SUN, value, source: this });
+      this.appService.updateUserSetting(VIEW_SKY, PROPERTY_TRACK_SUN, value, this);
       this.draw();
     }
   }
@@ -414,7 +414,7 @@ export class SvcSkyViewComponent extends GenericSkyViewDirective implements Afte
   set parallelToEcliptic(value: boolean) {
     if (this._parallelToEcliptic !== value) {
       this._parallelToEcliptic = value;
-      this.appService.updateUserSetting({ view: VIEW_SKY, property: PROPERTY_PARALLEL_TO_ECLIPTIC, value, source: this });
+      this.appService.updateUserSetting(VIEW_SKY, PROPERTY_PARALLEL_TO_ECLIPTIC, value, this);
       this.draw();
     }
   }
@@ -695,7 +695,7 @@ export class SvcSkyViewComponent extends GenericSkyViewDirective implements Afte
       if (planet === SUN) {
         if (dc.totality > 0.8 && dc.totality < 1.0)
           pSize += this.canvasScaling * (dc.totality - 0.8) / 0.2;
-        else if (dc.totality >=1)
+        else if (dc.totality >= 1)
           pSize -= 1;
       }
 
