@@ -1,6 +1,6 @@
 ## Sky View Café
 
-Copyright © 2016-2022 Kerry Shetline, kerry@shetline.com
+Copyright © 2016-2023 Kerry Shetline, kerry@shetline.com
 
 ### Licensing
 
