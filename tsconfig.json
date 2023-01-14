@@ -9,7 +9,7 @@
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "noImplicitAny": true,
-    "target": "es2020",
+    "target": "ES2022",
     "allowSyntheticDefaultImports": true,
     "typeRoots": [
       "node_modules/@types"
@@ -20,8 +20,11 @@
     ],
     "baseUrl": ".",
     "paths": {
-      "@angular/core/src/metadata/*": ["../node_modules/@angular/core"]
-    }
+      "@angular/core/src/metadata/*": [
+        "../node_modules/@angular/core"
+      ]
+    },
+    "useDefineForClassFields": false
   },
   "include": ["./ambient.d.ts", "./src/**/*"],
   "exclude": ["node_modules", "server", "**/*.spec.ts"]

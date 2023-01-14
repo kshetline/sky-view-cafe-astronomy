@@ -24,7 +24,7 @@ import { SvcTimeViewComponent } from './svc/svc-time-view/svc-time-view.componen
       { path: 'time', component: SvcTimeViewComponent },
       { path: 'tables', component: SvcTableViewComponent },
       { path: '**', component: SvcSkyViewComponent },
-    ], { useHash: true, relativeLinkResolution: 'legacy' }),
+    ], { useHash: true }),
   ],
   exports: [
     RouterModule,
