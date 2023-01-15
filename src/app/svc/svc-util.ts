@@ -18,3 +18,12 @@ export function formatLongitude(lon: number): string {
 
   return padLeft(degrees, 3, '0') + '°' + padLeft(minutes, 2, '0') + '\'' + (theSign < 0 ? 'W' : 'E');
 }
+
+export function hasOneOf<T>(set: Set<T>, list: T[]): boolean {
+  for (const item of list) {
+    if (set.has(item))
+      return true;
+  }
+
+  return false;
+}

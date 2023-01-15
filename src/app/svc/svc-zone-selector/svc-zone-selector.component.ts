@@ -1,9 +1,10 @@
 import { ChangeDetectorRef, Component, EventEmitter, forwardRef, OnInit, Output } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { noop } from '@tubular/util';
+import { compareStrings, noop } from '@tubular/util';
 import { Timezone, RegionAndSubzones } from '@tubular/time';
 import { timer } from 'rxjs';
 import { AppService, IANA_DB_UPDATE } from '../../app.service';
+import { hasOneOf } from '../svc-util';
 
 export const SVC_ZONE_SELECTOR_VALUE_ACCESSOR: any = {
   provide: NG_VALUE_ACCESSOR,
@@ -21,7 +22,7 @@ const UT   = 'UT';
 const OS   = 'OS';
 const LMT  = 'LMT';
 
-function toCanonicalOffset(offset: string): string { // ([§#~^\u2744])
+function toCanonicalOffset(offset: string): string {
   if (offset === 'UTC')
     return '+00:00';
 
@@ -48,8 +49,12 @@ function toCanonicalOffset(offset: string): string { // ([§#~^\u2744])
   return off + dst;
 }
 
+function displayRegionToRegion(region: string): string {
+  return region?.replace(/^[CNS]\./, '');
+}
+
 function toCanonicalZone(zone: string): string {
-  return zone?.replace(/ /g, '_');
+  return displayRegionToRegion(zone?.replace(/ /g, '_'));
 }
 
 function toDisplayOffset(offset: string): string {
@@ -97,6 +102,7 @@ export class SvcZoneSelectorComponent implements ControlValueAccessor, OnInit {
   offsets: string[] = [];
   zones: string[] = [];
 
+  private _displayRegion: string = this.regions[0];
   private _offset: string;
   private _region: string = this.regions[0];
   private _selectByOffset = true;
@@ -104,6 +110,7 @@ export class SvcZoneSelectorComponent implements ControlValueAccessor, OnInit {
   private _value: string = UT;
   private _zone: string;
 
+  private americaZoneToDisplayRegion: Record<string, string> = {};
   private focusCount = 0;
   private hasFocus = false;
   private knownIanaZones = new Set<string>();
@@ -122,7 +129,7 @@ export class SvcZoneSelectorComponent implements ControlValueAccessor, OnInit {
   @Output() blur: EventEmitter<any> = new EventEmitter();
 
   constructor(private app: AppService, private ref: ChangeDetectorRef) {
-    this.lastSubzones[this._region] = this._subzone;
+    this.lastSubzones[this._displayRegion] = this._subzone;
     this.subzonesByRegion[this._region] = this.subzones;
   }
 
@@ -150,7 +157,7 @@ export class SvcZoneSelectorComponent implements ControlValueAccessor, OnInit {
   }
 
   private updateValue(newZone: string): void {
-    if (newZone === null) {
+    if (newZone == null) {
       this._region = this._subzone = this._value = null;
       this._offset = this._zone = null;
 
@@ -274,14 +281,25 @@ export class SvcZoneSelectorComponent implements ControlValueAccessor, OnInit {
   get region(): string { return this._region; }
   set region(newRegion: string) { this.setRegion(newRegion, true); }
 
+  get displayRegion(): string { return this._displayRegion; }
+  set displayRegion(newRegion: string) {
+    if (this._displayRegion !== newRegion)
+      this.setRegion(displayRegionToRegion(newRegion), true, newRegion);
+  }
+
   get subzone(): string { return this._subzone; }
   set subzone(newZone: string) {
     if (!newZone)
       return;
 
     if (this._subzone !== newZone) {
+      if (this.subzones.length === 0) {
+        this._displayRegion = this.americaZoneToDisplayRegion[newZone];
+        this.subzones = this.subzonesByRegion[this._displayRegion];
+      }
+
       this._subzone = newZone;
-      this.lastSubzones[this._region] = newZone;
+      this.lastSubzones[this._displayRegion] = newZone;
       this._value = this.value;
       this.updateOffsetAndZoneForValue(this._value);
       this.onChangeCallback(this._value);
@@ -309,15 +327,55 @@ export class SvcZoneSelectorComponent implements ControlValueAccessor, OnInit {
     });
   }
 
+  // Break "America" region up into N.America, C.America, and S.America
+  private modifyRegions(regions: RegionAndSubzones[]): RegionAndSubzones[] {
+    (regions.find(r => r.region === 'America/Argentina') ?? {} as any).region = 'S.America/Argentina';
+    (regions.find(r => r.region === 'America/Indiana') ?? {} as any).region = 'N.America/Indiana';
+    (regions.find(r => r.region === 'MISC') ?? {} as any).region = '~MISC'; // Temporary change for resorting
+
+    const americaIndex = regions.findIndex(r => r.region === 'America');
+
+    if (americaIndex) {
+      const america = regions[americaIndex];
+      const newRegions: RegionAndSubzones[] = [
+        { region: 'N.America', subzones: [] },
+        { region: 'C.America', subzones: [] },
+        { region: 'S.America', subzones: [] }
+      ];
+
+      for (const zone of america.subzones) {
+        const countries = Timezone.getCountries('America/' + zone.replace(/ /g, '_'));
+        let regionIndex: number;
+
+        if (hasOneOf(countries, ['BZ', 'CR', 'GT', 'HN', 'NI', 'PA', 'SV']))
+          regionIndex = 1; // Central America
+        else if (hasOneOf(countries, ['AR', 'BO', 'BR', 'BV', 'CL', 'CO', 'EC', 'FK', 'GF', 'GS', 'GY', 'PE', 'PY', 'SR', 'UY', 'VE']))
+          regionIndex = 2; // South America
+        else
+          regionIndex = 0; // North America
+
+        newRegions[regionIndex].subzones.push(zone);
+        this.americaZoneToDisplayRegion[zone] = newRegions[regionIndex].region;
+      }
+
+      regions.splice(americaIndex, 1, ...newRegions);
+    }
+
+    regions.sort((a, b) => compareStrings(a.region, b.region));
+    (regions.find(r => r.region === '~MISC') ?? {} as any).region = 'MISC';
+
+    return regions;
+  }
+
   private updateTimezones(): void {
-    const rAndS = Timezone.getRegionsAndSubzones();
+    const rAndS = this.modifyRegions(Timezone.getRegionsAndSubzones());
 
     this.knownIanaZones.clear();
 
     for (const region of rAndS) {
       region.subzones.forEach((subzone: string) => {
         const zone = (region.region === MISC ? '' : region.region + '/') + toCanonicalZone(subzone);
-        this.knownIanaZones.add(zone);
+        this.knownIanaZones.add(displayRegionToRegion(zone));
       });
     }
 
@@ -366,7 +424,7 @@ export class SvcZoneSelectorComponent implements ControlValueAccessor, OnInit {
   }
 
   private setOffset(newOffset: string, doChangeCallback?: boolean): void {
-    if (this._offset !== newOffset) {
+    if (newOffset != null && this._offset !== newOffset) {
       this._offset = newOffset;
       this._zone = '';
 
@@ -399,25 +457,28 @@ export class SvcZoneSelectorComponent implements ControlValueAccessor, OnInit {
     }
   }
 
-  private setRegion(newRegion: string, doChangeCallback?: boolean): void {
-    if (this._region !== newRegion) {
+  private setRegion(newRegion: string, doChangeCallback?: boolean, displayRegion?: string): void {
+    displayRegion = displayRegion ?? newRegion;
+
+    if (this._region !== newRegion || this._displayRegion !== displayRegion) {
       this._region = newRegion;
+      this._displayRegion = displayRegion;
       this._subzone = '';
 
-      const subzones = this.subzonesByRegion[newRegion];
+      const subzones = this.subzonesByRegion[displayRegion];
 
       if (subzones)
         this.subzones = subzones;
       else
         this.subzones = [];
 
-      const lastSubzone = this.lastSubzones[newRegion];
+      const lastSubzone = this.lastSubzones[displayRegion];
 
       if (lastSubzone)
         this._subzone = lastSubzone;
       else if (this.subzones.length > 0) {
         this._subzone = this.subzones[0];
-        this.lastSubzones[newRegion] = this._subzone;
+        this.lastSubzones[displayRegion] = this._subzone;
       }
 
       if (this.subzones.length > 0 && this.subzone)

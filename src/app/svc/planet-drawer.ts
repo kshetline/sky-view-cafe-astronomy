@@ -172,8 +172,6 @@ export abstract class PlanetDrawer {
     g  = g * shade / 0xFF;
     b  = b * shade / 0xFF;
 
-    const pixel = (a << 24) | (r << 16) | (g << 8) | b;
-
-    return pixel;
+    return (a << 24) | (r << 16) | (g << 8) | b;
   }
 }

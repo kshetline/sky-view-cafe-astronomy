@@ -266,17 +266,14 @@ export class SvcEclipticViewComponent extends GenericSkyViewDirective implements
 
     const r = B * dc.orientation / dc.spanDegrees * dc.span + (dc.size - dc.span) / 2.0;
 
-    const pt = { x: (dc.xctr + cos(-L * dc.orientation) * r),
-                 y: (dc.yctr + sin(-L * dc.orientation) * r) };
-
-    return pt;
+    return { x: (dc.xctr + cos(-L * dc.orientation) * r),
+             y: (dc.yctr + sin(-L * dc.orientation) * r) };
   }
 
   protected getMoonShadingOrientation(dc: DrawingContextEcliptic): number {
     const moonPos = this.getSphericalPosition(MOON, dc);
-    const angle = (90.0 - moonPos.longitude.degrees) * dc.orientation;
 
-    return angle;
+    return (90.0 - moonPos.longitude.degrees) * dc.orientation;
   }
 
   protected drawSkyPlotLine(pt1: Point, pt2: Point, dc: DrawingContextPlanetary, _subject: SUBJECT): boolean {
