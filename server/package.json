@@ -16,7 +16,7 @@
   "dependencies": {
     "@tubular/geo-tz": "^7.1.0",
     "@tubular/math": "^3.3.1",
-    "@tubular/time": "^3.8.9",
+    "@tubular/time": "^3.8.11",
     "@tubular/util": "^4.13.1",
     "@turf/boolean-point-in-polygon": "^6.5.0",
     "basic-auth": "^2.0.1",

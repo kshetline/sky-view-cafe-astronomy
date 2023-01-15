@@ -17,6 +17,10 @@ const UT_OPTION   = '- UTC hour offsets -';
 const OS_OPTION   = '- Your OS timezone -';
 const LMT_OPTION  = '- Local Mean Time -';
 
+const CENTRAL_AMERICA = 'BZ CR GT HN NI PA SV'.split(' ');
+const NORTH_AMERICA = 'AG AI AW BB BL BQ BS CA CU CW DM DO GD GL GP HT JM KN LC MF MS MQ MX PM PR SX TC TT US VC VG VI'.split(' ');
+const SOUTH_AMERICA = 'AR BO BR BV CL CO EC FK GF GS GY PE PY SR UY VE'.split(' ');
+
 const MISC = 'MISC';
 const UT   = 'UT';
 const OS   = 'OS';
@@ -50,7 +54,7 @@ function toCanonicalOffset(offset: string): string {
 }
 
 function displayRegionToRegion(region: string): string {
-  return region?.replace(/^[CNS]\./, '');
+  return region?.replace(/(^(Central\xA0|C·|North\xA0|N·|South\xA0|S·))|\xA0\(other\)/, '');
 }
 
 function toCanonicalZone(zone: string): string {
@@ -121,6 +125,7 @@ export class SvcZoneSelectorComponent implements ControlValueAccessor, OnInit {
   private onTouchedCallback: () => void = noop;
   private subzonesByRegion: Record<string, string[]> = {};
   private zonesByOffset = new Map<string, string[]>();
+  private zoneConversions: Record<string, string> = {};
 
   disabled = false;
   error: string;
@@ -163,6 +168,8 @@ export class SvcZoneSelectorComponent implements ControlValueAccessor, OnInit {
 
       return;
     }
+
+    newZone = this.zoneConversions[newZone] ?? newZone;
 
     const groups: string[] = /^(America\/Argentina\/|America\/Indiana\/|SystemV\/\w+|\w+\/|[-+:\dA-Za-z]+)(.+)?$/.exec(newZone);
 
@@ -294,8 +301,8 @@ export class SvcZoneSelectorComponent implements ControlValueAccessor, OnInit {
 
     if (this._subzone !== newZone) {
       if (this.subzones.length === 0) {
-        this._displayRegion = this.americaZoneToDisplayRegion[newZone];
-        this.subzones = this.subzonesByRegion[this._displayRegion];
+        this._displayRegion = this.americaZoneToDisplayRegion[newZone] ?? this._displayRegion;
+        this.subzones = this.subzonesByRegion[this._displayRegion] ?? [];
       }
 
       this._subzone = newZone;
@@ -310,6 +317,8 @@ export class SvcZoneSelectorComponent implements ControlValueAccessor, OnInit {
   set zone(newZone: string) {
     if (!newZone)
       return;
+
+    newZone = this.zoneConversions[newZone] ?? newZone;
 
     if (this._zone !== newZone) {
       this._zone = newZone;
@@ -329,8 +338,10 @@ export class SvcZoneSelectorComponent implements ControlValueAccessor, OnInit {
 
   // Break "America" region up into N.America, C.America, and S.America
   private modifyRegions(regions: RegionAndSubzones[]): RegionAndSubzones[] {
-    (regions.find(r => r.region === 'America/Argentina') ?? {} as any).region = 'S.America/Argentina';
-    (regions.find(r => r.region === 'America/Indiana') ?? {} as any).region = 'N.America/Indiana';
+    this.zoneConversions = {};
+
+    (regions.find(r => r.region === 'America/Argentina') ?? {} as any).region = 'S·America/Argentina';
+    (regions.find(r => r.region === 'America/Indiana') ?? {} as any).region = 'N·America/Indiana';
     (regions.find(r => r.region === 'MISC') ?? {} as any).region = '~MISC'; // Temporary change for resorting
 
     const americaIndex = regions.findIndex(r => r.region === 'America');
@@ -338,25 +349,50 @@ export class SvcZoneSelectorComponent implements ControlValueAccessor, OnInit {
     if (americaIndex) {
       const america = regions[americaIndex];
       const newRegions: RegionAndSubzones[] = [
-        { region: 'N.America', subzones: [] },
-        { region: 'C.America', subzones: [] },
-        { region: 'S.America', subzones: [] }
+        { region: 'America\xA0(other)', subzones: [] },
+        { region: 'North\xA0America', subzones: [] },
+        { region: 'Central\xA0America', subzones: [] },
+        { region: 'South\xA0America', subzones: [] }
       ];
 
       for (const zone of america.subzones) {
-        const countries = Timezone.getCountries('America/' + zone.replace(/ /g, '_'));
-        let regionIndex: number;
+        const subzone = zone.replace(/ /g, '_');
+        const canonicalZone = 'America/' + subzone;
+        const countries = Timezone.getCountries(canonicalZone);
+        let regionIndex = 0;
 
-        if (hasOneOf(countries, ['BZ', 'CR', 'GT', 'HN', 'NI', 'PA', 'SV']))
-          regionIndex = 1; // Central America
-        else if (hasOneOf(countries, ['AR', 'BO', 'BR', 'BV', 'CL', 'CO', 'EC', 'FK', 'GF', 'GS', 'GY', 'PE', 'PY', 'SR', 'UY', 'VE']))
-          regionIndex = 2; // South America
-        else
-          regionIndex = 0; // North America
+        if (countries.size === 0 && zone === 'Ciudad Juarez') // Hack for possibly missing tz data.
+          countries.add('MX');
+
+        if (hasOneOf(countries, CENTRAL_AMERICA))
+          regionIndex = 2;
+        else if (hasOneOf(countries, SOUTH_AMERICA)) {
+          const testZone = 'America/Argentina/' + subzone;
+
+          if (this.knownIanaZones.has(testZone)) {
+            this.zoneConversions[canonicalZone] = testZone;
+            continue;
+          }
+
+          regionIndex = 3;
+        }
+        else if (hasOneOf(countries, NORTH_AMERICA)) {
+          const testZone = 'America/Indiana/' + subzone;
+
+          if (this.knownIanaZones.has(testZone)) {
+            this.zoneConversions[canonicalZone] = testZone;
+            continue;
+          }
+
+          regionIndex = 1;
+        }
 
         newRegions[regionIndex].subzones.push(zone);
         this.americaZoneToDisplayRegion[zone] = newRegions[regionIndex].region;
       }
+
+      if (newRegions[0].subzones.length === 0)
+        newRegions.splice(0, 1);
 
       regions.splice(americaIndex, 1, ...newRegions);
     }
@@ -459,6 +495,11 @@ export class SvcZoneSelectorComponent implements ControlValueAccessor, OnInit {
 
   private setRegion(newRegion: string, doChangeCallback?: boolean, displayRegion?: string): void {
     displayRegion = displayRegion ?? newRegion;
+
+    if (displayRegion === 'America/Indiana')
+      displayRegion = 'N·America/Indiana';
+    else if (displayRegion === 'America/Argentina')
+      displayRegion = 'S·America/Argentina';
 
     if (this._region !== newRegion || this._displayRegion !== displayRegion) {
       this._region = newRegion;
