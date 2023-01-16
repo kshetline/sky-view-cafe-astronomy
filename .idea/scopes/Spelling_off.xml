@@ -1,0 +1,3 @@
+<component name="DependencyValidationManager">
+  <scope name="Spelling off" pattern="file:server/app/data/celestial.txt||file:server/app/double-metaphone.ts" />
+</component>
