@@ -30,7 +30,7 @@
     "lodash": "^4.17.21",
     "morgan": "^1.10.0",
     "mysql": "^2.18.1",
-    "public-ip": "^4.0.4",
+    "public-ip": "^6.0.1",
     "request-ip": "^2.2.0",
     "rotating-file-stream": "^1.4.6",
     "unidecode-plus": "^1.0.4"
