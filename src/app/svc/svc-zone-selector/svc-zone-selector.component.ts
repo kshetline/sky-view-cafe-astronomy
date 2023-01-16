@@ -357,9 +357,6 @@ export class SvcZoneSelectorComponent implements ControlValueAccessor, OnInit {
         const countries = Timezone.getCountries(canonicalZone);
         let regionIndex = 0;
 
-        if (countries.size === 0 && zone === 'Ciudad Juarez') // Hack for possibly missing tz data.
-          countries.add('MX');
-
         if (hasOneOf(countries, CENTRAL_AMERICA)) {
           regionIndex = 2;
           this.displayZones[canonicalZone] = 'C·' + toDisplayZone(canonicalZone);
