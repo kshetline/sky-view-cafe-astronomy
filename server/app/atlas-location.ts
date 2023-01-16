@@ -126,7 +126,7 @@ export class AtlasLocation {
     return city + cityQualifier + (displayState ? ', ' + displayState : '') + stateQualifier + placeQualifier;
   }
 
-  set displayName(s: string) { /* Allow but ignore so this can be set via JSON without causing an error. */ }
+  set displayName(_s: string) { /* Allow but ignore so this can be set via JSON without causing an error. */ }
 
   isCloseMatch(other: AtlasLocation): boolean {
     return eqci(this.city, other.city) &&

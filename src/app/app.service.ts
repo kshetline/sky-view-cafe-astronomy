@@ -4,7 +4,7 @@ import { DomSanitizer } from '@angular/platform-browser';
 import { NavigationEnd, Router } from '@angular/router';
 import { SolarSystem, StarCatalog } from '@tubular/astronomy';
 import { min, Point, round } from '@tubular/math';
-import { addZonesUpdateListener, Calendar, pollForTimezoneUpdates, zonePollerBrowser } from '@tubular/time';
+import { addZonesUpdateListener, Calendar } from '@tubular/time';
 import { clone, forEach, isEqual, isNumber, isString } from '@tubular/util';
 import { compact, debounce, sortedIndexBy } from 'lodash-es';
 import { BehaviorSubject, Observable, Subject, Subscription } from 'rxjs';
@@ -242,7 +242,6 @@ export class AppService {
       }
     });
 
-    pollForTimezoneUpdates(zonePollerBrowser, 'large-alt');
     window.addEventListener('beforeunload', () => this.lastStateUpdate(true));
     this._location.subscribe(() => this.lastStateUpdate());
 

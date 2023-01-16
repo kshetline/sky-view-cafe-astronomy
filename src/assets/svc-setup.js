@@ -47,6 +47,8 @@ function initGoogleMaps(callback) { // eslint-disable-line @typescript-eslint/no
 
   // noinspection JSValidateTypes
   document.head.appendChild = function (node) {
+    let $;
+
     if (node.localName === 'script' && ($ = /^https:\/\/maps.googleapis.com(.*)$/.exec(node.src))) {
       node.src = base + '/maps/proxy' + $[1];
 

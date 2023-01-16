@@ -1,0 +1,3 @@
+<component name="DependencyValidationManager">
+  <scope name="Grammar off" pattern="file:LICENSE.md" />
+</component>

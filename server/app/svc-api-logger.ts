@@ -166,7 +166,7 @@ class SvcApiConsole {
 
   // noinspection JSMethodCanBeStatic
   trace(): void {
-    let stack = '';
+    let stack: string;
 
     try {
       // noinspection ExceptionCaughtLocallyJS
