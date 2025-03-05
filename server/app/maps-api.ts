@@ -6,7 +6,7 @@ import https from 'https';
 // eslint-disable-next-line n/no-deprecated-api
 import { parse as parseUrl } from 'url';
 import { asyncHandler, escapeRegExp, getRemoteAddress, notFound, notFoundForEverythingElse } from './common';
-import { getPublicIp } from './public-ip';
+import { getPublicIp } from './my-public-ip';
 import { requestText } from 'by-request';
 import { processMillis } from '@tubular/util';
 
@@ -72,7 +72,7 @@ const ALLOWED_IP_AGE = 7200000; // two hours
 const MAX_AUTHORIZATION_DELAY = 30000; // half minute
 
 router.get('/script/', asyncHandler(async (req: Request, res: Response) => {
-  const url = `https://maps.googleapis.com/maps/api/js?key=${GOOGLE_API_KEY}&callback=initGoogleMaps`;
+  const url = `https://maps.googleapis.com/maps/api/js?key=${GOOGLE_API_KEY}&loading=async&callback=initGoogleMaps`;
   let script = await requestText(url);
 
   script = script.replace(new RegExp(`['"]${GOOGLE_API_KEY}['"]`, 'g'), `setSvcMapsApiKey('${fakeApiKey}')`).trim();

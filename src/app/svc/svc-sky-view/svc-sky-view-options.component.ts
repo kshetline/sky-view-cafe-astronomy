@@ -71,27 +71,27 @@ export class SvcSkyViewOptionsComponent extends SvcGenericOptionsComponent imple
 
   namesCategories: MenuItemPlus[] = [
     { label: 'None',                  icon: UNCHECKED, property: null,
-      command: (event): void => { this.toggleLabels(event); } },
+      command: (event: any): void => { this.toggleLabels(event); } },
     { label: EM_DASH, icon: 'fas fa-fw' },
     { label: 'Planets',               icon: CHECKED,   property: PROPERTY_LABEL_PLANETS,
-      command: (event): void => { this.toggleLabels(event); } },
+      command: (event: any): void => { this.toggleLabels(event); } },
     { label: 'Bright Stars',          icon: UNCHECKED, property: PROPERTY_LABEL_BRIGHT_STARS,
-      command: (event): void => { this.toggleLabels(event); } },
+      command: (event: any): void => { this.toggleLabels(event); } },
     { label: 'Stars',                 icon: UNCHECKED, property: PROPERTY_LABEL_STARS,
-      command: (event): void => { this.toggleLabels(event); } },
+      command: (event: any): void => { this.toggleLabels(event); } },
     { label: 'Constellations',        icon: UNCHECKED, property: PROPERTY_LABEL_CONSTELLATIONS,
-      command: (event): void => { this.toggleLabels(event); }, disabled: true },
+      command: (event: any): void => { this.toggleLabels(event); }, disabled: true },
     { label: EM_DASH, icon: 'fas fa-fw' },
     { label: 'No Deep Sky Objects',   icon: CHECKED,   property: PROPERTY_LABEL_DSOS,
-      command: (event): void => { this.toggleLabels(event); }, value: NO_DEEP_SKY },
+      command: (event: any): void => { this.toggleLabels(event); }, value: NO_DEEP_SKY },
     { label: 'DSOs 4.0 and Brighter', icon: UNCHECKED, property: PROPERTY_LABEL_DSOS,
-      command: (event): void => { this.toggleLabels(event); }, value: 4 },
+      command: (event: any): void => { this.toggleLabels(event); }, value: 4 },
     { label: 'DSOs 5.0 and Brighter', icon: UNCHECKED, property: PROPERTY_LABEL_DSOS,
-      command: (event): void => { this.toggleLabels(event); }, value: 5 },
+      command: (event: any): void => { this.toggleLabels(event); }, value: 5 },
     { label: 'DSOs 6.0 and Brighter', icon: UNCHECKED, property: PROPERTY_LABEL_DSOS,
-      command: (event): void => { this.toggleLabels(event); }, value: 6 },
+      command: (event: any): void => { this.toggleLabels(event); }, value: 6 },
     { label: 'All Deep Sky Objects',  icon: UNCHECKED, property: PROPERTY_LABEL_DSOS,
-      command: (event): void => { this.toggleLabels(event); }, value: ALL_DEEP_SKY }
+      command: (event: any): void => { this.toggleLabels(event); }, value: ALL_DEEP_SKY }
   ];
 
   constructor(app: AppService) {

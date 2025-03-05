@@ -204,7 +204,7 @@ export class SvcZoneSelectorComponent implements ControlValueAccessor, OnInit {
     }
     else {
       this.setOffset('UTC+00:00');
-      this._zone = this.zones[0].value;
+      this._zone = this.zones[0]?.value || 'UT';
       this.selectByOffset = false;
     }
   }

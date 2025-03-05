@@ -13,7 +13,7 @@ import { router as directoryRouter } from './directory-listing';
 import { initTimezoneLargeAlt } from '@tubular/time';
 import { svcApiConsole, svcApiLogStream, svcApiSkipFilter } from './svc-api-logger';
 import { formatDateTime } from '@tubular/util';
-import { getPublicIp } from './public-ip';
+import { getPublicIp } from './my-public-ip';
 
 initTimezoneLargeAlt();
 
