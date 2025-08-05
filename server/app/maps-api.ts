@@ -82,7 +82,7 @@ router.get('/script/', asyncHandler(async (req: Request, res: Response) => {
   res.send(script);
 }));
 
-router.get('/proxy*', asyncHandler(async (req: Request, res: Response) => {
+router.get('/proxy*wc', asyncHandler(async (req: Request, res: Response) => {
   if (!(await isAuthorized(req))) {
     res.status(401).send('Not authorized');
     return;

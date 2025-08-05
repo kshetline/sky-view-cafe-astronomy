@@ -10,7 +10,7 @@ export const router = Router();
 const MAX_PER_MINUTE = 140;
 const times: number[] = [];
 
-router.get('/json/*', (req: Request, res: Response) => {
+router.get('/json/*wc', (req: Request, res: Response) => {
   const [url, paramStr] = req.url.split('?');
   const params = querystring.parse(paramStr);
   const $ = /^\/json(\/(.*))?$/.exec(url);

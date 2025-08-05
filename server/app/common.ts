@@ -21,7 +21,7 @@ export function formatVariablePrecision(value: number, maxDecimals = 3): string 
 }
 
 export function notFoundForEverythingElse(router: Router): void {
-  router.get('*', (req: Request, res: Response) => notFound(res));
+  router.get('*wc', (req: Request, res: Response) => notFound(res));
 }
 
 // noinspection JSVoidFunctionReturnValueUsed

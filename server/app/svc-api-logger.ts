@@ -1,4 +1,4 @@
-import rfs from 'rotating-file-stream';
+import { createStream } from 'rotating-file-stream';
 import { join as pathJoin } from 'path';
 import stream, { Writable } from 'stream';
 import fs, { WriteStream } from 'fs';
@@ -15,8 +15,7 @@ if (process.env.SVC_API_LOG) {
   const options: any = {
     interval: INTERVAL_DAYS + 'd',
     maxFiles: MAX_FILES,
-    maxSize: '256K',
-    rotationTime: true
+    size: '256K'
   };
   const fullLogPath = pathJoin(__dirname, process.env.SVC_API_LOG);
   const intervalMillis = INTERVAL_DAYS * 86400000;
@@ -52,7 +51,7 @@ if (process.env.SVC_API_LOG) {
     }
   };
 
-  let fileStream = (rfs as any)(fileName, options);
+  let fileStream = createStream(fileName, options);
 
   svcApiLogStream = new stream.Writable();
   svcApiLogStream._write = async (chunk: any, encoding: string, done: (error?: Error) => void): Promise<void> => {
@@ -70,9 +69,7 @@ if (process.env.SVC_API_LOG) {
         datedFilePath = logPath + separator + fileName(nowDate, index++);
       } while (fs.existsSync(datedFilePath));
 
-      if (fileStream.close)
-        fileStream.close();
-      else if (fileStream.end) {
+      if (fileStream.end) {
         await new Promise<void>(resolve => {
           fileStream.end(() => resolve());
         });
@@ -80,7 +77,7 @@ if (process.env.SVC_API_LOG) {
 
       logCreation = now;
       fs.renameSync(fullLogPath, datedFilePath);
-      fileStream = (rfs as any)(fileName, options);
+      fileStream = createStream(fileName, options);
       checkMaxFiles = true;
     }
 
