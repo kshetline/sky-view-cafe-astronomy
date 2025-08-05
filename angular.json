@@ -101,7 +101,7 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "svc-ng:build"
+            "buildTarget": "svc-ng:build"
           }
         },
         "test": {
