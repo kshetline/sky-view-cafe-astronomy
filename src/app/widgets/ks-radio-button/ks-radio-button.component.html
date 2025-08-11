@@ -1,0 +1,4 @@
+<p-radioButton #radioButton [(ngModel)]="ngValue" [disabled]="disabled" [value]="value"
+  (onFocus)="onFocus($event)" (onBlur)="onBlur($event)"></p-radioButton>
+<span *ngIf="!!label" (click)="onClick($event)" [ngClass]="{'faded': disabled}"
+   [ngStyle]="{'cursor': disabled ? 'default' : 'pointer'}">{{label}}</span>

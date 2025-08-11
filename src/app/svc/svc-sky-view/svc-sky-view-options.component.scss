@@ -5,12 +5,12 @@
     gap: 4px;
     max-width: 100%;
 
-    ks-checkbox, ks-dropdown, p-dropdown {
+    ks-checkbox, ks-dropdown, p-select {
       flex: 0 0 auto;
     }
   }
 
-  ::ng-deep .p-dropdown {
+  ::ng-deep .p-select {
     width: 100%;
   }
 }

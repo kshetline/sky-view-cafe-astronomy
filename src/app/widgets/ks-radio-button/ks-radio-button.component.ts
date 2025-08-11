@@ -2,19 +2,19 @@ import { Component, ElementRef, EventEmitter, forwardRef, Input, Output, ViewChi
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { isEqual, noop } from '@tubular/util';
 
-const CHECKBOX_VALUE_ACCESSOR: any = {
+const RADIO_BUTTON_VALUE_ACCESSOR: any = {
   provide: NG_VALUE_ACCESSOR,
-  useExisting: forwardRef(() => KsCheckboxComponent),
+  useExisting: forwardRef(() => KsRadioButtonComponent),
   multi: true
 };
 
 @Component({
-  selector: 'ks-checkbox',
-  templateUrl: './ks-checkbox.component.html',
-  styleUrls: ['./ks-checkbox.component.scss'],
-  providers: [CHECKBOX_VALUE_ACCESSOR]
+  selector: 'ks-radioButton',
+  templateUrl: './ks-radio-button.component.html',
+  styleUrls: ['./ks-radio-button.component.scss'],
+  providers: [RADIO_BUTTON_VALUE_ACCESSOR]
 })
-export class KsCheckboxComponent implements ControlValueAccessor {
+export class KsRadioButtonComponent implements ControlValueAccessor {
   private _ngValue: any;
   private hasFocus = false;
   private onTouchedCallback: () => void = noop;
@@ -22,12 +22,11 @@ export class KsCheckboxComponent implements ControlValueAccessor {
 
   disabled = false;
 
-  @ViewChild('checkbox', { static: true, read: ElementRef }) private checkboxRef: ElementRef;
+  @ViewChild('radioButton', { static: true, read: ElementRef }) private radioButtonRef: ElementRef;
 
   @Output() focus: EventEmitter<any> = new EventEmitter();
   @Output() blur: EventEmitter<any> = new EventEmitter();
   @Input() label: string;
-  @Input() binary: boolean | string;
   @Input() value: any;
 
   get ngValue(): any { return this._ngValue; }
@@ -69,7 +68,7 @@ export class KsCheckboxComponent implements ControlValueAccessor {
 
   onClick(event: MouseEvent): void {
     if (!this.disabled && event.type === 'click') {
-      const target = (this.checkboxRef.nativeElement as HTMLElement).querySelector('input');
+      const target = (this.radioButtonRef.nativeElement as HTMLElement).querySelector('input');
 
       target.click();
     }

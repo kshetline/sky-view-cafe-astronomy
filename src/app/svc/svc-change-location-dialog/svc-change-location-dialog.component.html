@@ -4,16 +4,16 @@
     Change location to {{formattedLatitude}}, {{formattedLongitude}} and:<br>
     <br>
     <div>
-      <p-radioButton name="group1" value="0" label="Keep current timezone ({{currentZone}})" [(ngModel)]="zoneChoice"></p-radioButton>
+      <ks-radioButton name="group1" value="0" label="Keep current timezone ({{currentZone}})" [(ngModel)]="zoneChoice"></ks-radioButton>
     </div>
     <div [hidden]="!timezone || timezone === currentZone">
-      <p-radioButton name="group1" value="1" label="Switch to {{timezone}}" [(ngModel)]="zoneChoice"></p-radioButton>
+      <ks-radioButton name="group1" value="1" label="Switch to {{timezone}}" [(ngModel)]="zoneChoice"></ks-radioButton>
     </div>
     <div [hidden]="formattedHourOffset === currentZone || formattedHourOffset === 'UT'">
-      <p-radioButton name="group1" value="2" label="Switch to {{formattedHourOffset}}" [(ngModel)]="zoneChoice"></p-radioButton>
+      <ks-radioButton name="group1" value="2" label="Switch to {{formattedHourOffset}}" [(ngModel)]="zoneChoice"></ks-radioButton>
     </div>
     <div [hidden]="'UT' === currentZone">
-      <p-radioButton name="group1" value="3" label="Switch to UT" [(ngModel)]="zoneChoice"></p-radioButton>
+      <ks-radioButton name="group1" value="3" label="Switch to UT" [(ngModel)]="zoneChoice"></ks-radioButton>
     </div>
   </div>
   <p-footer>

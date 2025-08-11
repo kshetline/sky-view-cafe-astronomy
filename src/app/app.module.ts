@@ -5,13 +5,16 @@ import { FormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
+import Aura from '@primeng/themes/aura';
+import { providePrimeNG } from 'primeng/config';
+import { palette, definePreset } from '@primeng/themes';
+
 import { ConfirmationService, SharedModule } from 'primeng/api';
 import { BlockUIModule } from 'primeng/blockui';
 import { ButtonModule } from 'primeng/button';
 import { CheckboxModule } from 'primeng/checkbox';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { DialogModule } from 'primeng/dialog';
-import { DropdownModule } from 'primeng/dropdown';
 import { InputTextModule } from 'primeng/inputtext';
 import { MenuModule } from 'primeng/menu';
 import { MessageModule } from 'primeng/message';
@@ -19,6 +22,7 @@ import { MessagesModule } from 'primeng/messages';
 import { OverlayPanelModule } from 'primeng/overlaypanel';
 import { PanelModule } from 'primeng/panel';
 import { RadioButtonModule } from 'primeng/radiobutton';
+import { SelectModule } from 'primeng/select';
 import { SliderModule } from 'primeng/slider';
 import { TableModule } from 'primeng/table';
 import { TabViewModule } from 'primeng/tabview';
@@ -64,10 +68,24 @@ import { KsCheckboxComponent } from './widgets/ks-checkbox/ks-checkbox.component
 import { KsDropdownComponent } from './widgets/ks-dropdown/ks-dropdown.component';
 import { KsIconButtonComponent } from './widgets/ks-icon-button/ks-icon-button.component';
 import { KsMarqueeComponent } from './widgets/ks-marquee/ks-marquee.component';
+import { KsRadioButtonComponent } from './widgets/ks-radio-button/ks-radio-button.component';
 import { KsTabViewComponent } from './widgets/ks-tab-view/ks-tab-view.component';
 import { KsTabComponent } from './widgets/ks-tab/ks-tab.component';
 
 import { AppRoutingModule } from './app-routing.module';
+
+const AuraSky = definePreset(Aura, {
+  semantic: {
+    primary: palette('{sky}')
+  },
+  components: {
+    button: {
+      label: {
+        fontSize: '1rem'
+      }
+    }
+  }
+});
 
 @NgModule({
   imports: [
@@ -79,7 +97,6 @@ import { AppRoutingModule } from './app-routing.module';
     CheckboxModule,
     ConfirmDialogModule,
     DialogModule,
-    DropdownModule,
     FormsModule,
     HttpClientModule,
     HttpClientJsonpModule,
@@ -90,6 +107,7 @@ import { AppRoutingModule } from './app-routing.module';
     OverlayPanelModule,
     PanelModule,
     RadioButtonModule,
+    SelectModule,
     SharedModule,
     SliderModule,
     TableModule,
@@ -104,6 +122,7 @@ import { AppRoutingModule } from './app-routing.module';
     KsDropdownComponent,
     KsIconButtonComponent,
     KsMarqueeComponent,
+    KsRadioButtonComponent,
     KsTabComponent,
     KsTabViewComponent,
     SvcAtlasDialogComponent,
@@ -141,7 +160,8 @@ import { AppRoutingModule } from './app-routing.module';
     DatePipe,
     JpegCommentReader,
     KsTimeService,
-    SvcAtlasService
+    SvcAtlasService,
+    providePrimeNG({ theme: { preset: AuraSky } })
   ],
   bootstrap: [AppComponent],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]

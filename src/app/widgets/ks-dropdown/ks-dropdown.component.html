@@ -1,9 +1,8 @@
-<!--suppress AngularUndefinedBinding, HtmlFormInputWithoutLabel -->
 <div class="wrapper">
-  <p-dropdown #pDropdown [options]="primeOptions" [(ngModel)]="primeValue" appendTo="body"
+  <p-select #pDropdown [options]="primeOptions" [(ngModel)]="primeValue" appendTo="body"
     [disabled]="(options.length === 0 && !editable) || disabled" [autoDisplayFirst]="false"
     (onFocus)="onDropdownFocus($event)" (onBlur)="onDropdownBlur($event)" [scrollHeight]="scrollHeight"
-    [editable]="editable" [style]="style"></p-dropdown>
+    [editable]="editable"></p-select>
   <!-- TODO: Disable special touch interface mode for now --> <!--suppress PointlessBooleanExpressionJS -->
   <select *ngIf="false && useSelect" tabindex="0" [(ngModel)]="selectValue"
     (touchstart)="onTouchStart()"

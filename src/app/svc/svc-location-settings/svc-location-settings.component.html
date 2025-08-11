@@ -26,7 +26,7 @@
     <div style="height: 80px;">
       Save location as:&nbsp;
       <ks-dropdown #saveNameDropdown [(ngModel)]="selectedName" [options]="saveDialogNames" [editable]="true" ksSizer="200"></ks-dropdown>
-      <br><br><p-checkbox [(ngModel)]="makeDefault" binary="true" label="Make this the default location"></p-checkbox>
+      <br><br><ks-checkbox [(ngModel)]="makeDefault" binary="true" label="Make this the default location"></ks-checkbox>
     </div>
     <p-footer>
       <div class="p-dialog-buttonpane p-widget-content p-helper-clearfix">

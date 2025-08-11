@@ -6,12 +6,12 @@
   <button pButton type="button" label="N" [disabled]="trackSun || facing === 180" (click)="changeFacing(180)"></button>
   <button pButton type="button" label="E" [disabled]="trackSun || facing === 270" (click)="changeFacing(270)"></button>
   <span>&bull;</span>
-  <p-checkbox [(ngModel)]="trackSun" binary="true" label="Track Sun"></p-checkbox>
+  <ks-checkbox [(ngModel)]="trackSun" binary="true" label="Track Sun"></ks-checkbox>
 </div>
 <div *ngIf="trackingPlanet >= 0" class="sky-controls">
-  <p-radioButton name="horizonOrEcliptic" [value]="false" [(ngModel)]="parallelToEcliptic" label="Parallel to horizon"></p-radioButton>
+  <ks-radioButton name="horizonOrEcliptic" [value]="false" [(ngModel)]="parallelToEcliptic" label="Parallel to horizon"></ks-radioButton>
   &nbsp;&nbsp;&nbsp;
-  <p-radioButton name="horizonOrEcliptic" [value]="true"  [(ngModel)]="parallelToEcliptic" label="Parallel to ecliptic"></p-radioButton>
+  <ks-radioButton name="horizonOrEcliptic" [value]="true"  [(ngModel)]="parallelToEcliptic" label="Parallel to ecliptic"></ks-radioButton>
 </div>
 <div #canvasWrapper class="canvas-wrapper">
   <div class="canvas-anchor">

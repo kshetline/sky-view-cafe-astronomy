@@ -1,4 +1,4 @@
-<!--suppress AngularUndefinedBinding -->
 <p-checkbox #checkbox [(ngModel)]="ngValue" [disabled]="disabled" [value]="value"
-  (onFocus)="onDropdownFocus($event)" (onBlur)="onDropdownBlur($event)" [binary]="binary"></p-checkbox>
-<span (click)="onClick($event)" [ngClass]="{'faded': disabled}">{{label}}</span>
+  (onFocus)="onFocus($event)" (onBlur)="onBlur($event)" [binary]="binary"></p-checkbox>
+<span *ngIf="!!label" (click)="onClick($event)" [ngClass]="{'faded': disabled}"
+   [ngStyle]="{'cursor': disabled ? 'default' : 'pointer'}">{{label}}</span>
