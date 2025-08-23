@@ -6,8 +6,8 @@
   position: relative;
 }
 
-span {
-  padding-left: 0.5em;
+label {
+  padding-left: 0.5rem;
   pointer-events: auto;
   @include selectable(none);
 }

@@ -63,7 +63,7 @@ input.city-field {
 
 .map-wrapper {
   position: absolute;
-  top: 85px;
+  top: 142px;
   right: 16px;
   width: 300px;
   height: 300px;
@@ -94,7 +94,7 @@ input.city-field {
 
   .table-border {
     background-color: #F0F8FF;
-    border: 1px solid #C8C8C8;
+    border: 1px solid $table-cell-border-color;
     bottom: 0;
     left: 0;
     position: absolute;

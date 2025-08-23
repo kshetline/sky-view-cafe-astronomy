@@ -10,17 +10,23 @@ html {
 }
 
 .p-button {
-  border-radius: 3px;
-  padding: 0.1875rem 0.6875rem 0.125rem 0.6875rem;
+  border-radius: 3px !important;
+  padding: 0.25rem 0.8rem 0.15rem 0.8rem !important;
+}
+
+.p-inputtext {
+  border-radius: 3px !important;
+  padding: 0.25rem 0.4rem 0.15rem 0.4rem !important;
 }
 
 .p-select-label {
-  padding: 0.1875rem 0.25rem !important;
+  padding: 0.25rem !important;
 }
 
 .p-select {
   border-radius: 0.3rem !important;
   justify-content: space-between;
+  min-width: 12.5em;
 
   .p-select-dropdown {
     position: relative;
@@ -29,6 +35,112 @@ html {
     .p-select-dropdown-icon {
       left: -3px;
       position: relative;
+    }
+  }
+
+  p-overlay {
+    position: absolute;
+  }
+}
+
+.p-datatable {
+  .p-datatable-tbody >tr > td,
+  .p-datatable-thead >tr > th {
+    padding: 0.25rem 0.5rem;
+  }
+}
+
+.atlas-table {
+  .p-datatable {
+    .p-datatable-tbody >tr > td,
+    .p-datatable-thead >tr > th {
+      border: 1px solid $table-cell-border-color;
+    }
+
+    .p-datatable-table-container {
+      overflow-x: clip !important;
+    }
+  }
+}
+
+.p-datatable-table-container {
+  &::before {
+    border-top: 1px solid $table-cell-border-color;
+    content: '';
+    display: block;
+    height: 1px;
+    left: 0;
+    position: absolute;
+    top: 0;
+    width: 100%;
+    z-index: 1;
+  }
+
+  &::after {
+    border-bottom: 1px solid $table-cell-border-color;
+    content: '';
+    display: block;
+    height: 1px;
+    left: 0;
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+  }
+
+  table {
+    width: 100%;
+  }
+
+  .p-datatable-thead  {
+    display: table-header-group !important;
+
+    > tr {
+      display: table-row !important;
+      flex-wrap: initial !important;
+
+      > th {
+        display: table-cell !important;
+        flex: initial !important;
+
+        &::after {
+          border-bottom: 1px solid $table-cell-border-color;
+          content: '';
+          display: block;
+          height: 1px;
+          left: 0;
+          position: absolute;
+          bottom: 0;
+          width: 100%;
+        }
+      }
+    }
+  }
+
+  .p-datatable-tbody {
+    display: table-row-group !important;
+
+    > tr {
+      display: table-row !important;
+      flex-wrap: initial !important;
+
+      > td {
+        display: table-cell !important;
+        flex: initial !important;
+      }
+    }
+  }
+
+  .p-datatable-tfoot {
+    display: table-footer-group !important;
+
+    > tr {
+      display: table-row !important;
+      flex-wrap: initial !important;
+
+      > td {
+        display: table-cell !important;
+        flex: initial !important;
+      }
     }
   }
 }
@@ -277,88 +389,6 @@ body {
 
   .p-widget {
     font: $theme-font;
-  }
-}
-
-.p-datatable-scrollable {
-  &::before {
-    border-top: 1px solid #c8c8c8;
-    content: '';
-    display: block;
-    height: 1px;
-    left: 0;
-    position: absolute;
-    top: 0;
-    width: 100%;
-    z-index: 1;
-  }
-
-  &::after {
-    border-bottom: 1px solid #c8c8c8;
-    content: '';
-    display: block;
-    height: 1px;
-    left: 0;
-    position: absolute;
-    bottom: 0;
-    width: 100%;
-  }
-
-  table {
-    width: 100%;
-  }
-
-  .p-datatable-thead  {
-    display: table-header-group !important;
-
-    > tr {
-      display: table-row !important;
-      flex-wrap: initial !important;
-
-      > th {
-        display: table-cell !important;
-        flex: initial !important;
-
-        &::after {
-          border-bottom: 1px solid #c8c8c8;
-          content: '';
-          display: block;
-          height: 1px;
-          left: 0;
-          position: absolute;
-          bottom: 0;
-          width: 100%;
-        }
-      }
-    }
-  }
-
-  .p-datatable-tbody {
-    display: table-row-group !important;
-
-    > tr {
-      display: table-row !important;
-      flex-wrap: initial !important;
-
-      > td {
-        display: table-cell !important;
-        flex: initial !important;
-      }
-    }
-  }
-
-  .p-datatable-tfoot {
-    display: table-footer-group !important;
-
-    > tr {
-      display: table-row !important;
-      flex-wrap: initial !important;
-
-      > td {
-        display: table-cell !important;
-        flex: initial !important;
-      }
-    }
   }
 }
 */
