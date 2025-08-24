@@ -1,7 +1,7 @@
 <div>
   <div style="align-self: center">Change location to...</div>
-  <button pButton type="button" label="Subsolar point" (click)="goToSubsolarPoint()"></button>
-  <button pButton type="button" label="Greatest eclipse" (click)="goToEclipseCenter()" [disabled]="!eclipseActive"></button>
+  <p-button label="Subsolar point" (click)="goToSubsolarPoint()"></p-button>
+  <p-button label="Greatest eclipse" (click)="goToEclipseCenter()" [disabled]="!eclipseActive"></p-button>
   <hr>
   <ks-dropdown [options]="mapTypes" [(ngModel)]="mapType"></ks-dropdown>
   <ks-checkbox [(ngModel)]="showDayNight" binary="true" label="Show day/night"></ks-checkbox>

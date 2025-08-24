@@ -1,10 +1,10 @@
 <div *ngIf="trackingPlanet < 0" class="sky-controls">
   <span>Facing: {{formattedFacing}}&deg; {{facingOrigin}}</span>
   <span>&bull;</span>
-  <button pButton type="button" label="S" [disabled]="trackSun || facing === 0" (click)="changeFacing(0)"></button>
-  <button pButton type="button" label="W" [disabled]="trackSun || facing === 90" (click)="changeFacing(90)"></button>
-  <button pButton type="button" label="N" [disabled]="trackSun || facing === 180" (click)="changeFacing(180)"></button>
-  <button pButton type="button" label="E" [disabled]="trackSun || facing === 270" (click)="changeFacing(270)"></button>
+  <p-button label="S" [disabled]="trackSun || facing === 0" (click)="changeFacing(0)"></p-button>
+  <p-button label="W" [disabled]="trackSun || facing === 90" (click)="changeFacing(90)"></p-button>
+  <p-button label="N" [disabled]="trackSun || facing === 180" (click)="changeFacing(180)"></p-button>
+  <p-button label="E" [disabled]="trackSun || facing === 270" (click)="changeFacing(270)"></p-button>
   <span>&bull;</span>
   <ks-checkbox [(ngModel)]="trackSun" binary="true" label="Track Sun"></ks-checkbox>
 </div>

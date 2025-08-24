@@ -15,11 +15,11 @@
     <hr>
     <ks-dropdown [options]="locationNames" [(ngModel)]="locationName" class="constrained-dropdown"></ks-dropdown>
     <div class="find-save">
-      <button pButton type="button" label="Find" (click)="openFindDialog()"></button>
-      <button pButton id="save-button" type="button" label="Save" (click)="openSaveDialog()"
+      <p-button label="Find" (click)="openFindDialog()"></p-button>
+      <p-button id="save-button" label="Save" (click)="openSaveDialog()"
           pTooltip="You can save newly found locations for future use." tooltipPosition="bottom"
-          [tooltipDisabled]="!showSaveHint" tooltipStyleClass="save-tooltip" [life]="8000"></button>
-      <button pButton type="button" label="Delete" (click)="openDeleteDialog()"></button>
+          [tooltipDisabled]="!showSaveHint" tooltipStyleClass="save-tooltip" [life]="8000"></p-button>
+      <p-button label="Delete" (click)="openDeleteDialog()"></p-button>
     </div>
   </div>
   <p-dialog header="Save Location" [modal]="true" [(visible)]="showSaveDialog" ksSizer="350">
@@ -30,8 +30,8 @@
     </div>
     <p-footer>
       <div class="p-dialog-buttonpane p-widget-content p-helper-clearfix">
-        <button type="button" pButton icon="far fa-window-close" (click)="showSaveDialog=false" label="Cancel"></button>
-        <button type="button" pButton icon="fas fa-check" (click)="doSave()" label="OK" [disabled]="!selectedName.trim()"></button>
+        <p-button icon="far fa-window-close" (click)="showSaveDialog=false" label="Cancel"></p-button>
+        <p-button icon="fas fa-check" (click)="doSave()" label="OK" [disabled]="!selectedName.trim()"></p-button>
       </div>
     </p-footer>
     <p-confirmDialog key="save-confirm" header="Same location name in use" icon="fas fa-question-circle" ksSizer="400" appendTo="body"></p-confirmDialog>
@@ -45,8 +45,8 @@
     </div>
     <p-footer>
       <div class="p-dialog-buttonpane p-widget-content p-helper-clearfix">
-        <button type="button" pButton icon="far fa-window-close" (click)="showDeleteDialog=false" label="Cancel"></button>
-        <button type="button" pButton icon="fas fa-check" (click)="doDelete()" label="OK"></button>
+        <p-button icon="far fa-window-close" (click)="showDeleteDialog=false" label="Cancel"></p-button>
+        <p-button icon="fas fa-check" (click)="doDelete()" label="OK"></p-button>
       </div>
     </p-footer>
   </p-dialog>

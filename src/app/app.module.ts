@@ -19,8 +19,8 @@ import { InputTextModule } from 'primeng/inputtext';
 import { MenuModule } from 'primeng/menu';
 import { MessageModule } from 'primeng/message';
 import { MessagesModule } from 'primeng/messages';
-import { OverlayPanelModule } from 'primeng/overlaypanel';
 import { PanelModule } from 'primeng/panel';
+import { PopoverModule } from 'primeng/popover';
 import { RadioButtonModule } from 'primeng/radiobutton';
 import { SelectModule } from 'primeng/select';
 import { SliderModule } from 'primeng/slider';
@@ -104,8 +104,8 @@ const AuraSky = definePreset(Aura, {
     MenuModule,
     MessageModule,
     MessagesModule,
-    OverlayPanelModule,
     PanelModule,
+    PopoverModule,
     RadioButtonModule,
     SelectModule,
     SharedModule,

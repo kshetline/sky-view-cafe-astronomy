@@ -3,7 +3,7 @@
   <ks-dropdown [options]="orientations" [(ngModel)]="northOutward"></ks-dropdown>
   <p-select [options]="additionals" [(ngModel)]="additional" [filter]="true" filterBy="search"
     [resetFilterOnHide]="true" emptyFilterMessage="No match"
-    [disabled]="!asteroidsReady" class="constrained-dropdown" [autoDisplayFirst]="false"></p-select>
+    [disabled]="!asteroidsReady" class="constrained-dropdown"></p-select>
   <ks-checkbox [(ngModel)]="ecliptic" binary="true" label="Ecliptic grid"></ks-checkbox>
   <ks-checkbox [(ngModel)]="celestial" binary="true" label="Celestial equator"></ks-checkbox>
   <ks-checkbox [(ngModel)]="showConstellations" binary="true" label="Constellations"></ks-checkbox>
@@ -17,4 +17,4 @@
 </div>
 <p-menu #menu [popup]="true" [model]="namesCategories"></p-menu>
 <br>
-<button type="button" pButton icon="fas fa-list" label="Show Names..." (click)="menu.toggle($event)"></button>
+<p-button icon="fas fa-list" label="Show Names..." (click)="menu.toggle($event)"></p-button>

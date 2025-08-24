@@ -11,7 +11,7 @@
   </div>
   <div class="zoom">
     <p-slider [(ngModel)]="reverseZoom" [min]="0" [max]="zoomSteps"></p-slider>
-    <button pButton type="button" class="default-zoom" label="&bull;" (click)="setDefaultZoom()"></button>
+    <p-button class="default-zoom" label="&bull;" (click)="setDefaultZoom()"></p-button>
   </div>
   <div style="flex: 0 0 auto" class="zoom-caption">zoom</div>
 </div>

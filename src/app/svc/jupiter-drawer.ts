@@ -10,8 +10,6 @@ export class JupiterDrawer extends PlanetDrawer {
   private static imageGrsLat = -20.0;
   private static imageGrsLong = 129.5;
 
-  private grsLong = 267.0;
-
   static getJupiterDrawer(astroDataService: AstroDataService, httpClient: HttpClient): Promise<JupiterDrawer> {
     const jupiterInfoPromise = JupiterInfo.getJupiterInfo(astroDataService);
 

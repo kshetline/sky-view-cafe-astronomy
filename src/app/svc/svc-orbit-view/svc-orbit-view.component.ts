@@ -27,7 +27,7 @@ export const    PROPERTY_ROTATION_YZ = 'rotation_yz';
 
 const scales = [
   // Scales in AU needed to display orbits out to a particular planet
-  50.0, // All planets out to Pluto. (Yeah, yeah... it's not officially a "planet" any more.)
+  50.0, // All planets out to Pluto. (Yeah, yeah... it's not officially a "planet" anymore.)
   30.5, // Neptune
   10.0, // Saturn
   1.75, // Mars
