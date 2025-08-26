@@ -145,6 +145,15 @@ html {
   }
 }
 
+p-dialog {
+  .p-dialog-footer {
+    .p-dialog-buttonpane {
+      display: flex;
+      gap: 1rem;
+    }
+  }
+}
+
 /*
 body {
   *:focus {
@@ -222,22 +231,6 @@ body {
 
     .p-datatable-tbody > tr > td {
       padding: 0.25em;
-    }
-  }
-
-  .p-dialog {
-    .p-dialog-header {
-      font-size: 1rem;
-      padding: 0.5rem 0.75rem;
-    }
-
-    .p-dialog-content {
-      padding: 0.5625rem 1rem;
-      position: relative;
-    }
-
-    .p-dialog-footer {
-      border-top: none;
     }
   }
 

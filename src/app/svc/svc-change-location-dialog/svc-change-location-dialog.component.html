@@ -16,10 +16,10 @@
       <ks-radioButton name="group1" value="3" label="Switch to UT" [(ngModel)]="zoneChoice"></ks-radioButton>
     </div>
   </div>
-  <p-footer>
+  <ng-template pTemplate="footer">
     <div class="p-dialog-buttonpane p-widget-content p-helper-clearfix">
       <p-button icon="far fa-window-close" (click)="visible=false" label="Cancel"></p-button>
       <p-button icon="fas fa-check" (click)="goToLocation()" label="OK"></p-button>
     </div>
-  </p-footer>
+  </ng-template>
 </p-dialog>

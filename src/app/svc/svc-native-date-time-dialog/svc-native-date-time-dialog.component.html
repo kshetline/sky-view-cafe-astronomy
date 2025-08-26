@@ -15,10 +15,10 @@
   </div>
   This setting can be changed later using the <strong>More.../Preferences</strong> dialog
 
-  <p-footer>
+  <ng-template pTemplate="footer">
     <div class="p-dialog-buttonpane p-widget-content p-clearfix">
       <p-button icon="far fa-window-close" (click)="visible=false" label="Cancel"></p-button>
       <p-button icon="fas fa-check" (click)="setPreferences()" label="OK"></p-button>
     </div>
-  </p-footer>
+  </ng-template>
 </p-dialog>

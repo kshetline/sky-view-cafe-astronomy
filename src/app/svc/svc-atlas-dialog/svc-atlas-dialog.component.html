@@ -65,11 +65,11 @@
     <div #atlasMap class="atlas-map"></div>
     <div class="map-mask" [ngStyle]="{visibility: maskDisplay}"></div>
   </div>
-  <p-footer>
+  <ng-template pTemplate="footer">
     <div class="p-dialog-buttonpane p-widget-content p-clearfix">
       <p-button icon="far fa-window-close" (click)="visible=false" label="Cancel"></p-button>
       <p-button icon="fas fa-check" (click)="setLocation()" label="OK" [disabled]="searching || !selection"></p-button>
     </div>
-  </p-footer>
+  </ng-template>
   <p-toast key="general" position="top-right"></p-toast>
 </p-dialog>

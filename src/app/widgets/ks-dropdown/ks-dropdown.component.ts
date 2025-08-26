@@ -22,6 +22,7 @@ export class KsDropdownComponent implements ControlValueAccessor {
   private _primeValue: any;
   private _selectValue: string;
   private hasFocus = false;
+  private initialized = false;
   private onTouchedCallback: () => void = noop;
   private onChangeCallback: (_: any) => void = noop;
   private usingTouch = false;
@@ -96,8 +97,9 @@ export class KsDropdownComponent implements ControlValueAccessor {
 
   get primeValue(): any { return this._primeValue; }
   set primeValue(newValue: any) {
-    if (!isEqual(this._primeValue, newValue)) {
+    if ((newValue !== undefined || this.initialized) && !isEqual(this._primeValue, newValue)) {
       this._primeValue = newValue;
+      this.initialized = true;
       this._value = this.findMatchingOption(newValue);
       this.onChangeCallback(newValue);
     }
@@ -110,7 +112,7 @@ export class KsDropdownComponent implements ControlValueAccessor {
 
       let newValue = this._options[parseInt(newSelectValue, 10)];
 
-      if (typeof newValue === 'object' && newValue.value !== undefined)
+      if (isObject(newValue.value))
         newValue = newValue.value;
 
       this.value = newValue;

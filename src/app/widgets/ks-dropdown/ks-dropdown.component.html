@@ -1,6 +1,6 @@
 <div class="wrapper">
   <p-select #pDropdown [options]="primeOptions" [(ngModel)]="primeValue" appendTo="body"
-    [disabled]="(options.length === 0 && !editable) || disabled" [autoDisplayFirst]="false"
+    [disabled]="(options.length === 0 && !editable) || disabled"
     (onFocus)="onDropdownFocus($event)" (onBlur)="onDropdownBlur($event)" [scrollHeight]="scrollHeight"
     [editable]="editable"></p-select>
   <!-- TODO: Disable special touch interface mode for now --> <!--suppress PointlessBooleanExpressionJS -->
