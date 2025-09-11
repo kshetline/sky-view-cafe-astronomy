@@ -22,7 +22,7 @@
       <p-button label="Delete" (click)="openDeleteDialog()"></p-button>
     </div>
   </div>
-  <p-dialog header="Save Location" [modal]="true" [(visible)]="showSaveDialog" ksSizer="350">
+  <p-dialog header="Save Location" [modal]="true" [(visible)]="showSaveDialog" ksSizer="350" [focusOnShow]="false">
     <div style="height: 80px;">
       Save location as:&nbsp;
       <ks-dropdown #saveNameDropdown [(ngModel)]="selectedName" [options]="saveDialogNames" [editable]="true" ksSizer="200"></ks-dropdown>

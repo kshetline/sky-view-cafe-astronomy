@@ -97,7 +97,7 @@ export class KsDropdownComponent implements ControlValueAccessor {
 
   get primeValue(): any { return this._primeValue; }
   set primeValue(newValue: any) {
-    if ((newValue !== undefined || this.initialized) && !isEqual(this._primeValue, newValue)) {
+    if (newValue !== undefined && this.initialized && !isEqual(this._primeValue, newValue)) {
       this._primeValue = newValue;
       this.initialized = true;
       this._value = this.findMatchingOption(newValue);
@@ -157,7 +157,10 @@ export class KsDropdownComponent implements ControlValueAccessor {
   }
 
   applyFocus(): void {
-    this.pDropdown.applyFocus();
+    const input = this.pDropdown?.el.nativeElement.querySelector('input');
+
+    if (input)
+      input.focus();
   }
 
   private findMatchingOption(testValue: any): any {

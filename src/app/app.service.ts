@@ -609,11 +609,15 @@ export class AppService {
   private renameIfMatchesSavedLocation(loc: Location): void {
     const match = this._locations.find(loc2 => {
       return (Math.abs(loc.latitude - loc2.latitude) < 0.0084 && Math.abs(loc.longitude - loc2.longitude) < 0.0084 &&
-              loc.zone === loc2.zone);
+        (!loc.zone || loc.zone === loc2.zone));
     });
 
-    if (match)
+    if (match) {
+      if (!loc.zone)
+        loc.zone = match.zone;
+
       loc.name = match.name;
+    }
     else
       loc.name = NEW_LOCATION;
   }

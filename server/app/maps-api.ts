@@ -123,7 +123,7 @@ router.get('/proxy*wc', asyncHandler(async (req: Request, res: Response) => {
   });
 }));
 
-router.get('/ping/', (req: Request, res: Response) => {
+router.get('/ping', (req: Request, res: Response) => {
   const remoteAddr = getRemoteAddress(req);
 
   if (remoteAddr)

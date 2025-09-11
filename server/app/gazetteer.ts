@@ -241,7 +241,7 @@ export async function initGazetteer(): Promise<void> {
       const [key, code] = line.split(':');
       const [country, abbr] = key.split('.');
 
-      if (abbr.length < 2)
+      if (!abbr || abbr.length < 2)
         return;
 
       const newKey = (code2ToCode3[country] || country) + '.' + code;

@@ -179,8 +179,10 @@ export class SvcZoneSelectorComponent implements ControlValueAccessor, OnInit {
         }
       }
       else {
-        this.setRegion(g1);
-        this.subzone = toDisplayZone(g2);
+        const subzone = toDisplayZone(g2);
+
+        this.setRegion(g1, subzone);
+        this.subzone = subzone;
       }
     }
     else {
@@ -251,9 +253,7 @@ export class SvcZoneSelectorComponent implements ControlValueAccessor, OnInit {
   set selectByOffset(newValue: boolean) {
     if (this._selectByOffset !== newValue) {
       this._selectByOffset = newValue;
-
-      if (newValue)
-        this.value = this._zone;
+      this.value = this._zone;
     }
   }
 
@@ -261,12 +261,12 @@ export class SvcZoneSelectorComponent implements ControlValueAccessor, OnInit {
   set offset(newOffset: string) { this.setOffset(newOffset, true); }
 
   get region(): string { return this._region; }
-  set region(newRegion: string) { this.setRegion(newRegion, true); }
+  set region(newRegion: string) { this.setRegion(newRegion, undefined, true); }
 
   get displayRegion(): string { return this._displayRegion; }
   set displayRegion(newRegion: string) {
     if (this._displayRegion !== newRegion)
-      this.setRegion(displayRegionToRegion(newRegion), true, newRegion);
+      this.setRegion(displayRegionToRegion(newRegion), undefined, true, newRegion);
   }
 
   get subzone(): string { return this._subzone; }
@@ -491,13 +491,15 @@ export class SvcZoneSelectorComponent implements ControlValueAccessor, OnInit {
     }
   }
 
-  private setRegion(newRegion: string, doChangeCallback?: boolean, displayRegion?: string): void {
+  private setRegion(newRegion: string, subzone?: string, doChangeCallback?: boolean, displayRegion?: string): void {
     displayRegion = displayRegion ?? newRegion;
 
     if (displayRegion === 'America/Indiana')
       displayRegion = 'N·America/Indiana';
     else if (displayRegion === 'America/Argentina')
       displayRegion = 'S·America/Argentina';
+    else
+      displayRegion = this.americaZoneToDisplayRegion[subzone] ?? displayRegion;
 
     if (this._region !== newRegion || this._displayRegion !== displayRegion) {
       this._region = newRegion;

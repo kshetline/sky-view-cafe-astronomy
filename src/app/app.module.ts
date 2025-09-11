@@ -1,5 +1,5 @@
 import { DatePipe } from '@angular/common';
-import { HttpClientJsonpModule, HttpClientModule } from '@angular/common/http';
+import { provideHttpClient, withInterceptorsFromDi, withJsonpSupport } from '@angular/common/http';
 import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
@@ -88,34 +88,6 @@ const AuraSky = definePreset(Aura, {
 });
 
 @NgModule({
-  imports: [
-    AppRoutingModule,
-    BlockUIModule,
-    BrowserAnimationsModule,
-    BrowserModule,
-    ButtonModule,
-    CheckboxModule,
-    ConfirmDialogModule,
-    DialogModule,
-    FormsModule,
-    HttpClientModule,
-    HttpClientJsonpModule,
-    InputTextModule,
-    MenuModule,
-    MessageModule,
-    MessagesModule,
-    PanelModule,
-    PopoverModule,
-    RadioButtonModule,
-    SelectModule,
-    SharedModule,
-    SliderModule,
-    TableModule,
-    TabViewModule,
-    ToastModule,
-    TooltipModule,
-    TubularNgWidgetsModule
-  ],
   declarations: [
     AppComponent,
     KsCheckboxComponent,
@@ -153,7 +125,33 @@ const AuraSky = definePreset(Aura, {
     SvcZoneSelectorComponent,
     KsSizerDirective
   ],
-  providers: [
+  bootstrap: [AppComponent],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
+  imports: [
+    AppRoutingModule,
+    BlockUIModule,
+    BrowserAnimationsModule,
+    BrowserModule,
+    ButtonModule,
+    CheckboxModule,
+    ConfirmDialogModule,
+    DialogModule,
+    FormsModule,
+    InputTextModule,
+    MenuModule,
+    MessageModule,
+    MessagesModule,
+    PanelModule,
+    PopoverModule,
+    RadioButtonModule,
+    SelectModule,
+    SharedModule,
+    SliderModule,
+    TableModule,
+    TabViewModule,
+    ToastModule,
+    TooltipModule,
+    TubularNgWidgetsModule], providers: [
     AppService,
     AstroDataService,
     ConfirmationService,
@@ -161,10 +159,9 @@ const AuraSky = definePreset(Aura, {
     JpegCommentReader,
     KsTimeService,
     SvcAtlasService,
-    providePrimeNG({ theme: { preset: AuraSky } })
-  ],
-  bootstrap: [AppComponent],
-  schemas: [CUSTOM_ELEMENTS_SCHEMA]
+    providePrimeNG({ theme: { preset: AuraSky } }),
+    provideHttpClient(withInterceptorsFromDi(), withJsonpSupport())
+  ]
 })
 
 export class AppModule {}
