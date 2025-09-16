@@ -92,6 +92,7 @@ export class SvcZoneSelectorComponent implements ControlValueAccessor, OnInit {
   private displayZones: Record<string, string> = {};
   private focusCount = 0;
   private hasFocus = false;
+  private initialized = false;
   private knownIanaZones = new Set<string>();
   private lastSubzones: Record<string, string> = {};
   private lastZones: Record<string, string> = {};
@@ -233,6 +234,9 @@ export class SvcZoneSelectorComponent implements ControlValueAccessor, OnInit {
   }
 
   writeValue(newZone: any): void {
+    if (!this.initialized && newZone)
+      setTimeout(() => this.initialized = true, 500);
+
     if (this._value !== newZone)
       this.updateValue(newZone);
   }
@@ -257,16 +261,37 @@ export class SvcZoneSelectorComponent implements ControlValueAccessor, OnInit {
     }
   }
 
+  get offsetAux(): string { return this._offset; }
+  set offsetAux(newOffset: string) {
+    if (this.initialized)
+      this.offset = newOffset;
+  }
+
   get offset(): string { return this._offset; }
-  set offset(newOffset: string) { this.setOffset(newOffset, true); }
+  set offset(newOffset: string) {
+    this.setOffset(newOffset, true);
+  }
 
   get region(): string { return this._region; }
   set region(newRegion: string) { this.setRegion(newRegion, undefined, true); }
 
+  get displayRegionAux(): string { return this._displayRegion; }
+  set displayRegionAux(newRegion: string) {
+    if (this.initialized)
+      this.displayRegion = newRegion;
+  }
+
+  // noinspection JSUnusedGlobalSymbols
   get displayRegion(): string { return this._displayRegion; }
   set displayRegion(newRegion: string) {
     if (this._displayRegion !== newRegion)
       this.setRegion(displayRegionToRegion(newRegion), undefined, true, newRegion);
+  }
+
+  get subzoneAux(): string { return this._subzone; }
+  set subzoneAux(newZone: string) {
+    if (this.initialized)
+      this.subzone = newZone;
   }
 
   get subzone(): string { return this._subzone; }
@@ -288,11 +313,14 @@ export class SvcZoneSelectorComponent implements ControlValueAccessor, OnInit {
     }
   }
 
+  get zoneAux(): string { return this._zone; }
+  set zoneAux(newZone: string) {
+    if (this.initialized)
+      this.zone = newZone;
+  }
+
   get zone(): string { return this._zone; }
   set zone(newZone: string) {
-    if (!newZone)
-      return;
-
     newZone = this.zoneConversions[newZone] ?? newZone;
 
     if (this._zone !== newZone) {

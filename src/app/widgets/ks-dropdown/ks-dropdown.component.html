@@ -1,5 +1,5 @@
 <div class="wrapper">
-  <p-select #pDropdown [options]="primeOptions" [(ngModel)]="primeValue" appendTo="body"
+  <p-select #pSelect [options]="primeOptions" [(ngModel)]="primeValue" appendTo="body"
     [disabled]="(options.length === 0 && !editable) || disabled"
     (onFocus)="onDropdownFocus($event)" (onBlur)="onDropdownBlur($event)" [scrollHeight]="scrollHeight"
     [editable]="editable"></p-select>

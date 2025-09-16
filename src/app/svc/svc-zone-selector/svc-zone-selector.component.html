@@ -6,21 +6,21 @@
 
 <div class="zone-selector">
   <div class="by-region" [style.opacity]="+!selectByOffset" [style.pointer-events]="selectByOffset ? 'none' : 'auto'">
-    <ks-dropdown [options]="regions" [(ngModel)]="displayRegion" [disabled]="disabled || selectByOffset" (focus)="onDropdownFocus($event)"
+    <ks-dropdown [options]="regions" [(ngModel)]="displayRegionAux" [disabled]="disabled || selectByOffset" (focus)="onDropdownFocus($event)"
                   (blur)="onDropdownBlur($event)" scrollHeight="396px"></ks-dropdown>
     <div class="caption">timezone region/category &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>
 
-    <ks-dropdown [options]="subzones" [(ngModel)]="subzone" [disabled]="disabled || selectByOffset" (focus)="onDropdownFocus($event)"
+    <ks-dropdown [options]="subzones" [(ngModel)]="subzoneAux" [disabled]="disabled || selectByOffset" (focus)="onDropdownFocus($event)"
                 (blur)="onDropdownBlur($event)" scrollHeight="308px" class="constrained-dropdown"></ks-dropdown>
     <div class="caption">specific timezone &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>
   </div>
 
   <div class="by-offset" [style.opacity]="+selectByOffset" [style.pointer-events]="selectByOffset ? 'auto' : 'none'">
-    <ks-dropdown [options]="offsets"  [(ngModel)]="offset" [disabled]="disabled || !selectByOffset" (focus)="onDropdownFocus($event)"
+    <ks-dropdown [options]="offsets"  [(ngModel)]="offsetAux" [disabled]="disabled || !selectByOffset" (focus)="onDropdownFocus($event)"
                 (blur)="onDropdownBlur($event)" scrollHeight="220px"></ks-dropdown>
     <div class="caption">utc offset/dst &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>
 
-    <ks-dropdown [options]="zones" [(ngModel)]="zone" [disabled]="disabled || !selectByOffset" (focus)="onDropdownFocus($event)"
+    <ks-dropdown [options]="zones" [(ngModel)]="zoneAux" [disabled]="disabled || !selectByOffset" (focus)="onDropdownFocus($event)"
                 (blur)="onDropdownBlur($event)" scrollHeight="308px" class="constrained-dropdown"></ks-dropdown>
     <div class="caption">specific timezone &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>
   </div>

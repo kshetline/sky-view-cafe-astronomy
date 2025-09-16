@@ -22,16 +22,15 @@ export class KsDropdownComponent implements ControlValueAccessor {
   private _primeValue: any;
   private _selectValue: string;
   private hasFocus = false;
-  private initialized = false;
   private onTouchedCallback: () => void = noop;
   private onChangeCallback: (_: any) => void = noop;
   private usingTouch = false;
 
-  @ViewChild('pDropdown', { static: true }) private pDropdown: Dropdown;
+  @ViewChild('pSelect', { static: true }) private pSelect: Dropdown;
 
+  disabled = false;
   primeOptions: SelectItem[] = [];
   selectOptions: string[] = [];
-  disabled = false;
   useSelect = true;
 
   @Output() focus: EventEmitter<any> = new EventEmitter();
@@ -42,9 +41,16 @@ export class KsDropdownComponent implements ControlValueAccessor {
 
   get value(): any { return this._value; }
   set value(newValue: any) {
+    this.setValue(newValue);
+  }
+
+  private setValue(newValue: any) {
+    if (newValue == null && this.options.length > 0)
+      return;
+
     if (!isEqual(this._value, newValue)) {
       this._value = newValue;
-      this._primeValue = this.findMatchingPrimeOption(newValue);
+      this._primeValue = this.findMatchingPrimeOption(newValue) ?? newValue;
       this._selectValue = this.findMatchingIndex(newValue);
       this.onChangeCallback(newValue);
     }
@@ -55,8 +61,8 @@ export class KsDropdownComponent implements ControlValueAccessor {
       this.useSelect = false;
       evt.preventDefault();
       evt.stopPropagation();
-      this.pDropdown.focus();
-      setTimeout(() => this.pDropdown.containerViewChild.nativeElement.click());
+      this.pSelect.focus();
+      setTimeout(() => this.pSelect.containerViewChild.nativeElement.click());
     }
   }
 
@@ -77,10 +83,7 @@ export class KsDropdownComponent implements ControlValueAccessor {
   }
 
   writeValue(newValue: any): void {
-    if (this._value !== newValue) {
-      this.value = newValue;
-      this._primeValue = this.findMatchingPrimeOption(newValue);
-    }
+    this.setValue(newValue);
   }
 
   registerOnChange(fn: any): void {
@@ -97,11 +100,13 @@ export class KsDropdownComponent implements ControlValueAccessor {
 
   get primeValue(): any { return this._primeValue; }
   set primeValue(newValue: any) {
-    if (newValue !== undefined && this.initialized && !isEqual(this._primeValue, newValue)) {
+    if (newValue == null && this.options.length > 0)
+      return;
+
+    if (!isEqual(this._primeValue, newValue)) {
       this._primeValue = newValue;
-      this.initialized = true;
       this._value = this.findMatchingOption(newValue);
-      this.onChangeCallback(newValue);
+      this.onChangeCallback(this._primeValue);
     }
   }
 
@@ -115,39 +120,34 @@ export class KsDropdownComponent implements ControlValueAccessor {
       if (isObject(newValue.value))
         newValue = newValue.value;
 
-      this.value = newValue;
+      this.setValue(newValue);
     }
   }
 
   get options(): any[] { return this._options; }
   @Input() set options(newOptions: any[]) {
     if (!isEqual(this._options, newOptions)) {
-      if (!isArray(newOptions)) {
+      if (!isArray(newOptions))
         newOptions = [];
-      }
 
       this._options = newOptions;
       this.primeOptions = newOptions.map((option: any): SelectItem => {
         let item: SelectItem;
 
-        if (isString(option)) {
+        if (isString(option))
           item = { label: option, value: option };
-        }
-        else {
+        else
           item = option;
-        }
 
         return item;
       });
       this.selectOptions = newOptions.map((option: any): string => {
         let item: string;
 
-        if (isString(option)) {
+        if (isString(option))
           item = option;
-        }
-        else {
+        else
           item = option.label;
-        }
 
         return item;
       });
@@ -157,7 +157,7 @@ export class KsDropdownComponent implements ControlValueAccessor {
   }
 
   applyFocus(): void {
-    const input = this.pDropdown?.el.nativeElement.querySelector('input');
+    const input = this.pSelect?.el.nativeElement.querySelector('input');
 
     if (input)
       input.focus();
