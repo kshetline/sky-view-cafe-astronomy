@@ -1,7 +1,7 @@
 import { AfterViewInit, Component, ElementRef, ViewChild } from '@angular/core';
 import { EARTH, MARS, MOON, NEPTUNE, NMode, PLUTO, REFRACTION, SATURN, SolarSystem, SUN } from '@tubular/astronomy';
 import { abs, cos_deg, floor, log10, max, min, mod, mod2, Point, Point3D, pow, round, sin_deg, SphericalPosition3D } from '@tubular/math';
-import { colorFromRGB, parseColor, replaceAlpha, RGBA } from '@tubular/util';
+import { clone, colorFromRGB, parseColor, replaceAlpha, RGBA } from '@tubular/util';
 import { debounce, sortBy } from 'lodash-es';
 import { AppService, CurrentTab, UserSetting } from '../../app.service';
 import { ZBuffer } from '../../util/ks-z-buffer';
@@ -383,7 +383,7 @@ export class SvcOrbitViewComponent extends GenericPlanetaryViewDirective impleme
           const angleStep = 0.5;
 
           for (let angle = 0; angle <= 180.0; angle += angleStep) {
-            pt0 = dc.ss.getHeliocentricPosition(planet, t).xyz;
+            pt0 = clone(dc.ss.getHeliocentricPosition(planet, t).xyz);
             const heavy = (pt0.z >= 0.0);
 
             pt1.x = pt0.x;
@@ -431,7 +431,7 @@ export class SvcOrbitViewComponent extends GenericPlanetaryViewDirective impleme
     let positions: ZSortablePlanet[] = [];
 
     for (const planet of this.planetsToDraw) {
-      pt0 = dc.ss.getHeliocentricPosition(planet, dc.jde).xyz;
+      pt0 = clone(dc.ss.getHeliocentricPosition(planet, dc.jde).xyz);
       SvcOrbitViewComponent.translate(mode, pt0, ctr, viewingDistance, cos_xz, sin_xz, cos_yz, sin_yz);
 
       const pt = { x: this.scaledRound(dc.xctr + pt0.x * pixelsPerUnit),
