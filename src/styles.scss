@@ -1,4 +1,6 @@
-@import 'primeng-theme-tweaks';
+@use 'primeng-theme-tweaks';
+
+$table-cell-border-color: primeng-theme-tweaks.$table-cell-border-color;
 
 // Changes to @tubular/ng-widgets styling.
 .tbw-dse-wrapper:hover:not([tabindex="-1"]) {

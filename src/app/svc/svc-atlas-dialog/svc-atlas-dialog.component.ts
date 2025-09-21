@@ -4,11 +4,21 @@ import { min } from '@tubular/math';
 import { } from 'googlemaps'; // Produces "unused import" warning, but is actually needed, and `import 'googlemaps'` won't do.
 import { Timezone } from '@tubular/time';
 import { eventToKey, isIOS, processMillis } from '@tubular/util';
-import { MessageService } from 'primeng/api';
-import { Table } from 'primeng/table';
+import { MessageService, PrimeTemplate } from 'primeng/api';
+import { Table, TableModule } from 'primeng/table';
 import { AppService, Location } from '../../app.service';
 import { AtlasLocation, AtlasResults, SvcAtlasService } from '../svc-atlas.service';
 import { formatLatitude, formatLongitude } from '../svc-util';
+import { Dialog } from 'primeng/dialog';
+import { FormsModule } from '@angular/forms';
+import { InputText } from 'primeng/inputtext';
+import { KsDropdownComponent } from '../../widgets/ks-dropdown/ks-dropdown.component';
+import { KsSizerDirective } from '../../directives/ks-sizer.directive';
+import { Button } from 'primeng/button';
+import { KsCheckboxComponent } from '../../widgets/ks-checkbox/ks-checkbox.component';
+import { NgIf, NgStyle } from '@angular/common';
+import { Tooltip } from 'primeng/tooltip';
+import { Toast } from 'primeng/toast';
 
 interface LocationInfo {
   rank: number;
@@ -26,7 +36,8 @@ interface LocationInfo {
   templateUrl: './svc-atlas-dialog.component.html',
   styleUrls: ['./svc-atlas-dialog.component.scss'],
   providers: [MessageService],
-  standalone: false
+  imports: [Button, Dialog, FormsModule, InputText, KsCheckboxComponent, KsDropdownComponent, KsSizerDirective, NgIf, NgStyle,
+            PrimeTemplate, TableModule, Toast, Tooltip]
 })
 export class SvcAtlasDialogComponent implements OnInit {
   private busyTimer: any;

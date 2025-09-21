@@ -6,6 +6,7 @@ import { floor, FMT_DD, FMT_MINS, min, round } from '@tubular/math';
 import { strokeLine } from '@tubular/util';
 import { AppService, CurrentTab, Location, UserSetting } from '../../app.service';
 import { DrawingContext, GenericViewDirective } from '../generic-view.directive';
+import { NgStyle } from '@angular/common';
 
 export const  VIEW_INSOLATION = 'insolation';
 export const    PROPERTY_CENTER_MIDNIGHT = 'center_midnight';
@@ -32,7 +33,7 @@ const CROSSHAIR_CLEARING = 2;
   selector: 'svc-insolation-view',
   templateUrl: './svc-insolation-view.component.html',
   styleUrls: ['./svc-insolation-view.component.scss'],
-  standalone: false
+  imports: [NgStyle]
 })
 export class SvcInsolationViewComponent extends GenericViewDirective implements AfterViewInit {
   private insolationCanvas: HTMLCanvasElement;

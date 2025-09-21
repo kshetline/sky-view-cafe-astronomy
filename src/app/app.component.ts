@@ -3,7 +3,7 @@ import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { Router } from '@angular/router';
 import { AstroEvent, EventFinder, FIRST_QUARTER, FULL_MOON, LAST_QUARTER, NEW_MOON } from '@tubular/astronomy';
 import { max, min, Point } from '@tubular/math';
-import { CalendarDateInfo, TimeEditorOptions, YearStyle } from '@tubular/ng-widgets';
+import { CalendarDateInfo, CalendarPanelComponent, TimeEditorComponent, TimeEditorOptions, YearStyle } from '@tubular/ng-widgets';
 import { DateTime, defaultLocale, getStartOfWeek, Timezone, YMDDate } from '@tubular/time';
 import { isEqual, toggleFullScreen } from '@tubular/util';
 import { debounce } from 'lodash-es';
@@ -15,7 +15,32 @@ import {
 } from './app.service';
 import { SvcAtlasService } from './svc/svc-atlas.service';
 import { addResizeListener, removeResizeListener } from 'detect-resize';
-import { PROPERTY_FIRST_DAY_OF_WEEK, VIEW_CALENDAR } from './svc/svc-calendar-view/svc-calendar-view.component';
+import { PROPERTY_FIRST_DAY_OF_WEEK, VIEW_CALENDAR, SvcCalendarViewComponent } from './svc/svc-calendar-view/svc-calendar-view.component';
+import { Dialog } from 'primeng/dialog';
+import { SvcNativeDateTimeDialogComponent } from './svc/svc-native-date-time-dialog/svc-native-date-time-dialog.component';
+import { SvcPreferencesDialogComponent } from './svc/svc-preferences-dialog/svc-preferences-dialog.component';
+import { Button } from 'primeng/button';
+import { FormsModule } from '@angular/forms';
+import { NgIf } from '@angular/common';
+import { Popover } from 'primeng/popover';
+import { KsIconButtonComponent } from './widgets/ks-icon-button/ks-icon-button.component';
+import { KsCheckboxComponent } from './widgets/ks-checkbox/ks-checkbox.component';
+import { SvcEventNavigatorComponent } from './svc/svc-event-navigator/svc-event-navigator.component';
+import { Menu } from 'primeng/menu';
+import { KsTabViewComponent } from './widgets/ks-tab-view/ks-tab-view.component';
+import { KsTabComponent } from './widgets/ks-tab/ks-tab.component';
+import { SvcSkyViewComponent } from './svc/svc-sky-view/svc-sky-view.component';
+import { SvcEclipticViewComponent } from './svc/svc-ecliptic-view/svc-ecliptic-view.component';
+import { SvcOrbitViewComponent } from './svc/svc-orbit-view/svc-orbit-view.component';
+import { SvcMoonsViewComponent } from './svc/svc-moons-view/svc-moons-view.component';
+import { SvcInsolationViewComponent } from './svc/svc-insolation-view/svc-insolation-view.component';
+import { SvcMapViewComponent } from './svc/svc-map-view/svc-map-view.component';
+import { SvcTimeViewComponent } from './svc/svc-time-view/svc-time-view.component';
+import { SvcTableViewComponent } from './svc/svc-table-view/svc-table-view.component';
+import { SvcEclipseCircumstancesComponent } from './svc/svc-eclipse-circumstances/svc-eclipse-circumstances.component';
+import { SvcLocationSettingsComponent } from './svc/svc-location-settings/svc-location-settings.component';
+import { SvcOptionsPanelComponent } from './svc/svc-options-panel/svc-options-panel.component';
+import { Toast } from 'primeng/toast';
 
 const MIN_APP_WIDTH = 1040;
 const MIN_APP_HEIGHT = 640;
@@ -28,7 +53,11 @@ const MAX_CLOCK_EFFECTIVE_WIDTH = 600;
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
   providers: [AppService, MessageService],
-  standalone: false
+  imports: [Button, CalendarPanelComponent, Dialog, FormsModule, KsCheckboxComponent, KsIconButtonComponent, KsTabComponent,
+            KsTabViewComponent, Menu, NgIf, Popover, SvcCalendarViewComponent, SvcEclipseCircumstancesComponent, SvcEclipticViewComponent,
+            SvcEventNavigatorComponent, SvcInsolationViewComponent, SvcLocationSettingsComponent, SvcMapViewComponent,
+            SvcMoonsViewComponent, SvcNativeDateTimeDialogComponent, SvcOptionsPanelComponent, SvcOrbitViewComponent,
+            SvcPreferencesDialogComponent, SvcSkyViewComponent, SvcTableViewComponent, SvcTimeViewComponent, TimeEditorComponent, Toast]
 })
 export class AppComponent implements AfterViewInit, OnDestroy {
   Timezone = Timezone;

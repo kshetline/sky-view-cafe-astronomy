@@ -1,11 +1,12 @@
 import { AfterContentInit, Component, ContentChildren, EventEmitter, Input, Output, QueryList } from '@angular/core';
 import { KsTabComponent } from '../ks-tab/ks-tab.component';
+import { NgFor, NgClass } from '@angular/common';
 
 @Component({
   selector: 'ks-tab-view',
   templateUrl: './ks-tab-view.component.html',
   styleUrls: ['./ks-tab-view.component.scss'],
-  standalone: false
+  imports: [NgClass, NgFor]
 })
 export class KsTabViewComponent implements AfterContentInit {
   private _activeTab = -1;

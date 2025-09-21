@@ -1,4 +1,4 @@
-@import "../../../styles";
+@use "../../../styles";
 
 :host {
   display: flex;
@@ -12,7 +12,7 @@
   flex-grow: 0;
   padding: 4px;
   text-align: center;
-  @include selectable(none);
+  @include styles.selectable(none);
 }
 
 .canvasWrapper {
@@ -37,7 +37,7 @@ canvas {
   left: 0;
   bottom: auto;
   right: auto;
-  @include selectable(none);
+  @include styles.selectable(none);
 }
 
 .marquee {

@@ -7,12 +7,19 @@ import {
   PROPERTY_ANAGLYPH_3D, PROPERTY_ANAGLYPH_RC, PROPERTY_CENTER_EARTH, PROPERTY_EXTENT, PROPERTY_GRAY_ORBITS, PROPERTY_MARQUEE_UNITS,
   PROPERTY_SHOW_MARKERS, PROPERTY_SHOW_NAMES, PROPERTY_SHOW_PATHS, PROPERTY_ZOOM, VIEW_ORBITS, ZOOM_STEPS
 } from './svc-orbit-view.component';
+import { KsDropdownComponent } from '../../widgets/ks-dropdown/ks-dropdown.component';
+import { FormsModule } from '@angular/forms';
+import { Select } from 'primeng/select';
+import { KsCheckboxComponent } from '../../widgets/ks-checkbox/ks-checkbox.component';
+import { RadioButton } from 'primeng/radiobutton';
+import { NgClass } from '@angular/common';
+import { Slider } from 'primeng/slider';
 
 @Component({
   selector: 'svc-orbits-view-options',
   templateUrl: './svc-orbit-view-options.component.html',
   styleUrls: ['./svc-orbit-view-options.component.scss'],
-  standalone: false
+  imports: [FormsModule, KsCheckboxComponent, KsDropdownComponent, NgClass, RadioButton, Select, Slider]
 })
 export class SvcOrbitViewOptionsComponent extends SvcGenericOptionsComponent implements AfterViewInit {
   private _extent = 0;

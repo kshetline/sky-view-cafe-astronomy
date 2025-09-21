@@ -1,9 +1,18 @@
 import { Component, ViewChild } from '@angular/core';
-import { AngleEditorOptions, AngleStyle } from '@tubular/ng-widgets';
+import { AngleEditorComponent, AngleEditorOptions, AngleStyle } from '@tubular/ng-widgets';
 import { clone } from '@tubular/util';
-import { ConfirmationService } from 'primeng/api';
+import { ConfirmationService, PrimeTemplate } from 'primeng/api';
 import { AppService, LatLongStyle, Location, NEW_LOCATION } from '../../app.service';
 import { KsDropdownComponent } from '../../widgets/ks-dropdown/ks-dropdown.component';
+import { FormsModule } from '@angular/forms';
+import { SvcZoneSelectorComponent } from '../svc-zone-selector/svc-zone-selector.component';
+import { Button } from 'primeng/button';
+import { Tooltip } from 'primeng/tooltip';
+import { Dialog } from 'primeng/dialog';
+import { KsSizerDirective } from '../../directives/ks-sizer.directive';
+import { KsCheckboxComponent } from '../../widgets/ks-checkbox/ks-checkbox.component';
+import { ConfirmDialog } from 'primeng/confirmdialog';
+import { SvcAtlasDialogComponent } from '../svc-atlas-dialog/svc-atlas-dialog.component';
 
 const SELECT_A_LOCATION = 'Select a location';
 
@@ -12,7 +21,8 @@ const SELECT_A_LOCATION = 'Select a location';
   templateUrl: './svc-location-settings.component.html',
   styleUrls: ['./svc-location-settings.component.scss'],
   providers: [ConfirmationService],
-  standalone: false
+  imports: [AngleEditorComponent, Button, ConfirmDialog, Dialog, FormsModule, KsCheckboxComponent, KsDropdownComponent,
+            KsSizerDirective, PrimeTemplate, SvcAtlasDialogComponent, SvcZoneSelectorComponent, Tooltip]
 })
 export class SvcLocationSettingsComponent {
   locationNames: string[] = [];

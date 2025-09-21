@@ -1,17 +1,21 @@
 import { AfterViewInit, Component } from '@angular/core';
-import { AngleStyle } from '@tubular/ng-widgets';
+import { AngleEditorComponent, AngleStyle } from '@tubular/ng-widgets';
 import { AppService, UserSetting } from '../../app.service';
 import {
   DEFAULT_FIXED_GRS, DEFAULT_ZOOM, PROPERTY_EAST_ON_LEFT, PROPERTY_FIXED_GRS, PROPERTY_GRS_OVERRIDE, PROPERTY_MARK_GRS,
   PROPERTY_MOON_NAMES, PROPERTY_MOON_NUMBERS, PROPERTY_NORTH_ON_TOP, PROPERTY_PHOTOGRAPHIC_PLANETS, PROPERTY_ZOOM, SvcMoonsViewComponent, VIEW_MOONS,
   ZOOM_STEPS
 } from './svc-moons-view.component';
+import { KsCheckboxComponent } from '../../widgets/ks-checkbox/ks-checkbox.component';
+import { FormsModule } from '@angular/forms';
+import { Slider } from 'primeng/slider';
+import { Button } from 'primeng/button';
 
 @Component({
   selector: 'svc-moons-view-options',
   templateUrl: './svc-moons-view-options.component.html',
   styleUrls: ['./svc-moons-view-options.component.scss'],
-  standalone: false
+  imports: [AngleEditorComponent, Button, FormsModule, KsCheckboxComponent, Slider]
 })
 export class SvcMoonsViewOptionsComponent implements AfterViewInit {
   DDD = AngleStyle.DDD;

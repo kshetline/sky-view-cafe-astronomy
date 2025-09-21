@@ -1,4 +1,4 @@
-@import "../../../styles";
+@use "../../../styles";
 
 ul.ks-tabs {
   list-style-type: none;
@@ -18,7 +18,7 @@ ul.ks-tabs > li {
   border-top-right-radius: 4px;
   border-bottom: none;
   cursor: pointer;
-  @include selectable(none);
+  @include styles.selectable(none);
 }
 
 ul.ks-tabs > li:hover {

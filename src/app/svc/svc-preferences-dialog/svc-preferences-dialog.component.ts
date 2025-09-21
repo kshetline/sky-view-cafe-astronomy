@@ -1,13 +1,20 @@
 import { Component, EventEmitter, Input, Output, ViewChild } from '@angular/core';
 import { TimeEditorComponent } from '@tubular/ng-widgets';
 import { eventToKey } from '@tubular/util';
-import { MenuItem } from 'primeng/api';
+import { MenuItem, PrimeTemplate } from 'primeng/api';
 import {
   AppService, CalendarSetting, CurrentTab, ClockStyle, LatLongStyle, PROPERTY_DEFAULT_TAB, PROPERTY_GREGORIAN_CHANGE_DATE,
   PROPERTY_INK_SAVER, PROPERTY_LAT_LONG_STYLE, PROPERTY_NATIVE_DATE_TIME, PROPERTY_NORTH_AZIMUTH, PROPERTY_TWILIGHT_BY_DEGREES,
   PROPERTY_TWILIGHT_DEGREES, PROPERTY_TWILIGHT_MINUTES, VIEW_APP, PROPERTY_CLOCK_STYLE, PROPERTY_RESTORE_LAST_STATE
 } from '../../app.service';
 import { KsDropdownComponent } from '../../widgets/ks-dropdown/ks-dropdown.component';
+import { Dialog } from 'primeng/dialog';
+import { KsSizerDirective } from '../../directives/ks-sizer.directive';
+import { FormsModule } from '@angular/forms';
+import { InputText } from 'primeng/inputtext';
+import { NgIf } from '@angular/common';
+import { KsCheckboxComponent } from '../../widgets/ks-checkbox/ks-checkbox.component';
+import { Button } from 'primeng/button';
 
 interface MenuItemPlus extends MenuItem {
   value?: any;
@@ -19,7 +26,8 @@ const standardGregorian = '1582-10-15';
   selector: 'svc-preferences-dialog',
   templateUrl: './svc-preferences-dialog.component.html',
   styleUrls: ['./svc-preferences-dialog.component.scss'],
-  standalone: false
+  imports: [Button, Dialog, FormsModule, InputText, KsCheckboxComponent, KsDropdownComponent, KsSizerDirective, NgIf,
+            PrimeTemplate, TimeEditorComponent],
 })
 export class SvcPreferencesDialogComponent {
   ISO_SEC = ClockStyle.ISO_SEC;

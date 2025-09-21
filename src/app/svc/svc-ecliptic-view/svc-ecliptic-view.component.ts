@@ -15,6 +15,7 @@ import {
   horizonColor, horizonPrintColor
 } from '../generic-sky-view.directive';
 import { PROPERTY_ADDITIONALS } from '../generic-view.directive';
+import { KsMarqueeComponent } from '../../widgets/ks-marquee/ks-marquee.component';
 
 export const  VIEW_ECLIPTIC = 'ecliptic';
 export const    PROPERTY_SPAN_25 = 'span_25';
@@ -45,7 +46,7 @@ interface DrawingContextEcliptic extends DrawingContextPlanetary {
   selector: 'svc-ecliptic-view',
   templateUrl: './svc-ecliptic-view.component.html',
   styleUrls: ['./svc-ecliptic-view.component.scss'],
-  standalone: false
+  imports: [KsMarqueeComponent]
 })
 export class SvcEclipticViewComponent extends GenericSkyViewDirective implements AfterViewInit {
   private span25 = false;

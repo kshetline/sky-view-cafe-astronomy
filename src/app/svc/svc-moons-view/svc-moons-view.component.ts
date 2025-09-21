@@ -12,6 +12,7 @@ import { DrawingContextPlanetary, GenericPlanetaryViewDirective, LABEL_TYPE, SEL
 import { JupiterDrawer } from '../jupiter-drawer';
 import { PlanetDrawer } from '../planet-drawer';
 import { SaturnDrawer } from '../saturn-drawer';
+import { KsMarqueeComponent } from '../../widgets/ks-marquee/ks-marquee.component';
 
 export const  VIEW_MOONS = 'moons';
 export const    PROPERTY_NORTH_ON_TOP = 'north_on_top';
@@ -54,7 +55,7 @@ const moonOutlineColor       = 'rgba(153, 153, 153, 0.5)';
   selector: 'svc-moons-view',
   templateUrl: './svc-moons-view.component.html',
   styleUrls: ['./svc-moons-view.component.scss'],
-  standalone: false
+  imports: [KsMarqueeComponent]
 })
 export class SvcMoonsViewComponent extends GenericPlanetaryViewDirective implements AfterViewInit {
   private jupiterDrawer: JupiterDrawer;

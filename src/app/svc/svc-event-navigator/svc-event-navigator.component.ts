@@ -14,6 +14,10 @@ import { Subscription, timer } from 'rxjs';
 import { AppService, UserSetting } from '../../app.service';
 import { AstroDataService } from '../../astronomy/astro-data.service';
 import { PROPERTY_FIXED_GRS, PROPERTY_GRS_OVERRIDE, VIEW_MOONS } from '../svc-moons-view/svc-moons-view.component';
+import { Button } from 'primeng/button';
+import { KsDropdownComponent } from '../../widgets/ks-dropdown/ks-dropdown.component';
+import { FormsModule } from '@angular/forms';
+import { Toast } from 'primeng/toast';
 import millisFromJulianDay = ttime.millisFromJulianDay;
 
 const CLICK_REPEAT_DELAY = 500;
@@ -28,7 +32,7 @@ export const    PROPERTY_EVENT_TYPE = 'event_type';
   providers: [MessageService],
   styleUrls: ['./svc-event-navigator.component.scss'],
   templateUrl: './svc-event-navigator.component.html',
-  standalone: false
+  imports: [Button, FormsModule, KsDropdownComponent, Toast]
 })
 export class SvcEventNavigatorComponent implements AfterViewInit, OnDestroy {
   private clickTimer: Subscription;

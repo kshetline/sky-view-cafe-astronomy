@@ -7,6 +7,8 @@ import { AppEvent, AppService, CurrentTab, UserSetting } from '../../app.service
 import { KsTimeService, ZoneForLocation } from '../../util/ks-time.service';
 import { DrawingContext, GenericViewDirective } from '../generic-view.directive';
 import { formatLatitude, formatLongitude } from '../svc-util';
+import { SvcChangeLocationDialogComponent } from '../svc-change-location-dialog/svc-change-location-dialog.component';
+import { KsMarqueeComponent } from '../../widgets/ks-marquee/ks-marquee.component';
 
 export const  VIEW_MAP = 'map';
 export const    PROPERTY_MAP_TYPE = 'map_type';
@@ -46,7 +48,7 @@ const shadowColor = 'rgba(0,0,0,0.6)';
   selector: 'svc-map-view',
   templateUrl: './svc-map-view.component.html',
   styleUrls: ['./svc-map-view.component.scss'],
-  standalone: false
+  imports: [KsMarqueeComponent, SvcChangeLocationDialogComponent]
 })
 export class SvcMapViewComponent extends GenericViewDirective implements AfterViewInit {
   private dayMap: HTMLImageElement;

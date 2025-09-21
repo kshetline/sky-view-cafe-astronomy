@@ -7,6 +7,10 @@ import {
   PROPERTY_DAILY_DAYLIGHT, PROPERTY_FIRST_DAY_OF_WEEK, PROPERTY_DAILY_MOON_PHASE, PROPERTY_EQUISOLSTICE, PROPERTY_EVENT_TYPE,
   PROPERTY_INCLUDE_TRANSITS, PROPERTY_KEY_MOON_PHASES, VIEW_CALENDAR
 } from './svc-calendar-view.component';
+import { Button } from 'primeng/button';
+import { KsDropdownComponent } from '../../widgets/ks-dropdown/ks-dropdown.component';
+import { FormsModule } from '@angular/forms';
+import { KsCheckboxComponent } from '../../widgets/ks-checkbox/ks-checkbox.component';
 
 const CLICK_REPEAT_DELAY = 500;
 const CLICK_REPEAT_RATE  = 250;
@@ -15,7 +19,7 @@ const CLICK_REPEAT_RATE  = 250;
   selector: 'svc-calendar-view-options',
   templateUrl: './svc-calendar-view-options.component.html',
   styleUrls: ['./svc-calendar-view-options.component.scss'],
-  standalone: false
+  imports: [Button, FormsModule, KsCheckboxComponent, KsDropdownComponent]
 })
 export class SvcCalendarViewOptionsComponent implements AfterViewInit, OnDestroy {
   private _eventType = 0;

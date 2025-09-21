@@ -1,12 +1,19 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { eventToKey, isIOS } from '@tubular/util';
 import { AppService, PROPERTY_NATIVE_DATE_TIME, PROPERTY_WARNING_NATIVE_DATE_TIME, VIEW_APP } from '../../app.service';
+import { Dialog } from 'primeng/dialog';
+import { KsSizerDirective } from '../../directives/ks-sizer.directive';
+import { KsRadioButtonComponent } from '../../widgets/ks-radio-button/ks-radio-button.component';
+import { FormsModule } from '@angular/forms';
+import { NgIf } from '@angular/common';
+import { PrimeTemplate } from 'primeng/api';
+import { Button } from 'primeng/button';
 
 @Component({
   selector: 'svc-native-date-time-dialog',
   templateUrl: './svc-native-date-time-dialog.component.html',
   styleUrls: ['./svc-native-date-time-dialog.component.scss'],
-  standalone: false
+  imports: [Button, Dialog, FormsModule, KsRadioButtonComponent, KsSizerDirective, NgIf, PrimeTemplate]
 })
 export class SvcNativeDateTimeDialogComponent {
   private _visible = false;

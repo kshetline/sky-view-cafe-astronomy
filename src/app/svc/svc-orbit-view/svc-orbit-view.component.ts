@@ -10,6 +10,9 @@ import {
   MARQUEE_DISTANCE, MARQUEE_ECLIPTIC, MARQUEE_HELIOCENTRIC, planetColors, planetPrintColors, SELECTION_TYPE, SUBJECT
 } from '../generic-planetary-view.directive';
 import { GenericViewDirective, PROPERTY_ADDITIONALS } from '../generic-view.directive';
+import { Button } from 'primeng/button';
+import { KsMarqueeComponent } from '../../widgets/ks-marquee/ks-marquee.component';
+import { DecimalPipe } from '@angular/common';
 
 export const  VIEW_ORBITS = 'orbits';
 export const    PROPERTY_EXTENT = 'extent';
@@ -102,7 +105,7 @@ interface ZSortablePlanet {
   selector: 'svc-orbit-view',
   templateUrl: './svc-orbit-view.component.html',
   styleUrls: ['./svc-orbit-view.component.scss'],
-  standalone: false
+  imports: [Button, DecimalPipe, KsMarqueeComponent]
 })
 export class SvcOrbitViewComponent extends GenericPlanetaryViewDirective implements AfterViewInit {
   private anaglyph3d = false;

@@ -8,6 +8,8 @@ import throttle from 'lodash-es/throttle';
 import { SelectItem } from 'primeng/api';
 import { AppService, CurrentTab, Location, UserSetting } from '../../app.service';
 import { AstroDataService } from '../../astronomy/astro-data.service';
+import { Select } from 'primeng/select';
+import { FormsModule } from '@angular/forms';
 
 export enum TableType { NONE, EPHEMERIS, EPHEMERIS_TBD, RISE_SET_TIMES, LUNAR_PHASES, EQUINOX_SOLSTICE, GALILEAN_MOONS }
 
@@ -20,7 +22,7 @@ export const    PROPERTY_TWILIGHT = 'twilight';
   selector: 'svc-table-view',
   templateUrl: './svc-table-view.component.html',
   styleUrls: ['./svc-table-view.component.scss'],
-  standalone: false
+  imports: [FormsModule, Select]
 })
 export class SvcTableViewComponent implements AfterViewInit {
   private dateTime: DateTime;

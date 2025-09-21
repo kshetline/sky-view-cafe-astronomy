@@ -2,12 +2,18 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { floor, mod } from '@tubular/math';
 import { AppService, Location } from '../../app.service';
 import { formatLatitude, formatLongitude } from '../svc-util';
+import { Dialog } from 'primeng/dialog';
+import { KsSizerDirective } from '../../directives/ks-sizer.directive';
+import { KsRadioButtonComponent } from '../../widgets/ks-radio-button/ks-radio-button.component';
+import { FormsModule } from '@angular/forms';
+import { PrimeTemplate } from 'primeng/api';
+import { Button } from 'primeng/button';
 
 @Component({
   selector: 'svc-change-location-dialog',
   templateUrl: './svc-change-location-dialog.component.html',
   styleUrls: ['./svc-change-location-dialog.component.scss'],
-  standalone: false
+  imports: [Button, Dialog, FormsModule, KsRadioButtonComponent, KsSizerDirective, PrimeTemplate]
 })
 export class SvcChangeLocationDialogComponent {
   private _visible = false;

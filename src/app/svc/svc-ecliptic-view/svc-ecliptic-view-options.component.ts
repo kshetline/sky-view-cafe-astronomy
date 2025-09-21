@@ -8,6 +8,12 @@ import { PROPERTY_BRIGHTEN_STARS, PROPERTY_CELESTIAL_EQUATOR, PROPERTY_ECLIPTIC_
   PROPERTY_LABEL_CONSTELLATIONS, PROPERTY_LABEL_DSOS, PROPERTY_LABEL_PLANETS, PROPERTY_LABEL_STARS,
   PROPERTY_LOCAL_HORIZON, PROPERTY_ORIENTATION, PROPERTY_SHOW_CONSTELLATIONS, PROPERTY_SHOW_STARS,
   PROPERTY_SPAN_25, PROPERTY_TOPOCENTRIC_MOON, VIEW_ECLIPTIC } from './svc-ecliptic-view.component';
+import { KsDropdownComponent } from '../../widgets/ks-dropdown/ks-dropdown.component';
+import { FormsModule } from '@angular/forms';
+import { Select } from 'primeng/select';
+import { KsCheckboxComponent } from '../../widgets/ks-checkbox/ks-checkbox.component';
+import { Menu } from 'primeng/menu';
+import { Button } from 'primeng/button';
 
 const CHECKED = 'far fa-check-square';
 const UNCHECKED = 'far fa-square';
@@ -27,7 +33,7 @@ interface MenuEvent {
   selector: 'svc-ecliptic-view-options',
   templateUrl: './svc-ecliptic-view-options.component.html',
   styleUrls: ['./svc-ecliptic-view-options.component.scss'],
-  standalone: false
+  imports: [Button, FormsModule, KsCheckboxComponent, KsDropdownComponent, Menu, Select]
 })
 export class SvcEclipticViewOptionsComponent extends SvcGenericOptionsComponent implements AfterViewInit {
   private _span25 = false;

@@ -1,8 +1,10 @@
 import { Component, EventEmitter, forwardRef, Input, Output, ViewChild } from '@angular/core';
-import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { ControlValueAccessor, NG_VALUE_ACCESSOR, FormsModule } from '@angular/forms';
 import { isArray, isObject, isString, isEqual, noop } from '@tubular/util';
 import { SelectItem } from 'primeng/api';
 import { Dropdown } from 'primeng/dropdown';
+import { Select } from 'primeng/select';
+import { NgIf, NgFor } from '@angular/common';
 
 const DROPDOWN_VALUE_ACCESSOR: any = {
   provide: NG_VALUE_ACCESSOR,
@@ -15,7 +17,7 @@ const DROPDOWN_VALUE_ACCESSOR: any = {
   templateUrl: './ks-dropdown.component.html',
   styleUrls: ['./ks-dropdown.component.scss'],
   providers: [DROPDOWN_VALUE_ACCESSOR],
-  standalone: false
+  imports: [FormsModule, NgFor, NgIf, Select]
 })
 export class KsDropdownComponent implements ControlValueAccessor {
   private _options: any[] = [];

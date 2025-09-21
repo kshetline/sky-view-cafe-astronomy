@@ -7,12 +7,16 @@ import {
   MapType, PROPERTY_BLINK_LOCATION_MARKERS, PROPERTY_MAP_TYPE, PROPERTY_SHOW_DAY_NIGHT, PROPERTY_SHOW_ECLIPSE_SHADOWS,
   PROPERTY_SHOW_LOCATION_MARKERS, PROPERTY_SHOW_TIMEZONES, PROPERTY_ZONE_IMAGE_URL, VIEW_MAP
 } from './svc-map-view.component';
+import { Button } from 'primeng/button';
+import { KsDropdownComponent } from '../../widgets/ks-dropdown/ks-dropdown.component';
+import { FormsModule } from '@angular/forms';
+import { KsCheckboxComponent } from '../../widgets/ks-checkbox/ks-checkbox.component';
 
 @Component({
   selector: 'svc-map-view-options',
   templateUrl: './svc-map-view-options.component.html',
   styleUrls: ['./svc-map-view-options.component.scss'],
-  standalone: false
+  imports: [Button, FormsModule, KsCheckboxComponent, KsDropdownComponent]
 })
 export class SvcMapViewOptionsComponent implements AfterViewInit {
   private _mapType = MapType.TERRAIN;

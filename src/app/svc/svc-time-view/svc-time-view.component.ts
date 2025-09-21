@@ -4,6 +4,7 @@ import ttime, { DAY_MSEC, DateTime, Timezone, utToTdt, isSafeUtcMillis } from '@
 import { Angle, FMT_MINS, FMT_SECS, mod2, Mode, round, Unit } from '@tubular/math';
 import { toDefaultLocaleFixed } from '@tubular/util';
 import { AppService, CurrentTab, Location } from '../../app.service';
+import { NgIf } from '@angular/common';
 import getDeltaTAtJulianDate = ttime.getDeltaTAtJulianDate;
 
 const nbsp = '\u00A0';
@@ -12,7 +13,7 @@ const nbsp = '\u00A0';
   selector: 'svc-time-view',
   templateUrl: './svc-time-view.component.html',
   styleUrls: ['./svc-time-view.component.scss'],
-  standalone: false
+  imports: [NgIf]
 })
 export class SvcTimeViewComponent {
   private longitude: number;

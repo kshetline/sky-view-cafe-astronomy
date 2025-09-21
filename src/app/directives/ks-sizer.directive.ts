@@ -1,10 +1,7 @@
 import { Directive, ElementRef, HostBinding, Input, ViewContainerRef } from '@angular/core';
 import { DomSanitizer, SafeStyle } from '@angular/platform-browser';
 
-@Directive({
-  selector: '[ksSizer]',
-  standalone: false
-})
+@Directive({ selector: '[ksSizer]' })
 export class KsSizerDirective {
   @HostBinding('style') style: string | SafeStyle;
 

@@ -4,12 +4,15 @@ import { AppService, UserSetting } from '../../app.service';
 import {
   PROPERTY_CENTER_MIDNIGHT, PROPERTY_SHOW_MOONLIGHT,  VIEW_INSOLATION
 } from './svc-insolation-view.component';
+import { KsDropdownComponent } from '../../widgets/ks-dropdown/ks-dropdown.component';
+import { FormsModule } from '@angular/forms';
+import { KsCheckboxComponent } from '../../widgets/ks-checkbox/ks-checkbox.component';
 
 @Component({
   selector: 'svc-insolation-view-options',
   templateUrl: './svc-insolation-view-options.component.html',
   styleUrls: ['./svc-insolation-view-options.component.scss'],
-  standalone: false
+  imports: [FormsModule, KsCheckboxComponent, KsDropdownComponent]
 })
 export class SvcInsolationViewOptionsComponent implements AfterViewInit {
   private _centerMidnight = true;

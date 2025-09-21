@@ -1,10 +1,11 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { NgClass } from '@angular/common';
 
 @Component({
   selector: 'ks-icon-button',
   templateUrl: './ks-icon-button.component.html',
   styleUrls: ['./ks-icon-button.component.scss'],
-  standalone: false
+  imports: [NgClass]
 })
 export class KsIconButtonComponent {
   private _disabled = false;

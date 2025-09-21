@@ -1,11 +1,13 @@
 import { ChangeDetectorRef, Component, EventEmitter, forwardRef, OnInit, Output } from '@angular/core';
-import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { ControlValueAccessor, NG_VALUE_ACCESSOR, FormsModule } from '@angular/forms';
 import { compareStrings, noop } from '@tubular/util';
 import { Timezone, RegionAndSubzones } from '@tubular/time';
 import { SelectItem } from 'primeng/api';
 import { timer } from 'rxjs';
 import { AppService, IANA_DB_UPDATE } from '../../app.service';
 import { hasOneOf } from '../svc-util';
+import { KsRadioButtonComponent } from '../../widgets/ks-radio-button/ks-radio-button.component';
+import { KsDropdownComponent } from '../../widgets/ks-dropdown/ks-dropdown.component';
 
 export const SVC_ZONE_SELECTOR_VALUE_ACCESSOR: any = {
   provide: NG_VALUE_ACCESSOR,
@@ -73,7 +75,7 @@ function toDisplayZone(zone: string): string {
   templateUrl: './svc-zone-selector.component.html',
   styleUrls: ['./svc-zone-selector.component.scss'],
   providers: [SVC_ZONE_SELECTOR_VALUE_ACCESSOR],
-  standalone: false
+  imports: [FormsModule, KsDropdownComponent, KsRadioButtonComponent]
 })
 export class SvcZoneSelectorComponent implements ControlValueAccessor, OnInit {
   regions: string[] = [UT_OPTION];

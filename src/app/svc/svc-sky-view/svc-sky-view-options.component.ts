@@ -11,6 +11,12 @@ import {
   PROPERTY_REFRACTION, PROPERTY_SHOW_CONSTELLATIONS, PROPERTY_SHOW_MILKY_WAY, PROPERTY_SKY_COLOR,
   PROPERTY_VIEW_TYPE, SKY_COLOR, VIEW_SKY, VIEW_TYPE,
 } from './svc-sky-view.component';
+import { KsDropdownComponent } from '../../widgets/ks-dropdown/ks-dropdown.component';
+import { FormsModule } from '@angular/forms';
+import { Select } from 'primeng/select';
+import { KsCheckboxComponent } from '../../widgets/ks-checkbox/ks-checkbox.component';
+import { Menu } from 'primeng/menu';
+import { Button } from 'primeng/button';
 
 const CHECKED = 'far fa-check-square';
 const UNCHECKED = 'far fa-square';
@@ -30,7 +36,7 @@ interface MenuEvent {
   selector: 'svc-sky-view-options',
   templateUrl: './svc-sky-view-options.component.html',
   styleUrls: ['./svc-sky-view-options.component.scss'],
-  standalone: false
+  imports: [Button, FormsModule, KsCheckboxComponent, KsDropdownComponent, Menu, Select]
 })
 export class SvcSkyViewOptionsComponent extends SvcGenericOptionsComponent implements AfterViewInit {
   private _viewType = VIEW_TYPE.FULL_SKY_FLAT;

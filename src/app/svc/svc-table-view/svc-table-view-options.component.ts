@@ -5,12 +5,14 @@ import { AppService, UserSetting } from '../../app.service';
 import {
   PROPERTY_PLANET_CHOICE, PROPERTY_TABLE_TYPE, PROPERTY_TWILIGHT, TableType, VIEW_TABLES
 } from './svc-table-view.component';
+import { KsDropdownComponent } from '../../widgets/ks-dropdown/ks-dropdown.component';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'svc-table-view-options',
   templateUrl: './svc-table-view-options.component.html',
   styleUrls: ['./svc-table-view-options.component.scss'],
-  standalone: false
+  imports: [FormsModule, KsDropdownComponent]
 })
 export class SvcTableViewOptionsComponent implements AfterViewInit {
   private planetChoice = SUN;

@@ -1,4 +1,4 @@
-@import "../../../styles";
+@use "../../../styles";
 
 :host {
   display: flex;
@@ -31,7 +31,7 @@ canvas {
   left: 0;
   bottom: auto;
   right: auto;
-  @include selectable(none);
+  @include styles.selectable(none);
 }
 
 .marquee {

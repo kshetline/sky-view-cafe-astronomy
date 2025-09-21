@@ -1,4 +1,4 @@
-@import "../../../styles";
+@use "../../../styles";
 
 :host {
   align-items: center;
@@ -9,7 +9,7 @@
 span {
   padding-left: 0.5em;
   pointer-events: auto;
-  @include selectable(none);
+  @include styles.selectable(none);
 }
 
 .faded {

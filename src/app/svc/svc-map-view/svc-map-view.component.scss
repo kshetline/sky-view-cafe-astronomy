@@ -1,4 +1,4 @@
-@import "../../../styles";
+@use "../../../styles";
 
 :host {
   display: flex;
@@ -30,7 +30,7 @@
       position: absolute;
       right: auto;
       top: 0;
-      @include selectable(none);
+      @include styles.selectable(none);
     }
 
     div {

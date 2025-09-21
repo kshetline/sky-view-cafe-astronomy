@@ -1,6 +1,8 @@
 import { Component, ElementRef, EventEmitter, forwardRef, Input, Output, ViewChild } from '@angular/core';
-import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { ControlValueAccessor, NG_VALUE_ACCESSOR, FormsModule } from '@angular/forms';
 import { isEqual, noop } from '@tubular/util';
+import { Checkbox } from 'primeng/checkbox';
+import { NgIf, NgClass, NgStyle } from '@angular/common';
 
 const CHECKBOX_VALUE_ACCESSOR: any = {
   provide: NG_VALUE_ACCESSOR,
@@ -13,7 +15,7 @@ const CHECKBOX_VALUE_ACCESSOR: any = {
   templateUrl: './ks-checkbox.component.html',
   styleUrls: ['./ks-checkbox.component.scss'],
   providers: [CHECKBOX_VALUE_ACCESSOR],
-  standalone: false
+  imports: [Checkbox, FormsModule, NgClass, NgIf, NgStyle]
 })
 export class KsCheckboxComponent implements ControlValueAccessor {
   private _ngValue: any;

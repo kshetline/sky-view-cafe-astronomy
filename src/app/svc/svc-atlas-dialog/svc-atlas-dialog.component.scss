@@ -1,4 +1,4 @@
-@import "../../../styles";
+@use "../../../styles";
 
 .search-controls {
   display: table;
@@ -94,7 +94,7 @@ input.city-field {
 
   .table-border {
     background-color: #F0F8FF;
-    border: 1px solid $table-cell-border-color;
+    border: 1px solid styles.$table-cell-border-color;
     bottom: 0;
     left: 0;
     position: absolute;
