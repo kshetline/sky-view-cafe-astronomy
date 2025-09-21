@@ -14,7 +14,8 @@ const CLICK_REPEAT_RATE  = 250;
 @Component({
   selector: 'svc-calendar-view-options',
   templateUrl: './svc-calendar-view-options.component.html',
-  styleUrls: ['./svc-calendar-view-options.component.scss']
+  styleUrls: ['./svc-calendar-view-options.component.scss'],
+  standalone: false
 })
 export class SvcCalendarViewOptionsComponent implements AfterViewInit, OnDestroy {
   private _eventType = 0;

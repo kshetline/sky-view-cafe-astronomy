@@ -27,7 +27,8 @@ export const    PROPERTY_EVENT_TYPE = 'event_type';
   selector: 'svc-event-navigator',
   providers: [MessageService],
   styleUrls: ['./svc-event-navigator.component.scss'],
-  templateUrl: './svc-event-navigator.component.html'
+  templateUrl: './svc-event-navigator.component.html',
+  standalone: false
 })
 export class SvcEventNavigatorComponent implements AfterViewInit, OnDestroy {
   private clickTimer: Subscription;

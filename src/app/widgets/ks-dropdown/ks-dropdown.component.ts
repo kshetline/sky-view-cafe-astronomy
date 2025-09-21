@@ -14,7 +14,8 @@ const DROPDOWN_VALUE_ACCESSOR: any = {
   selector: 'ks-dropdown',
   templateUrl: './ks-dropdown.component.html',
   styleUrls: ['./ks-dropdown.component.scss'],
-  providers: [DROPDOWN_VALUE_ACCESSOR]
+  providers: [DROPDOWN_VALUE_ACCESSOR],
+  standalone: false
 })
 export class KsDropdownComponent implements ControlValueAccessor {
   private _options: any[] = [];

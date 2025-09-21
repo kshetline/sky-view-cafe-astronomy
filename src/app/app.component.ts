@@ -27,7 +27,8 @@ const MAX_CLOCK_EFFECTIVE_WIDTH = 600;
   selector: 'svc-app',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
-  providers: [AppService, MessageService]
+  providers: [AppService, MessageService],
+  standalone: false
 })
 export class AppComponent implements AfterViewInit, OnDestroy {
   Timezone = Timezone;

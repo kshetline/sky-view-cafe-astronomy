@@ -44,7 +44,8 @@ interface DrawingContextEcliptic extends DrawingContextPlanetary {
 @Component({
   selector: 'svc-ecliptic-view',
   templateUrl: './svc-ecliptic-view.component.html',
-  styleUrls: ['./svc-ecliptic-view.component.scss']
+  styleUrls: ['./svc-ecliptic-view.component.scss'],
+  standalone: false
 })
 export class SvcEclipticViewComponent extends GenericSkyViewDirective implements AfterViewInit {
   private span25 = false;

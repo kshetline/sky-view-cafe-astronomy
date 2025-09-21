@@ -4,7 +4,8 @@ import { KsTabComponent } from '../ks-tab/ks-tab.component';
 @Component({
   selector: 'ks-tab-view',
   templateUrl: './ks-tab-view.component.html',
-  styleUrls: ['./ks-tab-view.component.scss']
+  styleUrls: ['./ks-tab-view.component.scss'],
+  standalone: false
 })
 export class KsTabViewComponent implements AfterContentInit {
   private _activeTab = -1;

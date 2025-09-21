@@ -5,7 +5,8 @@ import { AppService, PROPERTY_NATIVE_DATE_TIME, PROPERTY_WARNING_NATIVE_DATE_TIM
 @Component({
   selector: 'svc-native-date-time-dialog',
   templateUrl: './svc-native-date-time-dialog.component.html',
-  styleUrls: ['./svc-native-date-time-dialog.component.scss']
+  styleUrls: ['./svc-native-date-time-dialog.component.scss'],
+  standalone: false
 })
 export class SvcNativeDateTimeDialogComponent {
   private _visible = false;

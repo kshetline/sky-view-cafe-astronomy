@@ -12,7 +12,8 @@ const CHECKBOX_VALUE_ACCESSOR: any = {
   selector: 'ks-checkbox',
   templateUrl: './ks-checkbox.component.html',
   styleUrls: ['./ks-checkbox.component.scss'],
-  providers: [CHECKBOX_VALUE_ACCESSOR]
+  providers: [CHECKBOX_VALUE_ACCESSOR],
+  standalone: false
 })
 export class KsCheckboxComponent implements ControlValueAccessor {
   private _ngValue: any;

@@ -87,12 +87,12 @@
         "serve": {
           "builder": "@angular-builders/custom-webpack:dev-server",
           "options": {
-            "browserTarget": "svc-ng:build",
+            "buildTarget": "svc-ng:build",
             "port": 4200
           },
           "configurations": {
             "production": {
-              "browserTarget": "svc-ng:build:production"
+              "buildTarget": "svc-ng:build:production"
             }
           }
         },

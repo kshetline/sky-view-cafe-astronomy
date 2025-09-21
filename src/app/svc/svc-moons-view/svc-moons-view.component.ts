@@ -53,7 +53,8 @@ const moonOutlineColor       = 'rgba(153, 153, 153, 0.5)';
 @Component({
   selector: 'svc-moons-view',
   templateUrl: './svc-moons-view.component.html',
-  styleUrls: ['./svc-moons-view.component.scss']
+  styleUrls: ['./svc-moons-view.component.scss'],
+  standalone: false
 })
 export class SvcMoonsViewComponent extends GenericPlanetaryViewDirective implements AfterViewInit {
   private jupiterDrawer: JupiterDrawer;

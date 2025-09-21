@@ -11,7 +11,8 @@ const SELECT_A_LOCATION = 'Select a location';
   selector: 'svc-location-settings',
   templateUrl: './svc-location-settings.component.html',
   styleUrls: ['./svc-location-settings.component.scss'],
-  providers: [ConfirmationService]
+  providers: [ConfirmationService],
+  standalone: false
 })
 export class SvcLocationSettingsComponent {
   locationNames: string[] = [];

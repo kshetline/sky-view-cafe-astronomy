@@ -88,7 +88,8 @@ const DEFAULT_SKY_RESOLUTION = 5;
 @Component({
   selector: 'svc-sky-view',
   templateUrl: './svc-sky-view.component.html',
-  styleUrls: ['./svc-sky-view.component.scss']
+  styleUrls: ['./svc-sky-view.component.scss'],
+  standalone: false
 })
 export class SvcSkyViewComponent extends GenericSkyViewDirective implements AfterViewInit {
   private _facing = 0;

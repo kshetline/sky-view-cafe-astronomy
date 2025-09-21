@@ -12,7 +12,8 @@ const RADIO_BUTTON_VALUE_ACCESSOR: any = {
   selector: 'ks-radioButton',
   templateUrl: './ks-radio-button.component.html',
   styleUrls: ['./ks-radio-button.component.scss'],
-  providers: [RADIO_BUTTON_VALUE_ACCESSOR]
+  providers: [RADIO_BUTTON_VALUE_ACCESSOR],
+  standalone: false
 })
 export class KsRadioButtonComponent implements ControlValueAccessor {
   private _ngValue: any;

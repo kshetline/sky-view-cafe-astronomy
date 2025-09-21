@@ -10,6 +10,7 @@ const MARQUEE_SPEED = 100; // pixels per second.
   selector: 'ks-marquee',
   templateUrl: './ks-marquee.component.html',
   styleUrls: ['./ks-marquee.component.scss'],
+  standalone: false
 })
 export class KsMarqueeComponent implements AfterViewInit, OnDestroy {
   private _text = '';

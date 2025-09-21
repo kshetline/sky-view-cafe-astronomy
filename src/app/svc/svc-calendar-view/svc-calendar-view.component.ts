@@ -61,7 +61,8 @@ interface DateInfo extends YMDDate {
 @Component({
   selector: 'svc-calendar-view',
   templateUrl: './svc-calendar-view.component.html',
-  styleUrls: ['./svc-calendar-view.component.scss']
+  styleUrls: ['./svc-calendar-view.component.scss'],
+  standalone: false
 })
 export class SvcCalendarViewComponent implements AfterViewInit {
   isChromium = isChromium();

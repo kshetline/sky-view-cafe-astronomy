@@ -25,7 +25,8 @@ interface LocationInfo {
   selector: 'svc-atlas-dialog',
   templateUrl: './svc-atlas-dialog.component.html',
   styleUrls: ['./svc-atlas-dialog.component.scss'],
-  providers: [MessageService]
+  providers: [MessageService],
+  standalone: false
 })
 export class SvcAtlasDialogComponent implements OnInit {
   private busyTimer: any;

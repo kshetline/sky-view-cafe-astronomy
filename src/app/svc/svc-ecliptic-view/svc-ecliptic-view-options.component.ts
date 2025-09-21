@@ -26,7 +26,8 @@ interface MenuEvent {
 @Component({
   selector: 'svc-ecliptic-view-options',
   templateUrl: './svc-ecliptic-view-options.component.html',
-  styleUrls: ['./svc-ecliptic-view-options.component.scss']
+  styleUrls: ['./svc-ecliptic-view-options.component.scss'],
+  standalone: false
 })
 export class SvcEclipticViewOptionsComponent extends SvcGenericOptionsComponent implements AfterViewInit {
   private _span25 = false;

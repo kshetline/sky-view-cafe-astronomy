@@ -18,7 +18,8 @@ const standardGregorian = '1582-10-15';
 @Component({
   selector: 'svc-preferences-dialog',
   templateUrl: './svc-preferences-dialog.component.html',
-  styleUrls: ['./svc-preferences-dialog.component.scss']
+  styleUrls: ['./svc-preferences-dialog.component.scss'],
+  standalone: false
 })
 export class SvcPreferencesDialogComponent {
   ISO_SEC = ClockStyle.ISO_SEC;

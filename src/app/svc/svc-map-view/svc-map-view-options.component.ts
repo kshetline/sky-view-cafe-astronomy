@@ -11,7 +11,8 @@ import {
 @Component({
   selector: 'svc-map-view-options',
   templateUrl: './svc-map-view-options.component.html',
-  styleUrls: ['./svc-map-view-options.component.scss']
+  styleUrls: ['./svc-map-view-options.component.scss'],
+  standalone: false
 })
 export class SvcMapViewOptionsComponent implements AfterViewInit {
   private _mapType = MapType.TERRAIN;

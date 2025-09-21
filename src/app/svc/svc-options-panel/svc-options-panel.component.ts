@@ -4,7 +4,8 @@ import { AppService, CurrentTab } from '../../app.service';
 @Component({
   selector: 'svc-options-panel',
   templateUrl: './svc-options-panel.component.html',
-  styleUrls: ['./svc-options-panel.component.scss']
+  styleUrls: ['./svc-options-panel.component.scss'],
+  standalone: false
 })
 export class SvcOptionsPanelComponent {
   currentTab = CurrentTab.SKY;

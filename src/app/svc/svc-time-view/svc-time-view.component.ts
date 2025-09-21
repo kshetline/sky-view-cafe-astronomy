@@ -11,7 +11,8 @@ const nbsp = '\u00A0';
 @Component({
   selector: 'svc-time-view',
   templateUrl: './svc-time-view.component.html',
-  styleUrls: ['./svc-time-view.component.scss']
+  styleUrls: ['./svc-time-view.component.scss'],
+  standalone: false
 })
 export class SvcTimeViewComponent {
   private longitude: number;

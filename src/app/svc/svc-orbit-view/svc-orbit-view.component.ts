@@ -101,7 +101,8 @@ interface ZSortablePlanet {
 @Component({
   selector: 'svc-orbit-view',
   templateUrl: './svc-orbit-view.component.html',
-  styleUrls: ['./svc-orbit-view.component.scss']
+  styleUrls: ['./svc-orbit-view.component.scss'],
+  standalone: false
 })
 export class SvcOrbitViewComponent extends GenericPlanetaryViewDirective implements AfterViewInit {
   private anaglyph3d = false;

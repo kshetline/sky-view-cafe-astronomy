@@ -19,7 +19,8 @@ export const    PROPERTY_TWILIGHT = 'twilight';
 @Component({
   selector: 'svc-table-view',
   templateUrl: './svc-table-view.component.html',
-  styleUrls: ['./svc-table-view.component.scss']
+  styleUrls: ['./svc-table-view.component.scss'],
+  standalone: false
 })
 export class SvcTableViewComponent implements AfterViewInit {
   private dateTime: DateTime;

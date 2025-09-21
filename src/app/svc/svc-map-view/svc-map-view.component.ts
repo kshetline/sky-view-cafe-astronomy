@@ -45,7 +45,8 @@ const shadowColor = 'rgba(0,0,0,0.6)';
 @Component({
   selector: 'svc-map-view',
   templateUrl: './svc-map-view.component.html',
-  styleUrls: ['./svc-map-view.component.scss']
+  styleUrls: ['./svc-map-view.component.scss'],
+  standalone: false
 })
 export class SvcMapViewComponent extends GenericViewDirective implements AfterViewInit {
   private dayMap: HTMLImageElement;

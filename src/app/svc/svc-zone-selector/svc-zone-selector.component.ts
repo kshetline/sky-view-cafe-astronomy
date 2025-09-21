@@ -73,6 +73,7 @@ function toDisplayZone(zone: string): string {
   templateUrl: './svc-zone-selector.component.html',
   styleUrls: ['./svc-zone-selector.component.scss'],
   providers: [SVC_ZONE_SELECTOR_VALUE_ACCESSOR],
+  standalone: false
 })
 export class SvcZoneSelectorComponent implements ControlValueAccessor, OnInit {
   regions: string[] = [UT_OPTION];

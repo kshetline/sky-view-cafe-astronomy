@@ -11,7 +11,8 @@ import {
 @Component({
   selector: 'svc-orbits-view-options',
   templateUrl: './svc-orbit-view-options.component.html',
-  styleUrls: ['./svc-orbit-view-options.component.scss']
+  styleUrls: ['./svc-orbit-view-options.component.scss'],
+  standalone: false
 })
 export class SvcOrbitViewOptionsComponent extends SvcGenericOptionsComponent implements AfterViewInit {
   private _extent = 0;

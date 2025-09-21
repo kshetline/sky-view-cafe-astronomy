@@ -6,7 +6,8 @@ import { formatLatitude, formatLongitude } from '../svc-util';
 @Component({
   selector: 'svc-change-location-dialog',
   templateUrl: './svc-change-location-dialog.component.html',
-  styleUrls: ['./svc-change-location-dialog.component.scss']
+  styleUrls: ['./svc-change-location-dialog.component.scss'],
+  standalone: false
 })
 export class SvcChangeLocationDialogComponent {
   private _visible = false;

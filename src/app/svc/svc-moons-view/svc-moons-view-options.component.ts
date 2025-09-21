@@ -10,7 +10,8 @@ import {
 @Component({
   selector: 'svc-moons-view-options',
   templateUrl: './svc-moons-view-options.component.html',
-  styleUrls: ['./svc-moons-view-options.component.scss']
+  styleUrls: ['./svc-moons-view-options.component.scss'],
+  standalone: false
 })
 export class SvcMoonsViewOptionsComponent implements AfterViewInit {
   DDD = AngleStyle.DDD;

@@ -9,7 +9,8 @@ import {
 @Component({
   selector: 'svc-table-view-options',
   templateUrl: './svc-table-view-options.component.html',
-  styleUrls: ['./svc-table-view-options.component.scss']
+  styleUrls: ['./svc-table-view-options.component.scss'],
+  standalone: false
 })
 export class SvcTableViewOptionsComponent implements AfterViewInit {
   private planetChoice = SUN;

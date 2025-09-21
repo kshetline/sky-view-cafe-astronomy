@@ -31,7 +31,8 @@ const CROSSHAIR_CLEARING = 2;
 @Component({
   selector: 'svc-insolation-view',
   templateUrl: './svc-insolation-view.component.html',
-  styleUrls: ['./svc-insolation-view.component.scss']
+  styleUrls: ['./svc-insolation-view.component.scss'],
+  standalone: false
 })
 export class SvcInsolationViewComponent extends GenericViewDirective implements AfterViewInit {
   private insolationCanvas: HTMLCanvasElement;

@@ -29,7 +29,8 @@ interface MenuEvent {
 @Component({
   selector: 'svc-sky-view-options',
   templateUrl: './svc-sky-view-options.component.html',
-  styleUrls: ['./svc-sky-view-options.component.scss']
+  styleUrls: ['./svc-sky-view-options.component.scss'],
+  standalone: false
 })
 export class SvcSkyViewOptionsComponent extends SvcGenericOptionsComponent implements AfterViewInit {
   private _viewType = VIEW_TYPE.FULL_SKY_FLAT;

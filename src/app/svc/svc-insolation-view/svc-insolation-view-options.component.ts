@@ -8,7 +8,8 @@ import {
 @Component({
   selector: 'svc-insolation-view-options',
   templateUrl: './svc-insolation-view-options.component.html',
-  styleUrls: ['./svc-insolation-view-options.component.scss']
+  styleUrls: ['./svc-insolation-view-options.component.scss'],
+  standalone: false
 })
 export class SvcInsolationViewOptionsComponent implements AfterViewInit {
   private _centerMidnight = true;

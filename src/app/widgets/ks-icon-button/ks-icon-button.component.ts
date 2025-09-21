@@ -4,6 +4,7 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
   selector: 'ks-icon-button',
   templateUrl: './ks-icon-button.component.html',
   styleUrls: ['./ks-icon-button.component.scss'],
+  standalone: false
 })
 export class KsIconButtonComponent {
   private _disabled = false;

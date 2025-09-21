@@ -44,7 +44,8 @@ function toDuration(secs: number): string {
 @Component({
   selector: 'svc-eclipse-circumstances',
   templateUrl: './svc-eclipse-circumstances.component.html',
-  styleUrls: ['./svc-eclipse-circumstances.component.scss']
+  styleUrls: ['./svc-eclipse-circumstances.component.scss'],
+  standalone: false
 })
 export class SvcEclipseCircumstancesComponent implements AfterViewInit, OnInit {
   private _collapsed = false;
