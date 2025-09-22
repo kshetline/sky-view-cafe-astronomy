@@ -11,7 +11,7 @@ import { JpegCommentReader } from './app/util/ks-read-jpeg-comment';
 import { KsTimeService } from './app/util/ks-time.service';
 import { SvcAtlasService } from './app/svc/svc-atlas.service';
 import { providePrimeNG } from 'primeng/config';
-import { definePreset, palette } from '@primeng/themes';
+import { ColorScale, definePreset, palette } from '@primeng/themes';
 import { provideHttpClient, withInterceptorsFromDi, withJsonpSupport } from '@angular/common/http';
 import { AppRoutingModule } from './app/app-routing.module';
 import { BlockUIModule } from 'primeng/blockui';
@@ -25,14 +25,13 @@ import { FormsModule } from '@angular/forms';
 import { InputTextModule } from 'primeng/inputtext';
 import { MenuModule } from 'primeng/menu';
 import { MessageModule } from 'primeng/message';
-import { MessagesModule } from 'primeng/messages';
 import { PanelModule } from 'primeng/panel';
 import { PopoverModule } from 'primeng/popover';
 import { RadioButtonModule } from 'primeng/radiobutton';
 import { SelectModule } from 'primeng/select';
 import { SliderModule } from 'primeng/slider';
 import { TableModule } from 'primeng/table';
-import { TabViewModule } from 'primeng/tabview';
+import { TabsModule } from 'primeng/tabs';
 import { ToastModule } from 'primeng/toast';
 import { TooltipModule } from 'primeng/tooltip';
 import { AppComponent } from './app/app.component';
@@ -40,18 +39,9 @@ import Aura from '@primeng/themes/aura';
 
 const AuraSky = definePreset(Aura, {
   semantic: {
-    primary: palette('{sky}')
-  },
-  components: {
-    button: {
-      label: {
-        fontSize: '1rem'
-      }
-    }
+    primary: palette('{sky}') as ColorScale
   }
 });
-
-
 
 initTimezoneLargeAlt(true);
 pollForTimezoneUpdates(zonePollerBrowser, 'large-alt');
@@ -63,8 +53,8 @@ bootstrapApplication(AppComponent, {
   providers: [
     importProvidersFrom(
       AppRoutingModule, BlockUIModule, ButtonModule, CheckboxModule, ConfirmDialogModule, DialogModule, FormsModule, InputTextModule,
-      MenuModule, MessageModule, MessagesModule, PanelModule, PopoverModule, RadioButtonModule, SelectModule, SharedModule, SliderModule, TableModule,
-      TabViewModule, ToastModule, TooltipModule
+      MenuModule, MessageModule, MessageModule, PanelModule, PopoverModule, RadioButtonModule, SelectModule, SharedModule, SliderModule, TableModule,
+      TabsModule, ToastModule, TooltipModule
     ),
     AppService,
     AstroDataService,

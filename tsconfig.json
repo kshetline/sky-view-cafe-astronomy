@@ -5,13 +5,15 @@
     "outDir": "./dist/out-tsc",
     "sourceMap": true,
     "declaration": false,
-    "moduleResolution": "node",
+    "moduleResolution": "bundler",
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "noImplicitAny": true,
     "target": "ES2022",
     "allowSyntheticDefaultImports": true,
-    "types": ["node"],
+    "types": [
+      "node"
+    ],
     "lib": [
       "es2020",
       "dom"

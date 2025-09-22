@@ -2,7 +2,6 @@ import { Component, EventEmitter, forwardRef, Input, Output, ViewChild } from '@
 import { ControlValueAccessor, NG_VALUE_ACCESSOR, FormsModule } from '@angular/forms';
 import { isArray, isObject, isString, isEqual, noop } from '@tubular/util';
 import { SelectItem } from 'primeng/api';
-import { Dropdown } from 'primeng/dropdown';
 import { Select } from 'primeng/select';
 import { NgIf, NgFor } from '@angular/common';
 
@@ -29,7 +28,7 @@ export class KsDropdownComponent implements ControlValueAccessor {
   private onChangeCallback: (_: any) => void = noop;
   private usingTouch = false;
 
-  @ViewChild('pSelect', { static: true }) private pSelect: Dropdown;
+  @ViewChild('pSelect', { static: true }) private pSelect: Select;
 
   disabled = false;
   primeOptions: SelectItem[] = [];
@@ -65,7 +64,7 @@ export class KsDropdownComponent implements ControlValueAccessor {
       evt.preventDefault();
       evt.stopPropagation();
       this.pSelect.focus();
-      setTimeout(() => this.pSelect.containerViewChild.nativeElement.click());
+      setTimeout(() => this.pSelect.el.nativeElement.querySelector('div'));
     }
   }
 
