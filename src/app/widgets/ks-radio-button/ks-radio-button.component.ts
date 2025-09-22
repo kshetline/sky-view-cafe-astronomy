@@ -2,7 +2,7 @@ import { Component, ElementRef, EventEmitter, forwardRef, Input, Output, ViewChi
 import { ControlValueAccessor, NG_VALUE_ACCESSOR, FormsModule } from '@angular/forms';
 import { isEqual, noop } from '@tubular/util';
 import { RadioButton } from 'primeng/radiobutton';
-import { NgIf, NgClass, NgStyle } from '@angular/common';
+import { NgClass, NgStyle } from '@angular/common';
 
 const RADIO_BUTTON_VALUE_ACCESSOR: any = {
   provide: NG_VALUE_ACCESSOR,
@@ -15,7 +15,7 @@ const RADIO_BUTTON_VALUE_ACCESSOR: any = {
   templateUrl: './ks-radio-button.component.html',
   styleUrls: ['./ks-radio-button.component.scss'],
   providers: [RADIO_BUTTON_VALUE_ACCESSOR],
-  imports: [FormsModule, NgClass, NgIf, NgStyle, RadioButton]
+  imports: [FormsModule, NgClass, NgStyle, RadioButton]
 })
 export class KsRadioButtonComponent implements ControlValueAccessor {
   private _ngValue: any;

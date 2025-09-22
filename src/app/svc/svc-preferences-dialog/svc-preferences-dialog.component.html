@@ -55,15 +55,17 @@
       <div class="settings-value twilight">
         <ks-dropdown [options]="twilightOptions" [(ngModel)]="twilightByDegrees" ksSizer="27em"></ks-dropdown>
         <input type="text" [(ngModel)]="twilightValue" pInputText class="twilight-input form-control"
-               id="twilightInput" required minlength="1" maxlength="3" pattern="\d{1,3}" (input)="onTwilightChange($event.target)"/>
+          id="twilightInput" required minlength="1" maxlength="3" pattern="\d{1,3}" (input)="onTwilightChange($event.target)"/>
       </div>
     </div>
-    <div *ngIf="!formValid" class="settings-row">
-      <div class="settings-label"></div>
-      <div class="settings-value error-caption">
-        {{ invalidMessage }}
+    @if (!formValid) {
+      <div class="settings-row">
+        <div class="settings-label"></div>
+        <div class="settings-value error-caption">
+          {{ invalidMessage }}
+        </div>
       </div>
-    </div>
+    }
     <div class="settings-row">
       <div class="settings-label">
         Calendar:
@@ -78,7 +80,7 @@
           max="3900"
           [disabled]="gcdDisabled"
           [blank]="!gcdVisible"
-          [(date)]="gcdValue"></tbw-time-editor>
+        [(date)]="gcdValue"></tbw-time-editor>
       </div>
     </div>
     <div class="settings-row">
@@ -89,14 +91,16 @@
         <ks-dropdown [options]="inkSaverOptions" [(ngModel)]="inkSaver"></ks-dropdown>
       </div>
     </div>
-    <div *ngIf="showDateTimeOptions" class="settings-row">
-      <div class="settings-label">
-        Date/time input:
+    @if (showDateTimeOptions) {
+      <div class="settings-row">
+        <div class="settings-label">
+          Date/time input:
+        </div>
+        <div class="settings-value">
+          <ks-dropdown [options]="dateTimeOptions" [(ngModel)]="nativeDateTime"></ks-dropdown>
+        </div>
       </div>
-      <div class="settings-value">
-        <ks-dropdown [options]="dateTimeOptions" [(ngModel)]="nativeDateTime"></ks-dropdown>
-      </div>
-    </div>
+    }
     <div class="settings-row">
       <div class="settings-label">
         &nbsp;
@@ -107,7 +111,9 @@
     </div>
   </div>
   <ng-template pTemplate="footer">
-    <div *ngIf="clockStyle === ISO_SEC || clockStyle === LOCAL_SEC" class="time-accuracy-note">See notes on time accuracy!</div>
+    @if (clockStyle === ISO_SEC || clockStyle === LOCAL_SEC) {
+      <div class="time-accuracy-note">See notes on time accuracy!</div>
+    }
     <div class="p-dialog-buttonpane ui-widget p-clearfix">
       <p-button icon="far fa-window-close" (click)="visible=false" label="Cancel"></p-button>
       <p-button icon="fas fa-check" (click)="setPreferences()" label="OK" [disabled]="!formValid"></p-button>

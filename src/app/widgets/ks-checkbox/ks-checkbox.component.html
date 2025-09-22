@@ -1,4 +1,6 @@
 <p-checkbox #checkbox [(ngModel)]="ngValue" [disabled]="disabled" [value]="value"
-  (onFocus)="onFocus($event)" (onBlur)="onBlur($event)" [binary]="binary"></p-checkbox>
-<span *ngIf="!!label" (click)="onClick($event)" [ngClass]="{'faded': disabled}"
-   [ngStyle]="{'cursor': disabled ? 'default' : 'pointer'}">{{label}}</span>
+(onFocus)="onFocus($event)" (onBlur)="onBlur($event)" [binary]="binary"></p-checkbox>
+@if (!!label) {
+  <span (click)="onClick($event)" [ngClass]="{'faded': disabled}"
+  [ngStyle]="{'cursor': disabled ? 'default' : 'pointer'}">{{label}}</span>
+}

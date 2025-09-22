@@ -21,7 +21,6 @@ import { SvcNativeDateTimeDialogComponent } from './svc/svc-native-date-time-dia
 import { SvcPreferencesDialogComponent } from './svc/svc-preferences-dialog/svc-preferences-dialog.component';
 import { Button } from 'primeng/button';
 import { FormsModule } from '@angular/forms';
-import { NgIf } from '@angular/common';
 import { Popover } from 'primeng/popover';
 import { KsIconButtonComponent } from './widgets/ks-icon-button/ks-icon-button.component';
 import { KsCheckboxComponent } from './widgets/ks-checkbox/ks-checkbox.component';
@@ -53,11 +52,13 @@ const MAX_CLOCK_EFFECTIVE_WIDTH = 600;
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
   providers: [AppService, MessageService],
-  imports: [Button, CalendarPanelComponent, Dialog, FormsModule, KsCheckboxComponent, KsIconButtonComponent, KsTabComponent,
-            KsTabViewComponent, Menu, NgIf, Popover, SvcCalendarViewComponent, SvcEclipseCircumstancesComponent, SvcEclipticViewComponent,
-            SvcEventNavigatorComponent, SvcInsolationViewComponent, SvcLocationSettingsComponent, SvcMapViewComponent,
-            SvcMoonsViewComponent, SvcNativeDateTimeDialogComponent, SvcOptionsPanelComponent, SvcOrbitViewComponent,
-            SvcPreferencesDialogComponent, SvcSkyViewComponent, SvcTableViewComponent, SvcTimeViewComponent, TimeEditorComponent, Toast]
+  imports: [Button, CalendarPanelComponent, Dialog, FormsModule, KsCheckboxComponent, KsIconButtonComponent,
+            KsTabComponent, KsTabViewComponent, Menu, Popover, SvcCalendarViewComponent,
+            SvcEclipseCircumstancesComponent, SvcEclipticViewComponent, SvcEventNavigatorComponent,
+            SvcInsolationViewComponent, SvcLocationSettingsComponent, SvcMapViewComponent, SvcMoonsViewComponent,
+            SvcNativeDateTimeDialogComponent, SvcOptionsPanelComponent, SvcOrbitViewComponent,
+            SvcPreferencesDialogComponent, SvcSkyViewComponent, SvcTableViewComponent, SvcTimeViewComponent,
+            TimeEditorComponent, Toast]
 })
 export class AppComponent implements AfterViewInit, OnDestroy {
   Timezone = Timezone;

@@ -1,13 +1,31 @@
 <fieldset>
   <legend>Options</legend>
-  <div *ngIf="currentTab === 0"><svc-sky-view-options></svc-sky-view-options></div>
-  <div *ngIf="currentTab === 1"><svc-ecliptic-view-options></svc-ecliptic-view-options></div>
-  <div *ngIf="currentTab === 2"><svc-orbits-view-options></svc-orbits-view-options></div>
-  <div *ngIf="currentTab === 3"><svc-moons-view-options></svc-moons-view-options></div>
-  <div *ngIf="currentTab === 4"><svc-insolation-view-options></svc-insolation-view-options></div>
-  <div *ngIf="currentTab === 5"><svc-map-view-options></svc-map-view-options></div>
-  <div *ngIf="currentTab === 6"><svc-calendar-view-options></svc-calendar-view-options></div>
-  <div *ngIf="currentTab === 7"><span class="no-options">None</span></div>
-  <div *ngIf="currentTab === 8"><svc-table-view-options></svc-table-view-options></div>
+  @if (currentTab === 0) {
+    <div><svc-sky-view-options></svc-sky-view-options></div>
+  }
+  @if (currentTab === 1) {
+    <div><svc-ecliptic-view-options></svc-ecliptic-view-options></div>
+  }
+  @if (currentTab === 2) {
+    <div><svc-orbits-view-options></svc-orbits-view-options></div>
+  }
+  @if (currentTab === 3) {
+    <div><svc-moons-view-options></svc-moons-view-options></div>
+  }
+  @if (currentTab === 4) {
+    <div><svc-insolation-view-options></svc-insolation-view-options></div>
+  }
+  @if (currentTab === 5) {
+    <div><svc-map-view-options></svc-map-view-options></div>
+  }
+  @if (currentTab === 6) {
+    <div><svc-calendar-view-options></svc-calendar-view-options></div>
+  }
+  @if (currentTab === 7) {
+    <div><span class="no-options">None</span></div>
+  }
+  @if (currentTab === 8) {
+    <div><svc-table-view-options></svc-table-view-options></div>
+  }
 </fieldset>
 <div class="filler"></div>

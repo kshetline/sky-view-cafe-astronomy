@@ -5,7 +5,6 @@ import { Dialog } from 'primeng/dialog';
 import { KsSizerDirective } from '../../directives/ks-sizer.directive';
 import { KsRadioButtonComponent } from '../../widgets/ks-radio-button/ks-radio-button.component';
 import { FormsModule } from '@angular/forms';
-import { NgIf } from '@angular/common';
 import { PrimeTemplate } from 'primeng/api';
 import { Button } from 'primeng/button';
 
@@ -13,7 +12,7 @@ import { Button } from 'primeng/button';
   selector: 'svc-native-date-time-dialog',
   templateUrl: './svc-native-date-time-dialog.component.html',
   styleUrls: ['./svc-native-date-time-dialog.component.scss'],
-  imports: [Button, Dialog, FormsModule, KsRadioButtonComponent, KsSizerDirective, NgIf, PrimeTemplate]
+  imports: [Button, Dialog, FormsModule, KsRadioButtonComponent, KsSizerDirective, PrimeTemplate]
 })
 export class SvcNativeDateTimeDialogComponent {
   private _visible = false;

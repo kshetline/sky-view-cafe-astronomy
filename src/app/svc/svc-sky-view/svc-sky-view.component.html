@@ -1,26 +1,30 @@
-<div *ngIf="trackingPlanet < 0" class="sky-controls">
-  <span>Facing: {{formattedFacing}}&deg; {{facingOrigin}}</span>
-  <span>&bull;</span>
-  <p-button label="S" [disabled]="trackSun || facing === 0" (click)="changeFacing(0)"></p-button>
-  <p-button label="W" [disabled]="trackSun || facing === 90" (click)="changeFacing(90)"></p-button>
-  <p-button label="N" [disabled]="trackSun || facing === 180" (click)="changeFacing(180)"></p-button>
-  <p-button label="E" [disabled]="trackSun || facing === 270" (click)="changeFacing(270)"></p-button>
-  <span>&bull;</span>
-  <ks-checkbox [(ngModel)]="trackSun" binary="true" label="Track Sun"></ks-checkbox>
-</div>
-<div *ngIf="trackingPlanet >= 0" class="sky-controls">
-  <ks-radioButton name="horizonOrEcliptic" [value]="false" [(ngModel)]="parallelToEcliptic" label="Parallel to horizon"></ks-radioButton>
-  &nbsp;&nbsp;&nbsp;
-  <ks-radioButton name="horizonOrEcliptic" [value]="true"  [(ngModel)]="parallelToEcliptic" label="Parallel to ecliptic"></ks-radioButton>
-</div>
+@if (trackingPlanet < 0) {
+  <div class="sky-controls">
+    <span>Facing: {{formattedFacing}}&deg; {{facingOrigin}}</span>
+    <span>&bull;</span>
+    <p-button label="S" [disabled]="trackSun || facing === 0" (click)="changeFacing(0)"></p-button>
+    <p-button label="W" [disabled]="trackSun || facing === 90" (click)="changeFacing(90)"></p-button>
+    <p-button label="N" [disabled]="trackSun || facing === 180" (click)="changeFacing(180)"></p-button>
+    <p-button label="E" [disabled]="trackSun || facing === 270" (click)="changeFacing(270)"></p-button>
+    <span>&bull;</span>
+    <ks-checkbox [(ngModel)]="trackSun" binary="true" label="Track Sun"></ks-checkbox>
+  </div>
+}
+@if (trackingPlanet >= 0) {
+  <div class="sky-controls">
+    <ks-radioButton name="horizonOrEcliptic" [value]="false" [(ngModel)]="parallelToEcliptic" label="Parallel to horizon"></ks-radioButton>
+    &nbsp;&nbsp;&nbsp;
+    <ks-radioButton name="horizonOrEcliptic" [value]="true"  [(ngModel)]="parallelToEcliptic" label="Parallel to ecliptic"></ks-radioButton>
+  </div>
+}
 <div #canvasWrapper class="canvas-wrapper">
   <div class="canvas-anchor">
     <canvas #skyCanvas (window:resize)="onResize()"
-            (touchstart)="onTouchStart($event)" (mousedown)="onMouseDown($event)"
-            (touchmove)="onTouchMove($event)" (mousemove)="onMouseMove($event)"
-            (touchend)="onTouchEnd($event)" (touchcancel)="onTouchEnd($event)" (mouseup)="onMouseUp($event)"
-            (dblclick)="onDoubleClick($event)"
-            [style.cursor]="cursor"
+      (touchstart)="onTouchStart($event)" (mousedown)="onMouseDown($event)"
+      (touchmove)="onTouchMove($event)" (mousemove)="onMouseMove($event)"
+      (touchend)="onTouchEnd($event)" (touchcancel)="onTouchEnd($event)" (mouseup)="onMouseUp($event)"
+      (dblclick)="onDoubleClick($event)"
+      [style.cursor]="cursor"
     ></canvas>
   </div>
 </div>

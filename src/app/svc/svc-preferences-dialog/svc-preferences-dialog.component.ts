@@ -12,7 +12,6 @@ import { Dialog } from 'primeng/dialog';
 import { KsSizerDirective } from '../../directives/ks-sizer.directive';
 import { FormsModule } from '@angular/forms';
 import { InputText } from 'primeng/inputtext';
-import { NgIf } from '@angular/common';
 import { KsCheckboxComponent } from '../../widgets/ks-checkbox/ks-checkbox.component';
 import { Button } from 'primeng/button';
 
@@ -26,7 +25,7 @@ const standardGregorian = '1582-10-15';
   selector: 'svc-preferences-dialog',
   templateUrl: './svc-preferences-dialog.component.html',
   styleUrls: ['./svc-preferences-dialog.component.scss'],
-  imports: [Button, Dialog, FormsModule, InputText, KsCheckboxComponent, KsDropdownComponent, KsSizerDirective, NgIf,
+  imports: [Button, Dialog, FormsModule, InputText, KsCheckboxComponent, KsDropdownComponent, KsSizerDirective,
             PrimeTemplate, TimeEditorComponent],
 })
 export class SvcPreferencesDialogComponent {

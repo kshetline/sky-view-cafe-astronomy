@@ -1,4 +1,4 @@
-import { DatePipe, NgStyle, NgFor, NgClass } from '@angular/common';
+import { DatePipe, NgStyle, NgClass } from '@angular/common';
 import { AfterViewInit, Component, ElementRef, ViewChild } from '@angular/core';
 import {
   AstroEvent, EQ_SOLSTICE_EVENT_BASE, EventFinder, FALL_EQUINOX, FIRST_QUARTER, FULL_MOON, ISkyObserver, JUPITER, LAST_QUARTER, MARS,
@@ -62,7 +62,7 @@ interface DateInfo extends YMDDate {
   selector: 'svc-calendar-view',
   templateUrl: './svc-calendar-view.component.html',
   styleUrls: ['./svc-calendar-view.component.scss'],
-  imports: [NgClass, NgFor, NgStyle]
+  imports: [NgClass, NgStyle]
 })
 export class SvcCalendarViewComponent implements AfterViewInit {
   isChromium = isChromium();

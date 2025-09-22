@@ -16,7 +16,7 @@ import { KsDropdownComponent } from '../../widgets/ks-dropdown/ks-dropdown.compo
 import { KsSizerDirective } from '../../directives/ks-sizer.directive';
 import { Button } from 'primeng/button';
 import { KsCheckboxComponent } from '../../widgets/ks-checkbox/ks-checkbox.component';
-import { NgIf, NgStyle } from '@angular/common';
+import { NgStyle } from '@angular/common';
 import { Tooltip } from 'primeng/tooltip';
 import { Toast } from 'primeng/toast';
 
@@ -36,8 +36,8 @@ interface LocationInfo {
   templateUrl: './svc-atlas-dialog.component.html',
   styleUrls: ['./svc-atlas-dialog.component.scss'],
   providers: [MessageService],
-  imports: [Button, Dialog, FormsModule, InputText, KsCheckboxComponent, KsDropdownComponent, KsSizerDirective, NgIf, NgStyle,
-            PrimeTemplate, TableModule, Toast, Tooltip]
+  imports: [Button, Dialog, FormsModule, InputText, KsCheckboxComponent, KsDropdownComponent, KsSizerDirective,
+            NgStyle, PrimeTemplate, TableModule, Toast, Tooltip]
 })
 export class SvcAtlasDialogComponent implements OnInit {
   private busyTimer: any;

@@ -9,7 +9,6 @@ import { padLeft } from '@tubular/util';
 import {
   AppService, ClockStyle, Location, PROPERTY_CLOCK_STYLE, PROPERTY_ECLIPSE_INFO_COLLAPSED, UserSetting, VIEW_APP
 } from '../../app.service';
-import { NgIf } from '@angular/common';
 import julianDay = ttime.julianDay;
 import millisFromJulianDay = ttime.millisFromJulianDay;
 
@@ -45,8 +44,7 @@ function toDuration(secs: number): string {
 @Component({
   selector: 'svc-eclipse-circumstances',
   templateUrl: './svc-eclipse-circumstances.component.html',
-  styleUrls: ['./svc-eclipse-circumstances.component.scss'],
-  imports: [NgIf]
+  styleUrls: ['./svc-eclipse-circumstances.component.scss']
 })
 export class SvcEclipseCircumstancesComponent implements AfterViewInit, OnInit {
   private _collapsed = false;

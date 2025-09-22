@@ -2,11 +2,15 @@
   <p-select #pSelect [options]="primeOptions" [(ngModel)]="primeValue" appendTo="body"
     [disabled]="(options.length === 0 && !editable) || disabled"
     (onFocus)="onDropdownFocus($event)" (onBlur)="onDropdownBlur($event)" [scrollHeight]="scrollHeight"
-    [editable]="editable"></p-select>
+  [editable]="editable"></p-select>
   <!-- TODO: Disable special touch interface mode for now --> <!--suppress PointlessBooleanExpressionJS -->
-  <select *ngIf="false && useSelect" tabindex="0" [(ngModel)]="selectValue"
-    (touchstart)="onTouchStart()"
-    (click)="selectClick($event)">
-    <option *ngFor="let option of selectOptions; index as i" [value]="i">{{option}}</option>
-  </select>
+  @if (false && useSelect) {
+    <select tabindex="0" [(ngModel)]="selectValue"
+      (touchstart)="onTouchStart()"
+      (click)="selectClick($event)">
+      @for (option of selectOptions; track option; let i = $index) {
+        <option [value]="i">{{option}}</option>
+      }
+    </select>
+  }
 </div>

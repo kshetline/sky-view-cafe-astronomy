@@ -1,6 +1,6 @@
 <!--suppress HtmlFormInputWithoutLabel, HtmlUnknownAttribute, TypeScriptValidateJSTypes, TypeScriptUnresolvedVariable -->
 <p-dialog header="Find Latitude, Longitude, and Timezone" [modal]="true" [(visible)]="visible" [style]="{width: '797px'}"
-          (keyup)="onKey($event)">
+  (keyup)="onKey($event)">
   <div style="position: relative">
     <div class="search-controls">
       <div class="top-caption-row">
@@ -9,11 +9,11 @@
       </div>
       <div class="search-row">
         <span><input #searchField type="text" pInputText class="city-field" [(ngModel)]="city" [disabled]="searchInputDisabled"
-                 (focus)="searchFocus(true)" (blur)="searchFocus(false)" (input)="searchChanged()"
-                 autocorrect="off" autocapitalize="off" autocomplete="off"/></span>
+          (focus)="searchFocus(true)" (blur)="searchFocus(false)" (input)="searchChanged()"
+        autocorrect="off" autocapitalize="off" autocomplete="off"/></span>
         <span><ks-dropdown id="state-select" [(ngModel)]="state" [options]="states" [editable]="true" ksSizer="19em"></ks-dropdown></span>
         <span><p-button icon="fas fa-search" (click)="search()" label="Search" [disabled]="searching || becomingVisible"
-                      (focus)="searchFocus(true)" (blur)="searchFocus(false)"></p-button></span>
+        (focus)="searchFocus(true)" (blur)="searchFocus(false)"></p-button></span>
       </div>
       <div class="bottom-caption-row">
         <span>Required</span><span>(Optional)</span><span></span>
@@ -26,50 +26,52 @@
   </div>
   <div class="table-wrapper">
     <div class="table-border">&nbsp;</div>
-    <div *ngIf="!busy && !searching && (!locations || locations.length === 0)" class="table-overlay">&nbsp;</div>
+    @if (!busy && !searching && (!locations || locations.length === 0)) {
+      <div class="table-overlay">&nbsp;</div>
+    }
     <p-table #locationTable [value]="locations" selectionMode="single" [scrollable]="locations?.length > 11"
-             scrollHeight="300px" [(selection)]="selection" metaKeySelection="true" class="atlas-table results-table">
+      scrollHeight="300px" [(selection)]="selection" class="atlas-table results-table">
       <ng-template pTemplate="colgroup">
         <colgroup>
-          <col style="width: 40px">
-          <col style="width: 196px; max-width: 196px; overflow: hidden; text-overflow: ellipsis;">
-          <col style="width: 55px">
-          <col style="width: 62px">
-          <col style="width: 74px">
-        </colgroup>
-      </ng-template>
-      <ng-template pTemplate="header">
-        <tr>
-          <th>&#x2605;</th>
-          <th>Name</th>
-          <th>Lat.</th>
-          <th>Long.</th>
-          <th>Timezone</th>
-        </tr>
-      </ng-template>
-      <ng-template pTemplate="body" let-loc>
-        <tr [pSelectableRow]="loc" (dblclick)="onDoubleClick()">
-          <td>{{(loc.rank || 0).toString(16).toUpperCase()}} <img src="assets/resources/flags/{{loc.flagCode}}.png" class="flag-image" width="16" height="11" alt="{{loc.flagCode}}"></td>
-          <td style="max-width: 196px; text-overflow: ellipsis; overflow: hidden"><span [pTooltip]="showTooltip(loc.name)">{{loc.name}}</span></td>
-          <td>{{loc.lat}}</td>
-          <td>{{loc.lon}}</td>
-          <td><span [pTooltip]="showTooltip(loc.zone)">{{loc.zoneInfo}}</span></td>
-        </tr>
-      </ng-template>
-      <ng-template pTemplate="emptymessage">
-        <tr><td colspan="5">{{emptyMessage}}</td></tr>
-      </ng-template>
-    </p-table>
+        <col style="width: 40px">
+        <col style="width: 196px; max-width: 196px; overflow: hidden; text-overflow: ellipsis;">
+        <col style="width: 55px">
+        <col style="width: 62px">
+        <col style="width: 74px">
+      </colgroup>
+    </ng-template>
+    <ng-template pTemplate="header">
+      <tr>
+        <th>&#x2605;</th>
+        <th>Name</th>
+        <th>Lat.</th>
+        <th>Long.</th>
+        <th>Timezone</th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-loc>
+      <tr [pSelectableRow]="loc" (dblclick)="onDoubleClick()">
+        <td>{{(loc.rank || 0).toString(16).toUpperCase()}} <img src="assets/resources/flags/{{loc.flagCode}}.png" class="flag-image" width="16" height="11" alt="{{loc.flagCode}}"></td>
+        <td style="max-width: 196px; text-overflow: ellipsis; overflow: hidden"><span [pTooltip]="showTooltip(loc.name)">{{loc.name}}</span></td>
+        <td>{{loc.lat}}</td>
+        <td>{{loc.lon}}</td>
+        <td><span [pTooltip]="showTooltip(loc.zone)">{{loc.zoneInfo}}</span></td>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="emptymessage">
+      <tr><td colspan="5">{{emptyMessage}}</td></tr>
+    </ng-template>
+  </p-table>
+</div>
+<div class="map-wrapper">
+  <div #atlasMap class="atlas-map"></div>
+  <div class="map-mask" [ngStyle]="{visibility: maskDisplay}"></div>
+</div>
+<ng-template pTemplate="footer">
+  <div class="p-dialog-buttonpane p-widget-content p-clearfix">
+    <p-button icon="far fa-window-close" (click)="visible=false" label="Cancel"></p-button>
+    <p-button icon="fas fa-check" (click)="setLocation()" label="OK" [disabled]="searching || !selection"></p-button>
   </div>
-  <div class="map-wrapper">
-    <div #atlasMap class="atlas-map"></div>
-    <div class="map-mask" [ngStyle]="{visibility: maskDisplay}"></div>
-  </div>
-  <ng-template pTemplate="footer">
-    <div class="p-dialog-buttonpane p-widget-content p-clearfix">
-      <p-button icon="far fa-window-close" (click)="visible=false" label="Cancel"></p-button>
-      <p-button icon="fas fa-check" (click)="setLocation()" label="OK" [disabled]="searching || !selection"></p-button>
-    </div>
-  </ng-template>
-  <p-toast key="general" position="top-right"></p-toast>
+</ng-template>
+<p-toast key="general" position="top-right"></p-toast>
 </p-dialog>

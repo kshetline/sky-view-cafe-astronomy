@@ -1,7 +1,9 @@
 <div>
   <ul class="ks-tabs">
-    <li *ngFor="let tab of tabs; let i = index" [ngClass]="{'ks-active': i === activeTab}"
-        (click)="selectTab(i)">{{tab.header}}</li>
+    @for (tab of tabs; track tab; let i = $index) {
+      <li [ngClass]="{'ks-active': i === activeTab}"
+      (click)="selectTab(i)">{{tab.header}}</li>
+    }
   </ul>
   <ng-content></ng-content>
 </div>

@@ -22,7 +22,6 @@ import {
 import { PROPERTY_ADDITIONALS } from '../generic-view.directive';
 import { MilkyWay } from '../milky-way';
 import { MoonDrawer } from '../moon-drawer';
-import { NgIf } from '@angular/common';
 import { Button } from 'primeng/button';
 import { KsCheckboxComponent } from '../../widgets/ks-checkbox/ks-checkbox.component';
 import { FormsModule } from '@angular/forms';
@@ -95,7 +94,7 @@ const DEFAULT_SKY_RESOLUTION = 5;
   selector: 'svc-sky-view',
   templateUrl: './svc-sky-view.component.html',
   styleUrls: ['./svc-sky-view.component.scss'],
-  imports: [Button, FormsModule, KsCheckboxComponent, KsMarqueeComponent, KsRadioButtonComponent, NgIf]
+  imports: [Button, FormsModule, KsCheckboxComponent, KsMarqueeComponent, KsRadioButtonComponent]
 })
 export class SvcSkyViewComponent extends GenericSkyViewDirective implements AfterViewInit {
   private _facing = 0;

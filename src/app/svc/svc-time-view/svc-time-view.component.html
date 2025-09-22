@@ -27,7 +27,9 @@
     <td class="value">{{deltaT}}</td>
   </tr>
   <tr>
-    <td>ΔTAI (TAI - UTC)<span *ngIf="!taiToUtcWellDefined" class="footnote">*</span>:</td>
+    <td>ΔTAI (TAI - UTC)@if (!taiToUtcWellDefined) {
+      <span class="footnote">*</span>
+    }:</td>
     <td class="value">{{deltaTai}}</td>
   </tr>
   <tr>
@@ -54,7 +56,9 @@
     <td>Unix seconds:</td>
     <td class="value">{{formattedSeconds}}</td>
   </tr>
-  <tr *ngIf="!taiToUtcWellDefined">
-    <td colspan=2 class="full-footnote">*Transitions to TAI - UT outside of well-defined range for UTC.</td>
-  </tr>
+  @if (!taiToUtcWellDefined) {
+    <tr>
+      <td colspan=2 class="full-footnote">*Transitions to TAI - UT outside of well-defined range for UTC.</td>
+    </tr>
+  }
 </table>

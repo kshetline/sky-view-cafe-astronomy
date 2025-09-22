@@ -1,6 +1,6 @@
 <!--suppress CheckImageSize, HtmlUnknownTarget, HtmlUnknownAnchorTarget -->
 <p-dialog [(visible)]="displayAbout" class="about-dialog" [modal]="true" [dismissableMask]=true
-    [style]="{'max-width': '300px'}">
+  [style]="{'max-width': '300px'}">
   <div class="about-dialog">
     <img src="/assets/resources/svc_lunar_eclipse.png" alt="lunar eclipse" width="64" height="64">
     <h2>Sky View Café NG</h2>
@@ -30,15 +30,16 @@
           </div>
           <div class="time-panel-item">
             <tbw-time-editor [(ngModel)]="time"
-                [options]="clockOptions"
-                [timezone]="timezone"
-                [min]="SVC_MIN_YEAR"
-                [max]="SVC_MAX_YEAR"
-                [viewOnly]="trackTime"
-                [promptForNative]="promptForNative"
-                [nativeDateTime]="nativeDateTime"
-                [gregorianChangeDate]="gcDate"></tbw-time-editor>
-            <tbw-time-editor *ngIf="app.clockFloating"
+              [options]="clockOptions"
+              [timezone]="timezone"
+              [min]="SVC_MIN_YEAR"
+              [max]="SVC_MAX_YEAR"
+              [viewOnly]="trackTime"
+              [promptForNative]="promptForNative"
+              [nativeDateTime]="nativeDateTime"
+            [gregorianChangeDate]="gcDate"></tbw-time-editor>
+            @if (app.clockFloating) {
+              <tbw-time-editor
                 id="floating-clock"
                 floating
                 wideSpinner
@@ -52,24 +53,25 @@
                 [min]="SVC_MIN_YEAR"
                 [max]="SVC_MAX_YEAR"
                 [viewOnly]="trackTime"
-                [gregorianChangeDate]="gcDate"></tbw-time-editor>
+              [gregorianChangeDate]="gcDate"></tbw-time-editor>
+            }
           </div>
           <div class="time-panel-item">
             <span #calendarTarget style="position: relative; left: -1.2em; top: 2px"></span>
             <p-popover #calendarPopup class="calendar-popup">
               <tbw-calendar #calendar
-                  [(ngModel)]="date"
-                  [timezone]="timezone"
-                  [firstDay]="firstDay"
-                  [gregorianChangeDate]="gcDate"
-                  showDst
-                  [minYear]="SVC_MIN_YEAR"
-                  [maxYear]="SVC_MAX_YEAR"
-                  [backgroundDecorator]="getBackground"
-                  (dayClick)="calendarPopup.hide()"></tbw-calendar>
+                [(ngModel)]="date"
+                [timezone]="timezone"
+                [firstDay]="firstDay"
+                [gregorianChangeDate]="gcDate"
+                showDst
+                [minYear]="SVC_MIN_YEAR"
+                [maxYear]="SVC_MAX_YEAR"
+                [backgroundDecorator]="getBackground"
+              (dayClick)="calendarPopup.hide()"></tbw-calendar>
             </p-popover>
             <ks-icon-button [disabled]="trackTime" icon="far fa-calendar-alt fa-lg"
-                            (click)="calendarPopup.toggle($event, calendarTarget); calendar.reset()"></ks-icon-button>&nbsp;
+            (click)="calendarPopup.toggle($event, calendarTarget); calendar.reset()"></ks-icon-button>&nbsp;
           </div>
           <div class="time-panel-item">
             <ks-checkbox [(ngModel)]="trackTime" binary="true" label="Track current time"></ks-checkbox>
@@ -133,27 +135,27 @@
   <div id="quickTips" class="help-panel">
     <h3>Quick Tips</h3>
     <p>Please read the <a href="/assets/help/" target="_blank">Help</a> page. There's plenty of useful information there, and a
-      lot that <em>Sky View Café</em> can do that you'll discover.</p>
+    lot that <em>Sky View Café</em> can do that you'll discover.</p>
 
     <h3>Time</h3>
     <p>Click on the clock in the upper left corner of the app to change the time. You can type in the time, or click on
-       a digit and use the keyboard arrow keys or on-screen arrows to adjust the value.</p>
+    a digit and use the keyboard arrow keys or on-screen arrows to adjust the value.</p>
     <p>The clock uses 24-hour time. 0 is midnight, 12 is noon, 13 is 1 PM, 23 is 11 PM. The § symbol indicates Daylight
-       Saving Time.</p>
+    Saving Time.</p>
     <p>Find out more about: <a href="/assets/help/#time" target="_blank">time</a>, <a href="/assets/help/#zone" target="_blank">time
-       zones</a>, and years <a href="/assets/help/#bce" target="_blank">BCE</a>...</p>
+    zones</a>, and years <a href="/assets/help/#bce" target="_blank">BCE</a>...</p>
 
     <h3>Location</h3>
     <p>If <em>Sky View Café</em> does not automatically set your desired location, you can use the <strong>Find...</strong> button to look for cities
-       and towns. You can also click on the latitude and longitude fields to manually set a new observing location. Make sure to also pick the correct
-       matching timezone for your location.<p>
+    and towns. You can also click on the latitude and longitude fields to manually set a new observing location. Make sure to also pick the correct
+    matching timezone for your location.<p>
     <p>Coming back later? Click the <strong>Save...</strong> button to store locations for your next visit. (Cookies must be enabled.)
 
     <hr>
 
-    <p><a href="/assets/help/#eastleft" target="_blank">Why is East on the left?</a></p>
+      <p><a href="/assets/help/#eastleft" target="_blank">Why is East on the left?</a></p>
 
-    <p><a href="https://legacy.skyviewcafe.com/skyview.php" target="_blank">Looking for the original Sky View Café Java applet?</a></p>
+      <p><a href="https://legacy.skyviewcafe.com/skyview.php" target="_blank">Looking for the original Sky View Café Java applet?</a></p>
+    </div>
   </div>
-</div>
-<p-toast key="general" position="top-right"></p-toast>
+  <p-toast key="general" position="top-right"></p-toast>
