@@ -32,11 +32,12 @@ export class SvcPreferencesDialogComponent {
   ISO_SEC = ClockStyle.ISO_SEC;
   LOCAL_SEC = ClockStyle.LOCAL_SEC;
 
-  private _visible = false;
+  private originalDefaultTab = CurrentTab.SKY;
   private _calendarOption = CalendarSetting.STANDARD;
   private _twilightByDegrees = true;
   private twilightDegrees = 12;
   private twilightMinutes = 80;
+  private _visible = false;
 
   @ViewChild('defaultLocationDropdown', { static: true }) private defaultLocationDropdown: KsDropdownComponent;
 
@@ -126,7 +127,7 @@ export class SvcPreferencesDialogComponent {
         this.clockStyle = this.app.clockStyle;
         this.latLongStyle = this.app.latLongStyle;
         this.northAzimuth = this.app.northAzimuth;
-        this.defaultTab = this.app.defaultTab;
+        this.defaultTab = this.originalDefaultTab = this.app.defaultTab;
         this.twilightDegrees = this.app.twilightDegrees;
         this.twilightMinutes = this.app.twilightMinutes;
         this.twilightByDegrees = this.app.twilightByDegrees;
@@ -248,6 +249,9 @@ export class SvcPreferencesDialogComponent {
       this.app.resetWarnings();
 
     this.visible = false;
+
+    if (this.defaultTab !== this.originalDefaultTab)
+      this.app.currentTab = this.defaultTab;
   }
 
   onTwilightChange(value: string | EventTarget): void {

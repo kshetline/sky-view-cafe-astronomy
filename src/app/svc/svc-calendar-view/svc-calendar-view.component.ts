@@ -227,6 +227,10 @@ export class SvcCalendarViewComponent implements AfterViewInit {
   private draw(): void {
     if (CurrentTab.CALENDAR !== this.app.currentTab)
       return;
+    else if (!this.canvas) {
+      setTimeout(() => this.draw(), 100);
+      return;
+    }
 
     const printing = GenericViewDirective.printing;
     const inkSaver = printing && this.app.inkSaver;
@@ -273,7 +277,9 @@ export class SvcCalendarViewComponent implements AfterViewInit {
   }
 
   private updateView(forceUpdate?: boolean): void {
-    if (forceUpdate)
+    if (!this.observer)
+      return;
+    else if (forceUpdate)
       this.month = -1;
 
     if (this.app.currentTab !== CurrentTab.CALENDAR)

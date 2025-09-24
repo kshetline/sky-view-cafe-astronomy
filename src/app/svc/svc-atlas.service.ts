@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { urlEncodeParams } from '@tubular/util';
 
-const PING_INTERVAL = 1800000; // half hour
+const PING_INTERVAL = 1800000; // half-hour
 
 export interface AtlasLocation {
   displayName: string;

@@ -106,6 +106,7 @@ export class AppComponent implements AfterViewInit, OnDestroy {
     private elemRef: ElementRef
   ) {
     this.time = app.time;
+    this.selectedTab = app.defaultTab;
 
     atlasService.ping();
 

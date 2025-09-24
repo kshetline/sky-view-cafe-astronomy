@@ -11,6 +11,7 @@ import { NgClass } from '@angular/common';
 export class KsTabViewComponent implements AfterContentInit {
   private _activeTab = -1;
 
+  @Input() defaultTab = 0;
   @Output() change = new EventEmitter();
 
   @ContentChildren(KsTabComponent) tabs: QueryList<KsTabComponent>;
@@ -30,6 +31,6 @@ export class KsTabViewComponent implements AfterContentInit {
   }
 
   ngAfterContentInit(): void {
-    this.activeTab = 0;
+    this.activeTab = this.defaultTab;
   }
 }

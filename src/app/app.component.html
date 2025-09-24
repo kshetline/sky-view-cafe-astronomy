@@ -96,7 +96,7 @@
       </div>
     </div>
     <div class="lower-panel">
-      <ks-tab-view class="tabs" (change)="tabChanged($event)" [activeTab]="selectedTab">
+      <ks-tab-view class="tabs" (change)="tabChanged($event)" [defaultTab]="app.defaultTab" [activeTab]="selectedTab">
         <ks-tab header="Sky">
           <svc-sky-view></svc-sky-view>
         </ks-tab>

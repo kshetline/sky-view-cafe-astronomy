@@ -120,8 +120,8 @@ export class AppService {
   private starsReadyObserver: Observable<boolean> = this._starsReady.asObservable();
   private _asteroidsReady = new BehaviorSubject<boolean>(false);
   private asteroidsReadyObserver: Observable<boolean> = this._asteroidsReady.asObservable();
-  private _currentTab = new BehaviorSubject<CurrentTab>(CurrentTab.SKY);
-  private currentTabObserver: Observable<CurrentTab> = this._currentTab.asObservable();
+  private readonly _currentTab: BehaviorSubject<CurrentTab>;
+  private currentTabObserver: Observable<CurrentTab>;
   private settingsSource = new Subject<UserSetting>();
   private settingsObserver: Observable<UserSetting> = this.settingsSource.asObservable();
   private readonly allSettings: {[view: string]: {[setting: string]: boolean | number | string}} = {};
@@ -133,6 +133,7 @@ export class AppService {
   private _latLongStyle = LatLongStyle.DEGREES_AND_MINUTES;
   private _northAzimuth = false;
   private _defaultTab = CurrentTab.SKY;
+  private tabInitialized = false;
   private _twilightByDegrees = true;
   private _twilightDegrees = 12;
   private _twilightMinutes = 80;
@@ -214,6 +215,9 @@ export class AppService {
       }
     }
 
+    this._currentTab = new BehaviorSubject<CurrentTab>(this.defaultTab);
+    this.currentTabObserver = this._currentTab.asObservable();
+
     this.debouncedSaveSettings = debounce(() => this.saveSettings(), 1000);
 
     router.events.subscribe(event => {
@@ -224,7 +228,7 @@ export class AppService {
         if (newTab >= 0)
           this.currentTab = newTab;
         else
-          this.currentTab = CurrentTab.SKY;
+          this.currentTab = this.defaultTab ?? CurrentTab.SKY;
 
         setTimeout(() => {
           if (location.href.endsWith('#/'))
@@ -419,7 +423,8 @@ export class AppService {
 
   get currentTab(): CurrentTab { return this._currentTab.getValue(); }
   set currentTab(newTab: CurrentTab) {
-    if (this._currentTab.getValue() !== newTab) {
+    if (!this.tabInitialized || this._currentTab.getValue() !== newTab) {
+      this.tabInitialized = true;
       this._currentTab.next(newTab);
       this.router.navigate(['/' + tabNames[this._currentTab.getValue()]]).finally();
       this.lastStateUpdate();
@@ -525,14 +530,16 @@ export class AppService {
     if (this._defaultTab !== value) {
       this._defaultTab = value;
 
-      const currTab = this._currentTab.getValue();
+      if (this._currentTab) {
+        const currTab = this._currentTab.getValue();
 
-      if (currTab === value) {
-        if (location.href.endsWith('#/' + tabNames[value]))
-          history.replaceState(undefined, undefined, location.href.slice(0, -2 - tabNames[value].length));
+        if (currTab === value) {
+          if (location.href.endsWith('#/' + tabNames[value]))
+            history.replaceState(undefined, undefined, location.href.slice(0, -2 - tabNames[value].length));
+        }
+        else if (!location.href.includes('#'))
+          history.replaceState(undefined, undefined, location.href + '#/' + tabNames[currTab]);
       }
-      else if (!location.href.includes('#'))
-        history.replaceState(undefined, undefined, location.href + '#/' + tabNames[currTab]);
     }
   }
 
