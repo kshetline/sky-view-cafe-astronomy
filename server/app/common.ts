@@ -1,5 +1,4 @@
 import { NextFunction, Request, Response, Router } from 'express';
-import { isNil } from 'lodash';
 import { createReadStream } from 'fs';
 
 export const MIN_EXTERNAL_SOURCE = 100;
@@ -30,7 +29,7 @@ export const asyncHandler = (fn: (req: Request, res: Response, next: NextFunctio
     Promise.resolve(fn(req, res, next)).catch(next);
 
 export function eqci(s1: string, s2: string): boolean {
-  return s1 === s2 || isNil(s1) && isNil(s2) || s1.localeCompare(s2, undefined, { usage: 'search', sensitivity: 'base' }) === 0;
+  return s1 === s2 || s1 == null && s2 == null || s1.localeCompare(s2, undefined, { usage: 'search', sensitivity: 'base' }) === 0;
 }
 
 export class PromiseTimeoutError extends Error {}

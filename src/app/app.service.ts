@@ -5,10 +5,10 @@ import { NavigationEnd, Router } from '@angular/router';
 import { SolarSystem, StarCatalog } from '@tubular/astronomy';
 import { min, Point, round } from '@tubular/math';
 import { addZonesUpdateListener, Calendar } from '@tubular/time';
-import { clone, forEach, isEqual, isNumber, isString } from '@tubular/util';
-import { compact, debounce, sortedIndexBy } from 'lodash-es';
+import { clone, debounce, forEach, isEqual, isNumber, isString } from '@tubular/util';
 import { BehaviorSubject, Observable, Subject, Subscription } from 'rxjs';
 import { AstroDataService } from './astronomy/astro-data.service';
+import { sortedIndexBy } from './svc/svc-util';
 
 export const SVC_MIN_YEAR = -6000;
 export const SVC_MAX_YEAR = 9999;
@@ -165,7 +165,7 @@ export class AppService {
     }
 
     if (savedLocationsString)
-      this._locations = compact(Location.fromStringList(savedLocationsString));
+      this._locations = Location.fromStringList(savedLocationsString).filter(loc => !!loc);
 
     if (resave && this._locations.length > 0) {
       localStorage.setItem('svc-locations', savedLocationsString);
@@ -218,7 +218,7 @@ export class AppService {
     this._currentTab = new BehaviorSubject<CurrentTab>(this.defaultTab);
     this.currentTabObserver = this._currentTab.asObservable();
 
-    this.debouncedSaveSettings = debounce(() => this.saveSettings(), 1000);
+    this.debouncedSaveSettings = debounce(1000, () => this.saveSettings());
 
     router.events.subscribe(event => {
       if (event instanceof NavigationEnd) {

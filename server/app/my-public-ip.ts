@@ -1,4 +1,4 @@
-import * as publicIp from 'public-ip';
+import publicIp from 'public-ip';
 import { svcApiConsole } from './svc-api-logger';
 import { processMillis } from '@tubular/util';
 

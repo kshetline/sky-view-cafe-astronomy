@@ -8,8 +8,7 @@ import {
 } from '@tubular/astronomy';
 import { DateAndTime, DateTime, defaultLocale, getStartOfWeek, Timezone, utToTdt, YMDDate } from '@tubular/time';
 import { ceil, floor, max, min, round } from '@tubular/math';
-import { isChromium, isEdge, isFirefox } from '@tubular/util';
-import { throttle } from 'lodash-es';
+import { isChromium, isEdge, isFirefox, throttle } from '@tubular/util';
 import {
   AppService, CurrentTab, Location, PROPERTY_GREGORIAN_CHANGE_DATE, SVC_MAX_YEAR, SVC_MIN_YEAR, UserSetting, VIEW_APP
 } from '../../app.service';
@@ -129,10 +128,7 @@ export class SvcCalendarViewComponent implements AfterViewInit {
     this.isEdgeOrIE = isEdge();
     // TODO: Call method below whenever first day of week changes.
     this.updateDayHeadings();
-
-    this.throttledResize = throttle(() => {
-      this.doResize();
-    }, 100);
+    this.throttledResize = throttle(100, () => { this.doResize(); });
 
     app.getCurrentTabUpdates((currentTab: CurrentTab) => {
       if (currentTab === CurrentTab.CALENDAR) {

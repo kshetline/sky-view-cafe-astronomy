@@ -1,5 +1,4 @@
 import { AfterViewInit, Component, ElementRef, Input, OnDestroy, ViewChild } from '@angular/core';
-import { addResizeListener, removeResizeListener } from 'detect-resize';
 import { min } from '@tubular/math';
 import { getTextWidth } from '@tubular/util';
 
@@ -13,13 +12,13 @@ const MARQUEE_SPEED = 100; // pixels per second.
 })
 export class KsMarqueeComponent implements AfterViewInit, OnDestroy {
   private _text = '';
-  private resizeFunction: () => void;
   private wrapper: HTMLElement;
   private marquee: HTMLElement;
   private animationRequestId = 0;
   private animationStart: number;
   private animationWidth: number;
   private animationDuration: number;
+  private resizeListener = new ResizeObserver(() => this.onResize());
 
   @ViewChild('wrapper', { static: true }) wrapperRef: ElementRef;
   @ViewChild('marquee', { static: true }) marqueeRef: ElementRef;
@@ -35,14 +34,12 @@ export class KsMarqueeComponent implements AfterViewInit, OnDestroy {
   ngAfterViewInit(): void {
     this.wrapper = this.wrapperRef.nativeElement;
     this.marquee = this.marqueeRef.nativeElement;
-    this.resizeFunction = (): void => this.onResize();
-    addResizeListener(this.wrapper, this.resizeFunction);
+    this.resizeListener.observe(this.wrapper);
     this.onResize();
   }
 
   ngOnDestroy(): void {
-    if (this.resizeFunction)
-      removeResizeListener(this.wrapper, this.resizeFunction);
+    this.resizeListener.unobserve(this.wrapper);
 
     if (this.animationRequestId)
       window.cancelAnimationFrame(this.animationRequestId);

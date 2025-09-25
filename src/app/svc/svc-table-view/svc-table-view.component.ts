@@ -3,8 +3,7 @@ import {
   EARTH, EventFinder, ISkyObserver, JUPITER, JupiterInfo, MARS, MERCURY, MOON, NEPTUNE, PLUTO, SATURN, SkyObserver, SUN, URANUS, VENUS
 } from '@tubular/astronomy';
 import { DateAndTime, GregorianChange, DateTime, Timezone } from '@tubular/time';
-import { clone, isEqual, isString } from '@tubular/util';
-import throttle from 'lodash-es/throttle';
+import { clone, isEqual, isString, throttle } from '@tubular/util';
 import { SelectItem } from 'primeng/api';
 import { AppService, CurrentTab, Location, UserSetting } from '../../app.service';
 import { AstroDataService } from '../../astronomy/astro-data.service';
@@ -78,9 +77,7 @@ export class SvcTableViewComponent implements AfterViewInit {
       this.updateView();
     });
 
-    this.throttledResize = throttle(() => {
-      this.doResize();
-    }, 100);
+    this.throttledResize = throttle(100, () => { this.doResize(); });
 
     app.getCurrentTabUpdates((currentTab: CurrentTab) => {
       if (currentTab === CurrentTab.TABLES) {

@@ -27,3 +27,21 @@ export function hasOneOf<T>(set: Set<T>, list: T[]): boolean {
 
   return false;
 }
+
+export function sortedIndexBy<T>(array: T[], value: T, field: string): number {
+  const transformedValue = (value as any)[field];
+  let low = 0;
+  let high = array.length;
+
+  while (low < high) {
+    const mid = Math.floor((low + high) / 2);
+    const transformedElement = (array[mid] as any)[field];
+
+    if (transformedElement < transformedValue)
+      low = mid + 1;
+    else
+      high = mid;
+  }
+
+  return low;
+}

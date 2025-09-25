@@ -6,8 +6,7 @@ import {
 } from '@tubular/astronomy';
 import { DateTime, utToTdt } from '@tubular/time';
 import { ceil, max, round, sqrt } from '@tubular/math';
-import { clone, FontMetrics, getFontMetrics, isSafari, isString } from '@tubular/util';
-import { debounce, throttle } from 'lodash-es';
+import { clone, debounce, FontMetrics, getFontMetrics, isSafari, isString, throttle } from '@tubular/util';
 import { BehaviorSubject, Observable, Subscription } from 'rxjs';
 import { AppService, CurrentTab } from '../app.service';
 import { getXYForTouchEvent } from '../util/ks-touch-events';
@@ -108,12 +107,7 @@ export abstract class GenericViewDirective implements AfterViewInit {
       GenericViewDirective._printing.next(mql.matches);
     };
 
-    if (mql.addEventListener)
-      mql.addEventListener('change', printChange);
-    else {
-      // noinspection JSDeprecatedSymbols
-      mql.addListener(printChange);
-    }
+    mql.addEventListener('change', printChange);
   }
 
   static getPrintingUpdate(callback: (printing: boolean) => void): Subscription {
@@ -128,17 +122,9 @@ export abstract class GenericViewDirective implements AfterViewInit {
 
     this.updatePlanetsToDraw();
 
-    this.throttledRedraw = throttle(() => {
-      this.draw();
-    }, 100);
-
-    this.debouncedFullRedraw = debounce(() => {
-      this.draw(true);
-    }, FULL_REDRAW_DELAY);
-
-    this.throttledResize = throttle(() => {
-      this.doResize();
-    }, 100);
+    this.throttledRedraw = throttle(100, () => { this.draw(); });
+    this.debouncedFullRedraw = debounce(FULL_REDRAW_DELAY, () => { this.draw(true); });
+    this.throttledResize = throttle(100, () => { this.doResize(); });
 
     app.getCurrentTabUpdates((currentTab: CurrentTab) => {
       if (this.tabId === currentTab)
@@ -346,8 +332,8 @@ export abstract class GenericViewDirective implements AfterViewInit {
   }
 
   onMouseMove(event: MouseEvent): void {
-    if (this.goodDragStart || !this.dragging) // noinspection JSDeprecatedSymbols (for `which`)
-      this.handleMouseMove(event.offsetX, event.offsetY, !!((event.buttons & 0x01) || (this.isSafari && (event.which & 0x01))));
+    if (this.goodDragStart || !this.dragging)
+      this.handleMouseMove(event.offsetX, event.offsetY, !!(event.buttons & 0x01));
   }
 
   protected handleMouseMove(x: number, y: number, button1Down: boolean): void {

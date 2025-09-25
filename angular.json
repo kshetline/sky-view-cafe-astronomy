@@ -14,10 +14,6 @@
             "customWebpackConfig": {
               "path": "./extra-webpack.config.js"
             },
-            "allowedCommonJsDependencies": [
-              "detect-resize",
-              "lodash"
-            ],
             "outputPath": "dist/public",
             "index": "src/index.html",
             "main": "src/main.ts",

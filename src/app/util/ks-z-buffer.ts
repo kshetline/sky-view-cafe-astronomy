@@ -1,5 +1,4 @@
 import { strokeCircle, strokeLine } from '@tubular/util';
-import sortBy from 'lodash-es/sortBy';
 
 enum DrawAction { FILLED_RECT, LINE, CIRCLE, RECT }
 
@@ -70,7 +69,7 @@ export class ZBuffer {
 
   draw(context: CanvasRenderingContext2D, maxZ = Number.MAX_VALUE): void {
     if (!this.sorted) {
-      this.items = sortBy(this.items, [(item: ZBufferItem): number => item.z]);
+      this.items = this.items.sort((a, b) => a.z - b.z);
       this.sorted = true;
     }
 

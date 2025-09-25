@@ -5,8 +5,7 @@ import { AstroEvent, EventFinder, FIRST_QUARTER, FULL_MOON, LAST_QUARTER, NEW_MO
 import { max, min, Point } from '@tubular/math';
 import { CalendarDateInfo, CalendarPanelComponent, TimeEditorComponent, TimeEditorOptions, YearStyle } from '@tubular/ng-widgets';
 import { DateTime, defaultLocale, getStartOfWeek, Timezone, YMDDate } from '@tubular/time';
-import { isEqual, toggleFullScreen } from '@tubular/util';
-import { debounce } from 'lodash-es';
+import { debounce, isEqual, toggleFullScreen } from '@tubular/util';
 import { MenuItem, MessageService } from 'primeng/api';
 import { Subscription, timer } from 'rxjs';
 import {
@@ -14,7 +13,6 @@ import {
   PROPERTY_GREGORIAN_CHANGE_DATE, PROPERTY_LAST_TRACKING, PROPERTY_NATIVE_DATE_TIME, PROPERTY_RESTORE_LAST_STATE, SVC_MAX_YEAR, SVC_MIN_YEAR, UserSetting, VIEW_APP
 } from './app.service';
 import { SvcAtlasService } from './svc/svc-atlas.service';
-import { addResizeListener, removeResizeListener } from 'detect-resize';
 import { PROPERTY_FIRST_DAY_OF_WEEK, VIEW_CALENDAR, SvcCalendarViewComponent } from './svc/svc-calendar-view/svc-calendar-view.component';
 import { Dialog } from 'primeng/dialog';
 import { SvcNativeDateTimeDialogComponent } from './svc/svc-native-date-time-dialog/svc-native-date-time-dialog.component';
@@ -74,6 +72,7 @@ export class AppComponent implements AfterViewInit, OnDestroy {
   private lastEventMonth = 0;
   private lastEvents: AstroEvent[];
   private lastEventYear = Number.MIN_SAFE_INTEGER;
+  private resizeListener = new ResizeObserver(() => this.onResize());
   private _timeZone: Timezone = Timezone.OS_ZONE;
   private _time: number = this.dateTime.utcTimeMillis;
   private _trackTime = false;
@@ -143,7 +142,7 @@ export class AppComponent implements AfterViewInit, OnDestroy {
   }
 
   ngAfterViewInit(): void {
-    addResizeListener(this.elemRef.nativeElement, this.onResize);
+    this.resizeListener.observe(this.elemRef.nativeElement);
     setTimeout(() => {
       this.doResize();
 
@@ -156,7 +155,7 @@ export class AppComponent implements AfterViewInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.stopTimer();
-    removeResizeListener(this.elemRef.nativeElement, this.onResize);
+    this.resizeListener.unobserve(this.elemRef.nativeElement);
   }
 
   stopTimer(): void {
@@ -301,9 +300,9 @@ export class AppComponent implements AfterViewInit, OnDestroy {
       this._clockPosition = newValue;
 
       if (!this.clockPositionDebounce) {
-        this.clockPositionDebounce = debounce(() =>
+        this.clockPositionDebounce = debounce(500, () =>
           this.app.updateUserSetting(
-            VIEW_APP, PROPERTY_CLOCK_POSITION, JSON.stringify(this._clockPosition), this), 500);
+            VIEW_APP, PROPERTY_CLOCK_POSITION, JSON.stringify(this._clockPosition), this));
       }
 
       this.clockPositionDebounce();
@@ -322,7 +321,7 @@ export class AppComponent implements AfterViewInit, OnDestroy {
 
   @HostListener('window:resize') private onResize = (): void => {
     if (!this.debouncedResize)
-      this.debouncedResize = debounce(() => this.doResize(), 1000);
+      this.debouncedResize = debounce(1000, () => this.doResize());
 
     this.debouncedResize();
   };

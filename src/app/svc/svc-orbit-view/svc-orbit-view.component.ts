@@ -1,8 +1,7 @@
 import { AfterViewInit, Component, ElementRef, ViewChild } from '@angular/core';
 import { EARTH, MARS, MOON, NEPTUNE, NMode, PLUTO, REFRACTION, SATURN, SolarSystem, SUN } from '@tubular/astronomy';
 import { abs, cos_deg, floor, log10, max, min, mod, mod2, Point, Point3D, pow, round, sin_deg, SphericalPosition3D } from '@tubular/math';
-import { clone, colorFromRGB, parseColor, replaceAlpha, RGBA } from '@tubular/util';
-import { debounce, sortBy } from 'lodash-es';
+import { clone, colorFromRGB, debounce, parseColor, replaceAlpha, RGBA } from '@tubular/util';
 import { AppService, CurrentTab, UserSetting } from '../../app.service';
 import { ZBuffer } from '../../util/ks-z-buffer';
 import {
@@ -444,7 +443,7 @@ export class SvcOrbitViewComponent extends GenericPlanetaryViewDirective impleme
       positions.push({ planet, pos: pt0, pt });
     }
 
-    positions = sortBy(positions, [(position: ZSortablePlanet): any => position.pos.z]);
+    positions = positions.sort((a, b): any => a.pos.z - b.pos.z);
 
     const overrideColor = this.get3DColor(mode);
 
@@ -667,10 +666,10 @@ export class SvcOrbitViewComponent extends GenericPlanetaryViewDirective impleme
     this.draw();
   }
 
-  protected debouncedRotationUpdate = debounce(() => {
+  protected debouncedRotationUpdate = debounce(500, () => {
     this.app.updateUserSetting(VIEW_ORBITS, PROPERTY_ROTATION_XZ, this.rotation_xz, this);
     this.app.updateUserSetting(VIEW_ORBITS, PROPERTY_ROTATION_YZ, this.rotation_yz, this);
-  }, 500);
+  });
 
   protected static translate(mode: DrawingMode, pt: Point3D, ctr: Point3D, viewingDistance: number,
                              cos_xz: number, sin_xz: number, cos_yz: number, sin_yz: number): Point3D {

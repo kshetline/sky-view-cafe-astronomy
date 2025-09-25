@@ -659,8 +659,6 @@ name                               license period  license type                 
 @tubular/util                      perpetual       MIT                              git+https://github.com/kshetline/tubular_util.git                        3.4.1           3.4.1              Kerry Shetline
 array-buffer-reader                perpetual       MIT                              git+https://github.com/kshetline/array-buffer-reader.git                 1.0.4           1.0.4              Kerry Shetline
 core-js                            perpetual       MIT                              git+https://github.com/zloirock/core-js.git                              2.6.12          2.6.12             n/a
-detect-resize                      perpetual       MIT                              git+https://github.com/noderaider/detect-resize.git                      0.1.5           0.1.5              Cole Chamberlain
-lodash-es                          perpetual       MIT                              git+https://github.com/lodash/lodash.git                                 4.17.21         4.17.21            John-David Dalton
 ng-busy                            perpetual       MIT                              git+https://github.com/victos/angular-opensource.git                     11.0.0          11.0.0             victos
 primeicons                         perpetual       MIT                              git+https://github.com/primefaces/primeicons.git                         4.1.0           4.1.0              PrimeTek
 primeng                            perpetual       MIT                              git+https://github.com/primefaces/primeng.git                            11.2.3          11.2.3             n/a
@@ -673,7 +671,6 @@ zone.js                            perpetual       MIT                          
 @types/googlemaps                  perpetual       MIT                              https://github.com/DefinitelyTyped/DefinitelyTyped.git                   3.43.3          3.43.2             n/a
 @types/jasmine                     perpetual       MIT                              https://github.com/DefinitelyTyped/DefinitelyTyped.git                   3.6.4           3.6.0              n/a
 @types/jasminewd2                  perpetual       MIT                              https://github.com/DefinitelyTyped/DefinitelyTyped.git                   2.0.8           2.0.8              n/a
-@types/lodash-es                   perpetual       MIT                              https://github.com/DefinitelyTyped/DefinitelyTyped.git                   4.17.4          4.17.4             n/a
 @typescript-eslint/eslint-plugin   perpetual       MIT                              git+https://github.com/typescript-eslint/typescript-eslint.git           4.15.1          4.15.1             n/a
 @typescript-eslint/parser          perpetual       BSD-2-Clause                     git+https://github.com/typescript-eslint/typescript-eslint.git           4.15.1          4.15.1             n/a
 codelyzer                          perpetual       MIT                              git+https://github.com/mgechev/codelyzer.git                             6.0.1           6.0.0              Minko Gechev
