@@ -6,7 +6,7 @@ function altSlice(array: Uint8ClampedArray, start: number, end: number): ArrayLi
   try {
     return array.slice(start, end);
   }
-  catch (e) {}
+  catch {}
 
   const result = [];
 

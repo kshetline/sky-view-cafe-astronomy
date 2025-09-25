@@ -24,7 +24,7 @@ export class SvcGenericOptionsComponent {
     this.asteroidsReady = app.asteroidsReady;
 
     if (!this.asteroidsReady) {
-      app.getAsteroidsReadyUpdate((initialized) => {
+      app.getAsteroidsReadyUpdate(initialized => {
         this.asteroidsReady = initialized;
 
         if (initialized)

@@ -1,4 +1,3 @@
-/* eslint-disable guard-for-in */
 import { BufferAttribute, BufferGeometry } from 'three';
 
 function mergeBufferAttributes(attributes: BufferAttribute[]): BufferAttribute {

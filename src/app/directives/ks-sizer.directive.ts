@@ -5,7 +5,6 @@ import { DomSanitizer, SafeStyle } from '@angular/platform-browser';
 export class KsSizerDirective {
   @HostBinding('style') style: string | SafeStyle;
 
-  // eslint-disable-next-line accessor-pairs
   @Input() set ksSizer(size: string) {
     let [width, height] = size.split(',').map(s => s.trim());
 

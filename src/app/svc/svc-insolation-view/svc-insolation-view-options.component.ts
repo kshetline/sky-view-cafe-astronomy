@@ -2,7 +2,7 @@ import { AfterViewInit, Component } from '@angular/core';
 import { SelectItem } from 'primeng/api';
 import { AppService, UserSetting } from '../../app.service';
 import {
-  PROPERTY_CENTER_MIDNIGHT, PROPERTY_SHOW_MOONLIGHT,  VIEW_INSOLATION
+  PROPERTY_CENTER_MIDNIGHT, PROPERTY_SHOW_MOONLIGHT, VIEW_INSOLATION
 } from './svc-insolation-view.component';
 import { KsDropdownComponent } from '../../widgets/ks-dropdown/ks-dropdown.component';
 import { FormsModule } from '@angular/forms';

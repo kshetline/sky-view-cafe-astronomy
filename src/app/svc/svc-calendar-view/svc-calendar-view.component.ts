@@ -139,7 +139,7 @@ export class SvcCalendarViewComponent implements AfterViewInit {
       }
     });
 
-    app.getTimeUpdates((time) => {
+    app.getTimeUpdates(time => {
       this.time = time;
       this.updateView();
     });

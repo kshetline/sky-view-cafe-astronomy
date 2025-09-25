@@ -31,10 +31,10 @@ export const BRIGHT_STAR_LIMIT = 1.5;
 export const POLARIS_FK5_NUM = 907;
 
 const SCALE_WHERE_BRIGHTEST_STAR_IS_3x3 = 0.0026;
-const DIMMEST_ALLOWED_1x1_STAR_IMAGE_INDEX  = 33;
+const DIMMEST_ALLOWED_1x1_STAR_IMAGE_INDEX = 33;
 // const DIMMEST_AT_SCALE_1x1_STAR_IMAGE_INDEX = 100;
-const BRIGHTEST_1x1_STAR_IMAGE_INDEX        = 500;
-const BRIGHTEST_3x3_STAR_IMAGE_INDEX        = 1500;
+const BRIGHTEST_1x1_STAR_IMAGE_INDEX = 500;
+const BRIGHTEST_3x3_STAR_IMAGE_INDEX = 1500;
 
 const opacitiesOfWhite: string[] = [];
 
@@ -164,7 +164,7 @@ export abstract class GenericSkyViewDirective extends GenericPlanetaryViewDirect
   protected drawStars(dc: DrawingContextPlanetary): void {
     dc.scaleBoost = pow(dc.pixelsPerArcSec / SCALE_WHERE_BRIGHTEST_STAR_IS_3x3, 0.521);
     dc.starBrightestLevel = min(round(dc.scaleBoost * BRIGHTEST_3x3_STAR_IMAGE_INDEX), 1999);
-    dc.starDimmestLevel   = min(max(min(round(dc.scaleBoost * this.starBaseBrightness), 1999),
+    dc.starDimmestLevel = min(max(min(round(dc.scaleBoost * this.starBaseBrightness), 1999),
                               DIMMEST_ALLOWED_1x1_STAR_IMAGE_INDEX), BRIGHTEST_1x1_STAR_IMAGE_INDEX);
     dc.starLevelRange = dc.starBrightestLevel - dc.starDimmestLevel;
 

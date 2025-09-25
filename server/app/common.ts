@@ -38,6 +38,7 @@ export function timedPromise<T>(promise: Promise<T>, maxTime: number, errorRespo
   if (typeof errorResponse === 'string')
     errorResponse = new PromiseTimeoutError(errorResponse);
 
+  // eslint-disable-next-line @typescript-eslint/prefer-promise-reject-errors
   const timer = new Promise<T>((resolve, reject) => setTimeout(() => reject(errorResponse), maxTime));
 
   return Promise.race([promise, timer]);

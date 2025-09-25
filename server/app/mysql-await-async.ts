@@ -1,4 +1,3 @@
-/* eslint-disable n/no-deprecated-api */
 // noinspection JSDeprecatedSymbols
 
 import mysql, {
@@ -48,7 +47,6 @@ export class Pool {
       if (args[0] && /^(acquire|connection|release)$/.test(ev))
         callback(new PoolConnection(args[0]));
       else
-        // eslint-disable-next-line n/no-callback-literal
         callback(...args);
     });
 

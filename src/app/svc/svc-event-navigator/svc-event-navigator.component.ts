@@ -304,7 +304,7 @@ export class SvcEventNavigatorComponent implements AfterViewInit, OnDestroy {
       this.busyTimer = undefined;
     }, 500);
 
-    setTimeout(() => this.eventFinder.findEventAsync(this._selectedPlanet, this._selectedEvent,
+    setTimeout((): any => this.eventFinder.findEventAsync(this._selectedPlanet, this._selectedEvent,
         DateTime.julianDay(this.app.time), observer, timezone, this.app.gregorianChangeDate, goBack, argument)
       .then(event => this.gotEvent(event))
       .catch(err => {
@@ -330,7 +330,7 @@ export class SvcEventNavigatorComponent implements AfterViewInit, OnDestroy {
       let detail: string;
 
       if (isString(event.miscInfo))
-        summary = event.miscInfo as string;
+        summary = event.miscInfo;
       else if (event.eventType === LUNAR_ECLIPSE || event.eventType === SOLAR_ECLIPSE) {
         const ei = event.miscInfo as EclipseInfo;
         const isSolar = (event.eventType === SOLAR_ECLIPSE);

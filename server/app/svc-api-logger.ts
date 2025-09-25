@@ -87,7 +87,7 @@ if (process.env.SVC_API_LOG) {
       try {
         output = chunk.toString((encoding === 'buffer' ? 'utf8' : encoding) as any);
       }
-      catch (err) {
+      catch {
         // Unknown encoding?
         output = chunk.toString('utf8');
       }
@@ -107,7 +107,7 @@ if (process.env.SVC_API_LOG) {
         }
       });
     }
-    catch (err) { /* ignore errors writing to log file */ }
+    catch { /* ignore errors writing to log file */ }
 
     process.stdout.write(output);
     done();

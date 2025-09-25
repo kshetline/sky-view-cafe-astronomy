@@ -231,7 +231,7 @@ export class SvcMapViewComponent extends GenericViewDirective implements AfterVi
       this.xOffset = floor((dc.w - this.mapWidth) / 2);
     }
 
-    const   header = '- To set a new observer location, click on the map below -';
+    const header = '- To set a new observer location, click on the map below -';
 
     dc.context.fillStyle = 'black';
     dc.context.fillText(header, (dc.w - dc.context.measureText(header).width) / 2, yOffset + ascent);
@@ -493,7 +493,7 @@ export class SvcMapViewComponent extends GenericViewDirective implements AfterVi
   //
   protected getEclipseMagnitude(dc: DrawingContext, x: number, y: number): number {
     const testObserver = new SkyObserver(this.x_to_longitude(x), this.y_to_latitude(y));
-    const sunAltitude   = dc.ss.getHorizontalPosition(SUN, dc.jdu, testObserver, QUICK_SUN).altitude.degrees;
+    const sunAltitude = dc.ss.getHorizontalPosition(SUN, dc.jdu, testObserver, QUICK_SUN).altitude.degrees;
 
     if (sunAltitude < -REFRACTION_AT_HORIZON - AVG_SUN_MOON_RADIUS)
       return 0;

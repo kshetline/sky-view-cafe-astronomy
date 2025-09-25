@@ -12,7 +12,7 @@ export class MilkyWay {
         const image = new Image();
 
         image.onload = (): void => {
-          const canvas = document.createElement('canvas') as HTMLCanvasElement;
+          const canvas = document.createElement('canvas');
 
           canvas.width = image.width;
           canvas.height = image.height;

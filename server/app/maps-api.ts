@@ -1,9 +1,7 @@
-/* eslint-disable n/no-deprecated-api */
 // noinspection JSDeprecatedSymbols
 
 import { Request, Response, Router } from 'express';
 import https from 'https';
-// eslint-disable-next-line n/no-deprecated-api
 import { parse as parseUrl } from 'url';
 import { asyncHandler, escapeRegExp, getRemoteAddress, notFound, notFoundForEverythingElse } from './common';
 import { getPublicIp } from './my-public-ip';

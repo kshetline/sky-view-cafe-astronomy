@@ -52,7 +52,7 @@ export class AstroDataService implements IAstroDataService {
     else if (AstroDataService.asteroidDataPromise)
       return AstroDataService.asteroidDataPromise;
 
-    AstroDataService.asteroidDataPromise =  this.httpClient.get<AsteroidCometInfo[]>('/assets/resources/asteroids.json').toPromise().then(data => {
+    AstroDataService.asteroidDataPromise = this.httpClient.get<AsteroidCometInfo[]>('/assets/resources/asteroids.json').toPromise().then(data => {
       AstroDataService.asteroidData = data;
 
       return AstroDataService.asteroidData;

@@ -131,7 +131,7 @@ export abstract class GenericViewDirective implements AfterViewInit {
         setTimeout(() => this.onResize());
     });
 
-    this.timeSubscription = app.getTimeUpdates((time) => {
+    this.timeSubscription = app.getTimeUpdates(time => {
       this.time = time;
       this.draw();
     });

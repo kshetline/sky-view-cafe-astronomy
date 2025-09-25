@@ -129,7 +129,7 @@ export class SvcAtlasDialogComponent implements OnInit {
       this.searchChanged();
 
       if (state !== newState)
-        setTimeout(() => (document.querySelector('#state-select input.p-inputtext') as HTMLInputElement).value = state);
+        setTimeout(() => (document.querySelector('#state-select input.p-inputtext') as unknown as HTMLInputElement).value = state);
 
       this.stateChange.emit(this._state);
     }

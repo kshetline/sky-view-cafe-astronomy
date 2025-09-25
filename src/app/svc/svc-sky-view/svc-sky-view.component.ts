@@ -30,11 +30,13 @@ import { KsMarqueeComponent } from '../../widgets/ks-marquee/ks-marquee.componen
 
 export const  VIEW_SKY = 'sky';
 export const    PROPERTY_VIEW_TYPE = 'view_type';
-export enum       VIEW_TYPE { FULL_SKY_FLAT, FULL_SKY_DOME,
-                              HORIZON_45, HORIZON_90, HORIZON_120, HORIZON_TO_ZENITH,
-                              ZENITH_100,
-                              MOON_CLOSEUP_2, MOON_CLOSEUP_4, MOON_CLOSEUP_8, MOON_CLOSEUP_16,
-                              SUN_CLOSEUP_2, SUN_CLOSEUP_4, SUN_CLOSEUP_8, SUN_CLOSEUP_16 }
+export enum       VIEW_TYPE { /* eslint-disable @stylistic/indent */
+                    FULL_SKY_FLAT, FULL_SKY_DOME,
+                    HORIZON_45, HORIZON_90, HORIZON_120, HORIZON_TO_ZENITH,
+                    ZENITH_100,
+                    MOON_CLOSEUP_2, MOON_CLOSEUP_4, MOON_CLOSEUP_8, MOON_CLOSEUP_16,
+                    SUN_CLOSEUP_2, SUN_CLOSEUP_4, SUN_CLOSEUP_8, SUN_CLOSEUP_16
+                  } /* eslint-enable @stylistic/indent */
 export const    PROPERTY_SKY_COLOR = 'sky_color';
 export enum       SKY_COLOR { BLACK, BASIC, MULTI }
 export const    PROPERTY_REFRACTION = 'refraction';
@@ -126,7 +128,7 @@ export class SvcSkyViewComponent extends GenericSkyViewDirective implements Afte
   @ViewChild('canvasWrapper', { static: true }) private wrapperRef: ElementRef;
   @ViewChild('skyCanvas', { static: true }) private canvasRef: ElementRef;
 
-  private readonly gridFont  = 'italic bold 14px Arial, Helvetica, sans-serif';
+  private readonly gridFont = 'italic bold 14px Arial, Helvetica, sans-serif';
 
   formattedFacing = '000.0';
 
@@ -194,8 +196,8 @@ export class SvcSkyViewComponent extends GenericSkyViewDirective implements Afte
       this.moonDrawer = moonDrawer;
       this.draw();
     },
-    (reason) => console.error(reason))
-      .catch((reason) => console.error(reason));
+    reason => console.error(reason))
+      .catch(reason => console.error(reason));
 
     MilkyWay.getMilkyWay().then((milkyWay: MilkyWay) => {
       this.milkyWay = milkyWay;
@@ -203,8 +205,8 @@ export class SvcSkyViewComponent extends GenericSkyViewDirective implements Afte
       if (this.showMilkyWay)
         this.draw();
     },
-    (reason) => console.error(reason))
-      .catch((reason) => console.error(reason));
+    reason => console.error(reason))
+      .catch(reason => console.error(reason));
 
     app.getUserSettingUpdates((setting: UserSetting) => {
       if (setting.view === VIEW_SKY && setting.source !== this) {

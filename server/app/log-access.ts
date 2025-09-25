@@ -24,7 +24,7 @@ router.get('/', asyncHandler(async (req: Request, res: Response) => {
       try {
         res.send(await getFileContents(path, 'utf8'));
       }
-      catch (err) {
+      catch {
         res.send('Error reading log file.');
       }
     }

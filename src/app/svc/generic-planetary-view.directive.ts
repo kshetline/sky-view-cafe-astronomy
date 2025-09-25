@@ -164,7 +164,7 @@ export abstract class GenericPlanetaryViewDirective extends GenericViewDirective
     this.asteroidsReady = app.asteroidsReady;
 
     if (!this.starsReady) {
-      app.getStarsReadyUpdate((initialized) => {
+      app.getStarsReadyUpdate(initialized => {
         this.starsReady = initialized;
 
         if (initialized)
@@ -173,7 +173,7 @@ export abstract class GenericPlanetaryViewDirective extends GenericViewDirective
     }
 
     if (!this.asteroidsReady) {
-      app.getAsteroidsReadyUpdate((initialized) => {
+      app.getAsteroidsReadyUpdate(initialized => {
         this.asteroidsReady = initialized;
 
         if (initialized) {
@@ -488,7 +488,7 @@ export abstract class GenericPlanetaryViewDirective extends GenericViewDirective
 
     if (li.labelType === LABEL_TYPE.CONSTELLATION || li.labelType === LABEL_TYPE.SOLE_CONSTELLATION) {
       textWidth = getTextWidth(li.name, this.smallLabelFont);
-      li.textPt.x = li.pt.x -  textWidth / 2;
+      li.textPt.x = li.pt.x - textWidth / 2;
     }
     else {
       textWidth = getTextWidth(li.name, this.mediumLabelFont);
@@ -512,10 +512,10 @@ export abstract class GenericPlanetaryViewDirective extends GenericViewDirective
       crowdedDso = (ngc === 869 || ngc === 884);
     }
 
-    if      (li.labelType === LABEL_TYPE.PLANET || li.labelType === LABEL_TYPE.STAR ||
-             li.labelType === LABEL_TYPE.MOON   || li.labelType === LABEL_TYPE.HIDDEN_MOON ||
-             li.labelType === LABEL_TYPE.SOLE_CONSTELLATION ||
-             li.bodyIndex === dc.selectionIndex || crowdedDso)
+    if (li.labelType === LABEL_TYPE.PLANET || li.labelType === LABEL_TYPE.STAR ||
+        li.labelType === LABEL_TYPE.MOON   || li.labelType === LABEL_TYPE.HIDDEN_MOON ||
+        li.labelType === LABEL_TYPE.SOLE_CONSTELLATION ||
+        li.bodyIndex === dc.selectionIndex || crowdedDso)
       li.labelClass = LABEL_CLASS.STAR_OR_PLANET;
     else if (li.labelType === LABEL_TYPE.CONSTELLATION)
       li.labelClass = LABEL_CLASS.CONSTELLATION;

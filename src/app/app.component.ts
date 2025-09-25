@@ -173,7 +173,7 @@ export class AppComponent implements AfterViewInit, OnDestroy {
     }
   }
 
-  get clockOptions(): string | TimeEditorOptions | (string | TimeEditorOptions)[]  {
+  get clockOptions(): string | TimeEditorOptions | (string | TimeEditorOptions)[] {
     const showSeconds = (this.app.clockStyle === ClockStyle.ISO_SEC || this.app.clockStyle === ClockStyle.LOCAL_SEC);
 
     if (!this.app.localTimeFormat) {

@@ -88,7 +88,7 @@ export class SvcTableViewComponent implements AfterViewInit {
       }
     });
 
-    app.getTimeUpdates((time) => {
+    app.getTimeUpdates(time => {
       this.time = time;
       this.updateView();
     });

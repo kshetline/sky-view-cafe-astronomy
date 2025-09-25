@@ -92,7 +92,7 @@ export class SvcInsolationViewComponent extends GenericViewDirective implements 
     this.location = app.location;
 
     this.timeSubscription.unsubscribe();
-    this.timeSubscription = app.getTimeUpdates((time) => {
+    this.timeSubscription = app.getTimeUpdates(time => {
       this.time = time;
       this.updateView(RefreshMode.REFRESH_ON_CHANGED_YEAR);
     });
@@ -218,7 +218,7 @@ export class SvcInsolationViewComponent extends GenericViewDirective implements 
     dc.context.strokeStyle = 'black';
 
     for (let hour = 0; hour <= 22; hour += 2) {
-      let  hourStr;
+      let hourStr;
 
       if (this.centerMidnight)
         hourStr = '' + ((hour + 12) % 24);

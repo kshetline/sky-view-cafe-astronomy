@@ -454,7 +454,7 @@ async function remoteSourcesSearch(parsed: ParsedSearchString, doGeonames: boole
 
 function summarizeResults(result: SearchResult, remoteResults: RemoteSearchResults, dbError: string,
                           extend: boolean, version: number, parsed: ParsedSearchString,
-                          svc: boolean): { celestial: boolean, suggestions: string } {
+                          svc: boolean): { celestial: boolean; suggestions: string } {
   if (remoteResults) {
     if (remoteResults.geoNamesMetrics && !remoteResults.geoNamesError) {
       const metrics = remoteResults.geoNamesMetrics;

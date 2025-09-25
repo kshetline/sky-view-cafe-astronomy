@@ -165,7 +165,7 @@ export class KsDropdownComponent implements ControlValueAccessor {
   }
 
   private findMatchingOption(testValue: any): any {
-    return this._options.find(option => isObject(option as any) && option.value === testValue || option === testValue);
+    return this._options.find(option => isObject(option) && option.value === testValue || option === testValue);
   }
 
   private findMatchingPrimeOption(testValue: any): any {
@@ -182,7 +182,7 @@ export class KsDropdownComponent implements ControlValueAccessor {
   }
 
   private findMatchingIndex(testValue: any): string {
-    const result = this._options.findIndex(option => isObject(option as any) && option.value === testValue || option === testValue) || 0;
+    const result = this._options.findIndex(option => isObject(option) && option.value === testValue || option === testValue) || 0;
 
     return result.toString();
   }

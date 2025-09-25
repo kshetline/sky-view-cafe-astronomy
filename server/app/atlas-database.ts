@@ -58,7 +58,7 @@ function logMessageAux(message: string, lang: string, ip: string, asWarning: boo
       await pool.queryResults('INSERT INTO gazetteer_log (warning, message, lang, ip) VALUES (?, ?, ?, ?)',
         [asWarning, message, lang || '', ip || '']);
     }
-    catch (err) {
+    catch {
       console.error('Writing to gazetteer_log failed.');
     }
   });

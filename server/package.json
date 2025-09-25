@@ -9,7 +9,7 @@
     "dev": "ts-node-dev --respawn --transpile-only ./app/app.ts",
     "build": "rimraf dist && webpack && copyfiles -u 1 \"./app/data/*\" \"./dist\" && copyfiles -u 3 \"./node_modules/@tubular/geo-tz/data/geo.dat\" \"./dist\" && (chmod +x ./dist/app.js || echo \"\")",
     "start": "tsc && node -r dotenv/config dist/app.js",
-    "lint": "eslint \"**/*.ts\""
+    "lint": "eslint --ext .ts 'app/**/*.ts'"
   },
   "author": "Kerry Shetline <kerry@shetline.com>",
   "license": "MIT",
@@ -35,6 +35,7 @@
     "unidecode-plus": "^1.0.5"
   },
   "devDependencies": {
+    "@stylistic/eslint-plugin": "^4.4.1",
     "@types/basic-auth": "^1.1.8",
     "@types/express": "^5.0.3",
     "@types/follow-redirects": "^1.14.4",
@@ -45,16 +46,11 @@
     "@types/node": "^24.2.0",
     "@types/request-ip": "^0.0.41",
     "@types/serve-index": "^1.9.4",
-    "@typescript-eslint/eslint-plugin": "^8.44.1",
-    "@typescript-eslint/parser": "^8.44.1",
+    "@typescript-eslint/eslint-plugin": "^8.34.0",
+    "@typescript-eslint/parser": "^8.34.0",
     "copyfiles": "^2.4.1",
-    "eslint": "^8.31.0",
-    "eslint-config-standard": "^17.1.0",
-    "eslint-plugin-chai-friendly": "^1.1.0",
-    "eslint-plugin-import": "^2.32.0",
-    "eslint-plugin-jasmine": "^4.2.2",
-    "eslint-plugin-node": "^11.1.0",
-    "eslint-plugin-promise": "^6.1.1",
+    "eslint": "^9.29.0",
+    "eslint-plugin-chai-friendly": "^1.0.0",
     "rimraf": "^6.0.1",
     "terser-webpack-plugin": "^5.3.14",
     "ts-loader": "^9.5.4",

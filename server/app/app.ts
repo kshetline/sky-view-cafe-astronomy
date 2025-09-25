@@ -73,7 +73,7 @@ app.get('/', (req: Request, res: Response) => {
       getPublicIp();
     });
   }
-  catch (err) {
+  catch {
     svcApiConsole.error('Sky View Café failed to start');
     process.exit(1);
   }

@@ -124,7 +124,7 @@ export class AppService {
   private currentTabObserver: Observable<CurrentTab>;
   private settingsSource = new Subject<UserSetting>();
   private settingsObserver: Observable<UserSetting> = this.settingsSource.asObservable();
-  private readonly allSettings: {[view: string]: {[setting: string]: boolean | number | string}} = {};
+  private readonly allSettings: { [view: string]: { [setting: string]: boolean | number | string } } = {};
   private readonly debouncedSaveSettings: () => void;
   private knownIanaTimezones: Set<string>;
   private _clockFloating = min(window.screen.width, window.screen.height) < 768;

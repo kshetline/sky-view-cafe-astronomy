@@ -169,7 +169,7 @@ export async function initGazetteer(): Promise<void> {
 
     rows = (await connection.queryResults(`SELECT * FROM gazetteer_alt_names WHERE type ='1' AND historic = 0 AND colloquial = 0`));
 
-    const notFound: { id: number, lang: string, name: string }[] = [];
+    const notFound: { id: number; lang: string; name: string }[] = [];
 
     for (const row of rows as AltNames[]) {
       if (!row.lang)
@@ -273,7 +273,7 @@ async function initFlagCodes(): Promise<void> {
       return;
     }
   }
-  catch (err) { /* Ignore error, proceed to remote retrieval. */ }
+  catch { /* Ignore error, proceed to remote retrieval. */ }
 
   try {
     const lines = asLines(await requestText('https://skyviewcafe.com/assets/resources/flags/'));
@@ -452,7 +452,7 @@ export function containsMatchingLocation(matches: LocationMap, location: AtlasLo
     location2.country === location.country) >= 0;
 }
 
-export function fixRearrangedName(name: string): { name: string, variant: string } {
+export function fixRearrangedName(name: string): { name: string; variant: string } {
   let variant: string;
   let $: string[];
 

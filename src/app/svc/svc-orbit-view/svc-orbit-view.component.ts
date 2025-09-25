@@ -471,7 +471,7 @@ export class SvcOrbitViewComponent extends GenericPlanetaryViewDirective impleme
 
   protected get3DColor(mode: DrawingMode): string {
     if (mode === DrawingMode.LEFT_EYE)
-      return this.anaglyphRC ? '#FF0000'  : '#00CC00';
+      return this.anaglyphRC ? '#FF0000' : '#00CC00';
     else if (mode === DrawingMode.RIGHT_EYE)
       return this.anaglyphRC ? '#0099FF' : '#FF00FF';
     else
@@ -480,7 +480,7 @@ export class SvcOrbitViewComponent extends GenericPlanetaryViewDirective impleme
 
   protected get3DColorIndex(mode: DrawingMode, defaultIndex: number): number {
     if (mode === DrawingMode.LEFT_EYE)
-      return this.anaglyphRC ? LEFT_EYE_COLOR_RC_INDEX  : LEFT_EYE_COLOR_GM_INDEX;
+      return this.anaglyphRC ? LEFT_EYE_COLOR_RC_INDEX : LEFT_EYE_COLOR_GM_INDEX;
     else if (mode === DrawingMode.RIGHT_EYE)
       return this.anaglyphRC ? RIGHT_EYE_COLOR_RC_INDEX : RIGHT_EYE_COLOR_GM_INDEX;
     else

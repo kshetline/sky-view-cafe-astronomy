@@ -42,7 +42,7 @@ async function gettySearchAux(targetCity: string, targetState: string, metrics: 
   for (let i = 0; i < originalKeys.length; ++i) {
     let key = originalKeys[i];
     const url = 'http://www.getty.edu/vow/TGNFullDisplay?find=&place=&nation=&english=Y&subjectid=' + key;
-    const options = { headers: { 'User-Agent': FAKE_USER_AGENT, Referer: 'http://www.getty.edu/vow/TGNServlet' } };
+    const options = { headers: { 'User-Agent': FAKE_USER_AGENT, 'Referer': 'http://www.getty.edu/vow/TGNServlet' } };
     let lines: string[];
 
     try {
@@ -162,7 +162,7 @@ async function gettyPreliminarySearch(targetCity: string, targetState: string, m
 
     url += '&page=' + page;
 
-    const options = { headers: { 'User-Agent': FAKE_USER_AGENT, Referer: 'http://www.getty.edu/research/tools/vocabularies/tgn/index.html' } };
+    const options = { headers: { 'User-Agent': FAKE_USER_AGENT, 'Referer': 'http://www.getty.edu/research/tools/vocabularies/tgn/index.html' } };
     let lines: string[];
 
     try {
