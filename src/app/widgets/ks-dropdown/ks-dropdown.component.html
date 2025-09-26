@@ -4,11 +4,11 @@
     (onFocus)="onDropdownFocus($event)" (onBlur)="onDropdownBlur($event)" [scrollHeight]="scrollHeight"
   [editable]="editable"></p-select>
   <!-- TODO: Disable special touch interface mode for now --> <!--suppress PointlessBooleanExpressionJS -->
-  @if (false && useSelect) {
+  @if (useSelect) {
     <select tabindex="0" [(ngModel)]="selectValue"
       (touchstart)="onTouchStart()"
       (click)="selectClick($event)">
-      @for (option of selectOptions; track option; let i = $index) {
+      @for (option of selectOptions; track $index; let i = $index) {
         <option [value]="i">{{option}}</option>
       }
     </select>

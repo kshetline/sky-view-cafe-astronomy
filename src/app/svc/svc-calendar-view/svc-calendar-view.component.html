@@ -7,13 +7,13 @@
         <th colspan="7">{{title}}</th>
       </tr>
       <tr class="weekdays" #weekdaysRow>
-        @for (d of daysOfWeek; track d) {
+        @for (d of daysOfWeek; track $index) {
           <th class="day-header">{{d}}</th>
         }
       </tr>
-      @for (week of calendar; track week) {
+      @for (week of calendar; track $index) {
         <tr>
-          @for (day of week; track day) {
+          @for (day of week; track $index) {
             <td [ngClass]="{'ffox-fix-1': isFirefox}">
               <div class="day-wrapper" [ngClass]="{'ffox-fix-2': isFirefox}">
             <div [ngClass]="{
@@ -30,7 +30,7 @@
                 <div class="rise-set-group" [ngClass]="{'edge-ie-fix-1': isEdgeOrIE}">
                   <span class="planet-glyph">{{day.planet}}</span>
                   <div class="rise-set-list">
-                    @for (event of day.riseSetTimes; track event) {
+                    @for (event of day.riseSetTimes; track $index) {
                       <div class="rise-set"
                       (click)="onClick(event.time)">{{event.text}}</div>
                     }

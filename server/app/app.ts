@@ -60,7 +60,7 @@ app.use('/api/maps/', mapsRouter);
 // Make the flags folder browsable.
 app.use('/assets/resources/flags/', directoryRouter);
 app.use(express.static(pathJoin(__dirname, 'public')));
-app.get('/', (req: Request, res: Response) => {
+app.get('/', (_req: Request, res: Response) => {
   res.send('Static home file not found');
 });
 

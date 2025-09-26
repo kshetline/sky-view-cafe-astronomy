@@ -1,6 +1,6 @@
 <div>
   <ul class="ks-tabs">
-    @for (tab of tabs; track tab; let i = $index) {
+    @for (tab of tabs; track $index; let i = $index) {
       <li [ngClass]="{'ks-active': i < 0 ? i === defaultTab : i === activeTab}"
       (click)="selectTab(i)">{{tab.header}}</li>
     }

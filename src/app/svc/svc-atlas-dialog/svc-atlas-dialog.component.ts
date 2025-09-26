@@ -160,10 +160,12 @@ export class SvcAtlasDialogComponent implements OnInit {
     return name;
   }
 
-  constructor(private app: AppService, private atlasService: SvcAtlasService,
+  constructor(private app: AppService, private atlasService: SvcAtlasService, private elem: ElementRef,
               private messageService: MessageService, private ref: ChangeDetectorRef) {}
 
   ngOnInit(): void {
+    this.elem.nativeElement.addEventListener('click', this.onClick, true);
+
     this.atlasService.getStates()
       .then((states: string[]) => {
         this.states = states;
@@ -185,7 +187,17 @@ export class SvcAtlasDialogComponent implements OnInit {
     }
   }
 
+  private lastClick = -1;
+
+  onClick = (evt: Event): void => {
+    if (evt.timeStamp < this.lastClick + 500)
+      evt.stopPropagation();
+
+    this.lastClick = evt.timeStamp;
+  };
+
   onDoubleClick(): void {
+    console.log('double click');
     if (this._selection)
       this.setLocation();
   }

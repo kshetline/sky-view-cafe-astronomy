@@ -631,7 +631,10 @@ export class AppService {
 
   private getLocationFromIp(): void {
     this.httpClient.get('/api/ip/json/').subscribe((location: IpLocation) => {
-      this.setLocationFromIpLocation(location);
+      if (location.status !== 'fail')
+        this.setLocationFromIpLocation(location);
+      else
+        this.getLocationFromGeoLocation();
     }, () => {
       this.getLocationFromGeoLocation();
     });
@@ -665,8 +668,8 @@ export class AppService {
       navigator.geolocation.getCurrentPosition((position: GeolocationPosition) => {
         this.location = new Location('(unnamed)', position.coords.latitude, position.coords.longitude, 'OS');
       },
-      () => {
-        console.log('Using default location');
+      err => {
+        console.log('Using default location:', err.message);
       });
     }
     else

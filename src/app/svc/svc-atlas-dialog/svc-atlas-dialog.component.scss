@@ -120,3 +120,7 @@ input.city-field {
   padding-top: 12px;
   width: 100%;
 }
+
+.results-row td {
+  user-select: none;
+}

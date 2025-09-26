@@ -373,7 +373,7 @@ export class SvcZoneSelectorComponent implements ControlValueAccessor, OnInit {
 
     const americaIndex = regions.findIndex(r => r.region === 'America');
 
-    if (americaIndex) {
+    if (americaIndex >= 0) {
       const america = regions[americaIndex];
       const newRegions: RegionAndSubzones[] = [
         { region: 'America\xA0(other)', subzones: [] },

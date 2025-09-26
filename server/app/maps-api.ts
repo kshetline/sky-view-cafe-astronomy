@@ -67,7 +67,7 @@ function setSvcMapsApiKey(k) {
 
 const authorizedIps: Record<string, number> = {};
 const ALLOWED_IP_AGE = 7200000; // two hours
-const MAX_AUTHORIZATION_DELAY = 30000; // half minute
+const MAX_AUTHORIZATION_DELAY = 30000; // half-minute
 
 router.get('/script/', asyncHandler(async (req: Request, res: Response) => {
   const url = `https://maps.googleapis.com/maps/api/js?key=${GOOGLE_API_KEY}&loading=async&callback=initGoogleMaps`;
